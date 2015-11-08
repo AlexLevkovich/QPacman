@@ -4,7 +4,9 @@ QPacman is GUI to Archlinux pacman utility.
 It contains three projects:
 
 QPacmanServer - dbus server program (works under root) - works with pacman utility.
+
 QPacmanTray   - tray icon - checks updates, loads QPacman.
+
 QPacman       - main program
 
 # COMPILATION:
