@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.alexl.PacmanDBusServer
+Exec=/usr/bin/QPacmanServer
+User=root

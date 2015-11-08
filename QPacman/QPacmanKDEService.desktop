@@ -1,0 +1,10 @@
+[Desktop Entry]
+Actions=OpenPackageFiles;
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/x-xz-compressed-tar
+
+[Desktop Action OpenPackageFiles]
+Name=Install with QPacman ...
+Icon=Pacman-arch_logo
+Exec=QPacman %U

@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pics/configure.png</file>
+        <file>pics/distro-upgrade.png</file>
+        <file>pics/updates.png</file>
+        <file>pics/PacmanTray-arch_logo.png</file>
+        <file>pics/checking.gif</file>
+        <file>pics/system-log-out.png</file>
+        <file>sound/KDE-Sys-App-Positive.ogg</file>
+        <file>pics/kpk-important.png</file>
+        <file>sound/KDE-Sys-App-Error.ogg</file>
+        <file>pics/application-exit.png</file>
+        <file>pics/Pacman-arch_logo.png</file>
+    </qresource>
+</RCC>

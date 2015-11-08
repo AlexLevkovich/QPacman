@@ -1,0 +1,86 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.alexl.PacmanDBusServer">
+    <signal name="commandFinished">
+      <arg name="errorMsg" type="s" direction="out"/>
+    </signal>
+    <signal name="files_ready">
+      <arg name="package" type="s" direction="out"/>
+      <arg name="files" type="as" direction="out"/>
+    </signal>
+    <signal name="links_ready">
+      <arg name="links" type="ay" direction="out"/>
+    </signal>
+    <signal name="packages_ready">
+      <arg name="entry" type="as" direction="out"/>
+    </signal>
+    <signal name="package_ready">
+      <arg name="entry" type="ay" direction="out"/>
+    </signal>
+    <signal name="someProvidersAvailable">
+      <arg name="entry" type="as" direction="out"/>
+    </signal>    
+    <signal name="salt_ready">
+      <arg name="salt" type="ay" direction="out"/>
+    </signal>
+    <signal name="contents_length_found">
+      <arg name="len" type="i" direction="out"/>
+    </signal>
+    <signal name="download_progress">
+      <arg name="percents" type="i" direction="out"/>
+    </signal>
+    <signal name="someProvidersAvailable">
+      <arg name="providers" type="as" direction="out"/>
+    </signal>
+    <signal name="packages_deps_ready">
+      <arg name="install_packages" type="as" direction="out"/>
+      <arg name="remove_packages" type="as" direction="out"/>
+      <arg name="providerIds" type="ai" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QList&lt;int&gt;"/>
+    </signal>
+    <signal name="start_installing">
+      <arg name="name" type="s" direction="out"/>
+    </signal>
+    <signal name="post_messages">
+      <arg name="package" type="s" direction="out"/>
+      <arg name="messages" type="as" direction="out"/>
+    </signal>
+    <signal name="package_count">
+      <arg name="count" type="i" direction="out"/>
+    </signal>
+    <signal name="start_removing">
+      <arg name="name" type="s" direction="out"/>
+    </signal>
+    <method name="commandRequest">
+      <arg type="b" direction="out"/>
+      <arg name="command" type="ay" direction="in"/>
+    </method>
+    <method name="terminateRequest">
+    </method>
+    <method name="setPassword">
+      <arg name="password" type="ay" direction="in"/>
+    </method>
+    <method name="setFilePath">
+      <arg name="file_path" type="s" direction="in"/>
+    </method>
+    <method name="setPackageList">
+      <arg name="packages" type="as" direction="in"/>
+    </method>
+    <method name="setPackages">
+      <arg name="packages" type="s" direction="in"/>
+    </method>
+    <method name="setSelectedProvider">
+      <arg name="provider" type="s" direction="in"/>
+    </method>
+    <method name="setUrl">
+      <arg name="url" type="s" direction="in"/>
+    </method>
+    <method name="setChosenProviderIds">
+      <arg name="providerIds" type="ai" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QList&lt;int&gt;"/>
+    </method>
+    <method name="setDependance">
+      <arg name="doDeps" type="b" direction="in"/>
+    </method>
+  </interface>
+</node>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LocalPackageMainWindow</class>
+ <widget class="QMainWindow" name="LocalPackageMainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>581</width>
+    <height>403</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Local package installer...</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="qpacman.qrc">
+    <normaloff>:/pics/Pacman-arch_logo.png</normaloff>:/pics/Pacman-arch_logo.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <widget class="QWidget" name="widget" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QTreeView" name="packageView">
+            <property name="mouseTracking">
+             <bool>true</bool>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>22</width>
+              <height>22</height>
+             </size>
+            </property>
+            <property name="rootIsDecorated">
+             <bool>false</bool>
+            </property>
+            <property name="itemsExpandable">
+             <bool>false</bool>
+            </property>
+            <property name="expandsOnDoubleClick">
+             <bool>false</bool>
+            </property>
+            <attribute name="headerStretchLastSection">
+             <bool>false</bool>
+            </attribute>
+           </widget>
+          </item>
+          <item>
+           <widget class="PacmanWaitView" name="waitView"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="PacmanInfoBrowser" name="pacInfoView"/>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="movable">
+    <bool>false</bool>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomToolBarArea</set>
+   </property>
+   <property name="toolButtonStyle">
+    <enum>Qt::ToolButtonTextBesideIcon</enum>
+   </property>
+   <property name="floatable">
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>BottomToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionInstall"/>
+  </widget>
+  <action name="actionInstall">
+   <property name="icon">
+    <iconset resource="qpacman.qrc">
+     <normaloff>:/pics/dialog-ok-apply.png</normaloff>:/pics/dialog-ok-apply.png</iconset>
+   </property>
+   <property name="text">
+    <string>Install</string>
+   </property>
+   <property name="toolTip">
+    <string>Installs local packages</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+I</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PacmanInfoBrowser</class>
+   <extends>QTextBrowser</extends>
+   <header>pacmaninfobrowser.h</header>
+  </customwidget>
+  <customwidget>
+   <class>PacmanWaitView</class>
+   <extends>QGraphicsView</extends>
+   <header>pacmanwaitview.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="qpacman.qrc"/>
+ </resources>
+ <connections/>
+</ui>
