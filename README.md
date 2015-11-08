@@ -7,9 +7,9 @@ QPacmanServer - dbus server program (works under root) - works with pacman utili
 QPacmanTray   - tray icon - checks updates, loads QPacman.
 QPacman       - main program
 
-COMPILATION:
+# COMPILATION:
 
-# pkgdir & srcdir/ for pkgbild
+pkgdir & srcdir/ is for pkgbild
 for subdir in $srcdir/QPacmanServer $srcdir/QPacmanTray $srcdir/QPacman
 do
 cd $subdir
