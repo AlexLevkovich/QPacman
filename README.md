@@ -12,12 +12,19 @@ QPacman       - main program
 # COMPILATION:
 
 pkgdir & srcdir/ is for pkgbild
+
 for subdir in $srcdir/QPacmanServer $srcdir/QPacmanTray $srcdir/QPacman
+
 do
+
 cd $subdir
+
 qmake "INSTALL_PREFIX=/usr" "INSTALL_ROOT=$pkgdir" CONFIG+=release CONFIG-=debug
+
 make
+
 make install
+
 done
 
 Qt verions: QT4 or QT5
