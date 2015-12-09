@@ -221,7 +221,14 @@ void MainWindow::db_refreshed(PacmanProcessReader * reader) {
     PacmanSimpleUpdatesReader updatesreader;
     connect(&updatesreader,SIGNAL(was_error(const QString &,const QString &)),this,SLOT(was_error(const QString &,const QString &)));
     updatesreader.waitToComplete();
-    if (updatesreader.exitCode() != 0) return;
+    if (updatesreader.exitCode() != 0) {
+        if (m_errors.isEmpty()) m_errors[updatesreader.command()] = tr("PacmanSimpleUpdatesReader returned a wrong code!")  + '\n';
+        wasError = true;
+        showErrorsBalloon();
+        playSoundForWasError();
+        tray.setIcon(errorIcon);
+        return;
+    }
 
     _areUpdates(updatesreader.packages());
 
