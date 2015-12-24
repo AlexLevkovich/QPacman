@@ -9,15 +9,23 @@
 #include <QPixmap>
 #include <QProcess>
 #include <QMessageBox>
-#include "pacmanballoontip.h"
 #include "pacmandbrefresher.h"
 #include "pacmansimpleupdatesreader.h"
 #include <QMessageBox>
 #include <QPushButton>
 #include "errordialog.h"
-#include "pacmanerrorballoontip.h"
+#include <QDebug>
 
 extern const char * pacmantray_version;
+const char * error_str = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">"
+                         "<html><head><meta name=\"qrichtext\" content=\"1\" /></head><body style=\" font-style:normal;\">"
+                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%1</p>"
+                         "</body></html>";
+static const char * message_str_part1 = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">"
+                                        "<html><head><meta name=\"qrichtext\" content=\"1\" /></head><body style=\" font-style:normal;\">"
+                                        "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">%1</span></p>";
+static const char * message_str_packg = "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%1</p>";
+static const char * message_str_part2 = "</body></html>";
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow),
                                           errorIcon(":/pics/kpk-important.png"),
@@ -25,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
                                           good_player(":/sound/KDE-Sys-App-Positive.ogg"),
                                           bad_player(":/sound/KDE-Sys-App-Error.ogg"),
                                           checkingLock("/tmp/QPacmanTray_checker"),
-                                          tray(this) {
+                                          tray(NULL) {
     ui->setupUi(this);
 
     refresher = NULL;
@@ -45,15 +53,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     err_interval = settings.value("settings/err_interval",5).toInt();
     doPlaySound = settings.value("settings/playSound",true).toBool();
 
-    tray.setIcon(packageIcon);
-    checkUpdatesAction = menu.addAction(QIcon(":/pics/updates.png"),tr("Check the updates"),this,SLOT(timeout()));
-    updateAction = menu.addAction(QIcon(":/pics/PacmanTray-arch_logo.png"),tr("Update"),this,SLOT(onUpdate()));
-    errorAction = menu.addAction(errorIcon,tr("Show the last errors..."),this,SLOT(onShowErrors()));
-    menu.addAction(tr("Settings..."),this,SLOT(onSettings()));
-    menu.addAction(tr("About..."),this,SLOT(onAbout()));
-    menu.addAction(tr("Quit"),this,SLOT(onQuit()));
-    tray.setContextMenu(&menu);
-    connect(&tray,SIGNAL(activated(SystemTrayIcon::ActivationReason)),this,SLOT(trayActivated(SystemTrayIcon::ActivationReason)));
+    checkUpdatesAction = new QAction(QIcon(":/pics/updates.png"),tr("Check the updates"),this);
+    updateAction = new QAction(QIcon(":/pics/PacmanTray-arch_logo.png"),tr("Update"),this);
+    errorAction = new QAction(errorIcon,tr("Show the last errors..."),this);
+    connect(checkUpdatesAction,SIGNAL(triggered()),this,SLOT(timeout()));
+    connect(updateAction,SIGNAL(triggered()),this,SLOT(onUpdate()));
+    connect(errorAction,SIGNAL(triggered()),this,SLOT(onShowErrors()));
 
     connect(ui->toolBarWidget,SIGNAL(actionCheck_triggered()),checkUpdatesAction,SIGNAL(triggered()));
     connect(ui->toolBarWidget,SIGNAL(actionUpdate_triggered()),updateAction,SIGNAL(triggered()));
@@ -66,11 +71,36 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(&timer,SIGNAL(timeout()),this,SLOT(timeout()));
 
     movie.setFileName(":/pics/checking.gif");
+    movie.setSpeed(60);
 
-    //QThread::sleep(4);
     timeout();
     setVisible(false);
     emit actionErrorsUIUpdate(false);
+}
+
+void MainWindow::showTray(const QIcon & icon) {
+    if (tray == NULL) {
+        tray = new QSystemTrayIcon(this);
+        QMenu * menu = new QMenu(this);
+        menu->addAction(checkUpdatesAction);
+        menu->addAction(updateAction);
+        menu->addAction(errorAction);
+        menu->addAction(tr("Settings..."),this,SLOT(onSettings()));
+        menu->addAction(tr("About..."),this,SLOT(onAbout()));
+        menu->addAction(tr("Quit"),this,SLOT(onQuit()));
+        tray->setContextMenu(menu);
+        connect(tray,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+    }
+    tray->setIcon(icon);
+    tray->show();
+}
+
+void MainWindow::hideTray() {
+    if (tray == NULL) return;
+    QMenu * menu = tray->contextMenu();
+    delete tray;
+    if (menu != NULL) delete menu;
+    tray = NULL;
 }
 
 void MainWindow::onActionCheckUIUpdate(bool flag) {
@@ -109,16 +139,11 @@ void MainWindow::on_buttonBox_rejected() {
     setVisible(false);
 }
 
-void MainWindow::trayActivated(SystemTrayIcon::ActivationReason reason) {
-    if (reason == SystemTrayIcon::DoubleClick) onSettings();
-    else if (reason == SystemTrayIcon::Trigger && !isCheckingUpdates) {
+void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
+    if (reason == QSystemTrayIcon::DoubleClick) onSettings();
+    else if (reason == QSystemTrayIcon::Trigger && !isCheckingUpdates) {
         if (packages.count() > 0) updateRequested();
         else if (isConnected) timeout();
-    }
-    else if (reason == SystemTrayIcon::ToolTip) {
-        if (!wasError && !isCheckingUpdates) showPackagesBalloon();
-        else if (wasError) showErrorsBalloon();
-        else if (isCheckingUpdates) tray.showMessage(tr("Checking updates..."),"",SystemTrayIcon::Information,3000);
     }
 }
 
@@ -151,22 +176,20 @@ public:
     TimeOutEnd(MainWindow * mainWindow,bool lastUpdate = false) {
         this->mainWindow = mainWindow;
         this->lastUpdate = lastUpdate;
+		def_checking_updates = false;
     }
 
     ~TimeOutEnd() {
-        if (lastUpdate) {
-            mainWindow->movie.stop();
-            mainWindow->isCheckingUpdates = false;
-        }
-        else {
-            if (mainWindow->wasError) mainWindow->isCheckingUpdates = false;
-        }
+		mainWindow->isCheckingUpdates = def_checking_updates;
+        if (lastUpdate) mainWindow->movie.stop();
         emit mainWindow->actionCheckUIUpdate(!mainWindow->isGuiAppActive() && !mainWindow->isCheckingUpdates);
         emit mainWindow->actionUpdateUIUpdate(!mainWindow->isGuiAppActive() && !mainWindow->isCheckingUpdates && !mainWindow->wasError);
         emit mainWindow->actionErrorsUIUpdate(mainWindow->wasError && !mainWindow->isGuiAppActive());
         mainWindow->timer.start(((mainWindow->wasError)?mainWindow->err_interval:mainWindow->interval)*60000);
         if (mainWindow->wasError || lastUpdate) mainWindow->checkingLock.unlock();
     }
+	
+	bool def_checking_updates;
 
 private:
     MainWindow * mainWindow;
@@ -188,17 +211,16 @@ void MainWindow::timeout() {
 
     if (!checkingLock.tryLock()) {
         was_error(tr("Cannot lock checkingLock!!!"),"timeout");
-        wasError = true;
-        tray.setIcon(errorIcon);
-        tray.show();
         return;
     }
 
     if (isGuiAppActive()) return;
 
-    packages.clear();
+	temp.def_checking_updates = true;
+	packages.clear();
     movie.start();
-    tray.show();
+    showTray(errorIcon);
+    tray->setToolTip(tr("Checking updates..."));
 
     refresher = new PacmanDBRefresher(this);
     connect(refresher,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(db_refreshed(PacmanProcessReader *)));
@@ -206,7 +228,7 @@ void MainWindow::timeout() {
 }
 
 void MainWindow::checking_frame() {
-    tray.setIcon(QIcon(movie.currentPixmap()));
+    showTray(QIcon(movie.currentPixmap()));
 }
 
 void MainWindow::db_refreshed(PacmanProcessReader * reader) {
@@ -221,14 +243,7 @@ void MainWindow::db_refreshed(PacmanProcessReader * reader) {
     PacmanSimpleUpdatesReader updatesreader;
     connect(&updatesreader,SIGNAL(was_error(const QString &,const QString &)),this,SLOT(was_error(const QString &,const QString &)));
     updatesreader.waitToComplete();
-    if (updatesreader.exitCode() != 0) {
-        if (m_errors.isEmpty()) m_errors[updatesreader.command()] = tr("PacmanSimpleUpdatesReader returned a wrong code!")  + '\n';
-        wasError = true;
-        showErrorsBalloon();
-        playSoundForWasError();
-        tray.setIcon(errorIcon);
-        return;
-    }
+    if (updatesreader.exitCode() != 0) return;
 
     _areUpdates(updatesreader.packages());
 
@@ -240,50 +255,37 @@ void MainWindow::db_refreshed(PacmanProcessReader * reader) {
 void MainWindow::was_error(const QString & error,const QString & command) {
     if (error.isEmpty()) return;
     movie.stop();
-    showErrorsBalloon();
-    playSoundForWasError();
     m_errors[command] += error + '\n';
     wasError = true;
-    tray.setIcon(errorIcon);
+    showTray(errorIcon);
+    tray->setToolTip(QString(error_str).arg(tr("There were the errors during the last checking...")));
+    playSoundForWasError();
 }
 
 void MainWindow::_areUpdates(const QStringList & packages) {
     this->packages = packages;
     if (packages.count() > 0) {
-        tray.setIcon(packageIcon);
-        tray.setVisible(true);
-        if (showPackagesBalloon()) playSoundForCheckOk();
-    }
-    else if (!wasError) tray.setVisible(false);
-}
+        showTray(packageIcon);
 
-bool MainWindow::showPackagesBalloon() {
-    if (packages.count() > 0) {
-        tray.hideMessageBalloon();
-        PacmanBalloonTip * balloon = new PacmanBalloonTip(packages,&tray);
-        connect(balloon,SIGNAL(updateRequested()),this,SLOT(updateRequested()));
-        balloon->show();
-        return true;
-    }
-    return false;
-}
+        QString message_str = QString(message_str_part1).arg(tr("New packages are available:"));
+        int count = qMin(packages.count(),6);
+        for (int i=0;i<count;i++) {
+            message_str+=QString(message_str_packg).arg(packages[i]);
+        }
+        if (packages.count() > 6) message_str+=QString(message_str_packg).arg("...");
+        message_str+=message_str_part2;
+        tray->setToolTip(message_str);
 
-void MainWindow::showErrorsBalloon() {
-    if (wasError) {
-        tray.hideMessageBalloon();
-        PacmanErrorBalloonTip * balloon = new PacmanErrorBalloonTip(&tray);
-        connect(balloon,SIGNAL(showErrorsRequested()),this,SLOT(showErrorsRequested()));
-        balloon->show();
+        playSoundForCheckOk();
     }
+    else if (!wasError) hideTray();
 }
 
 void MainWindow::updateRequested() {
-    tray.hideMessageBalloon();
     onUpdate();
 }
 
 void MainWindow::showErrorsRequested() {
-    tray.hideMessageBalloon();
     onShowErrors();
 }
 
@@ -357,8 +359,10 @@ void MainWindow::terminate() {
 void MainWindow::dbusLoaded() {
     isConnected = true;
     wasError = false;
-    if (packages.count() > 0) tray.setIcon(packageIcon);
-    else tray.hide();
+    if (packages.count() > 0) {
+        showTray(packageIcon);
+    }
+    else hideTray();
     timeout();
 }
 
@@ -368,7 +372,6 @@ void MainWindow::dbusUnloaded() {
     isCheckingUpdates = false;
     was_error(tr("QPacmanServer service is unloaded!!! Restart it."),"DBus");
     timer.stop();
-    tray.show();
     emit actionCheckUIUpdate(false);
     emit actionUpdateUIUpdate(false);
     emit actionErrorsUIUpdate(wasError && !isGuiAppActive());
