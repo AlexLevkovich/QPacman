@@ -25,13 +25,11 @@ DEFINES += TRANS_DIR2=\\\"$$TRANS_DIR2\\\"
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    pacmanballoontip.cpp \
     singleapplication.cpp \
     pacmandbrefresher.cpp \
     pacmanprocessreader.cpp \
     errordialog.cpp \
     pacmansimpleupdatesreader.cpp \
-    pacmanerrorballoontip.cpp \
     toolbarwindow.cpp \
     jsondbsignals.cpp \
     pacmanserverinterface.cpp \
@@ -39,19 +37,14 @@ SOURCES += main.cpp\
     externalplayer.cpp \
     qlockfile.cpp \
     qlockfile_unix.cpp \
-    balloontip.cpp \
-    systemtrayicon.cpp \
-    systemtrayicon_x11.cpp \
     wraplabel.cpp
 
 HEADERS  += mainwindow.h \
-    pacmanballoontip.h \
     singleapplication.h \
     pacmandbrefresher.h \
     pacmanprocessreader.h \
     errordialog.h \
     pacmansimpleupdatesreader.h \
-    pacmanerrorballoontip.h \
     toolbarwindow.h \
     jsondbsignals.h \
     pacmanserverinterface.h \
@@ -59,9 +52,6 @@ HEADERS  += mainwindow.h \
     externalplayer.h \
     qlockfile.h \
     qlockfile_p.h \
-    balloontip.h \
-    systemtrayicon.h \
-    systemtrayicon_p.h \
     wraplabel.h
 
 FORMS    += mainwindow.ui \

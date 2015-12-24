@@ -7,7 +7,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "systemtrayicon.h"
+#include <QSystemTrayIcon>
 #include <QMenu>
 #include <QMap>
 #include <QTimer>
@@ -36,7 +36,7 @@ private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
     void on_quitButtonBox_accepted();
-    void trayActivated(SystemTrayIcon::ActivationReason reason);
+    void trayActivated(QSystemTrayIcon::ActivationReason reason);
     void onUpdate();
     void onSettings();
     void onAbout();
@@ -71,8 +71,7 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    SystemTrayIcon tray;
-    QMenu menu;
+    QSystemTrayIcon * tray;
     QAction * checkUpdatesAction;
     QAction * updateAction;
     QAction * errorAction;
@@ -96,10 +95,10 @@ private:
     ExternalPlayer bad_player;
 
     bool isGuiAppActive();
-    bool showPackagesBalloon();
-    void showErrorsBalloon();
     void playSoundForCheckOk();
     void playSoundForWasError();
+    void showTray(const QIcon & icon);
+    void hideTray();
 };
 
 #endif // MAINWINDOW_H

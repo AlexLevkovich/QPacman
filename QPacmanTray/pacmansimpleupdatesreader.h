@@ -14,10 +14,10 @@ class PacmanSimpleUpdatesReader : public PacmanProcessReader {
 public:
     explicit PacmanSimpleUpdatesReader(QObject *parent = 0);
     QStringList packages() const {return m_packages; }
+    QByteArray command() const;
 
 protected:
     void send_parameters();
-    QByteArray command() const;
 
 private slots:
     void on_packages_ready(const QStringList & packages);
