@@ -105,24 +105,20 @@ void PacmanInstallPackagesReader::readyReadStandardOutput() {
         if (install_wait && (packagesRetrieving || line.startsWith(RETRIEVING_PKGS_STR))) packagesRetrieving = true;
 
         if (!packagesRead && !install_wait) {
-            while (true) {
-                int index = line.indexOf(QRegExp("\\b\\d+\\b\\)\\s"));
-                if (index >= 0) {
-                    int index2 = line.indexOf(' ');
-                    if (index2 != -1) {
-                        int index3 = line.indexOf(' ',index2+1);
-                        QString str = (index3 == -1)?line.mid(index2+1).simplified():line.mid(index2+1,index3-index2-1).simplified();
-                        index2 = line.indexOf(") ");
-                        if (index2 != -1) {
-                            if (str.length() > 0) currentProviders[str] = line.mid(index,index2-index).toInt();
-                        }
-                        if (index3 >= 0) {
-                            line = line.mid(index3+1);
-                        }
-                        else break;
-                    }
+            for (int i=1;;i++) {
+                QString search_str = QString("%1) ").arg(i);
+                int index = line.indexOf(search_str);
+                if (index < 0) break;
+                line = line.mid(index+search_str.length());
+                int index2 = line.indexOf(' ',index+search_str.length());
+                if (index2 < 0) {
+                    currentProviders[line] = i;
+                    break;
                 }
-                else break;
+                else {
+                    currentProviders[line.mid(0,index2)] = i;
+                    line = line.mid(index2);
+                }
             }
         }
 
@@ -317,15 +313,10 @@ void PacmanInstallPackagesReader::sendAnswer(int answer) {
 }
 
 void PacmanInstallPackagesReader::sendChosenProvider(const QString & provider) {
-    m_providerIds.append(currentProviders[provider]);
     if (process.write(QString("%1\n").arg(currentProviders[provider]).toLocal8Bit()) == -1) {
         code = 1;
         return;
     }
     process.waitForBytesWritten(-1);
     currentProviders.clear();
-}
-
-QList<int> PacmanInstallPackagesReader::providerIds() const {
-    return m_providerIds;
 }

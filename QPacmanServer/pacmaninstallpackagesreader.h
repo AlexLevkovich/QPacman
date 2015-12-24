@@ -16,7 +16,6 @@ public:
     ~PacmanInstallPackagesReader();
     QStringList install_packages() const;
     QStringList remove_packages() const;
-    QList<int> providerIds() const;
     void sendChosenProvider(const QString & provider);
     void sendAnswer(int answer);
     void beginInstall();
@@ -61,7 +60,6 @@ private:
     int countRead;
     QMap<QString,int> currentProviders;
     QMap<QString,QStringList> m_messages;
-    QList<int> m_providerIds;
     QString m_outErrors;
     bool install_wait;
     int packages_count; // removal + installing ones
