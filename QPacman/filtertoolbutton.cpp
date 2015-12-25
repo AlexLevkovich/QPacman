@@ -128,7 +128,7 @@ bool FilterToolButton::setFilter(QMenu * menu,FilterToolButton::ItemId id,const 
 
 void FilterToolButton::onMenuItemSelected(QAction * action) {
     is_sel = ((action->menu() == NULL)?((IdAction *)action)->id():IS_UNKNOWN);
-    emit selected(getSelectedId(),action->text());
+    emit selected(getSelectedId(),action->iconText());
 }
 
 void FilterToolButton::triggerSignal(QAction * action) {

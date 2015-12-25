@@ -32,19 +32,19 @@ void SearchWidget::fillReposInCombo(const QStringList & repos) {
 }
 
 void SearchWidget::onSelectedFilter(FilterToolButton::ItemId itemId,const QString & group) {
-    emit search_changed(ui->searchBox->text(),ui->categoryButton->getSelectedId(),itemId,group,ui->repoButton->text());
+    emit search_changed(ui->searchBox->text(),ui->categoryButton->getSelectedId(),itemId,group,ui->repoButton->iconText());
 }
 
 void SearchWidget::onSelectedRepo(const QString & repo) {
-    emit search_changed(ui->searchBox->text(),ui->categoryButton->getSelectedId(),ui->filterButton->getSelectedId(),ui->filterButton->text(),repo);
+    emit search_changed(ui->searchBox->text(),ui->categoryButton->getSelectedId(),ui->filterButton->getSelectedId(),ui->filterButton->iconText(),repo);
 }
 
 void SearchWidget::onSelectedCategory(CategoryToolButton::ItemId itemId) {
-    emit search_changed(ui->searchBox->text(),itemId,ui->filterButton->getSelectedId(),ui->filterButton->text(),ui->repoButton->text());
+    emit search_changed(ui->searchBox->text(),itemId,ui->filterButton->getSelectedId(),ui->filterButton->iconText(),ui->repoButton->iconText());
 }
 
 void SearchWidget::onTextChanged(const QString & text) {
-    emit search_changed(text,ui->categoryButton->getSelectedId(),ui->filterButton->getSelectedId(),ui->filterButton->text(),ui->repoButton->text());
+    emit search_changed(text,ui->categoryButton->getSelectedId(),ui->filterButton->getSelectedId(),ui->filterButton->iconText(),ui->repoButton->iconText());
 }
 
 void SearchWidget::clearSearchText() {

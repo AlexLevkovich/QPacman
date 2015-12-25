@@ -43,5 +43,5 @@ void RepoToolButton::fill(const QStringList & repos) {
 }
 
 void RepoToolButton::onMenuItemSelected(QAction * action) {
-    emit selected(action->text());
+    emit selected(action->iconText());
 }

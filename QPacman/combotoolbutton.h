@@ -16,6 +16,7 @@ class ComboToolButton : public QToolButton {
 public:
     explicit ComboToolButton(QWidget *parent = 0);
     QAction * currentAction();
+    QString iconText() const;
 
 protected:
     void showEvent(QShowEvent * event);

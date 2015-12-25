@@ -25,7 +25,7 @@ ComboToolButton::ComboToolButton(QWidget *parent) : QToolButton(parent) {
 }
 
 void ComboToolButton::onMenuSelected(QAction * action) {
-    setText(action->text());
+    setText(action->iconText());
     curr_action = action;
 }
 
@@ -40,6 +40,10 @@ void ComboToolButton::showEvent(QShowEvent * event) {
             if (actions.count() > 0) onMenuSelected(actions.at(0));
         }
     }
+}
+
+QString ComboToolButton::iconText() const {
+    return (curr_action == NULL)?text():curr_action->iconText();
 }
 
 QAction * ComboToolButton::currentAction() {

@@ -131,7 +131,7 @@ QTreeWidgetItem * TreeMenuWidget::initItem(QTreeWidgetItem * parent,TreeMenuWidg
 
 void TreeMenuWidget::setItem(QTreeWidgetItem * item,QAction * action) {
     item->setData(0,Qt::UserRole,QVariant::fromValue<QAction *>(action));
-    item->setText(0,action->text());
+    item->setText(0,action->iconText());
     QIcon icon = action->icon();
     item->setIcon(0,action->isIconVisibleInMenu()?((icon.isNull())?QIcon(":/pics/notinstalled.png"):icon):QIcon());
     if (action->isCheckable()) item->setCheckState(0,action->isChecked()?Qt::Checked:Qt::Unchecked);
