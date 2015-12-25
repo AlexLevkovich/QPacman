@@ -191,6 +191,7 @@ icon.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/pixmaps/
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/bin/
 
 kde.files = QPacmanKDEService.desktop
-kde.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/kde4/services/ServiceMenus/
+greaterThan(QT_MAJOR_VERSION, 4): kde.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/kservices5/
+lessThan(QT_MAJOR_VERSION, 5): kde.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/kde4/services/ServiceMenus/
 
 INSTALLS += target qm desktop icon kde
