@@ -53,87 +53,94 @@ public:
 protected:
     PacmanServerInterface(QObject *parent = 0);
 
+private slots:
+    void _start();
+
 public Q_SLOTS: // METHODS
-    inline QDBusPendingReply<QString> commandRequest(const QByteArray &command) {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(command);
-        return asyncCallWithArgumentList(QLatin1String("commandRequest"), argumentList);
+    inline QString commandRequest(const QByteArray &command) {
+        QDBusReply<QString> reply = call(QLatin1String("commandRequest"), QVariant::fromValue(command));
+        if (reply.isValid()) return reply.value();
+        return reply.error().message();
     }
 
-    inline QDBusPendingReply<> setDependance(bool doDeps) {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(doDeps);
-        return asyncCallWithArgumentList(QLatin1String("setDependance"), argumentList);
+    inline void setDependance(bool doDeps) {
+        call(QLatin1String("setDependance"), QVariant::fromValue(doDeps));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> setFilePath(const QString &file_path) {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(file_path);
-        return asyncCallWithArgumentList(QLatin1String("setFilePath"), argumentList);
+    inline void setFilePath(const QString &file_path) {
+        call(QLatin1String("setFilePath"), QVariant::fromValue(file_path));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> setUrl(const QUrl &url) {
-        QList<QVariant> argumentList;
-        QString str = url.toString();
-        argumentList << QVariant::fromValue(url.toString());
-        return asyncCallWithArgumentList(QLatin1String("setUrl"), argumentList);
+    inline void setUrl(const QUrl &url) {
+        call(QLatin1String("setUrl"), QVariant::fromValue(url.toString()));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> setPackageList(const QStringList &packages) {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(packages);
-        return asyncCallWithArgumentList(QLatin1String("setPackageList"), argumentList);
+    inline void setPackageList(const QStringList &packages) {
+        call(QLatin1String("setPackageList"), QVariant::fromValue(packages));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> setPackages(const QString &packages) {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(packages);
-        return asyncCallWithArgumentList(QLatin1String("setPackages"), argumentList);
+    inline void setPackages(const QString &packages) {
+        call(QLatin1String("setPackages"), QVariant::fromValue(packages));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> setPassword(const QByteArray &password) {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(password);
-        return asyncCallWithArgumentList(QLatin1String("setPassword"), argumentList);
+    inline void setPassword(const QByteArray &password) {
+        call(QLatin1String("setPassword"), QVariant::fromValue(password));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> setSelectedProvider(const QString &provider) {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(provider);
-        return asyncCallWithArgumentList(QLatin1String("setSelectedProvider"), argumentList);
+    inline void setSelectedProvider(const QString &provider) {
+        call(QLatin1String("setSelectedProvider"), QVariant::fromValue(provider));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> terminateRequest(const QByteArray & command) {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(command);
-        return asyncCallWithArgumentList(QLatin1String("terminateRequest"), argumentList);
+    inline void terminateRequest(const QByteArray & command) {
+        call(QLatin1String("terminateRequest"), QVariant::fromValue(command));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> beginInstall() {
-        QList<QVariant> argumentList;
-        return asyncCallWithArgumentList(QLatin1String("beginInstall"), argumentList);
+    inline void beginInstall() {
+        call(QLatin1String("beginInstall"));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> cancelInstall() {
-        QList<QVariant> argumentList;
-        return asyncCallWithArgumentList(QLatin1String("cancelInstall"), argumentList);
+    inline void cancelInstall() {
+        call(QLatin1String("cancelInstall"));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> beginRemove() {
-        QList<QVariant> argumentList;
-        return asyncCallWithArgumentList(QLatin1String("beginRemove"), argumentList);
+    inline void beginRemove() {
+        call(QLatin1String("beginRemove"));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> cancelRemove() {
-        QList<QVariant> argumentList;
-        return asyncCallWithArgumentList(QLatin1String("cancelRemove"), argumentList);
+    inline void cancelRemove() {
+        call(QLatin1String("cancelRemove"));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
 
-    inline QDBusPendingReply<> sendAnswer(int answer) {
-        QList<QVariant> argumentList;
-        argumentList << QVariant::fromValue(answer);
-        return asyncCallWithArgumentList(QLatin1String("sendAnswer"), argumentList);
+    inline void sendAnswer(int answer) {
+        call(QLatin1String("sendAnswer"), QVariant::fromValue(answer));
+        QDBusError err = lastError();
+        if (err.isValid()) emit dbus_error(err.message());
     }
+
 
 protected slots:
 #ifdef PACMANENTRY
@@ -166,6 +173,7 @@ signals: // SIGNALS
     void show_tray_window();
     void client_started();
     void client_exited();
+    void dbus_error(const QString & msg);
 
 private:
     static QObject * save_parent;

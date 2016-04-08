@@ -11,7 +11,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../main.cpp" line="+114"/>
+        <location filename="../main.cpp" line="+119"/>
         <source>Invalid password!!!</source>
         <translation type="unfinished">Некарэктны пароль!!!</translation>
     </message>
@@ -79,7 +79,7 @@
 %1</translation>
     </message>
     <message>
-        <location filename="../pacmanentry.cpp" line="+388"/>
+        <location filename="../pacmanentry.cpp" line="+393"/>
         <location line="+30"/>
         <source>Name</source>
         <translation type="unfinished">Назва</translation>
@@ -240,7 +240,7 @@
         <translation type="obsolete">Немагчыма скапіраваць %1 в %2</translation>
     </message>
     <message>
-        <location filename="../pacmandbrefresher.cpp" line="+24"/>
+        <location filename="../pacmandbrefresher.cpp" line="+29"/>
         <source>Cannot copy pacman.conf to %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -327,7 +327,7 @@
 <context>
     <name>PacmanProcessReader</name>
     <message>
-        <location filename="../pacmanprocessreader.cpp" line="+86"/>
+        <location filename="../pacmanprocessreader.cpp" line="+91"/>
         <source>The process failed to start.</source>
         <translation type="unfinished">Працэс не змог запусціцца.</translation>
     </message>
@@ -360,7 +360,7 @@
 <context>
     <name>PacmanSetupInfoReader</name>
     <message>
-        <location filename="../pacmansetupinforeader.cpp" line="+42"/>
+        <location filename="../pacmansetupinforeader.cpp" line="+47"/>
         <source>QPacman: Cannot correctly parse the pacman&apos;s output!!!
 </source>
         <translation type="unfinished">QPacman: Не магу правільна інтэрпрэтаваць выхадныя дадзеныя з pacman!!!</translation>
@@ -447,7 +447,7 @@
 <context>
     <name>PacmanDBusServer</name>
     <message>
-        <location filename="../pacmandbusserver.cpp" line="+119"/>
+        <location filename="../pacmandbusserver.cpp" line="+124"/>
         <source>Cannot remove the contents of directory!!!</source>
         <translation type="unfinished">Немагчыма выдаліць змесціва дырэкторыі!!!</translation>
     </message>
@@ -493,7 +493,7 @@
 <context>
     <name>SingleApplication</name>
     <message>
-        <location filename="../singleapplication.cpp" line="+20"/>
+        <location filename="../singleapplication.cpp" line="+24"/>
         <source>One instance is already running!!!</source>
         <translation type="unfinished">Адна версія праграмы ўжо працуе!!!</translation>
     </message>
@@ -568,7 +568,7 @@
         <translation type="obsolete">Немагчыма скапіраваць %1 в %2</translation>
     </message>
     <message>
-        <location filename="../pacmaninstallpackagesreader.cpp" line="+38"/>
+        <location filename="../pacmaninstallpackagesreader.cpp" line="+43"/>
         <source>Cannot copy pacman.conf to %1</source>
         <translation type="unfinished"></translation>
     </message>

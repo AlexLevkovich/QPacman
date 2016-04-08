@@ -50,6 +50,8 @@ PacmanServerInterface::PacmanServerInterface(QObject *parent)
     connection().connect(name(),path(),name(),"package_ready",this,SLOT(on_package_ready(const QByteArray &)));
 #endif
     connection().connect(name(),path(),name(),"links_ready",this,SLOT(on_links_ready(const QByteArray &)));
+
+    QMetaObject::invokeMethod(this,"_start",Qt::QueuedConnection);
 }
 
 PacmanServerInterface::~PacmanServerInterface() {
@@ -57,6 +59,12 @@ PacmanServerInterface::~PacmanServerInterface() {
     connection().disconnect(name(),path(),name(),"package_ready",this,SLOT(on_package_ready(const QByteArray &)));
 #endif
     connection().disconnect(name(),path(),name(),"links_ready",this,SLOT(on_links_ready(const QByteArray &)));
+}
+
+void PacmanServerInterface::_start() {
+    QDBusError err = lastError();
+    if (err.isValid()) emit dbus_error(err.message());
+    else if (!isValid()) emit dbus_error(tr("Invalid DBUS server interface!"));
 }
 
 #ifdef PACMANENTRY
@@ -85,3 +93,4 @@ void PacmanServerInterface::on_dbus_loaded() {
 void PacmanServerInterface::on_dbus_unloaded() {
     disconnect(p_dbus_wacher,SIGNAL(unloaded()),p_dbus_interface,SLOT(on_dbus_unloaded()));
 }
+

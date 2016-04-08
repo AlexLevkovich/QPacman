@@ -4,7 +4,7 @@
 <context>
     <name>ErrorDialog</name>
     <message>
-        <location filename="../errordialog.h" line="+10"/>
+        <location filename="../errordialog.h" line="+15"/>
         <source>Pacman&apos;s error</source>
         <translation type="unfinished">Pacman: памылка</translation>
     </message>
@@ -45,13 +45,13 @@
         <translation type="unfinished">Падаць гукавы сігнал калі абнаўлення былі знойдзеныя</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+36"/>
-        <location line="+14"/>
+        <location filename="../mainwindow.cpp" line="+48"/>
+        <location line="+42"/>
         <source>Quit</source>
         <translation type="unfinished">Выйсці</translation>
     </message>
     <message>
-        <location line="-5"/>
+        <location line="-34"/>
         <source>Check the updates</source>
         <translation type="unfinished">Праверыць абнаўлення</translation>
     </message>
@@ -66,7 +66,7 @@
         <translation type="unfinished">Паказаць апошнія памылкі...</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="+30"/>
         <source>Settings...</source>
         <translation type="unfinished">Налады...</translation>
     </message>
@@ -76,12 +76,12 @@
         <translation type="unfinished">Аб праграме...</translation>
     </message>
     <message>
-        <location line="+68"/>
+        <location line="+134"/>
         <source>Checking updates...</source>
         <translation type="unfinished">Праверка абнаўленняў...</translation>
     </message>
     <message>
-        <location line="+17"/>
+        <location line="-60"/>
         <source>About QPacmanTray...</source>
         <translation type="unfinished">Пра QPacmanTray...</translation>
     </message>
@@ -91,7 +91,17 @@
         <translation type="unfinished">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - праграма для аўтаматычнай праверкі абнаўленняў. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  неабходны, чтобы гэта праграма працавала.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версія %1.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Распрацоўшчык: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Ліцэнзія: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="+179"/>
+        <location line="+98"/>
+        <source>There were the errors during the last checking...</source>
+        <translation type="unfinished">Былі памылкі падчас апошняй праверкі...</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>New packages are available:</source>
+        <translation type="unfinished">Даступныя новыя пакеты:</translation>
+    </message>
+    <message>
+        <location line="+52"/>
         <source>Press button to see the errors.</source>
         <translation type="unfinished">Націсніце пімпачку каб убачыць памылкі.</translation>
     </message>
@@ -100,7 +110,7 @@
         <translation type="obsolete">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - праграма для аўтаматычнай праверкі абнаўленняў. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  неабходны, чтобы гэта праграма працавала.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версія 2.0.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Распрацоўшчык: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Ліцэнзія: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="-127"/>
+        <location line="-109"/>
         <source>Cannot lock checkingLock!!!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -109,7 +119,7 @@
         <translation type="obsolete">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - праграма для аўтаматычнай праверкі абнаўленняў. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  неабходны, чтобы гэта праграма працавала.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версія 1.0.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Распрацоўшчык: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Ліцэнзія: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="+111"/>
+        <location line="+93"/>
         <source>Warning...</source>
         <translation type="unfinished">Папярэджанне...</translation>
     </message>
@@ -137,7 +147,7 @@ It is not good idea to abort pacman execution, Continue?</source>
         <translation type="obsolete">Паказаць лог</translation>
     </message>
     <message>
-        <location line="+52"/>
+        <location line="+54"/>
         <source>QPacmanServer service is unloaded!!! Restart it.</source>
         <translation type="unfinished">QPacmanServer сэрвіс выгрузіўся!!! Перестартуйце яго.</translation>
     </message>
@@ -157,14 +167,12 @@ It is not good idea to abort pacman execution, Continue?</source>
         <translation type="obsolete">Абнавіць</translation>
     </message>
     <message>
-        <location filename="../pacmanballoontip.cpp" line="+71"/>
         <source>Update...</source>
-        <translation type="unfinished">Абнавіць...</translation>
+        <translation type="obsolete">Абнавіць...</translation>
     </message>
     <message>
-        <location line="+8"/>
         <source>New packages are available:</source>
-        <translation type="unfinished">Даступныя новыя пакеты:</translation>
+        <translation type="obsolete">Даступныя новыя пакеты:</translation>
     </message>
     <message>
         <source>Errors</source>
@@ -182,19 +190,16 @@ It is not good idea to abort pacman execution, Continue?</source>
         <translation type="obsolete">Паказаць...</translation>
     </message>
     <message>
-        <location filename="../pacmanerrorballoontip.cpp" line="+33"/>
         <source>Errors</source>
-        <translation type="unfinished">Памылкі</translation>
+        <translation type="obsolete">Памылкі</translation>
     </message>
     <message>
-        <location line="-4"/>
         <source>There were the errors during the last checking...</source>
-        <translation type="unfinished">Былі памылкі падчас апошняй праверкі...</translation>
+        <translation type="obsolete">Былі памылкі падчас апошняй праверкі...</translation>
     </message>
     <message>
-        <location line="+0"/>
         <source>Details...</source>
-        <translation type="unfinished">Падрабязна...</translation>
+        <translation type="obsolete">Падрабязна...</translation>
     </message>
 </context>
 <context>
@@ -297,7 +302,7 @@ It is not good idea to abort pacman execution, Continue?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../singleapplication.cpp" line="+24"/>
+        <location filename="../singleapplication.cpp" line="+29"/>
         <source>Cannot connect to dbus&apos; QPacmanServer!</source>
         <translation type="unfinished">Не магу злучыцца з dbus &apos;QPacmanServer!</translation>
     </message>

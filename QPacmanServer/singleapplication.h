@@ -17,9 +17,6 @@ class SingleApplication : public QCoreApplication {
 public:
     explicit SingleApplication(int & argc, char ** argv);
 
-protected:
-    bool eventFilter(QObject * obj,QEvent * event);
-
 private slots:
     void aboutToQuit();
     void quit();

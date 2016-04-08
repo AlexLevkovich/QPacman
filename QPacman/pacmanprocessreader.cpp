@@ -18,6 +18,7 @@ PacmanProcessReader::PacmanProcessReader(QObject *parent) : QObject(parent) {
 
     connect(PacmanServerInterface::instance(),SIGNAL(command_finished(const QByteArray &,const QString &)),this,SLOT(onCommandFinished(const QByteArray &,const QString &)));
     connect(PacmanServerInterface::watcher(),SIGNAL(unloaded()),this,SLOT(_finish()));
+    connect(PacmanServerInterface::instance(),SIGNAL(dbus_error(const QString &)),this,SLOT(error(const QString &)),Qt::QueuedConnection);
 
     QMetaObject::invokeMethod(this,"_start",Qt::QueuedConnection);
 }

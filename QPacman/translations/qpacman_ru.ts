@@ -4,7 +4,7 @@
 <context>
     <name>CategoryToolButton</name>
     <message>
-        <location filename="../categorytoolbutton.cpp" line="+6"/>
+        <location filename="../categorytoolbutton.cpp" line="+11"/>
         <source>Search by name</source>
         <translation type="unfinished">Искать по имени</translation>
     </message>
@@ -27,7 +27,7 @@
 <context>
     <name>DBRefreshDialog</name>
     <message>
-        <location filename="../dbrefreshdialog.cpp" line="+5"/>
+        <location filename="../dbrefreshdialog.cpp" line="+10"/>
         <source>Please wait...</source>
         <translation type="unfinished">Подождите пожалуйста...</translation>
     </message>
@@ -40,7 +40,7 @@
 <context>
     <name>ErrorDialog</name>
     <message>
-        <location filename="../errordialog.h" line="+10"/>
+        <location filename="../errordialog.h" line="+15"/>
         <source>Pacman&apos;s error</source>
         <translation type="unfinished">Pacman: oшибка </translation>
     </message>
@@ -83,7 +83,7 @@
 <context>
     <name>FilterToolButton</name>
     <message>
-        <location filename="../filtertoolbutton.cpp" line="+35"/>
+        <location filename="../filtertoolbutton.cpp" line="+40"/>
         <source>Filters the packages by different groups</source>
         <translation type="unfinished">Распределяет пакеты по группам</translation>
     </message>
@@ -131,7 +131,7 @@
 <context>
     <name>InstallProgressDialog</name>
     <message>
-        <location filename="../installprogressdialog.cpp" line="+94"/>
+        <location filename="../installprogressdialog.cpp" line="+99"/>
         <source>Installing the packages...</source>
         <translation type="unfinished">Установка пакетов...</translation>
     </message>
@@ -178,7 +178,7 @@
         <translation type="obsolete">Пакеты небыли установлены!!! Пожалуйста проверьте зависимости!</translation>
     </message>
     <message>
-        <location filename="../localpackagemainwindow.cpp" line="+115"/>
+        <location filename="../localpackagemainwindow.cpp" line="+120"/>
         <source>Post messages...</source>
         <translation type="unfinished">Послеустановочные сообщения...</translation>
     </message>
@@ -297,7 +297,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+189"/>
+        <location filename="../mainwindow.cpp" line="+194"/>
         <source>The contents of cache directory will be removed.
 Are you sure to continue?</source>
         <translation type="unfinished">Все содержимое папки с кешом будет удалено. Вы уверены?</translation>
@@ -361,7 +361,7 @@ Are you sure to continue?</source>
         <translation type="unfinished">Версия</translation>
     </message>
     <message>
-        <location filename="../packagechangesdialog.cpp" line="+24"/>
+        <location filename="../packagechangesdialog.cpp" line="+29"/>
         <source>The following packages will be removed</source>
         <translation type="unfinished">Пакеты для удаления</translation>
     </message>
@@ -374,7 +374,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanItemModel</name>
     <message>
-        <location filename="../pacmanitemmodel.cpp" line="+47"/>
+        <location filename="../pacmanitemmodel.cpp" line="+52"/>
         <source>Name of package</source>
         <translation type="unfinished">Название пакета</translation>
     </message>
@@ -431,7 +431,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanSimpleItemModel</name>
     <message>
-        <location filename="../pacmansimpleitemmodel.cpp" line="+52"/>
+        <location filename="../pacmansimpleitemmodel.cpp" line="+57"/>
         <source>Name of package</source>
         <translation type="unfinished">Название пакета</translation>
     </message>
@@ -449,7 +449,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanView</name>
     <message>
-        <location filename="../pacmanview.cpp" line="+86"/>
+        <location filename="../pacmanview.cpp" line="+91"/>
         <source>%1 replaces %2.
 Do you want to mark it for installation?</source>
         <translation type="unfinished">%1 заменяет %2.
@@ -463,7 +463,7 @@ Do you want to mark it for installation?</source>
 <context>
     <name>PostErrorDlg</name>
     <message>
-        <location filename="../posterrordlg.cpp" line="+12"/>
+        <location filename="../posterrordlg.cpp" line="+17"/>
         <source>Error(s) during executing of the command:
 %1</source>
         <translation type="unfinished">Ошибки при исполнении команды:
@@ -473,7 +473,7 @@ Do you want to mark it for installation?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../pacmanentry.cpp" line="+388"/>
+        <location filename="../pacmanentry.cpp" line="+393"/>
         <location line="+30"/>
         <source>Name</source>
         <translation type="unfinished">Название</translation>
@@ -622,7 +622,7 @@ Do you want to mark it for installation?</source>
         <translation type="unfinished">Переустановить</translation>
     </message>
     <message>
-        <location filename="../static.cpp" line="+23"/>
+        <location filename="../static.cpp" line="+28"/>
         <source>All </source>
         <translation type="unfinished">Все</translation>
     </message>
@@ -669,7 +669,7 @@ Are you sure?</source>
 Вы уверены?</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="+41"/>
+        <location filename="../main.cpp" line="+46"/>
         <source>You should not be root!</source>
         <translation type="unfinished">Вы не должны быть суперпользователем!</translation>
     </message>
@@ -703,7 +703,7 @@ Please wait some time.</source>
 <context>
     <name>RemoveProgressDialog</name>
     <message>
-        <location filename="../removeprogressdialog.cpp" line="+14"/>
+        <location filename="../removeprogressdialog.cpp" line="+19"/>
         <source>Removing the packages...</source>
         <translation type="unfinished">Удаление пакетов...</translation>
     </message>
@@ -721,7 +721,7 @@ Please wait some time.</source>
 <context>
     <name>RepoToolButton</name>
     <message>
-        <location filename="../repotoolbutton.cpp" line="+7"/>
+        <location filename="../repotoolbutton.cpp" line="+12"/>
         <source>Filters the packages by selected repository</source>
         <translation type="unfinished">Распределяет пакеты по репозиториям</translation>
     </message>
@@ -787,7 +787,7 @@ Please wait some time.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../toolbarrightwidget.cpp" line="+11"/>
+        <location filename="../toolbarrightwidget.cpp" line="+16"/>
         <source>Help...</source>
         <translation type="unfinished">Помощь...</translation>
     </message>
@@ -1130,8 +1130,16 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MessageDialog</name>
     <message>
-        <location filename="../messagedialog.h" line="+10"/>
+        <location filename="../messagedialog.h" line="+15"/>
         <source>Pacman&apos;s message</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PacmanServerInterface</name>
+    <message>
+        <location filename="../pacmanserverinterface.cpp" line="+67"/>
+        <source>Invalid DBUS server interface!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

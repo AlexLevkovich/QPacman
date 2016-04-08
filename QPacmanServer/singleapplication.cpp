@@ -19,7 +19,6 @@ SingleApplication::SingleApplication(int & argc, char ** argv) : QCoreApplicatio
     connect(&signalHandler,SIGNAL(sigINT()),this,SLOT(quit()));
 
     signalHandler.start();
-    installEventFilter(this);
 
     if(!sharedLock.tryLock()) {
         qCritical() << tr("One instance is already running!!!");
@@ -51,10 +50,3 @@ void SingleApplication::quit() {
     QCoreApplication::quit();
 }
 
-bool SingleApplication::eventFilter(QObject * receiver,QEvent * event) {
-    if (QString::fromLatin1(receiver->metaObject()->className()).startsWith("QDBus")) {
-        //qDebug() << receiver->metaObject()->className() << event->type();
-        if (event->type() == QEvent::MetaCall) return true;
-    }
-    return QCoreApplication::eventFilter(receiver,event);
-}
