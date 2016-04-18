@@ -205,13 +205,30 @@ QString PacmanDBusServer::commandRequest(const QByteArray & command) {
         else return err_str;
     }
     else if (command == "READ REMOVE PACKAGES") {
+        if (removereader != NULL) return tr("One pacman process already is started!!!");
         if (m_packages.isEmpty()) {
             return tr("Input package list is empty!!!");
         }
 
         QString err_str = invalidPasswordError(m_password);
         if (err_str.isEmpty()) {
-            removereader = new PacmanRemovePackagesReader(m_packages);
+            removereader = new PacmanRemovePackagesReader(m_packages,true);
+            connect(removereader,SIGNAL(ready_to_process(int)),this,SLOT(emit_ready_to_process_remove(int)));
+            connect(removereader,SIGNAL(start_removing(const QString &)),this,SLOT(emit_start_removing(const QString &)));
+            connect(removereader,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(emit_post_messages(const QString &,const QStringList &)));
+            connect(removereader,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(read_remove_packages_finished(PacmanProcessReader *)));
+        }
+        else return err_str;
+    }
+    else if (command == "READ REMOVE PACKAGES NO DEPS") {
+        if (removereader != NULL) return tr("One pacman process already is started!!!");
+        if (m_packages.isEmpty()) {
+            return tr("Input package list is empty!!!");
+        }
+
+        QString err_str = invalidPasswordError(m_password);
+        if (err_str.isEmpty()) {
+            removereader = new PacmanRemovePackagesReader(m_packages,false);
             connect(removereader,SIGNAL(ready_to_process(int)),this,SLOT(emit_ready_to_process_remove(int)));
             connect(removereader,SIGNAL(start_removing(const QString &)),this,SLOT(emit_start_removing(const QString &)));
             connect(removereader,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(emit_post_messages(const QString &,const QStringList &)));
@@ -265,7 +282,8 @@ void PacmanDBusServer::terminateRequest(const QByteArray & command) {
             terminateRequest(i.value());
         }
     }
-    else if (command == "READ REMOVE PACKAGES") {
+    else if (command == "READ REMOVE PACKAGES" ||
+			    command == "READ REMOVE PACKAGES NO DEPS") {
         if (removereader != NULL) {
             removereader->terminate();
         }

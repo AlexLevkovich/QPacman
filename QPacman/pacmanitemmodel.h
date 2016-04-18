@@ -73,6 +73,7 @@ private:
     QIcon removeIcon;
     QIcon reinstallIcon;
     QString unInstallStr;
+    QString unInstallAllStr;
     QString reInstallStr;
     QString installStr;
     QSet<QString> m_groups;

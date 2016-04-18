@@ -28,6 +28,7 @@ PacmanItemModel::PacmanItemModel(QTreeView *parent) : QAbstractItemModel(parent)
     removeIcon(":/pics/delete.png"),reinstallIcon(":/pics/2down.png") {
 
     unInstallStr = QObject::tr("Uninstall");
+    unInstallAllStr = QObject::tr("Uninstall All");
     installStr = QObject::tr("Install");
     reInstallStr = QObject::tr("Reinstall");
 
@@ -79,10 +80,10 @@ QList<PacmanItemModel::ChangeMenuParam> PacmanItemModel::changeStateParamsForMen
         return QList<ChangeMenuParam>() << ChangeMenuParam(downloadIcon,installStr,PacmanEntry::DO_INSTALL);
     }
     else if ((status != PacmanEntry::NOT_INSTALLED) && (row(index).getRepo() == "aur")) {
-        return QList<ChangeMenuParam>() << ChangeMenuParam(removeIcon,unInstallStr,PacmanEntry::DO_UNINSTALL);
+        return QList<ChangeMenuParam>() << ChangeMenuParam(removeIcon,unInstallAllStr,PacmanEntry::DO_UNINSTALL_ALL) << ChangeMenuParam(removeIcon,unInstallStr,PacmanEntry::DO_UNINSTALL);
     }
 
-    return QList<ChangeMenuParam>() << ChangeMenuParam(removeIcon,unInstallStr,PacmanEntry::DO_UNINSTALL) << ChangeMenuParam(reinstallIcon,reInstallStr,PacmanEntry::DO_REINSTALL);
+    return QList<ChangeMenuParam>() << ChangeMenuParam(removeIcon,unInstallAllStr,PacmanEntry::DO_UNINSTALL_ALL) << ChangeMenuParam(removeIcon,unInstallStr,PacmanEntry::DO_UNINSTALL) << ChangeMenuParam(reinstallIcon,reInstallStr,PacmanEntry::DO_REINSTALL);
 }
 
 QIcon PacmanItemModel::changeStatusIcon(int index) const {
@@ -105,7 +106,25 @@ QVariant PacmanItemModel::data(const QModelIndex & index, int role) const {
             else if (index.column() == 1) return QVariant(rows[index.row()].desc);
             else {
                 PacmanEntry::UserChangeStatus change_status = rows[index.row()].getChangeStatus();
-                return QVariant((change_status == PacmanEntry::DO_UNINSTALL)?unInstallStr:((change_status == PacmanEntry::DO_INSTALL)?installStr:reInstallStr));
+                QString ret_str;
+                switch (change_status) {
+                    case PacmanEntry::DO_UNINSTALL_ALL:
+                        ret_str = unInstallAllStr;
+                        break;
+                    case PacmanEntry::DO_UNINSTALL:
+                        ret_str = unInstallStr;
+                        break;
+                    case PacmanEntry::DO_INSTALL:
+                        ret_str = installStr;
+                        break;
+                    case PacmanEntry::DO_REINSTALL:
+                        ret_str = reInstallStr;
+                        break;
+                    default:
+                        break;
+                }
+
+                return ret_str;
             }
         case Qt::DecorationRole:
             if (index.column() == 0) return rows[index.row()].isChosen()?changeStatusIcon(index.row()):(QVariant(rows[index.row()].isInstalled()?installedIcon:(rows[index.row()].isUpdate()?updatedIcon:notinstalledIcon)));

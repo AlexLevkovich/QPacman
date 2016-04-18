@@ -7,8 +7,9 @@
 #include "static.h"
 #include "pacmanserverinterface.h"
 
-PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,QObject *parent) : PacmanProcessReader(parent) {
+PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,bool withDeps,QObject *parent) : PacmanProcessReader(parent) {
     in_packages = packages;
+    m_withDeps = withDeps;
 
     connect(PacmanServerInterface::instance(),SIGNAL(ready_to_process_remove(const QStringList &,qreal)),this,SLOT(on_readyToProcess(const QStringList &,qreal)));
     connect(PacmanServerInterface::instance(),SIGNAL(post_messages(const QString &,const QStringList &)),this,SIGNAL(post_messages(const QString &,const QStringList &)));
@@ -20,7 +21,7 @@ QStringList PacmanRemovePackagesReader::packages() const {
 }
 
 QByteArray PacmanRemovePackagesReader::command() const {
-    return "READ REMOVE PACKAGES";
+    return m_withDeps?"READ REMOVE PACKAGES":"READ REMOVE PACKAGES NO DEPS";
 }
 
 void PacmanRemovePackagesReader::send_parameters() {
@@ -39,4 +40,8 @@ void PacmanRemovePackagesReader::beginRemove() {
 
 void PacmanRemovePackagesReader::cancelRemove() {
     PacmanServerInterface::instance()->cancelRemove();
+}
+
+bool PacmanRemovePackagesReader::isFinishedCommandCorrect(const QByteArray & command) {
+    return (command == "READ REMOVE PACKAGES" || command == "READ REMOVE PACKAGES NO DEPS");
 }

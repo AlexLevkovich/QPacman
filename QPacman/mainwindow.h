@@ -65,6 +65,7 @@ private:
     bool m_startsOnUpdates;
 
     bool actionApplyState();
+    void removePackageIfExistInList(const QStringList & packages,QStringList & in_out_packages);
 };
 
 #endif // MAINWINDOW_H

@@ -135,6 +135,13 @@ private:
     QWidget * m_widget;
 };
 
+
+void MainWindow::removePackageIfExistInList(const QStringList & packages,QStringList & in_out_packages) {
+    for (int i=0;i<packages.count();i++) {
+        if (in_out_packages.contains(packages.at(i))) in_out_packages.removeAll(packages.at(i));
+    }
+}
+
 void MainWindow::on_actionApply_triggered() {
     TempWinDisable temp(this);
 
@@ -144,18 +151,33 @@ void MainWindow::on_actionApply_triggered() {
     }
 
     QList<PacmanEntry> to_remove = ui->packetView->markedPackagesToRemove();
+    QList<PacmanEntry> to_removeall = ui->packetView->markedPackagesToRemoveAll();
     QList<PacmanEntry> to_install = ui->packetView->markedPackagesToInstall();
 
-    if (to_remove.count() > 0) {
-        RemoveProgressDialog rprogress_dlg(PacmanEntry::entriesListToNamesStringList(to_remove),this);
+    QStringList removed_packages;
+    if (to_removeall.count() > 0) {
+        RemoveProgressDialog rprogress_dlg(PacmanEntry::entriesListToNamesStringList(to_removeall),true,this);
         connect(&rprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
         if (rprogress_dlg.exec() != QDialog::Accepted) return;
+        removed_packages = rprogress_dlg.removedPackages();
+    }
+
+    QStringList remove_packages;
+    if (to_remove.count() > 0) {
+        remove_packages = PacmanEntry::entriesListToNamesStringList(to_remove);
+        if (removed_packages.count() > 0) removePackageIfExistInList(removed_packages,remove_packages);
+        if (remove_packages.count() > 0) {
+            RemoveProgressDialog rprogress_dlg(remove_packages,false,this);
+            connect(&rprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
+            if (rprogress_dlg.exec() != QDialog::Accepted) return;
+        }
     }
     if (to_install.count() > 0) {
         InstallProgressDialog iprogress_dlg(PacmanEntry::entriesListToStringList(to_install),this);
         connect(&iprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
         if (iprogress_dlg.exec() != QDialog::Accepted) {
-            if (to_remove.count() <= 0) return;
+            if (remove_packages.count() <= 0 &&
+                to_removeall.count() <= 0) return;
         }
     }
 
@@ -247,7 +269,8 @@ void MainWindow::dbus_unloaded() {
 }
 
 bool MainWindow::actionApplyState() {
+    QList<PacmanEntry> to_removeall = ui->packetView->markedPackagesToRemoveAll();
     QList<PacmanEntry> to_remove = ui->packetView->markedPackagesToRemove();
     QList<PacmanEntry> to_install = ui->packetView->markedPackagesToInstall();
-    return ((to_remove.count() > 0) || (to_install.count() > 0));
+    return ((to_removeall.count() > 0) || (to_remove.count() > 0) || (to_install.count() > 0));
 }

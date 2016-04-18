@@ -464,18 +464,21 @@
         <location line="+46"/>
         <location line="+24"/>
         <location line="+21"/>
+        <location line="+17"/>
         <location line="+16"/>
         <source>Input package list is empty!!!</source>
         <translation type="unfinished">Входной список пакетов пустой!!!</translation>
     </message>
     <message>
-        <location line="-64"/>
+        <location line="-81"/>
         <location line="+24"/>
+        <location line="+39"/>
+        <location line="+16"/>
         <source>One pacman process already is started!!!</source>
         <translation type="unfinished">Один pacman процесс уже запущен!!!</translation>
     </message>
     <message>
-        <location line="-84"/>
+        <location line="-139"/>
         <source>You are trying to run %1 command twice!!!</source>
         <translation type="unfinished">Вы пытаетесь выполнить команду %1 дважды!!!</translation>
     </message>
@@ -485,7 +488,7 @@
         <translation type="unfinished">Флаг зависимости должен быть boolean!!!</translation>
     </message>
     <message>
-        <location line="+32"/>
+        <location line="+49"/>
         <source>Invalid command!!!</source>
         <translation type="unfinished">Некорректная команда!!!</translation>
     </message>

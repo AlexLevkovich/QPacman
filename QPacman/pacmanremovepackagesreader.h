@@ -12,7 +12,7 @@
 class PacmanRemovePackagesReader : public PacmanProcessReader {
     Q_OBJECT
 public:
-    explicit PacmanRemovePackagesReader(const QString & packages,QObject *parent = 0);
+    explicit PacmanRemovePackagesReader(const QString & packages,bool withDeps = true,QObject *parent = 0);
     QStringList packages() const;
     void beginRemove();
     void cancelRemove();
@@ -20,6 +20,7 @@ public:
 protected:
     void send_parameters();
     QByteArray command() const;
+    bool isFinishedCommandCorrect(const QByteArray & command);
 
 private slots:
     void on_readyToProcess(const QStringList & packages,qreal total_removed);
@@ -32,6 +33,7 @@ signals:
 private:
     QString in_packages;
     QStringList m_packages;
+    bool m_withDeps;
 };
 
 #endif // PacmanRemovePackagesReader_H

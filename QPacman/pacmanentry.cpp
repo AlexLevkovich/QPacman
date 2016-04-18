@@ -228,7 +228,7 @@ PacmanEntry::ParseCode PacmanEntry::parseLine(const QByteArray & array) {
     else if (line.startsWith("Install Reason")) {
         if (afterColon(line).startsWith("Explicitly installed")) status = INSTALLED_EXPLICITLY;
         else status = INSTALLED_AS_DEP;
-        change_status = DO_UNINSTALL;
+        change_status = DO_UNINSTALL_ALL;
     }
     else if (line.startsWith("Validated By")) {
          if (repo.isEmpty()) repo = "aur";

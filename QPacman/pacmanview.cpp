@@ -239,7 +239,20 @@ QList<PacmanEntry> PacmanView::markedPackagesToInstall() const {
     for (int i=0;i<model->rowCount();i++) {
         PacmanEntry row = model->row(model->index(i,0));
         if (row.isChosen()) {
-            if (row.getChangeStatus() != PacmanEntry::DO_UNINSTALL) list.append(row);
+            if (row.getChangeStatus() != PacmanEntry::DO_UNINSTALL_ALL &&
+                row.getChangeStatus() != PacmanEntry::DO_UNINSTALL) list.append(row);
+        }
+    }
+
+    return list;
+}
+
+QList<PacmanEntry> PacmanView::markedPackagesToRemoveAll() const {
+    QList<PacmanEntry> list;
+    for (int i=0;i<model->rowCount();i++) {
+        PacmanEntry row = model->row(model->index(i,0));
+        if (row.isChosen()) {
+            if (row.getChangeStatus() == PacmanEntry::DO_UNINSTALL_ALL) list.append(row);
         }
     }
 

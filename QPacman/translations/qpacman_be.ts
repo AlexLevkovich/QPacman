@@ -289,7 +289,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+194"/>
+        <location filename="../mainwindow.cpp" line="+216"/>
         <source>The contents of cache directory will be removed.
 Are you sure to continue?</source>
         <translation type="unfinished">Усе змесціва папкі з кэшам будзе выдаленае. Вы ўпэўненыя?</translation>
@@ -366,7 +366,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanItemModel</name>
     <message>
-        <location filename="../pacmanitemmodel.cpp" line="+52"/>
+        <location filename="../pacmanitemmodel.cpp" line="+53"/>
         <source>Name of package</source>
         <translation type="unfinished">Назва пакета</translation>
     </message>
@@ -598,9 +598,14 @@ Do you want to mark it for installation?</source>
         <translation type="unfinished">Зрабіць асабіста усталяваным</translation>
     </message>
     <message>
-        <location filename="../pacmanitemmodel.cpp" line="-30"/>
+        <location filename="../pacmanitemmodel.cpp" line="-31"/>
         <source>Uninstall</source>
         <translation type="unfinished">Выдаліць</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Uninstall All</source>
+        <translation type="unfinished">Выдаліць усё</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -700,7 +705,7 @@ Please wait some time.</source>
         <translation type="unfinished">Падрыхтоўка...</translation>
     </message>
     <message>
-        <location line="+50"/>
+        <location line="+54"/>
         <source>Removing %1...</source>
         <translation type="unfinished">Выдаленне %1...</translation>
     </message>

@@ -9,7 +9,7 @@
 #include "static.h"
 #include <QMessageBox>
 
-RemoveProgressDialog::RemoveProgressDialog(const QStringList & packages,QWidget *parent) : QProgressDialog(parent) {
+RemoveProgressDialog::RemoveProgressDialog(const QStringList & packages,bool withDeps,QWidget *parent) : QProgressDialog(parent) {
     remover = NULL;
     index = 0;
     wasCanceled = false;
@@ -30,7 +30,7 @@ RemoveProgressDialog::RemoveProgressDialog(const QStringList & packages,QWidget 
         names.append(name);
     }
 
-    remover = new PacmanRemovePackagesReader(names.join(" "),this);
+    remover = new PacmanRemovePackagesReader(names.join(" "),withDeps,this);
     connect(remover,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(removing_packages_finished(PacmanProcessReader *)));
     connect(remover,SIGNAL(start_removing(const QString &)),this,SLOT(start_removing(const QString &)));
     connect(remover,SIGNAL(post_messages(const QString &,const QStringList &)),this,SIGNAL(post_messages(const QString &,const QStringList &)));
@@ -68,9 +68,14 @@ void RemoveProgressDialog::removing_packages_finished(PacmanProcessReader * read
     accept();
 }
 
+QStringList RemoveProgressDialog::removedPackages() const {
+    return removed_packages;
+}
+
 void RemoveProgressDialog::start_removing(const QString & package) {
     setLabelText(tr("Removing %1...").arg(package));
     setValue(++index);
+    removed_packages.append(package);
 }
 
 void RemoveProgressDialog::showEvent(QShowEvent * event) {

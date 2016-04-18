@@ -8,16 +8,17 @@
 
 #define TOTAL_REMOVED_STR "Total Removed Size:"
 
-PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,QObject *parent) : PacmanProcessReader(parent) {
+PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,bool withDeps,QObject *parent) : PacmanProcessReader(parent) {
     in_packages = packages;
     packagesRead = false;
     packagesWasRead = false;
     countRead = 0;
     removing_wait = false;
+    m_withDeps = withDeps;
 }
 
 QString PacmanRemovePackagesReader::command() const {
-    return QString("%2/pacman -Rcs --noprogressbar %1").arg(in_packages).arg(TOOLS_BIN);
+    return QString(m_withDeps?"%2/pacman -Rcs --noprogressbar %1":"%2/pacman -Rc --noprogressbar %1").arg(in_packages).arg(TOOLS_BIN);
 }
 
 qreal PacmanRemovePackagesReader::total_removed() {

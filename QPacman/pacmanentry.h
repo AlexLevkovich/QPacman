@@ -32,8 +32,9 @@ public:
 
     enum UserChangeStatus {
         DO_INSTALL = 0,
-        DO_UNINSTALL = 1,
-        DO_REINSTALL = 2
+        DO_UNINSTALL_ALL = 1,
+        DO_UNINSTALL = 2,
+        DO_REINSTALL = 3
     };
 
     struct Deps {

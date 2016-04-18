@@ -43,8 +43,12 @@ void PacmanProcessReader::_finish() {
     emit finished(this);
 }
 
+bool PacmanProcessReader::isFinishedCommandCorrect(const QByteArray & command) {
+    return (command == m_command);
+}
+
 void PacmanProcessReader::onCommandFinished(const QByteArray & command,const QString &errorMsg) {
-    if (m_command.isEmpty() || command != m_command) return;
+    if (!isFinishedCommandCorrect(command)) return;
 
     if (!errorMsg.isEmpty()) {
         code = 1;

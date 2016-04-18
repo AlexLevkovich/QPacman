@@ -12,7 +12,8 @@
 class RemoveProgressDialog : public QProgressDialog {
     Q_OBJECT
 public:
-    explicit RemoveProgressDialog(const QStringList & packages,QWidget *parent = 0);
+    explicit RemoveProgressDialog(const QStringList & packages,bool withDeps = true,QWidget *parent = 0);
+    QStringList removedPackages() const;
 
 protected:
     void showEvent(QShowEvent * event);
@@ -32,6 +33,7 @@ private:
     int index;
     bool wasCanceled;
     bool canBeShown;
+    QStringList removed_packages;
 };
 
 #endif // REMOVEPROGRESSDIALOG_H

@@ -30,6 +30,7 @@ protected slots:
 protected:
     virtual QByteArray command() const = 0;
     virtual void send_parameters() = 0;
+    virtual bool isFinishedCommandCorrect(const QByteArray & command);
 
 private slots:
     void _start();

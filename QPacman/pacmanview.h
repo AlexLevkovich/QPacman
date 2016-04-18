@@ -31,6 +31,7 @@ public:
     void markAll();
     void resetAll();
     QList<PacmanEntry> markedPackagesToInstall() const;
+    QList<PacmanEntry> markedPackagesToRemoveAll() const;
     QList<PacmanEntry> markedPackagesToRemove() const;
     PacmanEntry row(const QModelIndex & index) const;
     QModelIndex selectedRow() const;
