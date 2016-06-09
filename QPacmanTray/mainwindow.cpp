@@ -214,7 +214,10 @@ void MainWindow::timeout() {
         return;
     }
 
-    if (isGuiAppActive()) return;
+    if (isGuiAppActive()) {
+        wasError = true;
+        return;
+    }
 
 	temp.def_checking_updates = true;
 	packages.clear();
