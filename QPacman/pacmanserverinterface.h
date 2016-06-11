@@ -157,8 +157,8 @@ signals: // SIGNALS
     void start_download(const QString & url);
     void all_downloads_completed();
     void files_ready(const QString &package, const QStringList &files);
-    void ready_to_process_install(const QStringList &install_packages, const QStringList &remove_packages, const QStringList &local_install_packages, qreal total_installed, qreal total_removed);
-    void ready_to_process_remove(const QStringList &remove_packages, qreal total_removed);
+    void ready_to_process_install(const QStringList &install_packages, const QStringList &remove_packages, const QStringList &local_install_packages, double total_installed, double total_removed);
+    void ready_to_process_remove(const QStringList &remove_packages, double total_removed);
     void packages_to_update(const QStringList &entry);
 #ifdef PACMANENTRY
     void package_ready(const PacmanEntry &entry);

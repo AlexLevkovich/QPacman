@@ -51,11 +51,11 @@ QString PacmanInstallPackagesReader::command() const {
     return QString("%2/stdbuf -i0 -o0 -e0 %2/pacman --config %3 -S --noprogressbar %1").arg(in_packages).arg(TOOLS_BIN).arg(tempConf);
 }
 
-qreal PacmanInstallPackagesReader::total_installed() {
+double PacmanInstallPackagesReader::total_installed() {
     return m_total_installed;
 }
 
-qreal PacmanInstallPackagesReader::total_removed() {
+double PacmanInstallPackagesReader::total_removed() {
     return m_total_removed;
 }
 
@@ -199,6 +199,7 @@ void PacmanInstallPackagesReader::error(const QString & error) {
                 return;
             }
         }
+        else countRead += index + 3;
     }
     else {
         index = error.indexOf(providerChooserStr);

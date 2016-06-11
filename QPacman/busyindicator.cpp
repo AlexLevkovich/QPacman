@@ -30,7 +30,7 @@ BusyIndicator::BusyIndicator( QDeclarativeItem* parent )
     connect( this, SIGNAL( heightChanged() ), SLOT( updateSpinner() ) );
 }
  
-void BusyIndicator::setInnerRadius( const qreal& innerRadius ) {
+void BusyIndicator::setInnerRadius( const double& innerRadius ) {
     if ( qFuzzyCompare( m_innerRadius, innerRadius ) )
         return;
     m_innerRadius = innerRadius;
@@ -38,11 +38,11 @@ void BusyIndicator::setInnerRadius( const qreal& innerRadius ) {
     emit innerRadiusChanged();
 }
  
-qreal BusyIndicator::innerRadius() const {
+double BusyIndicator::innerRadius() const {
     return m_innerRadius;
 }
  
-void BusyIndicator::setOuterRadius( const qreal& outerRadius ) {
+void BusyIndicator::setOuterRadius( const double& outerRadius ) {
     if ( qFuzzyCompare( m_outerRadius, outerRadius ) )
         return;
     m_outerRadius = outerRadius;
@@ -50,7 +50,7 @@ void BusyIndicator::setOuterRadius( const qreal& outerRadius ) {
     emit outerRadiusChanged();
 }
  
-qreal BusyIndicator::outerRadius() const {
+double BusyIndicator::outerRadius() const {
     return m_outerRadius;
 }
  
@@ -78,18 +78,18 @@ QColor BusyIndicator::foregroundColor() const {
     return m_foregroundColor;
 }
  
-qreal BusyIndicator::actualInnerRadius() const {
+double BusyIndicator::actualInnerRadius() const {
     return m_actualInnerRadius;
 }
  
-qreal BusyIndicator::actualOuterRadius() const {
+double BusyIndicator::actualOuterRadius() const {
     return m_actualOuterRadius;
 }
  
 void BusyIndicator::updateSpinner() {
     // Calculate new inner and outer radii
     m_size = qMin( width(), height() );
-    qreal nCoef = 0.5 * m_size;
+    double nCoef = 0.5 * m_size;
     m_actualInnerRadius = nCoef * m_innerRadius;
     m_actualOuterRadius = nCoef * m_outerRadius;
  
@@ -118,7 +118,7 @@ void BusyIndicator::paint( QPainter* painter, const QStyleOptionGraphicsItem* op
         path.addEllipse( QPointF( m_actualOuterRadius, m_actualOuterRadius ), m_actualOuterRadius, m_actualOuterRadius );
         path.addEllipse( QPointF( m_actualOuterRadius, m_actualOuterRadius ), m_actualInnerRadius, m_actualInnerRadius );
  
-        qreal nActualDiameter = 2 * m_actualOuterRadius;
+        double nActualDiameter = 2 * m_actualOuterRadius;
         pixmap = QPixmap( nActualDiameter, nActualDiameter );
         pixmap.fill( Qt::transparent );
         QPainter p( &pixmap );

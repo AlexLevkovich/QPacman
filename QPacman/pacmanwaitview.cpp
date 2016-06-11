@@ -20,7 +20,7 @@ PacmanWaitView::PacmanWaitView(QWidget *parent) : QGraphicsView(parent) {
 }
 
 void PacmanWaitView::rotateSpinner() {
-    qreal nTransX = m_busyIndicator.actualOuterRadius();
+    double nTransX = m_busyIndicator.actualOuterRadius();
     m_busyIndicator.setTransform(QTransform().translate(nTransX, nTransX).
                                  rotate(angle).translate(-nTransX, -nTransX));
 

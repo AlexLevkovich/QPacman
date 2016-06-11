@@ -20,7 +20,7 @@ void PacmanInstallLocalPackagesReader::send_parameters() {
     PacmanServerInterface::instance()->setPackageList(m_packages);
 }
 
-void PacmanInstallLocalPackagesReader::on_readyToProcess(const QStringList & install_packages,const QStringList & remove_packages,const QStringList & local_install_packages,qreal total_installed, qreal total_removed) {
+void PacmanInstallLocalPackagesReader::on_readyToProcess(const QStringList & install_packages,const QStringList & remove_packages,const QStringList & local_install_packages,double total_installed, double total_removed) {
     m_local_install_packages = local_install_packages;
     PacmanInstallPackagesReader::on_readyToProcess(install_packages,remove_packages,local_install_packages,total_installed,total_removed);
 }

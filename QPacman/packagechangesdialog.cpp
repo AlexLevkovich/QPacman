@@ -9,7 +9,7 @@
 #include "byteshumanizer.h"
 #include <QTimer>
 
-PackageChangesDialog::PackageChangesDialog(const QStringList & install_packages,const QStringList & remove_packages,qreal total_installed,qreal total_removed,QWidget *parent) : QDialog(parent), ui(new Ui::PackageChangesDialog) {
+PackageChangesDialog::PackageChangesDialog(const QStringList & install_packages,const QStringList & remove_packages,double total_installed,double total_removed,QWidget *parent) : QDialog(parent), ui(new Ui::PackageChangesDialog) {
     ui->setupUi(this);
 
 #if QT_VERSION >= 0x050000
@@ -60,7 +60,7 @@ QTreeWidgetItem * PackageChangesDialog::fill(const QStringList & packages,const 
         item->setIcon(0,QIcon(":/pics/package.png"));
         item->setText(0,name);
         item->setText(1,version);
-        item->setData(0,Qt::UserRole,QVariant::fromValue((qreal)-1.0));
+        item->setData(0,Qt::UserRole,QVariant::fromValue((double)-1.0));
     }
 
     root_item->setExpanded(true);

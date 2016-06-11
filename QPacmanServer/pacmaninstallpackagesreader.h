@@ -20,8 +20,8 @@ public:
     void sendAnswer(int answer);
     void beginInstall();
     void cancelInstall();
-    qreal total_installed();
-    qreal total_removed();
+    double total_installed();
+    double total_removed();
 
     static const QString providerChooserStr;
 
@@ -63,8 +63,8 @@ private:
     QString m_outErrors;
     bool install_wait;
     int packages_count; // removal + installing ones
-    qreal m_total_installed;
-    qreal m_total_removed;
+    double m_total_installed;
+    double m_total_removed;
     bool packagesRetrieving;
     bool installCanceled;
     QString warnings;

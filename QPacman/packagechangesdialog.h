@@ -18,7 +18,7 @@ class PackageChangesDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit PackageChangesDialog(const QStringList & install_packages,const QStringList & remove_packages,qreal total_installed,qreal total_removed,QWidget *parent = 0);
+    explicit PackageChangesDialog(const QStringList & install_packages,const QStringList & remove_packages,double total_installed,double total_removed,QWidget *parent = 0);
     ~PackageChangesDialog();
 
 protected slots:

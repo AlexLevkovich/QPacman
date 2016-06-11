@@ -26,7 +26,7 @@ protected slots:
     void start_download(const QString & url);
     void all_downloads_completed();
     void onCancel();
-    void readyToProcess(qreal total_installed,qreal total_removed);
+    void readyToProcess(double total_installed,double total_removed);
     void someProvidersAvailable(const QStringList & providers);
     void questionAvailable(const QString & question);
     void _hide();

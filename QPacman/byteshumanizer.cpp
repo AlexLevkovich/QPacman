@@ -35,13 +35,13 @@ BytesHumanizer::BytesHumanizer(const QString & val) {
     }
 }
 
-BytesHumanizer::BytesHumanizer(qreal value) {
+BytesHumanizer::BytesHumanizer(double value) {
     m_value = value;
     m_was_error = false;
 }
 
 QString BytesHumanizer::toString(int precision) const {
-    qreal value = m_value;
+    double value = m_value;
 
     int index = 0;
     for(int i=0;i<8;i++) {

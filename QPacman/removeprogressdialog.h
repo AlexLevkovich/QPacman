@@ -22,7 +22,7 @@ protected slots:
     void removing_packages_finished(PacmanProcessReader * reader);
     void start_removing(const QString & package);
     void onCancel();
-    void readyToProcess(qreal total_removed);
+    void readyToProcess(double total_removed);
     void _hide();
 
 signals:

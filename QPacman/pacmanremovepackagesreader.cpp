@@ -11,7 +11,7 @@ PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,
     in_packages = packages;
     m_withDeps = withDeps;
 
-    connect(PacmanServerInterface::instance(),SIGNAL(ready_to_process_remove(const QStringList &,qreal)),this,SLOT(on_readyToProcess(const QStringList &,qreal)));
+    connect(PacmanServerInterface::instance(),SIGNAL(ready_to_process_remove(const QStringList &,double)),this,SLOT(on_readyToProcess(const QStringList &,double)));
     connect(PacmanServerInterface::instance(),SIGNAL(post_messages(const QString &,const QStringList &)),this,SIGNAL(post_messages(const QString &,const QStringList &)));
     connect(PacmanServerInterface::instance(),SIGNAL(start_removing(const QString &)),this,SIGNAL(start_removing(const QString &)));
 }
@@ -29,7 +29,7 @@ void PacmanRemovePackagesReader::send_parameters() {
     PacmanServerInterface::instance()->setPackages(in_packages);
 }
 
-void PacmanRemovePackagesReader::on_readyToProcess(const QStringList & packages, qreal total_removed) {
+void PacmanRemovePackagesReader::on_readyToProcess(const QStringList & packages, double total_removed) {
     m_packages = packages;
     emit ready_to_process(total_removed);
 }

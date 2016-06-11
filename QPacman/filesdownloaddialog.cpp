@@ -38,7 +38,7 @@ void FilesDownloadDialog::setNewDownload(const QString & url) {
 }
 
 void FilesDownloadDialog::setFileLength(int length) {
-    ui->currentLabel->setText(ui->currentLabel->text()+" ("+BytesHumanizer((qreal)length).toString()+")");
+    ui->currentLabel->setText(ui->currentLabel->text()+" ("+BytesHumanizer((double)length).toString()+")");
 }
 
 void FilesDownloadDialog::setValue(int percents) {

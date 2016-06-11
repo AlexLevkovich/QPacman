@@ -25,14 +25,14 @@ protected:
     virtual QByteArray command() const;
 
 protected slots:
-    virtual void on_readyToProcess(const QStringList & install_packages,const QStringList & remove_packages,const QStringList & local_install_packages,qreal total_installed, qreal total_removed);
+    virtual void on_readyToProcess(const QStringList & install_packages,const QStringList & remove_packages,const QStringList & local_install_packages,double total_installed, double total_removed);
 
 private:
     QString m_packages;
 
 signals:
     void some_providers_available(const QStringList & providers);
-    void ready_to_process(qreal total_installed, qreal total_removed);
+    void ready_to_process(double total_installed, double total_removed);
     void post_messages(const QString & package_name,const QStringList & messages);
     void start_installing(const QString & name);
     void start_removing(const QString & name);

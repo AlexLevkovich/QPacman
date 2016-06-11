@@ -11,21 +11,21 @@
  
 class BusyIndicator : public QDeclarativeItem {
     Q_OBJECT
-    Q_PROPERTY( qreal innerRadius READ innerRadius WRITE setInnerRadius NOTIFY innerRadiusChanged )
-    Q_PROPERTY( qreal outerRadius READ outerRadius WRITE setOuterRadius NOTIFY outerRadiusChanged )
+    Q_PROPERTY( double innerRadius READ innerRadius WRITE setInnerRadius NOTIFY innerRadiusChanged )
+    Q_PROPERTY( double outerRadius READ outerRadius WRITE setOuterRadius NOTIFY outerRadiusChanged )
     Q_PROPERTY( QColor backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged )
     Q_PROPERTY( QColor foregroundColor READ foregroundColor WRITE setForegroundColor NOTIFY foregroundColorChanged )
-    Q_PROPERTY( qreal actualInnerRadius READ actualInnerRadius NOTIFY actualInnerRadiusChanged )
-    Q_PROPERTY( qreal actualOuterRadius READ actualOuterRadius NOTIFY actualOuterRadiusChanged )
+    Q_PROPERTY( double actualInnerRadius READ actualInnerRadius NOTIFY actualInnerRadiusChanged )
+    Q_PROPERTY( double actualOuterRadius READ actualOuterRadius NOTIFY actualOuterRadiusChanged )
  
 public:
     explicit BusyIndicator( QDeclarativeItem* parent = 0 );
  
-    void setInnerRadius( const qreal& innerRadius );
-    qreal innerRadius() const;
+    void setInnerRadius( const double& innerRadius );
+    double innerRadius() const;
  
-    void setOuterRadius( const qreal& outerRadius );
-    qreal outerRadius() const;
+    void setOuterRadius( const double& outerRadius );
+    double outerRadius() const;
  
     void setBackgroundColor( const QColor& color );
     QColor backgroundColor() const;
@@ -33,8 +33,8 @@ public:
     void setForegroundColor( const QColor& color );
     QColor foregroundColor() const;
  
-    qreal actualInnerRadius() const;
-    qreal actualOuterRadius() const;
+    double actualInnerRadius() const;
+    double actualOuterRadius() const;
  
     virtual void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0 );
  
@@ -51,15 +51,15 @@ protected slots:
  
 private:
     // User settable properties
-    qreal m_innerRadius; // In range (0, m_outerRadius]
-    qreal m_outerRadius; // (m_innerRadius, 1]
+    double m_innerRadius; // In range (0, m_outerRadius]
+    double m_outerRadius; // (m_innerRadius, 1]
     QColor m_backgroundColor;
     QColor m_foregroundColor;
  
     // The calculated size, inner and outer radii
-    qreal m_size;
-    qreal m_actualInnerRadius;
-    qreal m_actualOuterRadius;
+    double m_size;
+    double m_actualInnerRadius;
+    double m_actualOuterRadius;
  
     QString m_cacheKey;
 };

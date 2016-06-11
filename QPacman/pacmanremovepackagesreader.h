@@ -23,10 +23,10 @@ protected:
     bool isFinishedCommandCorrect(const QByteArray & command);
 
 private slots:
-    void on_readyToProcess(const QStringList & packages,qreal total_removed);
+    void on_readyToProcess(const QStringList & packages,double total_removed);
 
 signals:
-    void ready_to_process(qreal total_removed);
+    void ready_to_process(double total_removed);
     void post_messages(const QString & package_name,const QStringList & messages);
     void start_removing(const QString & name);
 

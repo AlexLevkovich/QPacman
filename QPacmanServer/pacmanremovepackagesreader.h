@@ -16,7 +16,7 @@ public:
     QStringList packages() const;
     void beginRemove();
     void cancelRemove();
-    qreal total_removed();
+    double total_removed();
 
 protected:
     QString command() const;
@@ -43,7 +43,7 @@ private:
     bool packagesWasRead;
     QString current_removing;
     QMap<QString,QStringList> m_messages;
-    qreal m_total_removed;
+    double m_total_removed;
     bool m_withDeps;
 };
 

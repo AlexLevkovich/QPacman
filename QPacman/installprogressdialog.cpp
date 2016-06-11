@@ -17,7 +17,7 @@ InstallProgressDialog::InstallProgressDialog(const QStringList & packages,QWidge
     connect(installer,SIGNAL(start_installing(const QString &)),this,SLOT(start_installing(const QString &)));
     connect(installer,SIGNAL(start_removing(const QString &)),this,SLOT(start_removing(const QString &)));
     connect(installer,SIGNAL(post_messages(const QString &,const QStringList &)),this,SIGNAL(post_messages(const QString &,const QStringList &)));
-    connect(installer,SIGNAL(ready_to_process(qreal,qreal)),this,SLOT(readyToProcess(qreal,qreal)));
+    connect(installer,SIGNAL(ready_to_process(double,double)),this,SLOT(readyToProcess(double,double)));
     connect(installer,SIGNAL(some_providers_available(const QStringList &)),this,SLOT(someProvidersAvailable(const QStringList &)));
     connect(installer,SIGNAL(question_available(const QString &)),this,SLOT(questionAvailable(const QString &)));
     connect(installer,SIGNAL(start_download(const QString &)),this,SLOT(start_download(const QString &)));
@@ -69,7 +69,7 @@ void InstallProgressDialog::someProvidersAvailable(const QStringList & providers
     emit hidingProvidersList();
 }
 
-void InstallProgressDialog::readyToProcess(qreal total_installed,qreal total_removed) {
+void InstallProgressDialog::readyToProcess(double total_installed,double total_removed) {
     emit showingPackageListDlg();
     if (PackageChangesDialog(installer->install_packages(),installer->remove_packages(),total_installed,total_removed,this).exec() == QDialog::Rejected) {
         wasCanceled = true;

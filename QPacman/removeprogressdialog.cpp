@@ -34,10 +34,10 @@ RemoveProgressDialog::RemoveProgressDialog(const QStringList & packages,bool wit
     connect(remover,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(removing_packages_finished(PacmanProcessReader *)));
     connect(remover,SIGNAL(start_removing(const QString &)),this,SLOT(start_removing(const QString &)));
     connect(remover,SIGNAL(post_messages(const QString &,const QStringList &)),this,SIGNAL(post_messages(const QString &,const QStringList &)));
-    connect(remover,SIGNAL(ready_to_process(qreal)),this,SLOT(readyToProcess(qreal)));
+    connect(remover,SIGNAL(ready_to_process(double)),this,SLOT(readyToProcess(double)));
 }
 
-void RemoveProgressDialog::readyToProcess(qreal total_removed) {
+void RemoveProgressDialog::readyToProcess(double total_removed) {
     if (PackageChangesDialog(QStringList(),remover->packages(),0,total_removed,this).exec() == QDialog::Rejected) {
         wasCanceled = true;
         canBeShown = true;

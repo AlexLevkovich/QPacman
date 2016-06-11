@@ -20,7 +20,7 @@ protected:
     QByteArray command() const;
 
 protected slots:
-    virtual void on_readyToProcess(const QStringList & install_packages,const QStringList & remove_packages,const QStringList & local_install_packages,qreal total_installed, qreal total_removed);
+    virtual void on_readyToProcess(const QStringList & install_packages,const QStringList & remove_packages,const QStringList & local_install_packages,double total_installed, double total_removed);
 
 private:
     QStringList m_packages;

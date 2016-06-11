@@ -11,14 +11,14 @@
 class BytesHumanizer {
 public:
     BytesHumanizer(const QString & value);
-    BytesHumanizer(qreal value);
+    BytesHumanizer(double value);
     bool was_error() { return m_was_error; }
-    qreal value() { return m_value; }
+    double value() { return m_value; }
     QString toString(int precision = 2) const;
 
 private:
     static const QString labels[9];
-    qreal m_value;
+    double m_value;
     bool m_was_error;
 };
 

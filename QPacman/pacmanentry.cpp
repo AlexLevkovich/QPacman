@@ -19,7 +19,7 @@
 
 static QString escape(const QString& plain) {
     QString rich;
-    rich.reserve(int(plain.length() * qreal(1.1)));
+    rich.reserve(int(plain.length() * double(1.1)));
     for (int i = 0; i < plain.length(); ++i) {
         if (plain.at(i) == QLatin1Char('<'))
             rich += QLatin1String("&lt;");
@@ -207,7 +207,7 @@ PacmanEntry::ParseCode PacmanEntry::parseLine(const QByteArray & array) {
     else if (line.startsWith("Replaces")) replaces = parseStrList(line);
     else if (line.startsWith("replaces =")) replaces.append(afterEqualSign(line));
     else if (line.startsWith("Installed Size")) instsize = BytesHumanizer(afterColon(line)).value();
-    else if (line.startsWith("size =")) instsize = (qreal)afterEqualSign(line).toDouble();
+    else if (line.startsWith("size =")) instsize = (double)afterEqualSign(line).toDouble();
     else if (line.startsWith("Packager")) packager = escape(afterColon(line));
     else if (line.startsWith("packager =")) packager = escape(afterEqualSign(line));
     else if (line.startsWith("Build Date")) {

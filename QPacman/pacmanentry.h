@@ -96,7 +96,7 @@ public:
     QStringList listWarnings() const {return warnings;}
     QStringList listFiles() const {return files;}
     void setFiles(const QStringList & files) { this->files = files; }
-    qreal getInstallationSize() const {return instsize;}
+    double getInstallationSize() const {return instsize;}
     QString getPackager() const {return packager;}
     QDateTime buildDate() const {return builddate;}
     QDateTime installDate() const {return installdate;}
@@ -145,7 +145,7 @@ private:
     QStringList optionalfor;
     QStringList conflicts;
     QStringList replaces;
-    qreal instsize;
+    double instsize;
     QString packager;
     QDateTime builddate;
     QDateTime installdate;
