@@ -18,6 +18,8 @@ class QGraphicsView;
 #include "filtertoolbutton.h"
 #include "categorytoolbutton.h"
 
+class PacmanWaitView;
+
 class PacmanView : public QTreeView {
     Q_OBJECT
 public:
@@ -44,7 +46,7 @@ public:
     QStringList updateNamesList() const;
     QModelIndex indexByPackageNameVersion(const QString & name,const QString & ver) const;
     QModelIndex installedIndexByPackageName(const QString & package) const;
-    void setWaitView(QGraphicsView * view) {
+    inline void setWaitView(PacmanWaitView * view) {
         waitView = view;
     }
 
@@ -84,7 +86,7 @@ private:
     bool scrollPressed;
     PacmanEntry _selEntry;
     QTimer scrollTimer;
-    QGraphicsView * waitView;
+    PacmanWaitView * waitView;
 
     void setHeaderSections();
 };

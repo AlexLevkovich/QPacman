@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network declarative dbus
+QT       += core gui network dbus
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -78,7 +78,6 @@ SOURCES += main.cpp\
     treemenuwidget.cpp \
     byteshumanizer.cpp \
     pacmanhelpdialog.cpp \
-    busyindicator.cpp \
     pacmanwaitview.cpp \
     pacmanserverinterface.cpp \
     dbuswatcher.cpp \
@@ -136,7 +135,6 @@ HEADERS  += mainwindow.h \
     treemenuwidget.h \
     byteshumanizer.h \
     pacmanhelpdialog.h \
-    busyindicator.h \
     pacmanwaitview.h \
     pacmanserverinterface.h \
     dbuswatcher.h \

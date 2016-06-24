@@ -15,6 +15,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QGraphicsView>
+#include "pacmanwaitview.h"
 
 #ifndef max
 #define max(a,b) ((a>b)?a:b)

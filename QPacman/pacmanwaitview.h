@@ -6,12 +6,12 @@
 #ifndef PACMANWAITVIEW_H
 #define PACMANWAITVIEW_H
 
-#include <QGraphicsView>
-#include "busyindicator.h"
-#include <QGraphicsScene>
 #include <QTimer>
+#include <QWidget>
 
-class PacmanWaitView : public QGraphicsView {
+class QPaintEvent;
+
+class PacmanWaitView :public QWidget {
     Q_OBJECT
 public:
     explicit PacmanWaitView(QWidget *parent = 0);
@@ -19,15 +19,24 @@ public:
 protected:
     void showEvent(QShowEvent * event);
     void hideEvent(QHideEvent * event);
+    void paintEvent(QPaintEvent *event);
 
 private slots:
-    void rotateSpinner();
+    void changeAngle();
 
 private:
-    QGraphicsScene m_scene;
-    BusyIndicator m_busyIndicator;
+    QPixmap generatePixmap() const;
+
     QTimer m_timer;
     int angle;
+    double m_actualInnerRadius;
+    double m_actualOuterRadius;
+    QColor m_backgroundColor;
+    QColor m_foregroundColor;
+
+    static const double m_innerRadius;
+    static const double m_outerRadius;
+    static const double m_size;
 };
 
 #endif // PACMANWAITVIEW_H
