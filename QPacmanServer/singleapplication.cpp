@@ -5,6 +5,7 @@
 
 #include "singleapplication.h"
 #include <QFile>
+#include <QDir>
 #include <QDebug>
 #include "pacmandbusserver.h"
 #include "pacmansetupinforeader.h"
