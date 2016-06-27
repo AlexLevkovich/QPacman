@@ -76,12 +76,12 @@
         <translation type="unfinished">О программе...</translation>
     </message>
     <message>
-        <location line="+134"/>
+        <location line="+137"/>
         <source>Checking updates...</source>
         <translation type="unfinished">Проверка обновлений...</translation>
     </message>
     <message>
-        <location line="-60"/>
+        <location line="-63"/>
         <source>About QPacmanTray...</source>
         <translation type="unfinished">Об QPacmanTray...</translation>
     </message>
@@ -91,7 +91,7 @@
         <translation type="unfinished">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - приложение для автоматической проверки обновлений. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  необходим для работы этого приложения.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версия %1.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Разработчик: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Лицензия: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="+98"/>
+        <location line="+101"/>
         <source>There were the errors during the last checking...</source>
         <translation type="unfinished">Были ошибки во время последней проверки...</translation>
     </message>
@@ -110,7 +110,7 @@
         <translation type="obsolete">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - приложение для автоматической проверки обновлений. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  необходим для работы этого приложения.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версия 2.0.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Разработчик: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Лицензия: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="-109"/>
+        <location line="-112"/>
         <source>Cannot lock checkingLock!!!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -119,7 +119,7 @@
         <translation type="obsolete">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - приложение для автоматической проверки обновлений. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  необходим для работы этого приложения.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версия 1.0.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Разработчик: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Лицензия: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="+93"/>
+        <location line="+96"/>
         <source>Warning...</source>
         <translation type="unfinished">Предупреждение...</translation>
     </message>
@@ -305,6 +305,14 @@ It is not good idea to abort pacman execution, Continue?</source>
         <location filename="../singleapplication.cpp" line="+29"/>
         <source>Cannot connect to dbus&apos; QPacmanServer!</source>
         <translation type="unfinished">Не могу соединиться с dbus&apos; QPacmanServer!</translation>
+    </message>
+</context>
+<context>
+    <name>PacmanServerInterface</name>
+    <message>
+        <location filename="../pacmanserverinterface.cpp" line="+67"/>
+        <source>Invalid DBUS server interface!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

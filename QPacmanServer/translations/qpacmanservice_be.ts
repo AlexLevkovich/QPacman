@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="be_BY">
+<TS version="2.1" language="be_BY">
 <context>
     <name>ClientSocket</name>
     <message>
@@ -447,7 +447,7 @@
 <context>
     <name>PacmanDBusServer</name>
     <message>
-        <location filename="../pacmandbusserver.cpp" line="+124"/>
+        <location filename="../pacmandbusserver.cpp" line="+129"/>
         <source>Cannot remove the contents of directory!!!</source>
         <translation type="unfinished">Немагчыма выдаліць змесціва дырэкторыі!!!</translation>
     </message>
@@ -496,7 +496,7 @@
 <context>
     <name>SingleApplication</name>
     <message>
-        <location filename="../singleapplication.cpp" line="+24"/>
+        <location filename="../singleapplication.cpp" line="+25"/>
         <source>One instance is already running!!!</source>
         <translation type="unfinished">Адна версія праграмы ўжо працуе!!!</translation>
     </message>
@@ -574,6 +574,13 @@
         <location filename="../pacmaninstallpackagesreader.cpp" line="+43"/>
         <source>Cannot copy pacman.conf to %1</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name></name>
+    <message>
+        <source>You are trying to run %1 command twice!!!</source>
+        <translation type="obsolete">Вы спрабуеце запусціць каманду %1 двойчы!!!</translation>
     </message>
 </context>
 </TS>

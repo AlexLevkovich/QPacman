@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="ru_RU">
+<TS version="2.1" language="ru_RU">
 <context>
     <name>CategoryToolButton</name>
     <message>
@@ -449,7 +449,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanView</name>
     <message>
-        <location filename="../pacmanview.cpp" line="+91"/>
+        <location filename="../pacmanview.cpp" line="+92"/>
         <source>%1 replaces %2.
 Do you want to mark it for installation?</source>
         <translation type="unfinished">%1 заменяет %2.
