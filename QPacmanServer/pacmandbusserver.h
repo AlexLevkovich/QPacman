@@ -6,8 +6,8 @@
 #ifndef PACMANDBUSSERVER_H
 #define PACMANDBUSSERVER_H
 
-#include <QtCore/QObject>
-#include <QtDBus/QtDBus>
+#include <QObject>
+#include <QDBusAbstractAdaptor>
 #include "pacmanentry.h"
 class QByteArray;
 template<class T> class QList;

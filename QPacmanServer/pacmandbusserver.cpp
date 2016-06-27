@@ -5,6 +5,11 @@
 
 #include "pacmandbusserver.h"
 #include <QDir>
+#include <QDebug>
+#include <QDBusConnection>
+#include <QDBusError>
+#include <QDBusMessage>
+#include <QCoreApplication>
 #include "pacmanrepositoryreader.h"
 #include "pacmanfileslistreader.h"
 #include "pacmandbrefresher.h"
@@ -82,7 +87,7 @@ void PacmanDBusServer::_init() {
 
 QString PacmanDBusServer::commandRequest(const QByteArray & command) {
     if (m_commands.key(command,NULL) != NULL) {
-        return tr("You are trying to run %1 command twice!!!").arg(QString::fromLatin1(command));
+        return ::PacmanDBusServer::tr("You are trying to run %1 command twice!!!").arg(QString::fromLatin1(command));
     }
 
     if (command == "SHOW TRAY") {
@@ -99,7 +104,7 @@ QString PacmanDBusServer::commandRequest(const QByteArray & command) {
     }
     else if (command == "FILE INFO") {
         if (m_file_path.isEmpty()) {
-            return tr("Invalid input file path: empty!!!");
+            return ::PacmanDBusServer::tr("Invalid input file path: empty!!!");
         }
 
         PacmanFilePackageInfoReader * inforeader = new PacmanFilePackageInfoReader(m_file_path);
@@ -121,7 +126,7 @@ QString PacmanDBusServer::commandRequest(const QByteArray & command) {
     else if (command == "CLEAN CACHE") {
         QString err_str = invalidPasswordError(m_password);
         if (err_str.isEmpty()) {
-            if (!removeDir(pacman_cache_dir)) return tr("Cannot remove the contents of directory!!!");
+            if (!removeDir(pacman_cache_dir)) return ::PacmanDBusServer::tr("Cannot remove the contents of directory!!!");
             else emit_command_finished(command,"");
         }
         else return err_str;
@@ -142,10 +147,10 @@ QString PacmanDBusServer::commandRequest(const QByteArray & command) {
     }
     else if (command == "READ INSTALL PACKAGES") {
         if ((installreader != NULL) || (localinstallreader != NULL)) {
-            return tr("One pacman process already is started!!!");
+            return ::PacmanDBusServer::tr("One pacman process already is started!!!");
         }
         else if (m_packages.isEmpty()) {
-            return tr("Input package list is empty!!!");
+            return ::PacmanDBusServer::tr("Input package list is empty!!!");
         }
         QString err_str = invalidPasswordError(m_password);
         if (err_str.isEmpty()) {
@@ -166,10 +171,10 @@ QString PacmanDBusServer::commandRequest(const QByteArray & command) {
     }
     else if (command == "READ LOCAL INSTALL PACKAGES") {
         if ((installreader != NULL) || (localinstallreader != NULL)) {
-            return tr("One pacman process already is started!!!");
+            return ::PacmanDBusServer::tr("One pacman process already is started!!!");
         }
         else if (m_packages_list.isEmpty()) {
-            return tr("Input package list is empty!!!");
+            return ::PacmanDBusServer::tr("Input package list is empty!!!");
         }
         QString err_str = invalidPasswordError(m_password);
         if (err_str.isEmpty()) {
@@ -190,10 +195,10 @@ QString PacmanDBusServer::commandRequest(const QByteArray & command) {
     }
     else if (command == "CHANGE REASON") {
         if (m_packages.isEmpty()) {
-            return tr("Input package list is empty!!!");
+            return ::PacmanDBusServer::tr("Input package list is empty!!!");
         }
         if (!IS_BOOL(m_doDeps)) {
-            return tr("Dependency flag should be boolean!!!");
+            return ::PacmanDBusServer::tr("Dependency flag should be boolean!!!");
         }
 
         QString err_str = invalidPasswordError(m_password);
@@ -205,9 +210,9 @@ QString PacmanDBusServer::commandRequest(const QByteArray & command) {
         else return err_str;
     }
     else if (command == "READ REMOVE PACKAGES") {
-        if (removereader != NULL) return tr("One pacman process already is started!!!");
+        if (removereader != NULL) return ::PacmanDBusServer::tr("One pacman process already is started!!!");
         if (m_packages.isEmpty()) {
-            return tr("Input package list is empty!!!");
+            return ::PacmanDBusServer::tr("Input package list is empty!!!");
         }
 
         QString err_str = invalidPasswordError(m_password);
@@ -221,9 +226,9 @@ QString PacmanDBusServer::commandRequest(const QByteArray & command) {
         else return err_str;
     }
     else if (command == "READ REMOVE PACKAGES NO DEPS") {
-        if (removereader != NULL) return tr("One pacman process already is started!!!");
+        if (removereader != NULL) return ::PacmanDBusServer::tr("One pacman process already is started!!!");
         if (m_packages.isEmpty()) {
-            return tr("Input package list is empty!!!");
+            return ::PacmanDBusServer::tr("Input package list is empty!!!");
         }
 
         QString err_str = invalidPasswordError(m_password);
@@ -242,7 +247,7 @@ QString PacmanDBusServer::commandRequest(const QByteArray & command) {
         }
         else emit_command_finished(command,"");
     }
-    else return tr("Invalid command!!!");
+    else return ::PacmanDBusServer::tr("Invalid command!!!");
 
     return "";
 }
