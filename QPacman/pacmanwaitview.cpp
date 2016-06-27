@@ -14,7 +14,7 @@ const double PacmanWaitView::m_outerRadius = 1.0;
 const double PacmanWaitView::m_size = 150.0;
 
 PacmanWaitView::PacmanWaitView(QWidget *parent) : QWidget(parent) {
-    angle = 0;
+    angle = 360;
 
     m_backgroundColor = QApplication::palette().color(QPalette::Highlight);
     m_foregroundColor = QApplication::palette().color(QPalette::Base);
@@ -31,15 +31,15 @@ PacmanWaitView::PacmanWaitView(QWidget *parent) : QWidget(parent) {
 }
 
 void PacmanWaitView::changeAngle() {
-    angle += 10;
-    if (angle == 360) angle = 0;
+    angle -= 10;
+    if (angle == 0) angle = 360;
     update((width()-m_size)*0.5,(height()-m_size)*0.5,m_size,m_size);
 }
 
 QPixmap PacmanWaitView::generatePixmap() const {
     QString m_cacheKey = QString("%1").arg(angle);
     QPixmap pixmap;
-    if (!QPixmapCache::find(m_cacheKey, pixmap))     {
+    if (!QPixmapCache::find(m_cacheKey, &pixmap)) {
         // Set up a convenient path
         QPainterPath path;
         path.setFillRule(Qt::OddEvenFill);
@@ -48,7 +48,7 @@ QPixmap PacmanWaitView::generatePixmap() const {
 
         double nActualDiameter = 2 * m_actualOuterRadius;
         pixmap = QPixmap(nActualDiameter,nActualDiameter);
-        pixmap.fill( Qt::transparent );
+        pixmap.fill(Qt::transparent);
         QPainter p(&pixmap);
 
         // Draw the ring background
@@ -58,13 +58,11 @@ QPixmap PacmanWaitView::generatePixmap() const {
         p.drawPath(path);
 
         // Draw the ring foreground
-        QConicalGradient gradient(QPointF( m_actualOuterRadius,m_actualOuterRadius),0.0);
+        QConicalGradient gradient(QPointF(m_actualOuterRadius,m_actualOuterRadius),angle);
         gradient.setColorAt(0.0,Qt::transparent);
         gradient.setColorAt(0.05,m_foregroundColor);
         gradient.setColorAt(0.8,Qt::transparent);
         p.setBrush(gradient);
-        QTransform transform = p.transform();
-        p.setTransform(transform.translate(m_actualOuterRadius,m_actualOuterRadius).rotate(angle).translate(-m_actualOuterRadius,-m_actualOuterRadius));
         p.drawPath(path);
         p.end();
 
@@ -74,11 +72,12 @@ QPixmap PacmanWaitView::generatePixmap() const {
     return pixmap;
 }
 
-
 void PacmanWaitView::paintEvent(QPaintEvent *event) {
-    Q_UNUSED(event);
+    QRect pixmapRect((width()-m_size)*0.5,(height()-m_size)*0.5,m_size,m_size);
+    if (!event->rect().intersects(pixmapRect)) return;
+
     QPainter painter(this);
-    painter.drawPixmap((width()-m_size)*0.5,(height()-m_size)*0.5,generatePixmap());
+    painter.drawPixmap(pixmapRect.x(),pixmapRect.y(),generatePixmap());
     painter.end();
 }
 
