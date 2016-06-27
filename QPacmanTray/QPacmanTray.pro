@@ -7,7 +7,6 @@
 QT       += core gui network dbus
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-LIBS += -lX11
 
 TARGET = QPacmanTray
 TEMPLATE = app
