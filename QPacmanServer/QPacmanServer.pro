@@ -12,6 +12,7 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 DEFINES  += IS_QPACMAN_SERVER
+INCLUDEPATH += .
 
 isEmpty(INSTALL_PREFIX) {
     INSTALL_PREFIX = /usr/local
