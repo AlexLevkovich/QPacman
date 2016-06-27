@@ -22,7 +22,7 @@ void PacmanFilePackageInfoReader::readyReadStandardOutput() {
     }
 }
 
-void PacmanFilePackageInfoReader::error(const QString & error) {
+bool PacmanFilePackageInfoReader::error(const QString & error) {
     if (error.startsWith(".PKGINFO")) {
         if (!wasStdoutRead) {
             process.waitForReadyRead();
@@ -33,4 +33,5 @@ void PacmanFilePackageInfoReader::error(const QString & error) {
         onFinished(0,QProcess::NormalExit);
     }
     else code = 1;
+    return true;
 }

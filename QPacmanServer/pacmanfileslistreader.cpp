@@ -49,7 +49,7 @@ void PacmanFilesListReader::readyReadStandardOutput() {
     }
 }
 
-void PacmanFilesListReader::error(const QString & /*error*/) {}
+bool PacmanFilesListReader::error(const QString & /*error*/) { return true; }
 
 void PacmanFilesListReader::onFinished(int code,QProcess::ExitStatus status) {
     if (!m_package.isEmpty()) emit files_ready(m_package,m_files);

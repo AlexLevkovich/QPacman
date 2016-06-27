@@ -37,7 +37,7 @@ protected:
     bool isFinished;
     bool isTerminated;
 
-    virtual void error(const QString & error);
+    virtual bool error(const QString & error);
     virtual QString command() const = 0;
 
 private slots:

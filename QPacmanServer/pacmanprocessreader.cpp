@@ -126,7 +126,7 @@ void PacmanProcessReader::_finished() {
     emit finished(this);
 }
 
-void PacmanProcessReader::error(const QString & /*error*/) {}
+bool PacmanProcessReader::error(const QString & /*error*/) { return true; }
 
 int PacmanProcessReader::exitCode() const {
     return process.exitCode() + code;

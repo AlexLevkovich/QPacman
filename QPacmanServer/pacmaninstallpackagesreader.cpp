@@ -10,6 +10,7 @@
 #include <QDate>
 #include <QTextStream>
 #include <QFile>
+#include <QStringList>
 #include "confsettings.h"
 
 const QString PacmanInstallPackagesReader::providerChooserStr("Enter a number (default=");
@@ -20,7 +21,6 @@ const QString PacmanInstallPackagesReader::providerChooserStr("Enter a number (d
 PacmanInstallPackagesReader::PacmanInstallPackagesReader(const QString & packages,QObject *parent) : PacmanProcessReader(parent) {
     in_packages = packages;
     packagesRead = false;
-    countRead = 0;
     packages_count = 0;
     install_wait = false;
     packagesWasRead = false;
@@ -176,114 +176,104 @@ void PacmanInstallPackagesReader::onFinished(int code,QProcess::ExitStatus statu
 void PacmanInstallPackagesReader::readyReadStandardError() {
     m_errorStream += QString::fromLocal8Bit(process.readAllStandardError());
 
-    QString stream_str = m_errorStream.mid(countRead);
-    if (stream_str.isEmpty()) return;
-    error(stream_str);
+    QStringList errorLines = m_errorStream.split("\n",QString::SkipEmptyParts);
+    m_errorStream.clear();
+
+    QString err;
+    for (int i=0;i<(errorLines.count()-1);i++) {
+        err = errorLines.at(i);
+        err.remove('\r');
+        error(err);
+    }
+
+    if (errorLines.count() > 0) {
+        if (!error(errorLines.last())) m_errorStream += errorLines.last();
+    }
 }
 
-void PacmanInstallPackagesReader::error(const QString & error) {
-    int index = error.indexOf(":: ");
-    if (index != -1) {
+bool PacmanInstallPackagesReader::error(const QString & error) {
+    int index = -1;
+
+    if (error.startsWith(":: ")) {
         int index2 = error.indexOf("[Y/n]",0,Qt::CaseInsensitive);
         if (index2 != -1) {
-            countRead += index2 + 5;
-            QString line = error.mid(index);
-            if (line.startsWith(":: Proceed with installation? [Y/n]")) {
+            if (error.startsWith(":: Proceed with installation? [Y/n]")) {
                 install_wait = true;
                 emit ready_to_process(packages_count);
-                return;
+                return true;
             }
             else {
-                emit question_available((!warnings.isEmpty()?warnings:"")+line.mid(3,index2-index-3).trimmed());
+                emit question_available((!warnings.isEmpty()?warnings:"")+error.mid(3,index2-3).trimmed());
                 if (!warnings.isEmpty()) warnings.clear();
-                return;
+                return true;
             }
         }
-        else countRead += index + 3;
+        return false;
     }
-    else {
-        index = error.indexOf(providerChooserStr);
+
+    if (packagesRetrieving) {
+        QString line;
+        if (error.startsWith("--"+QDate::currentDate().toString(Qt::ISODate)+" ")) {
+            line = error.mid(2);
+            index = line.indexOf("--");
+            if (index != -1) {
+                line = line.mid(index+2);
+                QTextStream stream(&line,QIODevice::ReadOnly);
+                QString ret = stream.readLine().trimmed();
+                if (!ret.isEmpty()) {
+                    emit start_download(ret);
+                }
+            }
+            return true;
+        }
+
+        if (error.startsWith("Length: ")) {
+            line = error.mid(8);
+            int index2 = line.indexOf(" ");
+            if (index2 != -1) {
+                bool ok = false;
+                int ret_int = line.left(index2).toInt(&ok);
+                if (ok) emit contents_length_found(ret_int);
+            }
+            return true;
+        }
+
+        index = error.indexOf("%[");
         if (index != -1) {
-            if (currentProviders.count() > 0) {
-                emit some_providers_available(currentProviders.keys());
+            int index2 = error.lastIndexOf(" ",index);
+            if (index2 != -1) {
+                bool ok = false;
+                int ret_int = error.mid(index2+1,index-index2-1).toInt(&ok);
+                if (ok) {
+                    emit download_progress(ret_int);
+                }
             }
-            countRead += index + providerChooserStr.length();
+            return true;
         }
-        else {
-            if (packagesRetrieving) {
-                QString line;
-                index = error.indexOf("--"+QDate::currentDate().toString(Qt::ISODate)+" ");
-                if (index != -1) {
-                    line = error.mid(index+2);
-                    countRead += index+2;
-                    index = line.indexOf("--");
-                    if (index != -1) {
-                        countRead += index+2;
-                        line = line.mid(index+2);
-                        QTextStream stream(&line,QIODevice::ReadOnly);
-                        QString ret = stream.readLine().trimmed();
-                        if (!ret.isEmpty()) {
-                            countRead += ret.length();
-                            emit start_download(ret);
-                        }
-                    }
-                }
 
-                index = error.indexOf("Length: ");
-                if (index != -1) {
-                    countRead += index+8;
-                    line = error.mid(index+8);
-                    int index2 = line.indexOf(" ");
-                    if (index2 != -1) {
-                        countRead += index2;
-                        bool ok = false;
-                        int ret_int = line.left(index2).toInt(&ok);
-                        if (ok) emit contents_length_found(ret_int);
-                    }
-                }
-
-                line = error;
-                while (true) {
-                    index = line.indexOf("%[");
-                    if (index == -1) break;
-                    countRead += index+2;
-
-                    int index2 = line.lastIndexOf(" ",index);
-                    if (index2 == -1) break;
-
-                    bool ok = false;
-                    int ret_int = line.mid(index2+1,index-index2-1).toInt(&ok);
-                    if (ok) {
-                        emit download_progress(ret_int);
-                        line = line.mid(index+2);
-                    }
-                    else break;
-                }
-
-                index = error.indexOf("wget: ");
-                if (index != -1) {
-                    countRead += index+6;
-                    line = error.mid(index+6);
-                    QTextStream stream(&line,QIODevice::ReadOnly);
-                    QString ret = stream.readLine().trimmed();
-                    if (!ret.isEmpty()) {
-                        countRead += ret.length();
-                        m_outErrors += ret + "\n";
-                        code = 1;
-                    }
-                }
+        index = error.indexOf("wget: ");
+        if (index != -1) {
+            line = error.mid(index+6);
+            if (!line.isEmpty()) {
+                m_outErrors += line + "\n";
+                code = 1;
             }
-            else {
-                index = error.indexOf("warning: ");
-                if (index != -1) {
-                    QString line = error.mid(index);
-                    QStringList lines = line.split('\n');
-                    warnings += lines.at(0) + "\n";
-                    countRead += index + lines.at(0).length() + 1;
-                }
-            }
+            return true;
         }
     }
+
+    if (error.startsWith(providerChooserStr)) {
+        if (currentProviders.count() > 0) {
+            emit some_providers_available(currentProviders.keys());
+        }
+        return true;
+    }
+
+    if (error.startsWith("warning: ")) {
+        warnings += error + "\n";
+    }
+
+    return true;
 }
 
 void PacmanInstallPackagesReader::beginInstall() {

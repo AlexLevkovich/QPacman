@@ -27,7 +27,7 @@ public:
 
 protected:
     virtual QString command() const;
-    void error(const QString & error);
+    bool error(const QString & error);
 
 protected slots:
     void readyReadStandardError();
@@ -57,7 +57,6 @@ protected:
 private:
     bool packagesWasRead;
     QString current_installing;
-    int countRead;
     QMap<QString,int> currentProviders;
     QMap<QString,QStringList> m_messages;
     QString m_outErrors;

@@ -17,7 +17,7 @@ public:
 
 protected:
     QString command() const;
-    void error(const QString & error);
+    bool error(const QString & error);
 
 protected slots:
     void readyReadStandardOutput();

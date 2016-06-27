@@ -12,7 +12,6 @@ PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,
     in_packages = packages;
     packagesRead = false;
     packagesWasRead = false;
-    countRead = 0;
     removing_wait = false;
     m_withDeps = withDeps;
 }
@@ -88,33 +87,43 @@ void PacmanRemovePackagesReader::onFinished(int code,QProcess::ExitStatus status
 void PacmanRemovePackagesReader::readyReadStandardError() {
     m_errorStream += QString::fromLocal8Bit(process.readAllStandardError());
 
-    QString stream_str = m_errorStream.mid(countRead);
-    if (stream_str.isEmpty()) return;
-    error(stream_str);
+    QStringList errorLines = m_errorStream.split("\n",QString::SkipEmptyParts);
+    m_errorStream.clear();
+
+    QString err;
+    for (int i=0;i<(errorLines.count()-1);i++) {
+        err = errorLines.at(i);
+        err.remove('\r');
+        error(err);
+    }
+
+    if (errorLines.count() > 0) {
+        if (!error(errorLines.last())) m_errorStream += errorLines.last();
+    }
 }
 
-void PacmanRemovePackagesReader::error(const QString & error) {
+bool PacmanRemovePackagesReader::error(const QString & error) {
     int index = error.indexOf(":: ");
     if (index != -1) {
         int index2 = error.indexOf("[Y/n]",0,Qt::CaseInsensitive);
         if (index2 != -1) {
-            countRead += index2 + 5;
             QString line = error.mid(index);
             if (line.startsWith(":: Do you want to remove these packages? [Y/n]")) {
                 removing_wait = true;
                 emit ready_to_process(m_packages.count());
-                return;
+                return true;
             }
             else {
                 if (process.write("y\n") == -1) {
                     code = 1;
-                    return;
                 }
+                process.waitForBytesWritten(-1);
+                return true;
             }
-            process.waitForBytesWritten(-1);
         }
-        else countRead += index + 3;
+        return false;
     }
+    return true;
 }
 
 void PacmanRemovePackagesReader::beginRemove() {
