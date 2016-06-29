@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
+        <file>pics/go-previous.png</file>
+        <file>pics/go-next.png</file>
         <file>pics/notinstalled.png</file>
         <file>pics/down.png</file>
         <file>pics/delete.png</file>
@@ -31,7 +33,5 @@
         <file>pics/installed.png</file>
         <file>pics/2down.png</file>
         <file>pics/help-hint.png</file>
-        <file>pics/go-previous.png</file>
-        <file>pics/go-next.png</file>
     </qresource>
 </RCC>
