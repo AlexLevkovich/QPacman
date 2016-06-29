@@ -31,5 +31,7 @@
         <file>pics/installed.png</file>
         <file>pics/2down.png</file>
         <file>pics/help-hint.png</file>
+        <file>pics/go-previous.png</file>
+        <file>pics/go-next.png</file>
     </qresource>
 </RCC>

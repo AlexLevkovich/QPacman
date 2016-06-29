@@ -8,6 +8,7 @@
 
 #include <QTreeView>
 #include <QTimer>
+#include <QVector>
 #include "pacmanitemmodel.h"
 
 class InstallButtonDelegate;
@@ -26,6 +27,10 @@ public:
     explicit PacmanView(QWidget *parent = 0);
     ~PacmanView();
     void selectPackageByName(const QString & package);
+    void selectPrev();
+    void selectNext();
+    bool isSelectPrevPossible();
+    bool isSelectNextPossible();
     void selectPackageByEntry(const PacmanEntry & entry);
     void showAllRows();
     void markRow(const QModelIndex & index);
@@ -87,6 +92,9 @@ private:
     PacmanEntry _selEntry;
     QTimer scrollTimer;
     PacmanWaitView * waitView;
+    QVector<PacmanEntry> history_items;
+    bool history_disabled;
+    int history_index;
 
     void setHeaderSections();
 };

@@ -297,7 +297,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+216"/>
+        <location filename="../mainwindow.cpp" line="+219"/>
         <source>The contents of cache directory will be removed.
 Are you sure to continue?</source>
         <translation type="unfinished">Все содержимое папки с кешом будет удалено. Вы уверены?</translation>
@@ -341,6 +341,36 @@ Are you sure to continue?</source>
         <location/>
         <source>F6</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Previous</source>
+        <translation type="unfinished">Предыдущий</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Left</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Next</source>
+        <translation type="unfinished">Следующий</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Right</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location/>
+        <source>Sets the selection to the previous item</source>
+        <translation type="unfinished">Выделяет предыдущий элемент</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Sets the selection to the next item</source>
+        <translation type="unfinished">Выделяет следующий элемент</translation>
     </message>
 </context>
 <context>
@@ -449,7 +479,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanView</name>
     <message>
-        <location filename="../pacmanview.cpp" line="+92"/>
+        <location filename="../pacmanview.cpp" line="+94"/>
         <source>%1 replaces %2.
 Do you want to mark it for installation?</source>
         <translation type="unfinished">%1 заменяет %2.
@@ -695,7 +725,7 @@ Please wait some time.</source>
         <translation type="obsolete">Обновления</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+43"/>
+        <location filename="../mainwindow.cpp" line="+45"/>
         <source>QPacmanServer is loaded! You are on again.</source>
         <translation type="unfinished">QPacmanServer загружен! Все будет активно сейчас.</translation>
     </message>

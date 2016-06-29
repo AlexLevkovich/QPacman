@@ -29,6 +29,8 @@ PacmanView::PacmanView(QWidget *parent) : QTreeView(parent) {
     setIconSize(QSize(22,22));
     setMouseTracking(true);
 
+    history_disabled = false;
+    history_index = -1;
     waitView = NULL;
     prev_model = NULL;
     prev_sel_model = NULL;
@@ -128,6 +130,8 @@ void PacmanView::refresh() {
     if (model != NULL) model->removeRows(0,model->rowCount());
     reset();
 
+    history_items.clear();
+    history_index = -1;
     model = new PacmanItemModel(this);
 
     for (int i=0;i<model->columnCount();i++) {
@@ -149,7 +153,37 @@ void PacmanView::onSearchChanged(const QString & text,CategoryToolButton::ItemId
 
 void PacmanView::selectionChanged(const QItemSelection & selected,const QItemSelection & deselected) {
     QTreeView::selectionChanged(selected,deselected);
-    if (!selected.isEmpty()) emit selectionChanged(selected.indexes()[0]);
+    if (!selected.isEmpty()) {
+        QModelIndex index = selected.indexes()[0];
+        if (!history_disabled) {
+            if (history_index >= 0) history_items.resize(history_index+1);
+            history_items.append(model->row(index));
+            history_index = history_items.count() - 1;
+        }
+        emit selectionChanged(index);
+    }
+}
+
+void PacmanView::selectPrev() {
+    history_index--;
+    history_disabled = true;
+    selectPackageByEntry(history_items.at(history_index));
+    history_disabled = false;
+}
+
+void PacmanView::selectNext() {
+    history_index++;
+    history_disabled = true;
+    selectPackageByEntry(history_items.at(history_index));
+    history_disabled = false;
+}
+
+bool PacmanView::isSelectPrevPossible() {
+    return ((history_index-1) >= 0);
+}
+
+bool PacmanView::isSelectNextPossible() {
+    return ((history_index+1) < history_items.count());
 }
 
 void PacmanView::selectPackageByName(const QString & package) {
@@ -383,4 +417,3 @@ void PacmanView::keyPressEvent(QKeyEvent * event) {
             break;
     }
 }
-

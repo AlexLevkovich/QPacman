@@ -19,7 +19,16 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
@@ -29,7 +38,16 @@
       </property>
       <widget class="QWidget" name="widget" native="true">
        <layout class="QVBoxLayout" name="verticalLayout_2">
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -53,7 +71,16 @@
          <string>Info</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>1</number>
+         </property>
+         <property name="topMargin">
+          <number>1</number>
+         </property>
+         <property name="rightMargin">
+          <number>1</number>
+         </property>
+         <property name="bottomMargin">
           <number>1</number>
          </property>
          <item>
@@ -66,7 +93,16 @@
          <string>Files</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <property name="margin">
+         <property name="leftMargin">
+          <number>1</number>
+         </property>
+         <property name="topMargin">
+          <number>1</number>
+         </property>
+         <property name="rightMargin">
+          <number>1</number>
+         </property>
+         <property name="bottomMargin">
           <number>1</number>
          </property>
          <item>
@@ -132,6 +168,9 @@
    <addaction name="actionRefreshList"/>
    <addaction name="actionRefresh"/>
    <addaction name="actionCacheCleanUp"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrevious"/>
+   <addaction name="actionNext"/>
   </widget>
   <action name="actionApply">
    <property name="icon">
@@ -239,6 +278,36 @@
    </property>
    <property name="shortcut">
     <string>Alt+C</string>
+   </property>
+  </action>
+  <action name="actionPrevious">
+   <property name="icon">
+    <iconset resource="qpacman.qrc">
+     <normaloff>:/pics/go-previous.png</normaloff>:/pics/go-previous.png</iconset>
+   </property>
+   <property name="text">
+    <string>Previous</string>
+   </property>
+   <property name="toolTip">
+    <string>Sets the selection to the previous item</string>
+   </property>
+   <property name="shortcut">
+    <string>Left</string>
+   </property>
+  </action>
+  <action name="actionNext">
+   <property name="icon">
+    <iconset resource="qpacman.qrc">
+     <normaloff>:/pics/go-next.png</normaloff>:/pics/go-next.png</iconset>
+   </property>
+   <property name="text">
+    <string>Next</string>
+   </property>
+   <property name="toolTip">
+    <string>Sets the selection to the next item</string>
+   </property>
+   <property name="shortcut">
+    <string>Right</string>
    </property>
   </action>
  </widget>

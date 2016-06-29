@@ -81,6 +81,9 @@ void MainWindow::onSelectionChanged(const QModelIndex & index) {
     else {
         ui->filesTree->clear();
     }
+
+    ui->actionNext->setEnabled(ui->packetView->isSelectNextPossible());
+    ui->actionPrevious->setEnabled(ui->packetView->isSelectPrevPossible());
 }
 
 void MainWindow::onGroupUrlSelected(const QString & group) {
@@ -255,7 +258,9 @@ void MainWindow::onEnableActions(bool flag) {
     for (int i=0;i<actions.count();i++) {
         actions[i]->setEnabled(flag);
     }
-    ui->actionApply->setEnabled((!flag)?false:actionApplyState());
+    ui->actionApply->setEnabled(!flag?false:actionApplyState());
+    ui->actionNext->setEnabled(!flag?false:ui->packetView->isSelectNextPossible());
+    ui->actionPrevious->setEnabled(!flag?false:ui->packetView->isSelectPrevPossible());
 }
 
 void MainWindow::dbus_loaded() {
@@ -273,4 +278,12 @@ bool MainWindow::actionApplyState() {
     QList<PacmanEntry> to_remove = ui->packetView->markedPackagesToRemove();
     QList<PacmanEntry> to_install = ui->packetView->markedPackagesToInstall();
     return ((to_removeall.count() > 0) || (to_remove.count() > 0) || (to_install.count() > 0));
+}
+
+void MainWindow::on_actionPrevious_triggered() {
+    ui->packetView->selectPrev();
+}
+
+void MainWindow::on_actionNext_triggered() {
+    ui->packetView->selectNext();
 }

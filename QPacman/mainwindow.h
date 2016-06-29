@@ -55,6 +55,8 @@ private slots:
     void onEnableActions(bool flag);
     void dbus_loaded();
     void dbus_unloaded();
+    void on_actionPrevious_triggered();
+    void on_actionNext_triggered();
 
 private:
     Ui::MainWindow *ui;
