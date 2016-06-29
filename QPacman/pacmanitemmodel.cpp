@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QTreeView>
 #include <stdio.h>
+#include "static.h"
 
 #ifndef max
 #define max(a,b) ((a>b)?a:b)
@@ -315,14 +316,14 @@ QList<int> PacmanItemModel::filterRecords(const QString & text,CategoryToolButto
     QList<int> list;
     for (int i=0;i<rows.count();i++) {
         if (group.isEmpty()) {
-            if (((fItemId == FilterToolButton::IS_INSTALLED) && !rows[i].isInstalled()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty())) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_NONINSTALLED) && rows[i].isInstalled()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty())) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_NEEDUPDATE) && !rows[i].isUpdate()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty())) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_ORPHANED) && !rows[i].isOrphaned()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty())) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_MARKED) && !rows[i].isChosen()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty())) list.append(i);
+            if (((fItemId == FilterToolButton::IS_INSTALLED) && !rows[i].isInstalled()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_NONINSTALLED) && rows[i].isInstalled()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_NEEDUPDATE) && !rows[i].isUpdate()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_ORPHANED) && !rows[i].isOrphaned()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_MARKED) && !rows[i].isChosen()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
         }
         else{
-            if (!rows[i].ownedByGroup(group) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty())) list.append(i);
+            if (!rows[i].ownedByGroup(group) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
         }
     }
 

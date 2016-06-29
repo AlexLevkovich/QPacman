@@ -404,7 +404,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanItemModel</name>
     <message>
-        <location filename="../pacmanitemmodel.cpp" line="+53"/>
+        <location filename="../pacmanitemmodel.cpp" line="+54"/>
         <source>Name of package</source>
         <translation type="unfinished">Название пакета</translation>
     </message>
@@ -657,8 +657,12 @@ Do you want to mark it for installation?</source>
         <translation type="unfinished">Переустановить</translation>
     </message>
     <message>
-        <location filename="../static.cpp" line="+28"/>
         <source>All </source>
+        <translation type="obsolete">Все</translation>
+    </message>
+    <message>
+        <location filename="../static.cpp" line="+28"/>
+        <source>All</source>
         <translation type="unfinished">Все</translation>
     </message>
     <message>

@@ -25,7 +25,7 @@ QString Static::PacmanTerminate_Str;
 QString Static::RepoAll_Str;
 
 void Static::init_tr_variables() {
-    RepoAll_Str = QObject::tr("All ");
+    RepoAll_Str = QObject::tr("All");
     Error_Str = QObject::tr("Error...");
     Warning_Str = QObject::tr("Warning...");
     Info_Str = QObject::tr("Information...");
