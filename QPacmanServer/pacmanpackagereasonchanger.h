@@ -13,10 +13,6 @@ class PacmanPackageReasonChanger : public PacmanProcessReader {
 public:
     explicit PacmanPackageReasonChanger(const QString & package,bool doDeps,QObject *parent = 0);
 
-protected slots:
-    void readyReadStandardOutput();
-    void onFinished(int code,QProcess::ExitStatus status);
-
 protected:
     QString command() const;
 

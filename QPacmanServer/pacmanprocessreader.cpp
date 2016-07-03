@@ -8,9 +8,10 @@
 #include <QCoreApplication>
 #include <sys/types.h>
 #include <signal.h>
+#include <QDebug>
 
 PacmanProcessReader::PacmanProcessReader(QObject *parent) : QObject(parent) {
-    code = 0;
+    m_code = 0;
     isTerminated = false;
     isFinished = false;
 
@@ -52,7 +53,7 @@ void PacmanProcessReader::terminate() {
             }
         }
 
-        process.terminate();
+        terminateProcess();
         if (!process.waitForFinished()) process.kill();
         for(int i=0;i<list.size();i++) {
             if(!list.at(i).isEmpty()) ::kill(list.at(i).toInt(),SIGTERM);
@@ -62,7 +63,7 @@ void PacmanProcessReader::terminate() {
 }
 
 void PacmanProcessReader::start() {
-    if (code != 0) {
+    if (m_code != 0) {
         QMetaObject::invokeMethod(this,"_finished",Qt::QueuedConnection);
         return;
     }
@@ -74,7 +75,21 @@ void PacmanProcessReader::start() {
 void PacmanProcessReader::readyReadStandardError() {
     QString errStr = QString::fromLocal8Bit(process.readAllStandardError());
     m_errorStream += errStr;
-    error(errStr);
+    errStr = m_lastErrorStream + errStr;
+    m_lastErrorStream.clear();
+
+    QStringList errorLines = errStr.split("\n",QString::SkipEmptyParts);
+
+    QString err;
+    for (int i=0;i<(errorLines.count()-1);i++) {
+        err = errorLines.at(i);
+        err.remove('\r');
+        error(err);
+    }
+
+    if (errorLines.count() > 0) {
+        if (!error(errorLines.last())) m_lastErrorStream += errorLines.last();
+    }
 }
 
 QString PacmanProcessReader::errorStream() const {
@@ -82,7 +97,21 @@ QString PacmanProcessReader::errorStream() const {
 }
 
 void PacmanProcessReader::readyReadStandardOutput() {
-    process.readAllStandardOutput();
+    QString outStr = m_lastOutputStream + QString::fromLocal8Bit(process.readAllStandardOutput());
+    m_lastOutputStream.clear();
+
+    QStringList outputLines = outStr.split("\n",QString::KeepEmptyParts);
+    if (outputLines.count() > 0 && !outputLines.last().isEmpty()) {
+        m_lastOutputStream += outputLines.last();
+        outputLines.removeAt(outputLines.count()-1);
+    }
+
+    QString out;
+    for (int i=0;i<outputLines.count();i++) {
+        out = outputLines.at(i);
+        out.remove('\r');
+        output(out);
+    }
 }
 
 void PacmanProcessReader::onError(QProcess::ProcessError errid) {
@@ -112,22 +141,21 @@ void PacmanProcessReader::onFinished(int /*code*/,QProcess::ExitStatus /*status*
     if (isFinished) return;
 
     isFinished = true;
-    process.setReadChannel(QProcess::StandardOutput);
     if (process.bytesAvailable() > 0) readyReadStandardOutput();
-    process.setReadChannel(QProcess::StandardError);
     if (process.bytesAvailable() > 0) readyReadStandardError();
 
     QMetaObject::invokeMethod(this,"_finished",Qt::QueuedConnection);
 }
 
 void PacmanProcessReader::_finished() {
-    if (isTerminated) code = 0;
+    if (isTerminated) m_code = 0;
 
     emit finished(this);
 }
 
-bool PacmanProcessReader::error(const QString & /*error*/) { return true; }
+bool PacmanProcessReader::error(const QString & /*err*/) { return true; }
+bool PacmanProcessReader::output(const QString & /*out*/) { return true; }
 
 int PacmanProcessReader::exitCode() const {
-    return process.exitCode() + code;
+    return process.exitCode() + m_code;
 }

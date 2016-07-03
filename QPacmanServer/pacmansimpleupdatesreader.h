@@ -16,9 +16,7 @@ public:
 
 protected:
     QString command() const;
-
-protected slots:
-    void readyReadStandardOutput();
+    bool output(const QString & out);
 
 private:
     QStringList m_packages;

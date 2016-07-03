@@ -24,48 +24,45 @@ double PacmanRemovePackagesReader::total_removed() {
     return m_total_removed;
 }
 
-void PacmanRemovePackagesReader::readyReadStandardOutput() {
-    while (process.canReadLine()) {
-        QString line = QString::fromLocal8Bit(process.readLine());
-        if (line.endsWith("\n")) line = line.left(line.length()-1);
-        line = line.simplified();
-        if (line.isEmpty()) {
-            if (packagesRead) packagesRead = false;
-            continue;
-        }
-
-        if (packagesRead || line.startsWith("Packages (")) {
-            int startindex = 0;
-            if (!packagesRead) {
-                packagesRead = true;
-                packagesWasRead = true;
-                startindex = 2;
-            }
-            QStringList parts = line.split(" ",QString::SkipEmptyParts);
-            for (int i=startindex;i<parts.count();i++) {
-                 m_packages.append(parts[i]);
-            }
-        }
-
-        if (packagesWasRead && line.startsWith(TOTAL_REMOVED_STR)) m_total_removed = BytesHumanizer(line.mid(strlen(TOTAL_REMOVED_STR)).trimmed()).value();
-
-        if (!line.startsWith("removing ") || !line.endsWith("...")) {
-            if (!current_removing.isEmpty()) {
-                m_messages[current_removing].append(line);
-            }
-            continue;
-        }
-
-        QStringList parts = line.split(" ",QString::SkipEmptyParts);
-        if (parts.count() < 2) continue;
-
-        if (!current_removing.isEmpty() && m_messages.contains(current_removing)) {
-            emit post_messages(current_removing,m_messages[current_removing]);
-        }
-
-        current_removing = parts[1].left(parts[1].length()-3);
-        emit start_removing(current_removing);
+bool PacmanRemovePackagesReader::output(const QString & out) {
+    QString line = out.simplified();
+    if (line.isEmpty()) {
+        if (packagesRead) packagesRead = false;
+        return true;
     }
+
+    if (packagesRead || line.startsWith("Packages (")) {
+        int startindex = 0;
+        if (!packagesRead) {
+            packagesRead = true;
+            packagesWasRead = true;
+            startindex = 2;
+        }
+        QStringList parts = line.split(" ",QString::SkipEmptyParts);
+        for (int i=startindex;i<parts.count();i++) {
+             m_packages.append(parts[i]);
+        }
+    }
+
+    if (packagesWasRead && line.startsWith(TOTAL_REMOVED_STR)) m_total_removed = BytesHumanizer(line.mid(strlen(TOTAL_REMOVED_STR)).trimmed()).value();
+
+    if (!line.startsWith("removing ") || !line.endsWith("...")) {
+        if (!current_removing.isEmpty()) {
+            m_messages[current_removing].append(line);
+        }
+        return true;
+    }
+
+    QStringList parts = line.split(" ",QString::SkipEmptyParts);
+    if (parts.count() < 2) return true;
+
+    if (!current_removing.isEmpty() && m_messages.contains(current_removing)) {
+        emit post_messages(current_removing,m_messages[current_removing]);
+    }
+
+    current_removing = parts[1].left(parts[1].length()-3);
+    emit start_removing(current_removing);
+    return true;
 }
 
 QStringList PacmanRemovePackagesReader::packages() const {
@@ -77,29 +74,11 @@ void PacmanRemovePackagesReader::onFinished(int code,QProcess::ExitStatus status
         emit post_messages(current_removing,m_messages[current_removing]);
     }
 
-    if (packagesWasRead && (code != 0)) {
-        this->code = -code;
+    if (packagesWasRead && (this->code() != 0)) {
+        setCode(-code);
     }
 
     PacmanProcessReader::onFinished(code,status);
-}
-
-void PacmanRemovePackagesReader::readyReadStandardError() {
-    m_errorStream += QString::fromLocal8Bit(process.readAllStandardError());
-
-    QStringList errorLines = m_errorStream.split("\n",QString::SkipEmptyParts);
-    m_errorStream.clear();
-
-    QString err;
-    for (int i=0;i<(errorLines.count()-1);i++) {
-        err = errorLines.at(i);
-        err.remove('\r');
-        error(err);
-    }
-
-    if (errorLines.count() > 0) {
-        if (!error(errorLines.last())) m_errorStream += errorLines.last();
-    }
 }
 
 bool PacmanRemovePackagesReader::error(const QString & error) {
@@ -114,10 +93,9 @@ bool PacmanRemovePackagesReader::error(const QString & error) {
                 return true;
             }
             else {
-                if (process.write("y\n") == -1) {
-                    code = 1;
-                }
-                process.waitForBytesWritten(-1);
+                if (write("y\n") == -1) {
+                    setCode(1);
+                } else waitForBytesWritten();
                 return true;
             }
         }
@@ -128,18 +106,18 @@ bool PacmanRemovePackagesReader::error(const QString & error) {
 
 void PacmanRemovePackagesReader::beginRemove() {
     if (!removing_wait) return;
-    if (process.write("y\n") == -1) {
-        code = 1;
+    if (write("y\n") == -1) {
+        setCode(1);
         return;
     }
-    process.waitForBytesWritten(-1);
+    waitForBytesWritten();
 }
 
 void PacmanRemovePackagesReader::cancelRemove() {
     if (!removing_wait) return;
-    if (process.write("n\n") == -1) {
-        code = 1;
+    if (write("n\n") == -1) {
+        setCode(1);
         return;
     }
-    process.waitForBytesWritten(-1);
+    waitForBytesWritten();
 }

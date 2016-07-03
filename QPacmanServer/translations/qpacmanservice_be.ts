@@ -327,7 +327,7 @@
 <context>
     <name>PacmanProcessReader</name>
     <message>
-        <location filename="../pacmanprocessreader.cpp" line="+91"/>
+        <location filename="../pacmanprocessreader.cpp" line="+120"/>
         <source>The process failed to start.</source>
         <translation type="unfinished">Працэс не змог запусціцца.</translation>
     </message>
@@ -360,7 +360,7 @@
 <context>
     <name>PacmanSetupInfoReader</name>
     <message>
-        <location filename="../pacmansetupinforeader.cpp" line="+47"/>
+        <location filename="../pacmansetupinforeader.cpp" line="+44"/>
         <source>QPacman: Cannot correctly parse the pacman&apos;s output!!!
 </source>
         <translation type="unfinished">QPacman: Не магу правільна інтэрпрэтаваць выхадныя дадзеныя з pacman!!!</translation>
@@ -496,7 +496,7 @@
 <context>
     <name>SingleApplication</name>
     <message>
-        <location filename="../singleapplication.cpp" line="+25"/>
+        <location filename="../singleapplication.cpp" line="+24"/>
         <source>One instance is already running!!!</source>
         <translation type="unfinished">Адна версія праграмы ўжо працуе!!!</translation>
     </message>

@@ -27,11 +27,10 @@ public:
 
 protected:
     virtual QString command() const;
-    bool error(const QString & error);
+    bool error(const QString & errorOut);
+    bool output(const QString & out);
 
 protected slots:
-    void readyReadStandardError();
-    void readyReadStandardOutput();
     virtual void onFinished(int code,QProcess::ExitStatus status);
     void start();
 
@@ -67,6 +66,7 @@ private:
     bool packagesRetrieving;
     bool installCanceled;
     QString warnings;
+    QString errorStream;
 };
 
 #endif // PacmanInstallPackagesReader_H

@@ -21,10 +21,9 @@ public:
 protected:
     QString command() const;
     bool error(const QString & error);
+    bool output(const QString & out);
 
 protected slots:
-    void readyReadStandardError();
-    void readyReadStandardOutput();
     void onFinished(int code,QProcess::ExitStatus status);
 
 signals:
@@ -44,6 +43,7 @@ private:
     QMap<QString,QStringList> m_messages;
     double m_total_removed;
     bool m_withDeps;
+    QString errorStream;
 };
 
 #endif // PacmanRemovePackagesReader_H

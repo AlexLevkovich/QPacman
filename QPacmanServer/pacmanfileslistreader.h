@@ -16,10 +16,9 @@ public:
 
 protected:
     QString command() const;
-    bool error(const QString & error);
+    bool output(const QString & out);
 
 protected slots:
-    void readyReadStandardOutput();
     void onFinished(int code,QProcess::ExitStatus status);
 
 signals:

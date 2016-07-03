@@ -16,9 +16,7 @@ public:
 
 protected:
     virtual QString command() const;
-
-protected slots:
-    virtual void readyReadStandardOutput();
+    bool output(const QString & out);
 
 signals:
     void read_package(const PacmanEntry & package);

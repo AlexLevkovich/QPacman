@@ -20,7 +20,6 @@ SingleApplication::SingleApplication(int & argc, char ** argv) : QCoreApplicatio
     connect(&signalHandler,SIGNAL(sigINT()),this,SLOT(quit()));
 
     signalHandler.start();
-
     if(!sharedLock.tryLock()) {
         qCritical() << tr("One instance is already running!!!");
         ::exit(1);
@@ -31,7 +30,7 @@ SingleApplication::SingleApplication(int & argc, char ** argv) : QCoreApplicatio
     inforeader.waitToComplete();
     if (inforeader.exitCode() > 0) {
         qCritical() << inforeader.errorStream();
-        exit(2);
+        ::exit(2);
         return;
     }
 

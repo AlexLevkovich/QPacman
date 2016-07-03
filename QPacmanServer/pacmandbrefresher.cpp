@@ -25,8 +25,8 @@ QString PacmanDBRefresher::command() const {
 void PacmanDBRefresher::start() {
     ConfSettings settings(tempConf);
     if (!settings.copyFromPacmanConf()) {
-        code = 1;
-        m_errorStream += tr("Cannot copy pacman.conf to %1").arg(tempConf) + "\n";
+        setCode(1);
+        addToErrorStreamCache(tr("Cannot copy pacman.conf to %1").arg(tempConf) + "\n");
     }
     settings.replaceXferCommand();
 

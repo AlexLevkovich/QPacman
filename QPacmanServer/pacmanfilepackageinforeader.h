@@ -17,10 +17,8 @@ public:
 
 protected:
     QString command() const;
-    bool error(const QString & error);
-
-protected slots:
-    void readyReadStandardOutput();
+    bool error(const QString & err);
+    bool output(const QString & out);
 
 private:
     QString m_package;

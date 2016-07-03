@@ -14,24 +14,22 @@ QString PacmanFilePackageInfoReader::command() const {
     return QString("%2/stdbuf -i0 -o0 -e0 %2/tar -xpvf \"%1\" .PKGINFO -O").arg(m_package).arg(TOOLS_BIN);
 }
 
-void PacmanFilePackageInfoReader::readyReadStandardOutput() {
+bool PacmanFilePackageInfoReader::output(const QString & line) {
     wasStdoutRead = true;
-    while (process.canReadLine()) {
-        QByteArray line = process.readLine();
-        if (!line.simplified().isEmpty()) entry.parseLine(line);
-    }
+    if (!line.simplified().isEmpty()) entry.parseLine(line.toLocal8Bit());
+    return true;
 }
 
-bool PacmanFilePackageInfoReader::error(const QString & error) {
-    if (error.startsWith(".PKGINFO")) {
+bool PacmanFilePackageInfoReader::error(const QString & err) {
+    if (err.startsWith(".PKGINFO")) {
         if (!wasStdoutRead) {
-            process.waitForReadyRead();
+            waitForReadyRead();
         }
-        process.terminate();
-        m_errorStream.clear();
-        code = 0;
+        terminateProcess();
+        clearErrorStreamCache();
+        setCode(0);
         onFinished(0,QProcess::NormalExit);
     }
-    else code = 1;
+    else setCode(1);
     return true;
 }

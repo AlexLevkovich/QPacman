@@ -14,9 +14,11 @@ public:
     explicit PacmanSetupInfoReader(QObject *parent = 0);
 
 protected slots:
-    void readyReadStandardOutput();
+    bool error(const QString & err);
+    bool output(const QString & out);
+
+protected slots:
     void onFinished(int code,QProcess::ExitStatus status);
-    void readyReadStandardError();
 
 protected:
     QString command() const;

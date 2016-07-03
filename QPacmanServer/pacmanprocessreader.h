@@ -14,34 +14,52 @@ class PacmanProcessReader : public QObject {
 public:
     explicit PacmanProcessReader(QObject *parent = 0);
     ~PacmanProcessReader();
+
     virtual void terminate();
     int exitCode() const;
     QString errorStream() const;
     void waitToComplete();
-    bool wasTerminated() { return isTerminated; }
 
 signals:
     void finished(PacmanProcessReader * pointer);
 
 protected slots:
-    virtual void readyReadStandardError();
-    virtual void readyReadStandardOutput();
     void onError(QProcess::ProcessError errid);
     virtual void onFinished(int code,QProcess::ExitStatus status);
     virtual void start();
 
 protected:
-    QProcess process;
-    QString m_errorStream;
-    int code;
-    bool isFinished;
-    bool isTerminated;
+    inline int code() { return m_code; }
+    inline void setCode(int code) { m_code = code; }
+    inline qint64 write(const QByteArray & arr) { return process.write(arr); }
+    inline void addToErrorStreamCache(const QString & err) { m_errorStream += err; }
+    inline void clearErrorStreamCache() { m_errorStream.clear(); }
+    inline bool wasTerminated() { return isTerminated; }
+    inline void setTerminated(bool flag) { isTerminated = flag; }
+    inline bool wasFinished() { return isFinished; }
+    inline void waitForBytesWritten() { process.waitForBytesWritten(-1); }
+    inline void waitForReadyRead() { process.waitForReadyRead(-1); }
+    inline void terminateProcess() { process.terminate(); }
 
-    virtual bool error(const QString & error);
+    virtual bool error(const QString & err);
+    virtual bool output(const QString & out);
     virtual QString command() const = 0;
 
 private slots:
     void _finished();
+    void readyReadStandardError();
+    void readyReadStandardOutput();
+
+private:
+    QString m_errorStream;
+    QString m_lastErrorStream;
+    QString m_lastOutputStream;
+    int m_code;
+    QProcess process;
+    bool isFinished;
+    bool isTerminated;
+
+    friend class PacmanDBusServer;
 };
 
 #endif // PacmanProcessReader_H

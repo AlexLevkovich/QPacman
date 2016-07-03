@@ -14,10 +14,3 @@ QString PacmanPackageReasonChanger::command() const {
     return QString("%3/pacman -D --%1 %2").arg(m_doDeps?"asdeps":"asexplicit").arg(m_package).arg(TOOLS_BIN);
 }
 
-void PacmanPackageReasonChanger::readyReadStandardOutput() {
-    PacmanProcessReader::readyReadStandardOutput();
-}
-
-void PacmanPackageReasonChanger::onFinished(int code,QProcess::ExitStatus status) {
-    PacmanProcessReader::onFinished(code,status);
-}

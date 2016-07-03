@@ -12,13 +12,10 @@ QString PacmanSimpleUpdatesReader::command() const {
     return QString("%1/pacman -Qqu").arg(TOOLS_BIN);
 }
 
-void PacmanSimpleUpdatesReader::readyReadStandardOutput() {
-    while (process.canReadLine()) {
-        QString line = QString::fromLocal8Bit(process.readLine());
-        if (line.endsWith("\n")) line = line.left(line.length()-1);
-        line = line.simplified();
-        if (line.isEmpty()) continue;
-        m_packages.append(line);
-    }
+bool PacmanSimpleUpdatesReader::output(const QString & out) {
+    QString line = out.simplified();
+    if (line.isEmpty()) return true;
+    m_packages.append(line);
+    return true;
 }
 
