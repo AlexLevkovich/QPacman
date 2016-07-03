@@ -101,8 +101,8 @@ void PacmanProcessReader::readyReadStandardOutput() {
     m_lastOutputStream.clear();
 
     QStringList outputLines = outStr.split("\n",QString::KeepEmptyParts);
-    if (outputLines.count() > 0 && !outputLines.last().isEmpty()) {
-        m_lastOutputStream += outputLines.last();
+    if (outputLines.count() > 0) {
+        if (!outputLines.last().isEmpty()) m_lastOutputStream += outputLines.last();
         outputLines.removeAt(outputLines.count()-1);
     }
 

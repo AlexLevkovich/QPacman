@@ -21,7 +21,7 @@ void RepoToolButton::fill(const QStringList & repos) {
     QIcon icon(":pics/repository.ico");
     menu->addAction(icon,Static::RepoAll_Str);
     for (int i=0;i<repos.count();i++) {
-        menu->addAction(icon,repos[i]);
+        if (!repos[i].isEmpty()) menu->addAction(icon,repos[i]);
     }
 
     QMenu * old_menu = this->menu();
