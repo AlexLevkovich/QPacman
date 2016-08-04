@@ -8,6 +8,7 @@
 #include "filesdownloaddialog.h"
 #include "static.h"
 #include <QMessageBox>
+#include <QKeyEvent>
 
 InstallProgressDialog::InstallProgressDialog(const QStringList & packages,QWidget *parent) : QProgressDialog(parent) {
     init();
@@ -76,6 +77,7 @@ void InstallProgressDialog::readyToProcess(double total_installed,double total_r
         canBeShown = true;
         setVisible(true);
         installer->cancelInstall();
+        emit hidingPackageListDlg();
         return;
     }
     emit hidingPackageListDlg();
@@ -141,4 +143,9 @@ void InstallProgressDialog::showEvent(QShowEvent * event) {
 
 void InstallProgressDialog::_hide() {
     QWidget::setVisible(false);
+}
+
+void InstallProgressDialog::keyPressEvent(QKeyEvent *e) {
+    if(e->key() == Qt::Key_Escape) e->ignore();
+    else QProgressDialog::keyPressEvent(e);
 }

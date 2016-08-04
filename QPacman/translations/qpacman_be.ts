@@ -131,7 +131,7 @@
 <context>
     <name>InstallProgressDialog</name>
     <message>
-        <location filename="../installprogressdialog.cpp" line="+99"/>
+        <location filename="../installprogressdialog.cpp" line="+101"/>
         <source>Installing the packages...</source>
         <translation type="unfinished">Усталёўка пакетаў...</translation>
     </message>
@@ -729,7 +729,7 @@ Please wait some time.</source>
 <context>
     <name>RemoveProgressDialog</name>
     <message>
-        <location filename="../removeprogressdialog.cpp" line="+19"/>
+        <location filename="../removeprogressdialog.cpp" line="+20"/>
         <source>Removing the packages...</source>
         <translation type="unfinished">Выдаленне пакетаў...</translation>
     </message>

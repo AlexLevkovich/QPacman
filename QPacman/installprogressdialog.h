@@ -9,6 +9,8 @@
 #include <QProgressDialog>
 #include "pacmaninstallpackagesreader.h"
 
+class QKeyEvent;
+
 class InstallProgressDialog : public QProgressDialog {
     Q_OBJECT
 public:
@@ -42,6 +44,8 @@ signals:
     void hidingFilesDownloadDlg();
 
 protected:
+    void keyPressEvent(QKeyEvent *event);
+
     PacmanInstallPackagesReader * installer;
 
 private:

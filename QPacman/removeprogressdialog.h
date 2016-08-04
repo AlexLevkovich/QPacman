@@ -17,6 +17,7 @@ public:
 
 protected:
     void showEvent(QShowEvent * event);
+    void keyPressEvent(QKeyEvent *event);
 
 protected slots:
     void removing_packages_finished(PacmanProcessReader * reader);

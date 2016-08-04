@@ -6,12 +6,15 @@
 #include "filesdownloaddialog.h"
 #include "ui_filesdownloaddialog.h"
 #include <QFileInfo>
+#include <QCloseEvent>
+#include <QKeyEvent>
 #include "byteshumanizer.h"
 #include "pacmaninstallpackagesreader.h"
 
 FilesDownloadDialog::FilesDownloadDialog(PacmanInstallPackagesReader * installer,QWidget *parent) : QDialog(parent), ui(new Ui::FilesDownloadDialog) {
     ui->setupUi(this);
     currFileNum = -1;
+    doClose = false;
     m_files_count = installer->install_packages().count();
 
     ui->currentBar->setRange(0,100);
@@ -19,8 +22,7 @@ FilesDownloadDialog::FilesDownloadDialog(PacmanInstallPackagesReader * installer
     ui->currentBar->setValue(0);
     ui->overalBar->setValue(0);
 
-    connect(this,SIGNAL(rejected()),this,SIGNAL(canceled()));
-    connect(installer,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(accept()));
+    connect(installer,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(finished()));
     connect(installer,SIGNAL(start_download(const QString &)),this,SLOT(setNewDownload(const QString &)));
     connect(installer,SIGNAL(download_progress(int)),this,SLOT(setValue(int)));
     connect(installer,SIGNAL(contents_length_found(int)),this,SLOT(setFileLength(int)));
@@ -46,3 +48,24 @@ void FilesDownloadDialog::setValue(int percents) {
     ui->overalBar->setValue(((100*currFileNum)/m_files_count)+(percents/m_files_count));
 }
 
+void FilesDownloadDialog::closeEvent(QCloseEvent *e) {
+    if (doClose) e->accept();
+    else {
+        e->ignore();
+        emit canceled();
+    }
+}
+
+void FilesDownloadDialog::finished() {
+    doClose = true;
+    accept();
+}
+
+void FilesDownloadDialog::keyPressEvent(QKeyEvent *e) {
+    if(e->key() == Qt::Key_Escape) e->ignore();
+    else QDialog::keyPressEvent(e);
+}
+
+void FilesDownloadDialog::reject() {
+    QDialog::close();
+}

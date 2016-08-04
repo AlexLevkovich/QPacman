@@ -9,6 +9,9 @@
 #include <QDialog>
 #include <QUrl>
 
+class QCloseEvent;
+class QKeyEvent;
+
 class PacmanInstallPackagesReader;
 
 namespace Ui {
@@ -25,6 +28,7 @@ public:
 private slots:
     void setValue(int percents);
     void setFileLength(int length);
+    void finished();
 
 public slots:
     void setNewDownload(const QString & url);
@@ -32,11 +36,16 @@ public slots:
 signals:
     void canceled();
 
+protected:
+    void closeEvent(QCloseEvent *e);
+    void keyPressEvent(QKeyEvent *event);
+    void reject();
+
 private:
     Ui::FilesDownloadDialog *ui;
     int currFileNum;
     int m_files_count;
-
+    bool doClose;
 };
 
 #endif // FILESDOWNLOADDIALOG_H
