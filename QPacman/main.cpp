@@ -16,7 +16,7 @@
 #include "static.h"
 #include "qlockfile.h"
 
-const char * pacman_version = "2.1";
+const char * pacman_version = "2.2";
 
 class ClientStarter {
 public:
