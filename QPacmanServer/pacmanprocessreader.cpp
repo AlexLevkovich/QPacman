@@ -9,6 +9,9 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <QDebug>
+#include <QFile>
+
+extern QString pacman_lock_file;
 
 PacmanProcessReader::PacmanProcessReader(QObject *parent) : QObject(parent) {
     m_code = 0;
@@ -59,6 +62,7 @@ void PacmanProcessReader::terminate() {
             if(!list.at(i).isEmpty()) ::kill(list.at(i).toInt(),SIGTERM);
         }
     }
+    QFile::remove(pacman_lock_file);
     isTerminated = true;
 }
 
