@@ -131,7 +131,7 @@
 <context>
     <name>InstallProgressDialog</name>
     <message>
-        <location filename="../installprogressdialog.cpp" line="+101"/>
+        <location filename="../installprogressdialog.cpp" line="+100"/>
         <source>Installing the packages...</source>
         <translation type="unfinished">Установка пакетов...</translation>
     </message>
@@ -141,7 +141,7 @@
         <translation type="unfinished">Подготовка...</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="+27"/>
         <source>Installing %1...</source>
         <translation type="unfinished">Установка %1...</translation>
     </message>
