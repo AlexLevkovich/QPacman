@@ -36,7 +36,6 @@ void InstallProgressDialog::all_downloads_completed() {
 }
 
 void InstallProgressDialog::onCancelDownload() {
-    wasCanceled = true;
     onCancel();
 }
 
@@ -107,6 +106,7 @@ void InstallProgressDialog::init() {
 
 void InstallProgressDialog::onCancel() {
     if (QMessageBox::warning(this,Static::Warning_Str,Static::PacmanTerminate_Str,QMessageBox::Yes,QMessageBox::No) == QMessageBox::No) return;
+    wasCanceled = true;
     canBeShown = true;
     setVisible(true);
     if (installer != NULL) installer->terminate();
