@@ -14,6 +14,7 @@ PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,
     packagesWasRead = false;
     removing_wait = false;
     m_withDeps = withDeps;
+    removeCanceled = false;
 }
 
 QString PacmanRemovePackagesReader::command() const {
@@ -78,6 +79,8 @@ void PacmanRemovePackagesReader::onFinished(int code,QProcess::ExitStatus status
         setCode(-code);
     }
 
+    if (removeCanceled) setTerminated(true);
+
     PacmanProcessReader::onFinished(code,status);
 }
 
@@ -119,5 +122,6 @@ void PacmanRemovePackagesReader::cancelRemove() {
         setCode(1);
         return;
     }
+    removeCanceled = true;
     waitForBytesWritten();
 }

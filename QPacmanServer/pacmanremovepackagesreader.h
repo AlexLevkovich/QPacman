@@ -44,6 +44,7 @@ private:
     double m_total_removed;
     bool m_withDeps;
     QString errorStream;
+    bool removeCanceled;
 };
 
 #endif // PacmanRemovePackagesReader_H
