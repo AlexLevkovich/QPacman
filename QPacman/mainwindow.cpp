@@ -9,8 +9,8 @@
 #include <QSettings>
 #include <QMessageBox>
 #include "dbrefreshdialog.h"
-#include "removeprogressdialog.h"
-#include "installprogressdialog.h"
+#include "removeprogressloop.h"
+#include "installprogressloop.h"
 #include "logwindow.h"
 #include "toolbarrightwidget.h"
 #include "pacmancachecleaner.h"
@@ -159,7 +159,7 @@ void MainWindow::on_actionApply_triggered() {
 
     QStringList removed_packages;
     if (to_removeall.count() > 0) {
-        RemoveProgressDialog rprogress_dlg(PacmanEntry::entriesListToNamesStringList(to_removeall),true,this);
+        RemoveProgressLoop rprogress_dlg(PacmanEntry::entriesListToNamesStringList(to_removeall),true,this);
         connect(&rprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
         if (rprogress_dlg.exec() != QDialog::Accepted) return;
         removed_packages = rprogress_dlg.removedPackages();
@@ -170,13 +170,13 @@ void MainWindow::on_actionApply_triggered() {
         remove_packages = PacmanEntry::entriesListToNamesStringList(to_remove);
         if (removed_packages.count() > 0) removePackageIfExistInList(removed_packages,remove_packages);
         if (remove_packages.count() > 0) {
-            RemoveProgressDialog rprogress_dlg(remove_packages,false,this);
+            RemoveProgressLoop rprogress_dlg(remove_packages,false,this);
             connect(&rprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
             if (rprogress_dlg.exec() != QDialog::Accepted) return;
         }
     }
     if (to_install.count() > 0) {
-        InstallProgressDialog iprogress_dlg(PacmanEntry::entriesListToStringList(to_install),this);
+        InstallProgressLoop iprogress_dlg(PacmanEntry::entriesListToStringList(to_install),this);
         connect(&iprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
         if (iprogress_dlg.exec() != QDialog::Accepted) {
             if (remove_packages.count() <= 0 &&

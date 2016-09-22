@@ -61,7 +61,6 @@ SOURCES += main.cpp\
     pacmanpackagereasonchanger.cpp \
     localpackagemainwindow.cpp \
     pacmansimpleitemmodel.cpp \
-    installfilesprogressdialog.cpp \
     pacmaninstalllocalpackagesreader.cpp \
     installbuttondelegate.cpp \
     pacmansaltreader.cpp \
@@ -85,7 +84,10 @@ SOURCES += main.cpp\
     qlockfile.cpp \
     qlockfile_unix.cpp \
     filesdownloaddialog.cpp \
-    messagedialog.cpp
+    messagedialog.cpp \
+    installprogressloop.cpp \
+    installfilesprogressloop.cpp \
+    removeprogressloop.cpp
 
 HEADERS  += mainwindow.h \
     searchwidget.h \
@@ -118,7 +120,6 @@ HEADERS  += mainwindow.h \
     pacmanpackagereasonchanger.h \
     localpackagemainwindow.h \
     pacmansimpleitemmodel.h \
-    installfilesprogressdialog.h \
     pacmaninstalllocalpackagesreader.h \
     installbuttondelegate.h \
     pacmansaltreader.h \
@@ -142,7 +143,10 @@ HEADERS  += mainwindow.h \
     qlockfile.h \
     qlockfile_p.h \
     filesdownloaddialog.h \
-    messagedialog.h
+    messagedialog.h \
+    installprogressloop.h \
+    installfilesprogressloop.h \
+    removeprogressloop.h
 
 FORMS    += mainwindow.ui \
     searchwidget.ui \
