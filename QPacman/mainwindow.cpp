@@ -242,7 +242,6 @@ void MainWindow::onRefreshCompleted() {
 
     ui->pacInfoView->setModel((PacmanItemModel *)((QAbstractItemView *)ui->packetView)->model());
 
-    ui->packetView->checkReplaces();
     ui->filesTree->clear();
     ui->pacInfoView->clear();
 
