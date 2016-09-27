@@ -46,7 +46,9 @@ void InstallProgressLoop::start_download(const QString & url) {
     disconnect(installer,SIGNAL(start_download(const QString &)),this,SLOT(start_download(const QString &)));
     if (wasCanceled) return;
     emit showingFilesDownloadDlg();
+    disconnect(installer,SIGNAL(all_downloads_completed()),this,SLOT(all_downloads_completed()));
     FilesDownloadDialog download_dlg(installer,(QWidget *)parent());
+    connect(installer,SIGNAL(all_downloads_completed()),this,SLOT(all_downloads_completed()),Qt::QueuedConnection);
     connect(&download_dlg,SIGNAL(canceled()),this,SLOT(onCancel()));
     download_dlg.setNewDownload(url);
     download_dlg.exec();
