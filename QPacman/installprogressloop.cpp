@@ -30,9 +30,8 @@ InstallProgressLoop::InstallProgressLoop(QWidget *parent) : QEventLoop(parent) {
 
 void InstallProgressLoop::all_downloads_completed() {
     emit hidingFilesDownloadDlg();
-    InstallProgressDialog dlg(installer,(QWidget *)parent());
     int total = packages_count();
-    dlg.setRange(0,(total == 1)?0:total);
+    InstallProgressDialog dlg(installer,(total == 1)?0:total,(QWidget *)parent());
     connect(&dlg,SIGNAL(canceled()),this,SLOT(onCancel()));
     dlg.exec();
 }

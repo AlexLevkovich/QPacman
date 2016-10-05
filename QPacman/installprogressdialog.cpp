@@ -10,9 +10,12 @@
 #include <QMessageBox>
 #include <QKeyEvent>
 
-InstallProgressDialog::InstallProgressDialog(PacmanInstallPackagesReader * installer,QWidget *parent) : QProgressDialog(parent) {
+InstallProgressDialog::InstallProgressDialog(PacmanInstallPackagesReader * installer,uint pkgs_count,QWidget *parent) : QProgressDialog(parent) {
     this->installer = installer;
     index = 0;
+    first_pkg = true;
+    this->pkgs_count = pkgs_count;
+
     setWindowModality(Qt::WindowModal);
     setWindowTitle(tr("Installing the packages..."));
     setMinimumDuration(500);
@@ -23,14 +26,24 @@ InstallProgressDialog::InstallProgressDialog(PacmanInstallPackagesReader * insta
     connect(installer,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(cancel()));
     connect(installer,SIGNAL(start_installing(const QString &)),this,SLOT(start_installing(const QString &)));
     connect(installer,SIGNAL(start_removing(const QString &)),this,SLOT(start_removing(const QString &)));
+
+    setRange(0,0);
 }
 
 void InstallProgressDialog::start_installing(const QString & package) {
+    if (first_pkg) {
+        first_pkg = false;
+        setRange(0,pkgs_count);
+    }
     setLabelText(tr("Installing %1...").arg(package));
     setValue(++index);
 }
 
 void InstallProgressDialog::start_removing(const QString & package) {
+    if (first_pkg) {
+        first_pkg = false;
+        setRange(0,pkgs_count);
+    }
     setLabelText(tr("Removing %1...").arg(package));
     setValue(++index);
 }

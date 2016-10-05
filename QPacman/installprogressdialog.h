@@ -14,7 +14,7 @@ class QKeyEvent;
 class InstallProgressDialog : public QProgressDialog {
     Q_OBJECT
 public:
-    explicit InstallProgressDialog(PacmanInstallPackagesReader * installer,QWidget *parent = 0);
+    explicit InstallProgressDialog(PacmanInstallPackagesReader * installer,uint pkgs_count,QWidget *parent = 0);
 
 protected slots:
     void start_installing(const QString & package);
@@ -27,6 +27,8 @@ protected:
 
 private:
     int index;
+    bool first_pkg;
+    uint pkgs_count;
 };
 
 #endif // INSTALLPROGRESSDIALOG_H
