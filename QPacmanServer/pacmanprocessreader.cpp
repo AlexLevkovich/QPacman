@@ -20,7 +20,11 @@ PacmanProcessReader::PacmanProcessReader(QObject *parent) : QObject(parent) {
 
     connect(&process,SIGNAL(readyReadStandardError()),this,SLOT(readyReadStandardError()));
     connect(&process,SIGNAL(readyReadStandardOutput()),this,SLOT(readyReadStandardOutput()));
-    connect(&process,SIGNAL(error(QProcess::ProcessError)),this,SLOT(onError(QProcess::ProcessError)));
+#if QT_VERSION >= 0x050000
+    connect(&process,SIGNAL(errorOccurred(QProcess::ProcessError)),SLOT(onError(QProcess::ProcessError)));
+#else
+    connect(&process,SIGNAL(error(QProcess::ProcessError)),SLOT(onError(QProcess::ProcessError)));
+#endif    
     connect(&process,SIGNAL(finished(int,QProcess::ExitStatus)),this,SLOT(onFinished(int,QProcess::ExitStatus)));
 
     QMetaObject::invokeMethod(this,"start",Qt::QueuedConnection);
