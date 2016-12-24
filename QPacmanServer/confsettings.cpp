@@ -21,7 +21,7 @@ bool ConfSettings::readConfFile(QIODevice & device, QSettings::SettingsMap & map
     QTextStream stream(&device);
 
     while (!stream.atEnd()) {
-        QString line = stream.readLine().trimmed();
+        QString line = stream.readLine().simplified();
 
         // Skip comments and empty lines
         if (line.startsWith('#') || line.isEmpty())
@@ -43,7 +43,9 @@ bool ConfSettings::readConfFile(QIODevice & device, QSettings::SettingsMap & map
         key.prepend(section);
 
         if (line.contains('=')) map.insert(key, value);
-        else map.insert(key, QString());
+        else {
+            if (key.simplified() != "VerbosePkgLists") map.insert(key, QString());
+        }
     }
 
     return true;
