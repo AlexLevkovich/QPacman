@@ -26,6 +26,7 @@ protected:
 
 protected slots:
     void onFinished(int code,QProcess::ExitStatus status);
+    void start();
 
 signals:
     void start_removing(const QString & name);
