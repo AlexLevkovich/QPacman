@@ -9,7 +9,7 @@ PacmanFilesListReader::PacmanFilesListReader(QObject *parent) : PacmanProcessRea
 }
 
 QString PacmanFilesListReader::command() const {
-    return QString("%1/pacman -Ql").arg(TOOLS_BIN);
+    return QString("%1 -Ql").arg(PACMAN_BIN);
 }
 
 bool PacmanFilesListReader::output(const QString & out) {

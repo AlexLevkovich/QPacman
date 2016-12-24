@@ -11,7 +11,7 @@ PacmanFilePackageInfoReader::PacmanFilePackageInfoReader(const QString & package
 }
 
 QString PacmanFilePackageInfoReader::command() const {
-    return QString("%2/stdbuf -i0 -o0 -e0 %2/tar -xpvf \"%1\" .PKGINFO -O").arg(m_package).arg(TOOLS_BIN);
+    return QString("%2 -i0 -o0 -e0 %3 -xpvf \"%1\" .PKGINFO -O").arg(m_package).arg(STDBUF_BIN).arg(TAR_BIN);
 }
 
 bool PacmanFilePackageInfoReader::output(const QString & line) {

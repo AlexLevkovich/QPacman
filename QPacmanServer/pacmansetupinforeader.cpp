@@ -15,7 +15,7 @@ PacmanSetupInfoReader::PacmanSetupInfoReader(QObject *parent) : PacmanProcessRea
 }
 
 QString PacmanSetupInfoReader::command() const {
-    return QString("%1/pacman -v").arg(TOOLS_BIN);
+    return QString("%1 -v").arg(PACMAN_BIN);
 }
 
 bool PacmanSetupInfoReader::output(const QString & out) {

@@ -9,7 +9,7 @@ PacmanSimpleUpdatesReader::PacmanSimpleUpdatesReader(QObject *parent) : PacmanPr
 }
 
 QString PacmanSimpleUpdatesReader::command() const {
-    return QString("%1/pacman -Qqu").arg(TOOLS_BIN);
+    return QString("%1 -Qqu").arg(PACMAN_BIN);
 }
 
 bool PacmanSimpleUpdatesReader::output(const QString & out) {

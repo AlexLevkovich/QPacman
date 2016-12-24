@@ -81,7 +81,7 @@ bool ConfSettings::writeConfFile(QIODevice & device, const QSettings::SettingsMa
 }
 
 bool ConfSettings::replaceXferCommand() {
-    setValue("options/XferCommand",QString("%1/wget --passive-ftp --progress=bar:force -c -O %o %u -T 30").arg(TOOLS_BIN));
+    setValue("options/XferCommand",QString("%1 --passive-ftp --progress=bar:force -c -O %o %u -T 30").arg(WGET_BIN));
     return true;
 }
 

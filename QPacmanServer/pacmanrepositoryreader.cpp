@@ -9,7 +9,7 @@ PacmanRepositoryReader::PacmanRepositoryReader(QObject *parent) : PacmanProcessR
 }
 
 QString PacmanRepositoryReader::command() const {
-    return QString("%1/bash -c \"%1/pacman -Si;%1/pacman -Qi | %1/cat\"").arg(TOOLS_BIN);
+    return QString("%1 -c \"%2 -Si;%2 -Qi | %3\"").arg(BASH_BIN).arg(PACMAN_BIN).arg(CAT_BIN);
 }
 
 bool PacmanRepositoryReader::output(const QString & out) {

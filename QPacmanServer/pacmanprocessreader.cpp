@@ -51,7 +51,7 @@ void PacmanProcessReader::terminate() {
         params << "-o";
         params << "pid";
         params << "--noheaders";
-        killer.start(QString("%1/ps").arg(TOOLS_BIN),params,QIODevice::ReadOnly);
+        killer.start(PS_BIN,params,QIODevice::ReadOnly);
         if(killer.waitForStarted(-1)) {
             if(killer.waitForFinished(-1)) {
                 QByteArray temp=killer.readAllStandardOutput();

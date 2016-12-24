@@ -18,7 +18,7 @@ PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,
 }
 
 QString PacmanRemovePackagesReader::command() const {
-    return QString(m_withDeps?"%2/pacman -Rcs --noprogressbar %1":"%2/pacman -Rc --noprogressbar %1").arg(in_packages).arg(TOOLS_BIN);
+    return QString(m_withDeps?"%2 -Rcs --noprogressbar %1":"%2 -Rc --noprogressbar %1").arg(in_packages).arg(PACMAN_BIN);
 }
 
 double PacmanRemovePackagesReader::total_removed() {

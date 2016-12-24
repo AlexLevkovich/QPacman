@@ -18,31 +18,36 @@ isEmpty(INSTALL_PREFIX) {
     INSTALL_PREFIX = /usr/local
 }
 
-TOOLS_BIN = /usr/bin
+PACMAN_BIN = $$system(which pacman 2>/dev/null)
+isEmpty( PACMAN_BIN ):error( "pacman should be installed!!!" )
+DEFINES += PACMAN_BIN=\\\"$$PACMAN_BIN\\\"
 
-!exists( $$TOOLS_BIN/pacman ) {
-    error( "pacman should be installed!!!" )
-}
+TAR_BIN = $$system(which tar 2>/dev/null)
+isEmpty( TAR_BIN ):error( "tar should be installed!!!" )
+DEFINES += TAR_BIN=\\\"$$TAR_BIN\\\"
 
-!exists( $$TOOLS_BIN/tar ) {
-    error( "tar should be installed!!!" )
-}
+XZ_BIN = $$system(which xz 2>/dev/null)
+isEmpty( XZ_BIN ):error( "xz should be installed!!!" )
 
-!exists( $$TOOLS_BIN/xz ) {
-    error( "xz should be installed!!!" )
-}
+STDBUF_BIN = $$system(which stdbuf 2>/dev/null)
+isEmpty( STDBUF_BIN ):error( "stdbuf should be installed!!!" )
+DEFINES += STDBUF_BIN=\\\"$$STDBUF_BIN\\\"
 
-!exists( $$TOOLS_BIN/stdbuf ) {
-    error( "coreutils should be installed!!!" )
-}
+WGET_BIN = $$system(which wget 2>/dev/null)
+isEmpty( WGET_BIN ):error( "wget should be installed!!!" )
+DEFINES += WGET_BIN=\\\"$$WGET_BIN\\\"
 
-!exists( $$TOOLS_BIN/wget ) {
-    error( "wget should be installed!!!" )
-}
+PS_BIN = $$system(which ps 2>/dev/null)
+isEmpty( PS_BIN ):error( "ps should be installed!!!" )
+DEFINES += PS_BIN=\\\"$$PS_BIN\\\"
 
-!exists( $$TOOLS_BIN/ps ) {
-    error( "procps-ng should be installed!!!" )
-}
+CAT_BIN = $$system(which cat 2>/dev/null)
+isEmpty( CAT_BIN ):error( "cat should be installed!!!" )
+DEFINES += CAT_BIN=\\\"$$CAT_BIN\\\"
+
+BASH_BIN = $$system(which bash 2>/dev/null)
+isEmpty( BASH_BIN ):error( "bash should be installed!!!" )
+DEFINES += BASH_BIN=\\\"$$BASH_BIN\\\"
 
 TRANS_DIR1 = $$OUT_PWD/translations
 TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
@@ -50,7 +55,6 @@ TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
 DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 DEFINES += TRANS_DIR1=\\\"$$TRANS_DIR1\\\"
 DEFINES += TRANS_DIR2=\\\"$$TRANS_DIR2\\\"
-DEFINES += TOOLS_BIN=\\\"$$TOOLS_BIN\\\"
 
 TEMPLATE = app
 

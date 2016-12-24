@@ -11,6 +11,6 @@ PacmanPackageReasonChanger::PacmanPackageReasonChanger(const QString & package,b
 }
 
 QString PacmanPackageReasonChanger::command() const {
-    return QString("%3/pacman -D --%1 %2").arg(m_doDeps?"asdeps":"asexplicit").arg(m_package).arg(TOOLS_BIN);
+    return QString("%3 -D --%1 %2").arg(m_doDeps?"asdeps":"asexplicit").arg(m_package).arg(PACMAN_BIN);
 }
 

@@ -19,7 +19,7 @@ PacmanDBRefresher::~PacmanDBRefresher() {
 }
 
 QString PacmanDBRefresher::command() const {
-    return QString("%1/stdbuf -i0 -o0 -e0 %1/pacman --config %2 -Sy").arg(TOOLS_BIN).arg(tempConf);
+    return QString("%1 -i0 -o0 -e0 %3 --config %2 -Sy").arg(STDBUF_BIN).arg(tempConf).arg(PACMAN_BIN);
 }
 
 void PacmanDBRefresher::start() {

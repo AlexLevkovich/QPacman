@@ -47,7 +47,7 @@ void PacmanInstallPackagesReader::start() {
 }
 
 QString PacmanInstallPackagesReader::command() const {
-    return QString("%2/stdbuf -i0 -o0 -e0 %2/pacman --config %3 -S --noprogressbar %1").arg(in_packages).arg(TOOLS_BIN).arg(tempConf);
+    return QString("%2 -i0 -o0 -e0 %4 --config %3 -S --noprogressbar %1").arg(in_packages).arg(STDBUF_BIN).arg(tempConf).arg(PACMAN_BIN);
 }
 
 double PacmanInstallPackagesReader::total_installed() {
