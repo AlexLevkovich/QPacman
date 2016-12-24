@@ -6,6 +6,7 @@
 #include "pacmanremovepackagesreader.h"
 #include "byteshumanizer.h"
 #include <QFile>
+#include "confsettings.h"
 
 #define TOTAL_REMOVED_STR "Total Removed Size:"
 
