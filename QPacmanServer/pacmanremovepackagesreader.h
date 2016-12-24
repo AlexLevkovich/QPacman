@@ -13,6 +13,7 @@ class PacmanRemovePackagesReader : public PacmanProcessReader {
     Q_OBJECT
 public:
     explicit PacmanRemovePackagesReader(const QString & packages,bool withDeps = true,QObject *parent = 0);
+    ~PacmanRemovePackagesReader();
     QStringList packages() const;
     void beginRemove();
     void cancelRemove();
@@ -45,6 +46,7 @@ private:
     bool m_withDeps;
     QString errorStream;
     bool removeCanceled;
+    QString tempConf;
 };
 
 #endif // PacmanRemovePackagesReader_H

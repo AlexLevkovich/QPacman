@@ -15,10 +15,16 @@ PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,
     removing_wait = false;
     m_withDeps = withDeps;
     removeCanceled = false;
+    
+    tempConf = ConfSettings::createTempConfName();
+}
+
+PacmanRemovePackagesReader::~PacmanRemovePackagesReader() {
+    QFile::remove(tempConf);
 }
 
 QString PacmanRemovePackagesReader::command() const {
-    return QString(m_withDeps?"%2 -Rcs --noprogressbar %1":"%2 -Rc --noprogressbar %1").arg(in_packages).arg(PACMAN_BIN);
+    return QString(m_withDeps?"%2 -Rcs --config %3 --noprogressbar %1":"%2 -Rc --config %3 --noprogressbar %1").arg(in_packages).arg(PACMAN_BIN).arg(tempConf);
 }
 
 double PacmanRemovePackagesReader::total_removed() {
