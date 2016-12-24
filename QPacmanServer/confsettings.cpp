@@ -38,14 +38,13 @@ bool ConfSettings::readConfFile(QIODevice & device, QSettings::SettingsMap & map
 
         if (key.isEmpty()) continue;
         if (section.isEmpty()) return false;
+        if (key.simplified() == "VerbosePkgLists") continue;
 
         key.prepend("/");
         key.prepend(section);
 
         if (line.contains('=')) map.insert(key, value);
-        else {
-            if (key.simplified() != "VerbosePkgLists") map.insert(key, QString());
-        }
+        else map.insert(key, QString());
     }
 
     return true;
