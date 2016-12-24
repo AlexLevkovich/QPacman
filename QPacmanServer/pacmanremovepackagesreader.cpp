@@ -8,6 +8,7 @@
 #include <QFile>
 #include "confsettings.h"
 
+
 #define TOTAL_REMOVED_STR "Total Removed Size:"
 
 PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,bool withDeps,QObject *parent) : PacmanProcessReader(parent) {
@@ -23,6 +24,16 @@ PacmanRemovePackagesReader::PacmanRemovePackagesReader(const QString & packages,
 
 PacmanRemovePackagesReader::~PacmanRemovePackagesReader() {
     QFile::remove(tempConf);
+}
+
+void PacmanRemovePackagesReader::start() {
+    ConfSettings settings(tempConf);
+    if (!settings.copyFromPacmanConf()) {
+        setCode(1);
+        addToErrorStreamCache(tr("Cannot copy pacman.conf to %1").arg(tempConf) + "\n");
+    }
+    settings.replaceXferCommand();
+    PacmanProcessReader::start();
 }
 
 QString PacmanRemovePackagesReader::command() const {
