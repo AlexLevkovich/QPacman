@@ -1,7 +1,7 @@
 # QPacman
 QPacman is GUI to Archlinux pacman utility.
 
-It contains three projects:
+It contains two projects:
 
 QPacmanTray   - tray icon - checks updates, loads QPacman.
 
