@@ -4,12 +4,18 @@
 ********************************************************************************/
 
 #include "pacmansetupinforeader.h"
-#include "pacmanentry.h"
 
-extern QString pacman_cache_dir;
-extern QString pacman_conf;
-extern QString pacman_lock_file;
-extern QString pacman_db_path;
+QString PacmanSetupInfoReader::pacman_cache_dir;
+QString PacmanSetupInfoReader::pacman_conf;
+QString PacmanSetupInfoReader::pacman_lock_file;
+QString PacmanSetupInfoReader::pacman_db_path;
+
+static const QString afterColon(const QString & str) {
+    int index = str.indexOf(':');
+    if (index == -1) return QString();
+
+    return str.mid(index+1).simplified();
+}
 
 PacmanSetupInfoReader::PacmanSetupInfoReader(QObject *parent) : PacmanProcessReader(parent) {
 }
@@ -22,17 +28,17 @@ bool PacmanSetupInfoReader::output(const QString & out) {
     QString line = out.simplified();
     if (line.isEmpty()) return true;
     if (line.startsWith("Conf File :")) {
-        pacman_conf = PacmanEntry::afterColon(line);
+        pacman_conf = afterColon(line);
     }
     else if (line.startsWith("Cache Dirs:")) {
-        pacman_cache_dir = PacmanEntry::afterColon(line);
+        pacman_cache_dir = afterColon(line);
         if (pacman_cache_dir.endsWith("/")) pacman_cache_dir = pacman_cache_dir.left(pacman_cache_dir.count()-1);
     }
     else if (line.startsWith("Lock File :")) {
-        pacman_lock_file = PacmanEntry::afterColon(line);
+        pacman_lock_file = afterColon(line);
     }
     else if (line.startsWith("DB Path :")) {
-        pacman_db_path = PacmanEntry::afterColon(line)+"sync";
+        pacman_db_path = afterColon(line)+"sync";
     }
     return true;
 }

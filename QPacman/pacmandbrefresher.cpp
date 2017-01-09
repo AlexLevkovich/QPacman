@@ -4,15 +4,28 @@
 ********************************************************************************/
 
 #include "pacmandbrefresher.h"
-#include <QMainWindow>
-#include "errordialog.h"
+#include <QFile>
+#include "confsettings.h"
 
-PacmanDBRefresher::PacmanDBRefresher(QObject *parent) : PacmanProcessReader(parent) {
+PacmanDBRefresher::PacmanDBRefresher(const QString & su_password,QObject *parent) : PacmanProcessReader(su_password,parent) {
+    tempConf = ConfSettings::createTempConfName();
 }
 
-QByteArray PacmanDBRefresher::command() const {
-    return "DB REFRESH";
+PacmanDBRefresher::~PacmanDBRefresher() {
+    QFile::remove(tempConf);
 }
 
-void PacmanDBRefresher::send_parameters() {}
+QString PacmanDBRefresher::command() const {
+    return QString("%2 --config %1 -Sy").arg(tempConf).arg(PACMAN_BIN);
+}
 
+void PacmanDBRefresher::start() {
+    ConfSettings settings(tempConf);
+    if (!settings.copyFromPacmanConf()) {
+        setCode(1);
+        addToErrorStreamCache(tr("Cannot copy pacman.conf to %1").arg(tempConf) + "\n");
+    }
+    settings.replaceXferCommand();
+
+    PacmanProcessReader::start();
+}

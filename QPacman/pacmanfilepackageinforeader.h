@@ -16,15 +16,14 @@ public:
     PacmanEntry info() const { return entry; }
 
 protected:
-    void send_parameters();
-    QByteArray command() const;
-
-private slots:
-    void on_package_ready(const PacmanEntry & entry);
+    QString command() const;
+    bool error(const QString & err);
+    bool output(const QString & out);
 
 private:
     QString m_package;
     PacmanEntry entry;
+    bool wasStdoutRead;
 };
 
 #endif // PacmanFilePackageInfoReader_H

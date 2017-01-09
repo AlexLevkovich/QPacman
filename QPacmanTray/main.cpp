@@ -7,11 +7,13 @@
 #include "singleapplication.h"
 #include "pacmanprocessreader.h"
 #include <QTranslator>
+#include <QLibraryInfo>
 
 const char * pacmantray_version = "2.2";
 
 int main(int argc, char *argv[]) {
     SingleApplication a(argc, argv);
+    if (a.error()) return 0;
 
     QTranslator m_translator;
     QString lang = QLocale::system().name().split("_").at(0);
@@ -28,11 +30,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("QPacmanTray");
     qRegisterMetaType<PacmanProcessReader *>("PacmanProcessReader *");
 
-    if (a.isStarted()) {
-        MainWindow w;
-        a.setMainWidget(&w);
-        return a.exec();
-    }
-
-    return 0;
+    MainWindow w;
+    a.setMainWidget(&w);
+    return a.exec();
 }

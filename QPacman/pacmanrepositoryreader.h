@@ -12,14 +12,18 @@
 class PacmanRepositoryReader : public PacmanProcessReader {
     Q_OBJECT
 public:
-    explicit PacmanRepositoryReader(QObject *parent = 0);
+    PacmanRepositoryReader(QObject *parent = 0);
+    ~PacmanRepositoryReader();
 
 protected:
-    void send_parameters();
-    QByteArray command() const;
+    virtual QString command() const;
+    bool output(const QString & out);
 
 signals:
-    void read_package(const PacmanEntry & package);
+    void read_package(PacmanEntry * package);
+
+private:
+    PacmanEntry * m_package;
 };
 
 #endif // PacmanRepositoryReader_H

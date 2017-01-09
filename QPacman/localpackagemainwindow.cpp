@@ -83,6 +83,7 @@ void LocalPackageMainWindow::onSelectionChanged(const QItemSelection & /*selecte
     QModelIndexList selected = ui->packageView->selectionModel()->selectedRows();
     if (selected.count() <= 0) return;
 
+    ui->pacInfoView->clearImageCache();
     ui->pacInfoView->setHtml(model->row(selected[0]).toHtml());
 }
 
@@ -108,7 +109,7 @@ void LocalPackageMainWindow::on_actionInstall_triggered() {
     start_wait_indicator();
 
     if (m_packages.count() > 0) {
-        InstallFilesProgressLoop iprogress_dlg(m_packages,this);
+        InstallFilesProgressLoop iprogress_dlg(Static::su_password,m_packages,this);
         connect(&iprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
         connect(&iprogress_dlg,SIGNAL(showingProvidersList()),this,SLOT(stop_wait_indicator()));
         connect(&iprogress_dlg,SIGNAL(hidingProvidersList()),this,SLOT(start_wait_indicator()));

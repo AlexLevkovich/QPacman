@@ -51,7 +51,7 @@ PacmanView::~PacmanView() {
     delete model;
 }
 
-void PacmanView::read_package(const PacmanEntry & item) {
+void PacmanView::read_package(PacmanEntry * item) {
     model->addRow(item);
 }
 
@@ -107,7 +107,7 @@ void PacmanView::read_packages_finished(PacmanProcessReader * ptr) {
     model->sort();
     delete ptr;
 
-    PacmanFilesListReader * filesreader = new PacmanFilesListReader();
+    PacmanFilesListReader * filesreader = new PacmanFilesListReader(this);
     connect(filesreader,SIGNAL(files_ready(const QString &,const QStringList &)),this,SLOT(files_ready(const QString &,const QStringList &)));
     connect(filesreader,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(read_files_finished(PacmanProcessReader *)));
 }
@@ -138,8 +138,8 @@ void PacmanView::refresh() {
         setItemDelegateForColumn(i,delegate);
     }
 
-    PacmanRepositoryReader * pacrepreader = new PacmanRepositoryReader();
-    connect(pacrepreader,SIGNAL(read_package(const PacmanEntry &)),this,SLOT(read_package(const PacmanEntry &)));
+    PacmanRepositoryReader * pacrepreader = new PacmanRepositoryReader(this);
+    connect(pacrepreader,SIGNAL(read_package(PacmanEntry *)),this,SLOT(read_package(PacmanEntry *)));
     connect(pacrepreader,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(read_packages_finished(PacmanProcessReader *)));
 }
 
@@ -189,8 +189,7 @@ bool PacmanView::isSelectNextPossible() {
 void PacmanView::selectPackageByName(const QString & package) {
     QModelIndex index = model->firstFoundIndexByPackageName(package);
     if (index.isValid()) {
-        selectionModel()->clearSelection();
-        selectionModel()->select(index,QItemSelectionModel::Select|QItemSelectionModel::Rows);
+        selectionModel()->select(index,QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows);
         scrollTo(index);
     }
 }
@@ -325,7 +324,12 @@ void PacmanView::revertReason(const QString & package) {
     QModelIndex index = model->installedIndexByPackageName(package);
     if (!index.isValid()) return;
 
-    PacmanPackageReasonChanger reasonchanger(package,model->row(index).isExplicitly());
+    if (!Static::checkRootAccess()) {
+        QMessageBox::critical(this,Static::Error_Str,Static::RootRightsNeeded_Str,QMessageBox::Ok);
+        return;
+    }
+
+    PacmanPackageReasonChanger reasonchanger(Static::su_password,package,model->row(index).isExplicitly());
     reasonchanger.waitToComplete();
     if (reasonchanger.exitCode() == 0) model->row(index).revertStatus();
 }

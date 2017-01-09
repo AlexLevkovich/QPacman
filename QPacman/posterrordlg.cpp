@@ -13,6 +13,11 @@ PostErrorDlg::PostErrorDlg(const QString & error,const QString & command) : QObj
 }
 
 void PostErrorDlg::_show_error(const QString & error,const QString & command) {
+    if (error.isEmpty()) {
+        deleteLater();
+        return;
+    }
+
     QMainWindow * mainWindow = Static::findMainWindow();
     ErrorDialog(tr("Error(s) during executing of the command:\n%1").arg(command),error,mainWindow).exec();
     deleteLater();

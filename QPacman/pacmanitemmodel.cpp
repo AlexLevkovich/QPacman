@@ -45,6 +45,10 @@ PacmanItemModel::PacmanItemModel(QTreeView *parent) : QAbstractItemModel(parent)
     updateText(fm,maxInstallWidth,reInstallStr);
 }
 
+PacmanItemModel::~PacmanItemModel() {
+    while (!rows.isEmpty()) delete rows.takeFirst();
+}
+
 QVariant PacmanItemModel::headerData(int section,Qt::Orientation orientation,int role) const {
     if (orientation != Qt::Horizontal) return QVariant();
     if (role != Qt::DisplayRole) return QVariant();
@@ -88,7 +92,7 @@ QList<PacmanItemModel::ChangeMenuParam> PacmanItemModel::changeStateParamsForMen
 }
 
 QIcon PacmanItemModel::changeStatusIcon(int index) const {
-    PacmanEntry::UserChangeStatus change_status = rows[index].getChangeStatus();
+    PacmanEntry::UserChangeStatus change_status = rows[index]->getChangeStatus();
     if (change_status == PacmanEntry::DO_INSTALL) return downloadIcon;
     else if (change_status == PacmanEntry::DO_REINSTALL) return reinstallIcon;
 
@@ -101,12 +105,12 @@ QVariant PacmanItemModel::data(const QModelIndex & index, int role) const {
 
     switch (role) {
         case Qt::DisplayRole:
-            if (index.column() == 0) return QVariant(rows[index.row()].name);
-            else if (index.column() == 2) return QVariant(rows[index.row()].version);
-            else if (index.column() == 3) return QVariant(rows[index.row()].repo);
-            else if (index.column() == 1) return QVariant(rows[index.row()].desc);
+            if (index.column() == 0) return QVariant(rows[index.row()]->name);
+            else if (index.column() == 2) return QVariant(rows[index.row()]->version);
+            else if (index.column() == 3) return QVariant(rows[index.row()]->repo);
+            else if (index.column() == 1) return QVariant(rows[index.row()]->desc);
             else {
-                PacmanEntry::UserChangeStatus change_status = rows[index.row()].getChangeStatus();
+                PacmanEntry::UserChangeStatus change_status = rows[index.row()]->getChangeStatus();
                 QString ret_str;
                 switch (change_status) {
                     case PacmanEntry::DO_UNINSTALL_ALL:
@@ -128,7 +132,7 @@ QVariant PacmanItemModel::data(const QModelIndex & index, int role) const {
                 return ret_str;
             }
         case Qt::DecorationRole:
-            if (index.column() == 0) return rows[index.row()].isChosen()?changeStatusIcon(index.row()):(QVariant(rows[index.row()].isInstalled()?installedIcon:(rows[index.row()].isUpdate()?updatedIcon:notinstalledIcon)));
+            if (index.column() == 0) return rows[index.row()]->isChosen()?changeStatusIcon(index.row()):(QVariant(rows[index.row()]->isInstalled()?installedIcon:(rows[index.row()]->isUpdate()?updatedIcon:notinstalledIcon)));
             if (index.column() == 4) return changeStatusIcon(index.row());
             break;
         case Qt::SizeHintRole:
@@ -153,7 +157,7 @@ QVariant PacmanItemModel::data(const QModelIndex & index, int role) const {
 
 bool PacmanItemModel::setData(const QModelIndex & index,const QVariant & value,int role) {
     if ((role == Qt::DisplayRole) && (index.column() == 4)) {
-        rows[index.row()].setChangeStatus((PacmanEntry::UserChangeStatus)value.toInt());
+        rows[index.row()]->setChangeStatus((PacmanEntry::UserChangeStatus)value.toInt());
         return true;
     }
 
@@ -172,45 +176,57 @@ int PacmanItemModel::rowCount(const QModelIndex & parent) const {
     return parent.isValid()?0:rows.count();
 }
 
-void PacmanItemModel::addRow(const PacmanEntry & item) {
+void PacmanItemModel::addRow(PacmanEntry * item) {
+    if (item == NULL) return;
+
     rows.append(item);
-    for (int i=0;i<item.groups.count();i++) {
-        m_groups.insert(item.groups[i]);
-        m_repos.insert(item.repo);
-    }
 }
 
 QStringList PacmanItemModel::getGroups() {
-    return m_groups.toList();
+    if (m_groups.isEmpty()) {
+        for (int id=0;id<rows.count();id++) {
+            m_groups.append(rows[id]->groups);
+        }
+        m_groups.removeDuplicates();
+    }
+
+    return m_groups;
 }
 
 QStringList PacmanItemModel::getRepos() {
-    return m_repos.toList();
+    if (m_repos.isEmpty()) {
+        for (int id=0;id<rows.count();id++) {
+            m_repos.append(rows[id]->repo);
+        }
+        m_repos.removeDuplicates();
+    }
+
+    return m_repos;
 }
 
 void PacmanItemModel::chooseRow(const QModelIndex & index,bool sel) {
-    rows[index.row()].m_isChosen = sel;
+    rows[index.row()]->m_isChosen = sel;
 }
 
-bool PacmanItemModel::pacman_model_asc_sort(const PacmanEntry & item1, const PacmanEntry & item2) {
+bool PacmanItemModel::pacman_model_asc_sort(const PacmanEntry * item1, const PacmanEntry * item2) {
     return pacman_model_asc_compare(item1,item2) < 0;
 }
 
-bool PacmanItemModel::pacman_model_no_version_asc_sort(const PacmanEntry & item1, const PacmanEntry & item2) {
+bool PacmanItemModel::pacman_model_no_version_asc_sort(const PacmanEntry * item1, const PacmanEntry * item2) {
     return pacman_model_no_version_asc_compare(item1,item2) < 0;
 }
 
-int PacmanItemModel::pacman_model_asc_compare(const PacmanEntry & item1, const PacmanEntry & item2) {
+int PacmanItemModel::pacman_model_asc_compare(const PacmanEntry * item1, const PacmanEntry * item2) {
     int Ret;
-    return (Ret = item1.name.compare(item2.name))?Ret:
-                  alpm_pkg_vercmp((const char *)item1.version.toLocal8Bit(),(const char *)item2.version.toLocal8Bit());
+    return (Ret = item1->name.compare(item2->name))?Ret:
+                  alpm_pkg_vercmp((const char *)item1->version.toLocal8Bit(),(const char *)item2->version.toLocal8Bit());
 }
 
-int PacmanItemModel::pacman_model_no_version_asc_compare(const PacmanEntry & item1, const PacmanEntry & item2) {
-    return item1.name.compare(item2.name);
+int PacmanItemModel::pacman_model_no_version_asc_compare(const PacmanEntry * item1, const PacmanEntry * item2) {
+    return item1->name.compare(item2->name);
 }
 
-int PacmanItemModel::findLastIndex(int bIndex,int (*compare)(const PacmanEntry & item1, const PacmanEntry & item2)) const {
+int PacmanItemModel::findLastIndex(int bIndex,int (*compare)(const PacmanEntry * item1, const PacmanEntry * item2)) const {
     for (int i=bIndex;i<rows.count();i++) {
         if (compare(rows[bIndex],rows[i])) {
             return i - 1;
@@ -219,7 +235,7 @@ int PacmanItemModel::findLastIndex(int bIndex,int (*compare)(const PacmanEntry &
     return rows.count()-1;
 }
 
-int PacmanItemModel::findFirstIndex(int bIndex,int (*compare)(const PacmanEntry & item1, const PacmanEntry & item2)) const {
+int PacmanItemModel::findFirstIndex(int bIndex,int (*compare)(const PacmanEntry * item1, const PacmanEntry * item2)) const {
     for (int i=bIndex;i>=0;i--) {
         if (compare(rows[bIndex],rows[i])) {
             return i + 1;
@@ -232,14 +248,14 @@ void PacmanItemModel::fix_sort_portion(int firstindex,int lastindex) {
     if (lastindex > firstindex) {
         QString repo;
         for (int i=firstindex;i<=lastindex;i++) {
-            if (rows[i].repo != "aur") {
-                if (repo.isEmpty()) repo = rows[i].repo;
-                rows[i].name = "";
+            if (rows[i]->repo != "aur") {
+                if (repo.isEmpty()) repo = rows[i]->repo;
+                rows[i]->name = "";
             }
         }
         for (int i=firstindex;i<=lastindex;i++) {
-            if (rows[i].repo == "aur") {
-                rows[i].repo = repo;
+            if (rows[i]->repo == "aur") {
+                rows[i]->repo = repo;
                 break;
             }
         }
@@ -247,13 +263,13 @@ void PacmanItemModel::fix_sort_portion(int firstindex,int lastindex) {
 }
 
 void PacmanItemModel::fix_sort_portion2(int firstindex,int lastindex) {
-    if (rows[firstindex].version == rows[lastindex].version) return;
+    if (rows[firstindex]->version == rows[lastindex]->version) return;
 
-    QString version = rows[lastindex].version;
+    QString version = rows[lastindex]->version;
 
     bool isInstalled = false;
     for (int i=lastindex;i>=firstindex;i--) {
-        if ((rows[i].getVersion() != version) && rows[i].isInstalled()) {
+        if ((rows[i]->getVersion() != version) && rows[i]->isInstalled()) {
             isInstalled = true;
             break;
         }
@@ -261,7 +277,7 @@ void PacmanItemModel::fix_sort_portion2(int firstindex,int lastindex) {
 
     if (!isInstalled) return;
 
-    rows[lastindex].m_isUpdate = true;
+    rows[lastindex]->m_isUpdate = true;
 }
 
 void PacmanItemModel::sort() {
@@ -282,7 +298,7 @@ void PacmanItemModel::sort() {
     }
 
     for (int i=(rows.count()-1);i>=0;i--) {
-        if (rows[i].name.isEmpty()) rows.removeAt(i);
+        if (rows[i]->name.isEmpty()) delete rows.takeAt(i);
     }
 
     firstindex = 0;
@@ -299,13 +315,13 @@ void PacmanItemModel::sort() {
 
     provides_rows.clear();
     for (int i=(rows.count()-1);i>=0;i--) {
-        QStringList provides = rows[i].listProvides();
+        QStringList provides = rows[i]->listProvides();
         if (provides.count() > 0) {
             for (int j=0;j<provides.count();j++) {
                 QString provider;
                 QString version;
                 PacmanEntry::parseNameVersion(provides[j],provider,version);
-                provides_rows[provider.toLower()].insert(i);
+                provides_rows[provider].insert(i);
             }
         }
     }
@@ -316,14 +332,14 @@ QList<int> PacmanItemModel::filterRecords(const QString & text,CategoryToolButto
     QList<int> list;
     for (int i=0;i<rows.count();i++) {
         if (group.isEmpty()) {
-            if (((fItemId == FilterToolButton::IS_INSTALLED) && !rows[i].isInstalled()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_NONINSTALLED) && rows[i].isInstalled()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_NEEDUPDATE) && !rows[i].isUpdate()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_ORPHANED) && !rows[i].isOrphaned()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_MARKED) && !rows[i].isChosen()) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
+            if (((fItemId == FilterToolButton::IS_INSTALLED) && !rows[i]->isInstalled()) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_NONINSTALLED) && rows[i]->isInstalled()) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_NEEDUPDATE) && !rows[i]->isUpdate()) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_ORPHANED) && !rows[i]->isOrphaned()) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_MARKED) && !rows[i]->isChosen()) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
         }
         else{
-            if (!rows[i].ownedByGroup(group) || !rows[i].containsText(text,cItemId) || ((rows[i].repo != repo) && !repo.isEmpty() && (rows[i].repo != Static::RepoAll_Str))) list.append(i);
+            if (!rows[i]->ownedByGroup(group) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
         }
     }
 
@@ -331,17 +347,18 @@ QList<int> PacmanItemModel::filterRecords(const QString & text,CategoryToolButto
 }
 
 PacmanEntry & PacmanItemModel::row(const QModelIndex & index) {
-    return rows[index.row()];
+    return *rows[index.row()];
 }
 
 PacmanEntry PacmanItemModel::row(const QModelIndex & index) const {
     int idx = index.row();
-    if ((idx >= 0) && (idx < rows.count())) return rows[idx];
+    if ((idx >= 0) && (idx < rows.count())) return *rows[idx];
     return PacmanEntry();
 }
 
 QModelIndex PacmanItemModel::firstFoundIndexByPackageName(const QString & package) const {
-    QList<PacmanEntry>::const_iterator i = qBinaryFind(rows.begin(),rows.end(),PacmanEntry(package),pacman_model_no_version_asc_sort);
+    PacmanEntry entry(package);
+    QList<PacmanEntry * >::const_iterator i = qBinaryFind(rows.begin(),rows.end(),&entry,pacman_model_no_version_asc_sort);
     if (i == rows.end()) {
         if (provides_rows.contains(package)) return index(*provides_rows[package].begin(),0);
         return QModelIndex();
@@ -355,14 +372,15 @@ QModelIndex PacmanItemModel::installedProviderIndex(const QString & provider) co
         QSetIterator<int> i(provides_rows[provider]);
         while (i.hasNext()) {
             int index = i.next();
-            if (rows[index].isInstalled()) return this->index(index,0);
+            if (rows[index]->isInstalled()) return this->index(index,0);
         }
     }
     return QModelIndex();
 }
 
 QModelIndex PacmanItemModel::installedIndexByPackageName(const QString & package) const {
-    QList<PacmanEntry>::const_iterator i = qBinaryFind(rows.begin(),rows.end(),PacmanEntry(package),pacman_model_no_version_asc_sort);
+    PacmanEntry entry(package);
+    QList<PacmanEntry * >::const_iterator i = qBinaryFind(rows.begin(),rows.end(),&entry,pacman_model_no_version_asc_sort);
     if (i == rows.end()) return QModelIndex();
 
     int firstindex = findFirstIndex(i-rows.begin(),pacman_model_no_version_asc_compare);
@@ -377,7 +395,8 @@ QModelIndex PacmanItemModel::installedIndexByPackageName(const QString & package
 }
 
 QModelIndex PacmanItemModel::indexByPackageNameVersion(const QString & name,const QString & ver) const {
-    QList<PacmanEntry>::const_iterator i = qBinaryFind(rows.begin(),rows.end(),PacmanEntry(name,ver),pacman_model_asc_sort);
+    PacmanEntry entry(name,ver);
+    QList<PacmanEntry * >::const_iterator i = qBinaryFind(rows.begin(),rows.end(),&entry,pacman_model_asc_sort);
     if (i == rows.end()) return QModelIndex();
 
     return index(i-rows.begin(),0);
@@ -414,16 +433,16 @@ QList<QModelIndex> PacmanItemModel::indexesCanReplaceInstalled() const {
     QString ver;
     QList<QModelIndex> ret;
     for (int i=(rows.count()-1);i>=0;i--) {
-        if (rows[i].isInstalled() && !rows[i].isUpdate()) continue;
-        if (rows[i].replaces.isEmpty()) continue;
-        if ((ret.count() > 0) && (rows[i].name == rows[ret[ret.count()-1].row()].name)) continue;
+        if (rows[i]->isInstalled() && !rows[i]->isUpdate()) continue;
+        if (rows[i]->replaces.isEmpty()) continue;
+        if ((ret.count() > 0) && (rows[i]->name == rows[ret[ret.count()-1].row()]->name)) continue;
 
-        for (int j=0;j<rows[i].replaces.count();j++) {
-            PacmanEntry::parseNameVersion(rows[i].replaces[j],name,ver);
+        for (int j=0;j<rows[i]->replaces.count();j++) {
+            PacmanEntry::parseNameVersion(rows[i]->replaces[j],name,ver);
             if (!ver.isEmpty()) continue;
 
             QModelIndex index = installedIndexByPackageName(name);
-            if (index.isValid() && (rows[index.row()].name != rows[i].name)) {
+            if (index.isValid() && (rows[index.row()]->name != rows[i]->name)) {
                 ret.append(this->index(i,0));
                 break;
             }
@@ -435,7 +454,7 @@ QList<QModelIndex> PacmanItemModel::indexesCanReplaceInstalled() const {
 
 bool PacmanItemModel::removeRows(int row,int count,const QModelIndex & /*parent*/) {
     for (int i=(row+count-1);i>=row;i--) {
-        rows.removeAt(i);
+        delete rows.takeAt(i);
     }
     return true;
 }
@@ -443,7 +462,7 @@ bool PacmanItemModel::removeRows(int row,int count,const QModelIndex & /*parent*
 QList<QModelIndex> PacmanItemModel::updatesList() const {
     QList<QModelIndex> indexes;
     for (int i=(rows.count()-1);i>=0;i--) {
-        if (rows[i].isUpdate()) indexes.append(index(i,0));
+        if (rows[i]->isUpdate()) indexes.append(index(i,0));
     }
 
     return indexes;

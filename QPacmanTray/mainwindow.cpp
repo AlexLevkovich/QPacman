@@ -15,6 +15,10 @@
 #include <QPushButton>
 #include "errordialog.h"
 #include <QDebug>
+#include "suchecker.h"
+#include "rootdialog.h"
+#include "simplecrypt.h"
+#include <cpuid.h>
 
 extern const char * pacmantray_version;
 const char * error_str = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">"
@@ -26,6 +30,65 @@ static const char * message_str_part1 = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTM
                                         "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">%1</span></p>";
 static const char * message_str_packg = "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%1</p>";
 static const char * message_str_part2 = "</body></html>";
+
+class Cryptor {
+public:
+    static QString decrypt(const QString &password) {
+        return SimpleCrypt(getCpuHash()).decryptToString(password);
+    }
+
+    static QString encrypt(const QString &password) {
+        return SimpleCrypt(getCpuHash()).encryptToString(password);
+    }
+
+private:
+    static unsigned short getCpuHash() {
+        unsigned int level = 0;
+        unsigned int cpuinfo[4] = { 0, 0, 0, 0 };
+
+        __get_cpuid(level, &cpuinfo[0], &cpuinfo[1], &cpuinfo[2], &cpuinfo[3]);
+
+       unsigned short hash = 0;
+       unsigned int* ptr = (&cpuinfo[0]);
+       for ( unsigned int i = 0; i < 4; i++ )
+          hash += (ptr[i] & 0xFFFF) + ( ptr[i] >> 16 );
+
+       return hash;
+    }
+};
+
+static const QString su_password() {
+    QSettings settings;
+    return Cryptor::decrypt(settings.value("settings/su_password","").toString());
+}
+
+static void setSuPassword(const QString & su_password) {
+    QSettings settings;
+    settings.setValue("settings/su_password",Cryptor::encrypt(su_password));
+}
+
+static bool checkRootAccess() {
+    if (!su_password().isEmpty()) {
+        SuChecker suchecker(su_password());
+        suchecker.waitToComplete();
+        if (suchecker.ok()) return true;
+    }
+
+    for (int i=0;i<3;i++) {
+        RootDialog dlg;
+        if (dlg.exec() == QDialog::Rejected) break;
+
+        SuChecker suchecker(dlg.password());
+        suchecker.waitToComplete();
+        if (!suchecker.ok()) continue;
+
+        setSuPassword(dlg.password());
+        return true;
+    }
+
+    return false;
+}
+
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow),
                                           errorIcon(":/pics/kpk-important.png"),
@@ -225,7 +288,12 @@ void MainWindow::timeout() {
     showTray(errorIcon);
     tray->setToolTip(tr("Checking updates..."));
 
-    refresher = new PacmanDBRefresher(this);
+    if (!checkRootAccess()) {
+        was_error(tr("The root's rights are needed to continue!!!"),"timeout");
+        return;
+    }
+
+    refresher = new PacmanDBRefresher(su_password(),this);
     connect(refresher,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(db_refreshed(PacmanProcessReader *)));
     connect(refresher,SIGNAL(was_error(const QString &,const QString &)),this,SLOT(was_error(const QString &,const QString &)));
 }
@@ -348,34 +416,16 @@ void MainWindow::showEvent(QShowEvent * event) {
 void MainWindow::onGuiExited() {
     emit actionCheckUIUpdate(!isCheckingUpdates);
     emit actionUpdateUIUpdate(!isCheckingUpdates);
+    timeout();
 }
 
 void MainWindow::onGuiStarted() {
     emit actionCheckUIUpdate(false);
     emit actionUpdateUIUpdate(false);
+    hideTray();
 }
 
 void MainWindow::terminate() {
     if (refresher != NULL) refresher->terminate();
 }
 
-void MainWindow::dbusLoaded() {
-    isConnected = true;
-    wasError = false;
-    if (packages.count() > 0) {
-        showTray(packageIcon);
-    }
-    else hideTray();
-    timeout();
-}
-
-void MainWindow::dbusUnloaded() {
-    isConnected = false;
-    checkingLock.unlock();
-    isCheckingUpdates = false;
-    was_error(tr("QPacmanServer service is unloaded!!! Restart it."),"DBus");
-    timer.stop();
-    emit actionCheckUIUpdate(false);
-    emit actionUpdateUIUpdate(false);
-    emit actionErrorsUIUpdate(wasError && !isGuiAppActive());
-}

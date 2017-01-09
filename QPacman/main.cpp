@@ -6,27 +6,22 @@
 #include "mainwindow.h"
 #include "localpackagemainwindow.h"
 #include <QApplication>
+#include <QDebug>
 #include <QFileInfo>
+#include <QDir>
 #include <QMessageBox>
 #include <QTranslator>
+#include <QLibraryInfo>
 #include "pacmanprocessreader.h"
-#include "pacmanserverinterface.h"
 #include "pacmaninstallpackagesreader.h"
-#include "dbuswatcher.h"
 #include "static.h"
+#if QT_VERSION >= 0x050000
+#include <QLockFile>
+#else
 #include "qlockfile.h"
+#endif
 
-const char * pacman_version = "2.2";
-
-class ClientStarter {
-public:
-    ClientStarter() {
-        PacmanServerInterface::instance()->commandRequest("CLIENT STARTED");
-    }
-    ~ClientStarter() {
-        PacmanServerInterface::instance()->commandRequest("CLIENT EXITED");
-    }
-};
+const char * pacman_version = "2.4";
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
@@ -64,14 +59,6 @@ int main(int argc, char *argv[]) {
     qRegisterMetaType<PacmanProcessReader *>("PacmanProcessReader *");
     qRegisterMetaType<PacmanInstallPackagesReader *>("PacmanInstallPackagesReader *");
 
-    PacmanServerInterface::createInstance(&a);
-    if (!PacmanServerInterface::instance()->isValid()) {
-        QMessageBox::critical(NULL,Static::Error_Str,QObject::tr("Cannot connect to dbus' QPacmanServer!"),QMessageBox::Ok);
-        return 1;
-    }
-
-    ClientStarter starter;
-
     int ret = 127;
 
     QStringList packages;
@@ -84,8 +71,6 @@ int main(int argc, char *argv[]) {
     if (packages.count() > 0) {
         try {
             LocalPackageMainWindow w(packages);
-            QObject::connect(PacmanServerInterface::watcher(),SIGNAL(loaded()),&w,SLOT(enableActions()));
-            QObject::connect(PacmanServerInterface::watcher(),SIGNAL(unloaded()),&w,SLOT(disableActions()));
             w.show();
             ret = a.exec();
         }
@@ -97,8 +82,6 @@ int main(int argc, char *argv[]) {
     else {
         try {
             MainWindow w((argc >= 2) && (QString(argv[1]) == "--updates"));
-            QObject::connect(PacmanServerInterface::watcher(),SIGNAL(loaded()),&w,SLOT(dbus_loaded()));
-            QObject::connect(PacmanServerInterface::watcher(),SIGNAL(unloaded()),&w,SLOT(dbus_unloaded()));
             w.show();
             ret = a.exec();
         }

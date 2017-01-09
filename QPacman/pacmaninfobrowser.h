@@ -16,6 +16,7 @@ class PacmanInfoBrowser : public QTextBrowser {
 public:
     explicit PacmanInfoBrowser(QWidget *parent = 0);
     void setModel(PacmanItemModel * model);
+    void clearImageCache();
 
 protected:
     void setSource(const QUrl & name);

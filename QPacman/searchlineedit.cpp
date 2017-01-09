@@ -18,4 +18,5 @@ void SearchLineEdit::onTextEdited(const QString & /*str*/) {
 
 void SearchLineEdit::onTimeout() {
     emit changed(text());
+    timer.stop();
 }

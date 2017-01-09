@@ -8,8 +8,8 @@
 #include <QTemporaryFile>
 #include <QFileInfo>
 #include <QStringList>
+#include "pacmansetupinforeader.h"
 
-extern QString pacman_conf;
 QSettings::Format ConfSettings::ConfFormat = QSettings::InvalidFormat;
 
 ConfSettings::ConfSettings(const QString & confName,QObject *parent) : QSettings(confName,(ConfSettings::ConfFormat == QSettings::InvalidFormat)?QSettings::registerFormat("conf",ConfSettings::readConfFile,ConfSettings::writeConfFile):ConfSettings::ConfFormat,parent) {
@@ -104,5 +104,5 @@ bool ConfSettings::copyFromFile(const QString & fileName) {
 }
 
 bool ConfSettings::copyFromPacmanConf() {
-    return copyFromFile(pacman_conf);
+    return copyFromFile(PacmanSetupInfoReader::pacman_conf);
 }

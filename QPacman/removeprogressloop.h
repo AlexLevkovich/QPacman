@@ -12,7 +12,7 @@
 class RemoveProgressLoop : public QEventLoop {
     Q_OBJECT
 public:
-    explicit RemoveProgressLoop(const QStringList & packages,bool withDeps = true,QWidget *parent = 0);
+    explicit RemoveProgressLoop(const QString & su_password,const QStringList & packages,bool withDeps = true,QWidget *parent = 0);
     QStringList removedPackages() const;
 
 protected slots:

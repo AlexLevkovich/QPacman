@@ -73,6 +73,7 @@ void MainWindow::onCanFillReposInCombo(const QStringList & repos) {
 }
 
 void MainWindow::onSelectionChanged(const QModelIndex & index) {
+    ui->pacInfoView->clearImageCache();
     ui->pacInfoView->setHtml(ui->packetView->row(index).toHtml());
     PacmanEntry row = ui->packetView->row(index);
     if (row.isInstalled()) {
@@ -159,7 +160,7 @@ void MainWindow::on_actionApply_triggered() {
 
     QStringList removed_packages;
     if (to_removeall.count() > 0) {
-        RemoveProgressLoop rprogress_dlg(PacmanEntry::entriesListToNamesStringList(to_removeall),true,this);
+        RemoveProgressLoop rprogress_dlg(Static::su_password,PacmanEntry::entriesListToNamesStringList(to_removeall),true,this);
         connect(&rprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
         if (rprogress_dlg.exec() != QDialog::Accepted) return;
         removed_packages = rprogress_dlg.removedPackages();
@@ -170,13 +171,13 @@ void MainWindow::on_actionApply_triggered() {
         remove_packages = PacmanEntry::entriesListToNamesStringList(to_remove);
         if (removed_packages.count() > 0) removePackageIfExistInList(removed_packages,remove_packages);
         if (remove_packages.count() > 0) {
-            RemoveProgressLoop rprogress_dlg(remove_packages,false,this);
+            RemoveProgressLoop rprogress_dlg(Static::su_password,remove_packages,false,this);
             connect(&rprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
             if (rprogress_dlg.exec() != QDialog::Accepted) return;
         }
     }
     if (to_install.count() > 0) {
-        InstallProgressLoop iprogress_dlg(PacmanEntry::entriesListToStringList(to_install),this);
+        InstallProgressLoop iprogress_dlg(Static::su_password,PacmanEntry::entriesListToStringList(to_install),this);
         connect(&iprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
         if (iprogress_dlg.exec() != QDialog::Accepted) {
             if (remove_packages.count() <= 0 &&
@@ -217,17 +218,13 @@ void MainWindow::on_actionCacheCleanUp_triggered() {
     }
 
     if (QMessageBox::warning(this,Static::Warning_Str,tr("The contents of cache directory will be removed.\nAre you sure to continue?"),QMessageBox::Yes,QMessageBox::No) == QMessageBox::No) return;
-    PacmanCacheCleaner cleaner;
+    PacmanCacheCleaner cleaner(Static::su_password);
     cleaner.waitToComplete();
     if (cleaner.exitCode() != 0) return;
     QMessageBox::information(this,"Information...",tr("The contents of cache directory was removed succesfully!"));
 }
 
 void MainWindow::onReasonUrlSelected(const QString & package) {
-    if (!Static::checkRootAccess()) {
-        QMessageBox::critical(this,Static::Error_Str,Static::RootRightsNeeded_Str,QMessageBox::Ok);
-        return;
-    }
     ui->packetView->revertReason(package);
     ui->packetView->refresh();
 }
@@ -260,16 +257,6 @@ void MainWindow::onEnableActions(bool flag) {
     ui->actionApply->setEnabled(!flag?false:actionApplyState());
     ui->actionNext->setEnabled(!flag?false:ui->packetView->isSelectNextPossible());
     ui->actionPrevious->setEnabled(!flag?false:ui->packetView->isSelectPrevPossible());
-}
-
-void MainWindow::dbus_loaded() {
-    onEnableActions(true);
-    QMessageBox::information(NULL,Static::Info_Str,QObject::tr("QPacmanServer is loaded! You are on again."),QMessageBox::Ok);
-}
-
-void MainWindow::dbus_unloaded() {
-    onEnableActions(false);
-    QMessageBox::critical(NULL,Static::Error_Str,QObject::tr("QPacmanServer has killed! Please restart it."),QMessageBox::Ok);
 }
 
 bool MainWindow::actionApplyState() {

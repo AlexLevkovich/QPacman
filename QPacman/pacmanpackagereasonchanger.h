@@ -11,11 +11,10 @@
 class PacmanPackageReasonChanger : public PacmanProcessReader {
     Q_OBJECT
 public:
-    explicit PacmanPackageReasonChanger(const QString & package,bool doDeps,QObject *parent = 0);
+    explicit PacmanPackageReasonChanger(const QString & su_password,const QString & package,bool doDeps,QObject *parent = 0);
 
 protected:
-    void send_parameters();
-    QByteArray command() const;
+    QString command() const;
 
 private:
     QString m_package;

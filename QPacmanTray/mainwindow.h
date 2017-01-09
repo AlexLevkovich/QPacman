@@ -12,7 +12,11 @@
 #include <QMap>
 #include <QTimer>
 #include <QMovie>
+#if QT_VERSION >= 0x050000
+#include <QLockFile>
+#else
 #include "qlockfile.h"
+#endif
 #include "externalplayer.h"
 
 namespace Ui {
@@ -55,10 +59,8 @@ private slots:
     void onActionCheckUIUpdate(bool flag);
     void onActionUpdateUIUpdate(bool flag);
     void onActionErrorsUIUpdate(bool flag);
-    void dbusLoaded();
-    void dbusUnloaded();
 
-protected slots:
+public slots:
     void terminate();
 
 signals:

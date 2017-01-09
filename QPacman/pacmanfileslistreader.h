@@ -7,7 +7,7 @@
 #define PacmanFilesListReader_H
 
 #include "pacmanprocessreader.h"
-#include <QStringList>
+#include <QMap>
 
 class PacmanFilesListReader : public PacmanProcessReader {
     Q_OBJECT
@@ -15,11 +15,19 @@ public:
     explicit PacmanFilesListReader(QObject *parent = 0);
 
 protected:
-    void send_parameters();
-    QByteArray command() const;
+    QString command() const;
+    bool output(const QString & out);
+
+protected slots:
+    void onFinished(int code,QProcess::ExitStatus status);
 
 signals:
     void files_ready(const QString & package,const QStringList & files);
+
+private:
+    QString m_package;
+    QStringList m_files;
+    QString m_dir;
 };
 
 #endif // PacmanFilesListReader_H

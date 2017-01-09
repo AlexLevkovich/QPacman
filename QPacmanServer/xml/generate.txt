@@ -1,5 +1,0 @@
-qdbuscpp2xml-qt4 -M -s pacmandbusserver.h -o xml/org.alexl.PacmanServer.xml
-
-qdbusxml2cpp-qt4 -c PacmanServerAdaptor -a pacmanserveradaptor.h:pacmanserveradaptor.cpp xml/org.alexl.PacmanServer.xml
-
-qdbusxml2cpp-qt4 -v -c PacmanServerInterface -p pacmanserverinterface.h:pacmanserverinterface.cpp org.alexl.PacmanServer.xml

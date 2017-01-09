@@ -11,9 +11,9 @@
 #include <QMessageBox>
 #include <QKeyEvent>
 
-InstallProgressLoop::InstallProgressLoop(const QStringList & packages,QWidget *parent) : QEventLoop(parent) {
+InstallProgressLoop::InstallProgressLoop(const QString & su_password,const QStringList & packages,QWidget *parent) : QEventLoop(parent) {
     wasCanceled = false;
-    installer = new PacmanInstallPackagesReader(packages.join(" "),this);
+    installer = new PacmanInstallPackagesReader(su_password,packages.join(" "),this);
     connect(installer,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(installing_packages_finished(PacmanProcessReader *)));
     connect(installer,SIGNAL(post_messages(const QString &,const QStringList &)),this,SIGNAL(post_messages(const QString &,const QStringList &)));
     connect(installer,SIGNAL(ready_to_process(double,double)),this,SLOT(readyToProcess(double,double)));

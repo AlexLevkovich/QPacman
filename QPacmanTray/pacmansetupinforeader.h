@@ -1,0 +1,1 @@
+../QPacman/pacmansetupinforeader.h

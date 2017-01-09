@@ -11,7 +11,7 @@
 #include <QMessageBox>
 #include <QKeyEvent>
 
-RemoveProgressLoop::RemoveProgressLoop(const QStringList & packages,bool withDeps,QWidget *parent) : QEventLoop(parent) {
+RemoveProgressLoop::RemoveProgressLoop(const QString & su_password,const QStringList & packages,bool withDeps,QWidget *parent) : QEventLoop(parent) {
     remover = NULL;
     wasCanceled = false;
 
@@ -23,7 +23,7 @@ RemoveProgressLoop::RemoveProgressLoop(const QStringList & packages,bool withDep
         names.append(name);
     }
 
-    remover = new PacmanRemovePackagesReader(names.join(" "),withDeps,this);
+    remover = new PacmanRemovePackagesReader(su_password,names.join(" "),withDeps,this);
     connect(remover,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(removing_packages_finished(PacmanProcessReader *)));
     connect(remover,SIGNAL(post_messages(const QString &,const QStringList &)),this,SIGNAL(post_messages(const QString &,const QStringList &)));
     connect(remover,SIGNAL(ready_to_process(double)),this,SLOT(readyToProcess(double)));

@@ -11,11 +11,10 @@
 class PacmanCacheCleaner : public PacmanProcessReader {
     Q_OBJECT
 public:
-    explicit PacmanCacheCleaner(QObject *parent = 0);
+    explicit PacmanCacheCleaner(const QString & su_password,QObject *parent = 0);
 
 protected:
-    QByteArray command() const;
-    void send_parameters();
+    QString command() const;
 };
 
 #endif // PacmanCacheCleaner_H

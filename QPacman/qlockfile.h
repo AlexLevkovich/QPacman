@@ -1,1 +1,1 @@
-../QPacmanServer/qlockfile.h
+../QPacmanTray/qlockfile.h

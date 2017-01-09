@@ -13,7 +13,7 @@
 class InstallProgressLoop : public QEventLoop {
     Q_OBJECT
 public:
-    explicit InstallProgressLoop(const QStringList & packages,QWidget *parent = 0);
+    explicit InstallProgressLoop(const QString & su_password,const QStringList & packages,QWidget *parent = 0);
 
 protected:
     explicit InstallProgressLoop(QWidget *parent = 0);

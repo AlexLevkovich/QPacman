@@ -29,6 +29,7 @@ void PacmanInfoBrowser::setSource(const QUrl & name) {
     if (name.scheme() != "qpc") QDesktopServices::openUrl(name);
     else {
         QString package = name.host();
+        if (package == "pack") package = name.path().mid(1);
         QStringList parts = package.split(".");
         if ((parts.count() >= 2) && (parts[0] == "group")) {
             package="";
@@ -59,4 +60,6 @@ void PacmanInfoBrowser::setModel(PacmanItemModel * model) {
     ((PacmanInfoBrowserDocument *)document())->setModel(m_model);
 }
 
-
+void PacmanInfoBrowser::clearImageCache() {
+    ((PacmanInfoBrowserDocument *)document())->clearImageCache();
+}

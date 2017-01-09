@@ -4,21 +4,32 @@
 ********************************************************************************/
 
 #include "pacmanfilepackageinforeader.h"
-#include "pacmanserverinterface.h"
 
 PacmanFilePackageInfoReader::PacmanFilePackageInfoReader(const QString & package,QObject *parent) : PacmanProcessReader(parent) {
     m_package = package;
-    connect(PacmanServerInterface::instance(),SIGNAL(package_ready(const PacmanEntry &)),this,SLOT(on_package_ready(const PacmanEntry &)));
+    wasStdoutRead = false;
 }
 
-QByteArray PacmanFilePackageInfoReader::command() const {
-    return "FILE INFO";
+QString PacmanFilePackageInfoReader::command() const {
+    return QString("%2 -xpvf \"%1\" .PKGINFO -O").arg(m_package).arg(TAR_BIN);
 }
 
-void PacmanFilePackageInfoReader::send_parameters() {
-    PacmanServerInterface::instance()->setFilePath(m_package);
+bool PacmanFilePackageInfoReader::output(const QString & line) {
+    wasStdoutRead = true;
+    if (!line.simplified().isEmpty()) entry.parseLine(line.toLocal8Bit());
+    return true;
 }
 
-void PacmanFilePackageInfoReader::on_package_ready(const PacmanEntry & entry) {
-    this->entry = entry;
+bool PacmanFilePackageInfoReader::error(const QString & err) {
+    if (err.startsWith(".PKGINFO")) {
+        if (!wasStdoutRead) {
+            waitForReadyRead();
+        }
+        terminateProcess();
+        clearErrorStreamCache();
+        setCode(0);
+        onFinished(0,QProcess::NormalExit);
+    }
+    else setCode(1);
+    return true;
 }

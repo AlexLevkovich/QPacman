@@ -7,20 +7,19 @@
 #define PACMANSIMPLEUPDATESREADER_H
 
 #include "pacmanprocessreader.h"
-#include <QStringList>
 
 class PacmanSimpleUpdatesReader : public PacmanProcessReader {
     Q_OBJECT
 public:
     explicit PacmanSimpleUpdatesReader(QObject *parent = 0);
-    QStringList packages() const {return m_packages; }
-    QByteArray command() const;
+    QStringList packages() const {return m_packages;  }
 
 protected:
-    void send_parameters();
+    QString command() const;
+    bool output(const QString & out);
 
-private slots:
-    void on_packages_ready(const QStringList & packages);
+protected slots:
+    void onFinished(int code,QProcess::ExitStatus status);
 
 private:
     QStringList m_packages;

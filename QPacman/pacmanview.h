@@ -62,7 +62,7 @@ protected:
     void keyPressEvent(QKeyEvent * event);
 
 protected slots:
-    void read_package(const PacmanEntry & item);
+    void read_package(PacmanEntry * item);
     void read_packages_finished(PacmanProcessReader * ptr);
     void read_files_finished(PacmanProcessReader * ptr);
     void files_ready(const QString & package,const QStringList & files);

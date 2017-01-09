@@ -4,18 +4,22 @@
 ********************************************************************************/
 
 #include "pacmansimpleupdatesreader.h"
-#include "pacmanserverinterface.h"
 
 PacmanSimpleUpdatesReader::PacmanSimpleUpdatesReader(QObject *parent) : PacmanProcessReader(parent) {
-    connect(PacmanServerInterface::instance(),SIGNAL(packages_to_update(const QStringList &)),this,SLOT(on_packages_ready(const QStringList &)));
 }
 
-QByteArray PacmanSimpleUpdatesReader::command() const {
-    return "READ UPDATES";
+QString PacmanSimpleUpdatesReader::command() const {
+    return QString("%1 -Qqu").arg(PACMAN_BIN);
 }
 
-void PacmanSimpleUpdatesReader::send_parameters() {}
+bool PacmanSimpleUpdatesReader::output(const QString & out) {
+    QString line = out.simplified();
+    if (line.isEmpty()) return true;
+    m_packages.append(line);
+    return true;
+}
 
-void PacmanSimpleUpdatesReader::on_packages_ready(const QStringList & packages) {
-    m_packages = packages;
+void PacmanSimpleUpdatesReader::onFinished(int code,QProcess::ExitStatus status) {
+    if (errorStream().isEmpty() && code != 0) setCode(-code);
+    PacmanProcessReader::onFinished(code,status);
 }

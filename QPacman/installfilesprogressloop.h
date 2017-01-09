@@ -11,7 +11,7 @@
 class InstallFilesProgressLoop : public InstallProgressLoop {
     Q_OBJECT
 public:
-    explicit InstallFilesProgressLoop(const QStringList & packages,QWidget *parent = 0);
+    explicit InstallFilesProgressLoop(const QString & su_password,const QStringList & packages,QWidget *parent = 0);
 
 protected:
     int packages_count();

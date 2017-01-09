@@ -8,8 +8,13 @@
 
 #include <QApplication>
 #include "jsondbsignals.h"
+#if QT_VERSION >= 0x050000
+#include <QLockFile>
+#else
 #include "qlockfile.h"
-#include "pacmanserverinterface.h"
+#endif
+#include <QFileSystemWatcher>
+#include <QString>
 
 class QWidget;
 
@@ -17,28 +22,23 @@ class SingleApplication : public QApplication {
     Q_OBJECT
 public:
     explicit SingleApplication(int & argc, char ** argv);
-    bool isStarted();
-    void setMainWidget(QWidget * mainWidget) { m_mainWidget = mainWidget; }
-
-protected:
-    bool eventFilter(QObject * obj,QEvent * event);
+    void setMainWidget(QWidget * mainWidget);
+    bool error() const { return m_error; }
 
 protected slots:
-    void showMainWindow();
-    void guiExited();
-    void guiStarted();
-    void updatesList(const QStringList & list);
-    void aboutToQuit();
-    void dbusLoaded();
-    void dbusUnloaded();
+    void tempDirectoryChanged();
+    void terminate();
 
 private:
     QWidget * m_mainWidget;
     JsonDbSignals signalHandler;
     QLockFile sharedLock;
-    bool m_isStarted;
+    QFileSystemWatcher watcher;
+    bool client_loaded;
+    bool m_error;
 
-    void initDbusConnections();
+    static const QString client_lock_file;
+    static const QString tray_show_file;
 };
 
 #endif // SINGLEAPPLICATION_H

@@ -4,16 +4,15 @@
 ********************************************************************************/
 
 #include "static.h"
-#include "pacmansaltreader.h"
 #include "rootdialog.h"
 #include <sys/utsname.h>
 #include <unistd.h>
 #include <pwd.h>
 #include <QApplication>
 #include "pacmanprovidersdialog.h"
+#include "suchecker.h"
 
-QByteArray Static::encryptedPassword;
-bool Static::isRootAccessOK = false;
+QString Static::su_password;
 QString Static::Error_Str;
 QString Static::Warning_Str;
 QString Static::Question_Str;
@@ -37,18 +36,21 @@ void Static::init_tr_variables() {
 }
 
 bool Static::checkRootAccess() {
-    if (isRootAccessOK) return true;
-
-    PacmanSaltReader salt_reader;
-    salt_reader.waitToComplete();
-    if (salt_reader.exitCode() != 0) return false;
+    if (!su_password.isEmpty()) {
+        SuChecker suchecker(su_password);
+        suchecker.waitToComplete();
+        if (suchecker.ok()) return true;
+    }
 
     for (int i=0;i<3;i++) {
-        RootDialog dlg(salt_reader.salt());
+        RootDialog dlg;
         if (dlg.exec() == QDialog::Rejected) break;
-        if (!dlg.passwordIsOK()) continue;
 
-        isRootAccessOK = true;
+        SuChecker suchecker(dlg.password());
+        suchecker.waitToComplete();
+        if (!suchecker.ok()) continue;
+
+        su_password = dlg.password();
         return true;
     }
 
@@ -61,16 +63,6 @@ const QString Static::arch() {
     utsname name;
     uname(&name);
     return QString(name.machine);
-}
-
-const QByteArray Static::encryptUserPassword(const char * password,const char * salt) {
-    QByteArray arr(crypt(password,salt));
-
-    int index = arr.lastIndexOf("$");
-    if (index == -1) return QByteArray();
-
-    encryptedPassword = arr.mid(index+1);
-    return encryptedPassword;
 }
 
 QMainWindow * Static::findMainWindow() {

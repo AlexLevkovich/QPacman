@@ -27,7 +27,7 @@
 <context>
     <name>DBRefreshDialog</name>
     <message>
-        <location filename="../dbrefreshdialog.cpp" line="+10"/>
+        <location filename="../dbrefreshdialog.cpp" line="+12"/>
         <source>Please wait...</source>
         <translation type="unfinished">Подождите пожалуйста...</translation>
     </message>
@@ -131,7 +131,7 @@
 <context>
     <name>InstallProgressDialog</name>
     <message>
-        <location filename="../installprogressdialog.cpp" line="+100"/>
+        <location filename="../installprogressdialog.cpp" line="+20"/>
         <source>Installing the packages...</source>
         <translation type="unfinished">Установка пакетов...</translation>
     </message>
@@ -141,12 +141,12 @@
         <translation type="unfinished">Подготовка...</translation>
     </message>
     <message>
-        <location line="+27"/>
+        <location line="+15"/>
         <source>Installing %1...</source>
         <translation type="unfinished">Установка %1...</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+9"/>
         <source>Removing %1...</source>
         <translation type="unfinished">Удаление %1...</translation>
     </message>
@@ -178,7 +178,7 @@
         <translation type="obsolete">Пакеты небыли установлены!!! Пожалуйста проверьте зависимости!</translation>
     </message>
     <message>
-        <location filename="../localpackagemainwindow.cpp" line="+120"/>
+        <location filename="../localpackagemainwindow.cpp" line="+121"/>
         <source>Post messages...</source>
         <translation type="unfinished">Послеустановочные сообщения...</translation>
     </message>
@@ -297,7 +297,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+219"/>
+        <location filename="../mainwindow.cpp" line="+220"/>
         <source>The contents of cache directory will be removed.
 Are you sure to continue?</source>
         <translation type="unfinished">Все содержимое папки с кешом будет удалено. Вы уверены?</translation>
@@ -404,7 +404,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanItemModel</name>
     <message>
-        <location filename="../pacmanitemmodel.cpp" line="+54"/>
+        <location filename="../pacmanitemmodel.cpp" line="+58"/>
         <source>Name of package</source>
         <translation type="unfinished">Название пакета</translation>
     </message>
@@ -432,8 +432,42 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanProcessReader</name>
     <message>
+        <location filename="../pacmanprocessreader.cpp" line="+178"/>
+        <source>The process failed to start.</source>
+        <translation type="unfinished">Процесс не удалось запустить.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The process crashed some time after starting successfully.</source>
+        <translation type="unfinished">Процесс убился через некоторое время после успешного запуска.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The last waitFor...() function timed out.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>An error occurred when attempting to write to the process-&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>An error occurred when attempting to read from the process-&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>An error occurred when attempting to write to the process.</source>
+        <translation type="obsolete">При попытке записи в процессе произошла ошибка.</translation>
+    </message>
+    <message>
+        <source>An error occurred when attempting to read from the process.</source>
+        <translation type="obsolete">При попытке чтения из процесса произошла ошибка.</translation>
+    </message>
+    <message>
+        <location line="+3"/>
         <source>An unknown error occurred.</source>
-        <translation type="obsolete">Произошла неизвестная ошибка.</translation>
+        <translation type="unfinished">Произошла неизвестная ошибка.</translation>
     </message>
     <message>
         <source>The server is busy or invalid command was passed!</source>
@@ -493,7 +527,7 @@ Do you want to mark it for installation?</source>
 <context>
     <name>PostErrorDlg</name>
     <message>
-        <location filename="../posterrordlg.cpp" line="+17"/>
+        <location filename="../posterrordlg.cpp" line="+22"/>
         <source>Error(s) during executing of the command:
 %1</source>
         <translation type="unfinished">Ошибки при исполнении команды:
@@ -503,7 +537,7 @@ Do you want to mark it for installation?</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../pacmanentry.cpp" line="+393"/>
+        <location filename="../pacmanentry.cpp" line="+430"/>
         <location line="+30"/>
         <source>Name</source>
         <translation type="unfinished">Название</translation>
@@ -637,7 +671,7 @@ Do you want to mark it for installation?</source>
         <translation type="unfinished">Сделать явно установленным</translation>
     </message>
     <message>
-        <location filename="../pacmanitemmodel.cpp" line="-31"/>
+        <location filename="../pacmanitemmodel.cpp" line="-35"/>
         <source>Uninstall</source>
         <translation type="unfinished">Удалить</translation>
     </message>
@@ -661,7 +695,7 @@ Do you want to mark it for installation?</source>
         <translation type="obsolete">Все</translation>
     </message>
     <message>
-        <location filename="../static.cpp" line="+28"/>
+        <location filename="../static.cpp" line="+27"/>
         <source>All</source>
         <translation type="unfinished">Все</translation>
     </message>
@@ -708,7 +742,7 @@ Are you sure?</source>
 Вы уверены?</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="+46"/>
+        <location filename="../main.cpp" line="+41"/>
         <source>You should not be root!</source>
         <translation type="unfinished">Вы не должны быть суперпользователем!</translation>
     </message>
@@ -720,29 +754,71 @@ Please wait some time.</source>
 Пожалуйста подождите некоторое время.</translation>
     </message>
     <message>
-        <location line="+12"/>
         <source>Cannot connect to dbus&apos; QPacmanServer!</source>
-        <translation type="unfinished">Не могу соединиться с dbus сервером QPacmanServer!</translation>
+        <translation type="obsolete">Не могу соединиться с dbus сервером QPacmanServer!</translation>
     </message>
     <message>
         <source>Updates</source>
         <translation type="obsolete">Обновления</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+45"/>
         <source>QPacmanServer is loaded! You are on again.</source>
-        <translation type="unfinished">QPacmanServer загружен! Все будет активно сейчас.</translation>
+        <translation type="obsolete">QPacmanServer загружен! Все будет активно сейчас.</translation>
     </message>
     <message>
-        <location line="+5"/>
         <source>QPacmanServer has killed! Please restart it.</source>
-        <translation type="unfinished">QPacmanServer выгрузился! Перестартуйте его.</translation>
+        <translation type="obsolete">QPacmanServer выгрузился! Перестартуйте его.</translation>
+    </message>
+    <message>
+        <location filename="../byteshumanizer.cpp" line="+6"/>
+        <source>B</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>KiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>MiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>GiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>TiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>PiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>EiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>ZiB</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>YiB</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>RemoveProgressDialog</name>
     <message>
-        <location filename="../removeprogressdialog.cpp" line="+20"/>
+        <location filename="../removeprogressdialog.cpp" line="+18"/>
         <source>Removing the packages...</source>
         <translation type="unfinished">Удаление пакетов...</translation>
     </message>
@@ -752,7 +828,7 @@ Please wait some time.</source>
         <translation type="unfinished">Подготовка...</translation>
     </message>
     <message>
-        <location line="+54"/>
+        <location line="+12"/>
         <source>Removing %1...</source>
         <translation type="unfinished">Удаление %1...</translation>
     </message>
@@ -1175,11 +1251,37 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>PacmanServerInterface</name>
+    <name>PacmanDBRefresher</name>
     <message>
-        <location filename="../pacmanserverinterface.cpp" line="+67"/>
-        <source>Invalid DBUS server interface!</source>
-        <translation type="unfinished"></translation>
+        <location filename="../pacmandbrefresher.cpp" line="+26"/>
+        <source>Cannot copy pacman.conf to %1</source>
+        <translation type="unfinished">Невозможно скопировать pacman.conf в %1</translation>
+    </message>
+</context>
+<context>
+    <name>PacmanInstallPackagesReader</name>
+    <message>
+        <location filename="../pacmaninstallpackagesreader.cpp" line="+42"/>
+        <source>Cannot copy pacman.conf to %1</source>
+        <translation type="unfinished">Невозможно скопировать pacman.conf в %1</translation>
+    </message>
+</context>
+<context>
+    <name>PacmanRemovePackagesReader</name>
+    <message>
+        <location filename="../pacmanremovepackagesreader.cpp" line="+33"/>
+        <source>Cannot copy pacman.conf to %1</source>
+        <translation type="unfinished">Невозможно скопировать pacman.conf в %1</translation>
+    </message>
+</context>
+<context>
+    <name>PacmanSetupInfoReader</name>
+    <message>
+        <location filename="../pacmansetupinforeader.cpp" line="+50"/>
+        <source>QPacman: Cannot correctly parse the pacman&apos;s output!!!
+</source>
+        <translation type="unfinished">QPacman: Не удается правильно разобрать выход из pacman !!!
+</translation>
     </message>
 </context>
 </TS>

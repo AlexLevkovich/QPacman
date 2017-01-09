@@ -3,19 +3,25 @@
 ** License:    GPL
 ********************************************************************************/
 
-#ifndef PacmanDBRefresher_H
-#define PacmanDBRefresher_H
+#ifndef PACMANDBREFRESHER_H
+#define PACMANDBREFRESHER_H
 
 #include "pacmanprocessreader.h"
 
 class PacmanDBRefresher : public PacmanProcessReader {
     Q_OBJECT
 public:
-    explicit PacmanDBRefresher(QObject *parent = 0);
+    explicit PacmanDBRefresher(const QString & su_password,QObject *parent = 0);
+    ~PacmanDBRefresher();
 
 protected:
-    void send_parameters();
-    QByteArray command() const;
+    QString command() const;
+
+protected slots:
+    void start();
+
+private:
+    QString tempConf;
 };
 
-#endif // PacmanDBRefresher_H
+#endif // PACMANDBREFRESHER_H

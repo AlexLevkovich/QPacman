@@ -27,7 +27,7 @@ PacmanWaitView::PacmanWaitView(QWidget *parent) : QWidget(parent) {
     setAutoFillBackground(true);
     setPalette(pal);
 
-    connect(&m_timer,SIGNAL(timeout()),this,SLOT(changeAngle()));
+    connect(&m_timer,SIGNAL(timeout()),this,SLOT(changeAngle()),Qt::QueuedConnection);
 }
 
 void PacmanWaitView::changeAngle() {

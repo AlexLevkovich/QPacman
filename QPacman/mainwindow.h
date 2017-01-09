@@ -53,8 +53,6 @@ private slots:
     void onRowChoosingStateChanged(const QModelIndex & index);
     void onRefreshCompleted();
     void onEnableActions(bool flag);
-    void dbus_loaded();
-    void dbus_unloaded();
     void on_actionPrevious_triggered();
     void on_actionNext_triggered();
 

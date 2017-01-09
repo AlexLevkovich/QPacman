@@ -7,33 +7,47 @@
 #define PacmanRemovePackagesReader_H
 
 #include "pacmanprocessreader.h"
-#include <QStringList>
+#include <QMap>
 
 class PacmanRemovePackagesReader : public PacmanProcessReader {
     Q_OBJECT
 public:
-    explicit PacmanRemovePackagesReader(const QString & packages,bool withDeps = true,QObject *parent = 0);
+    explicit PacmanRemovePackagesReader(const QString & su_password,const QString & packages,bool withDeps = true,QObject *parent = 0);
+    ~PacmanRemovePackagesReader();
     QStringList packages() const;
     void beginRemove();
     void cancelRemove();
+    double total_removed();
 
 protected:
-    void send_parameters();
-    QByteArray command() const;
-    bool isFinishedCommandCorrect(const QByteArray & command);
+    QString command() const;
+    bool error(const QString & error);
+    bool output(const QString & out);
 
-private slots:
-    void on_readyToProcess(const QStringList & packages,double total_removed);
+protected slots:
+    void onFinished(int code,QProcess::ExitStatus status);
+    void start();
 
 signals:
-    void ready_to_process(double total_removed);
-    void post_messages(const QString & package_name,const QStringList & messages);
     void start_removing(const QString & name);
+    void post_messages(const QString & package_name,const QStringList & messages);
+    void ready_to_process(double cnt);
+
+protected:
+    QString in_packages;
 
 private:
-    QString in_packages;
     QStringList m_packages;
+    bool removing_wait;
+    bool packagesRead;
+    bool packagesWasRead;
+    QString current_removing;
+    QMap<QString,QStringList> m_messages;
+    double m_total_removed;
     bool m_withDeps;
+    QString errorStream;
+    bool removeCanceled;
+    QString tempConf;
 };
 
 #endif // PacmanRemovePackagesReader_H

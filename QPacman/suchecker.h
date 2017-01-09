@@ -3,26 +3,27 @@
 ** License:    GPL
 ********************************************************************************/
 
-#ifndef PACMANDBREFRESHER_H
-#define PACMANDBREFRESHER_H
+#ifndef SUCHECKER_H
+#define SUCHECKER_H
 
 #include "pacmanprocessreader.h"
 
-class PacmanDBRefresher : public PacmanProcessReader {
+class SuChecker : public PacmanProcessReader {
     Q_OBJECT
 public:
-    explicit PacmanDBRefresher(QObject *parent = 0);
-    ~PacmanDBRefresher();
+    SuChecker(const QString & password,QObject *parent = 0);
+    inline bool ok() const { return (m_ok != 0); }
 
 protected:
     QString command() const;
+    bool error(const QString & out);
 
 protected slots:
-    void start();
+    void onFinished(int code,QProcess::ExitStatus status);
 
 private:
-    QStringList m_errors;
-    QString tempConf;
+    int m_ok;
+    QString m_password;
 };
 
-#endif // PACMANDBREFRESHER_H
+#endif // SUCHECKER_H

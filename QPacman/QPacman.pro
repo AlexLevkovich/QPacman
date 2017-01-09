@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network dbus
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,6 +27,57 @@ TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
 DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 DEFINES += TRANS_DIR1=\\\"$$TRANS_DIR1\\\"
 DEFINES += TRANS_DIR2=\\\"$$TRANS_DIR2\\\"
+
+TAR_BIN = $$system(which tar 2>/dev/null)
+isEmpty( TAR_BIN ):error( "tar should be installed!!!" )
+DEFINES += TAR_BIN=\\\"$$TAR_BIN\\\"
+
+WGET_BIN = $$system(which wget 2>/dev/null)
+isEmpty( WGET_BIN ):error( "wget should be installed!!!" )
+DEFINES += WGET_BIN=\\\"$$WGET_BIN\\\"
+
+RM_BIN = $$system(which rm 2>/dev/null)
+isEmpty( RM_BIN ):error( "rm should be installed!!!" )
+DEFINES += RM_BIN=\\\"$$RM_BIN\\\"
+
+SU_BIN = $$system(which su 2>/dev/null)
+isEmpty( SU_BIN ):error( "su should be installed!!!" )
+DEFINES += SU_BIN=\\\"$$SU_BIN\\\"
+
+PACMAN_BIN = $$system(which pacman 2>/dev/null)
+isEmpty( PACMAN_BIN ):error( "pacman should be installed!!!" )
+DEFINES += PACMAN_BIN=\\\"$$PACMAN_BIN\\\"
+
+BASH_BIN = $$system(which bash 2>/dev/null)
+isEmpty( BASH_BIN ):error( "bash should be installed!!!" )
+DEFINES += BASH_BIN=\\\"$$BASH_BIN\\\"
+
+KILL_BIN = $$system(which kill 2>/dev/null)
+isEmpty( KILL_BIN ):error( "kill should be installed!!!" )
+DEFINES += KILL_BIN=\\\"$$KILL_BIN\\\"
+
+CAT_BIN = $$system(which cat 2>/dev/null)
+isEmpty( CAT_BIN ):error( "cat should be installed!!!" )
+DEFINES += CAT_BIN=\\\"$$CAT_BIN\\\"
+
+PSTREE_BIN = $$system(which pstree 2>/dev/null)
+isEmpty( PSTREE_BIN ):error( "pstree should be installed!!!" )
+DEFINES += PSTREE_BIN=\\\"$$PSTREE_BIN\\\"
+
+AWK_BIN = $$system(which awk 2>/dev/null)
+isEmpty( AWK_BIN ):error( "awk should be installed!!!" )
+DEFINES += AWK_BIN=\\\"$$AWK_BIN\\\"
+
+TR_BIN = $$system(which tr 2>/dev/null)
+isEmpty( TR_BIN ):error( "tr should be installed!!!" )
+DEFINES += TR_BIN=\\\"$$TR_BIN\\\"
+
+lessThan(QT_MAJOR_VERSION, 5): {
+SOURCES += qlockfile.cpp \
+           qlockfile_unix.cpp
+HEADERS += qlockfile.h \
+           qlockfile_p.h
+}
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -63,8 +114,6 @@ SOURCES += main.cpp\
     pacmansimpleitemmodel.cpp \
     pacmaninstalllocalpackagesreader.cpp \
     installbuttondelegate.cpp \
-    pacmansaltreader.cpp \
-    pacmanpasswordchecker.cpp \
     rootdialog.cpp \
     static.cpp \
     repotoolbutton.cpp \
@@ -79,15 +128,14 @@ SOURCES += main.cpp\
     byteshumanizer.cpp \
     pacmanhelpdialog.cpp \
     pacmanwaitview.cpp \
-    pacmanserverinterface.cpp \
-    dbuswatcher.cpp \
-    qlockfile.cpp \
-    qlockfile_unix.cpp \
     filesdownloaddialog.cpp \
     messagedialog.cpp \
     installprogressloop.cpp \
     installfilesprogressloop.cpp \
-    removeprogressloop.cpp
+    removeprogressloop.cpp \
+    confsettings.cpp \
+    suchecker.cpp \
+    pacmansetupinforeader.cpp
 
 HEADERS  += mainwindow.h \
     searchwidget.h \
@@ -122,8 +170,6 @@ HEADERS  += mainwindow.h \
     pacmansimpleitemmodel.h \
     pacmaninstalllocalpackagesreader.h \
     installbuttondelegate.h \
-    pacmansaltreader.h \
-    pacmanpasswordchecker.h \
     rootdialog.h \
     static.h \
     repotoolbutton.h \
@@ -138,15 +184,14 @@ HEADERS  += mainwindow.h \
     byteshumanizer.h \
     pacmanhelpdialog.h \
     pacmanwaitview.h \
-    pacmanserverinterface.h \
-    dbuswatcher.h \
-    qlockfile.h \
-    qlockfile_p.h \
     filesdownloaddialog.h \
     messagedialog.h \
     installprogressloop.h \
     installfilesprogressloop.h \
-    removeprogressloop.h
+    removeprogressloop.h \
+    confsettings.h \
+    suchecker.h \
+    pacmansetupinforeader.h
 
 FORMS    += mainwindow.ui \
     searchwidget.ui \

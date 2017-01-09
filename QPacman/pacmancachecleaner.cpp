@@ -4,17 +4,10 @@
 ********************************************************************************/
 
 #include "pacmancachecleaner.h"
-#include "static.h"
-#include "pacmanserverinterface.h"
+#include "pacmansetupinforeader.h"
 
-PacmanCacheCleaner::PacmanCacheCleaner(QObject *parent) : PacmanProcessReader(parent) {
+PacmanCacheCleaner::PacmanCacheCleaner(const QString & su_password,QObject *parent) : PacmanProcessReader(su_password,parent) {}
+
+QString PacmanCacheCleaner::command() const {
+    return QString("%2 -f %1/*").arg(PacmanSetupInfoReader::pacman_cache_dir).arg(RM_BIN);
 }
-
-QByteArray PacmanCacheCleaner::command() const {
-    return "CLEAN CACHE";
-}
-
-void PacmanCacheCleaner::send_parameters() {
-    PacmanServerInterface::instance()->setPassword(Static::encryptedPassword);
-}
-

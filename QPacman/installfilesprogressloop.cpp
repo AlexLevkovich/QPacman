@@ -6,8 +6,8 @@
 #include "installfilesprogressloop.h"
 #include "pacmaninstalllocalpackagesreader.h"
 
-InstallFilesProgressLoop::InstallFilesProgressLoop(const QStringList & packages,QWidget *parent) : InstallProgressLoop(parent) {
-    installer = new PacmanInstallLocalPackagesReader(packages,this);
+InstallFilesProgressLoop::InstallFilesProgressLoop(const QString & su_password,const QStringList & packages,QWidget *parent) : InstallProgressLoop(parent) {
+    installer = new PacmanInstallLocalPackagesReader(su_password,packages,this);
     connect(installer,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(installing_packages_finished(PacmanProcessReader *)));
     connect(installer,SIGNAL(start_installing(const QString &)),this,SLOT(start_installing(const QString &)));
     connect(installer,SIGNAL(start_removing(const QString &)),this,SLOT(start_removing(const QString &)));

@@ -7,24 +7,23 @@
 #define PACMANINSTALLLOCALPACKAGESREADER_H
 
 #include "pacmaninstallpackagesreader.h"
-#include <QStringList>
 
 class PacmanInstallLocalPackagesReader : public PacmanInstallPackagesReader {
     Q_OBJECT
 public:
-    explicit PacmanInstallLocalPackagesReader(const QStringList & packages,QObject *parent = 0);
+    explicit PacmanInstallLocalPackagesReader(const QString & su_password,const QStringList & packages,QObject *parent = 0);
+    static const QString namesToString(const QStringList & packages);
     QStringList local_install_packages() const;
 
-protected:
-    void send_parameters();
-    QByteArray command() const;
-
 protected slots:
-    virtual void on_readyToProcess(const QStringList & install_packages,const QStringList & remove_packages,const QStringList & local_install_packages,double total_installed, double total_removed);
+    void on_readyToProcess(int cnt);
+
+protected:
+    QString command() const;
 
 private:
-    QStringList m_packages;
     QStringList m_local_install_packages;
+    QStringList packages_input_list;
 };
 
 #endif // PACMANINSTALLLOCALPACKAGESREADER_H

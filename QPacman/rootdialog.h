@@ -18,9 +18,9 @@ class RootDialog : public QDialog {
     Q_OBJECT
 
 public:
-    explicit RootDialog(const QByteArray & salt,QWidget *parent = 0);
+    explicit RootDialog(QWidget *parent = 0);
     ~RootDialog();
-    bool passwordIsOK() { return m_passwordIsOK; }
+    QString password() const;
 
 private slots:
     void on_buttonBox_accepted();
@@ -28,9 +28,6 @@ private slots:
 
 private:
     Ui::RootDialog *ui;
-
-    QByteArray m_salt;
-    bool m_passwordIsOK;
 };
 
 #endif // ROOTDIALOG_H

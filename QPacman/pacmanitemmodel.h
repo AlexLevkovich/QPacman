@@ -8,7 +8,7 @@
 
 #include <QAbstractItemModel>
 #include <QIcon>
-#include <QSet>
+#include <QStringList>
 #include "filtertoolbutton.h"
 #include "categorytoolbutton.h"
 #include "pacmanentry.h"
@@ -31,11 +31,12 @@ public:
         PacmanEntry::UserChangeStatus status;
     };
 
-    explicit PacmanItemModel(QTreeView *parent);
+    PacmanItemModel(QTreeView *parent);
+    ~PacmanItemModel();
     bool setData(const QModelIndex & index,const QVariant & value,int role = Qt::EditRole);
     virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole ) const;
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
-    void addRow(const PacmanEntry & item);
+    void addRow(PacmanEntry * item);
     void chooseRow(const QModelIndex & index,bool sel);
     virtual int columnCount(const QModelIndex & parent = QModelIndex()) const;
     QList<QModelIndex> updatesList() const;
@@ -62,7 +63,7 @@ protected:
     virtual QVariant headerData(int section,Qt::Orientation orientation,int role = Qt::DisplayRole) const;
     bool setHeaderData(int section,Qt::Orientation orientation,const QVariant & value,int role = Qt::EditRole);
 
-    QList<PacmanEntry> rows;
+    QList<PacmanEntry * > rows;
     QTreeView * m_parent;
 
 private:
@@ -76,18 +77,18 @@ private:
     QString unInstallAllStr;
     QString reInstallStr;
     QString installStr;
-    QSet<QString> m_groups;
-    QSet<QString> m_repos;
+    QStringList m_groups;
+    QStringList m_repos;
     QMap<QString,QSet<int> > provides_rows;
 
-    int findLastIndex(int firstindex,int (*compare)(const PacmanEntry & item1, const PacmanEntry & item2)) const;
-    int findFirstIndex(int firstindex,int (*compare)(const PacmanEntry & item1, const PacmanEntry & item2)) const;
+    int findLastIndex(int firstindex,int (*compare)(const PacmanEntry * item1, const PacmanEntry * item2)) const;
+    int findFirstIndex(int firstindex,int (*compare)(const PacmanEntry * item1, const PacmanEntry * item2)) const;
     void fix_sort_portion(int firstindex,int lastindex);
     void fix_sort_portion2(int firstindex,int lastindex);
-    static bool pacman_model_asc_sort(const PacmanEntry & item1, const PacmanEntry & item2);
-    static int pacman_model_asc_compare(const PacmanEntry & item1, const PacmanEntry & item2);
-    static bool pacman_model_no_version_asc_sort(const PacmanEntry & item1, const PacmanEntry & item2);
-    static int pacman_model_no_version_asc_compare(const PacmanEntry & item1, const PacmanEntry & item2);
+    static bool pacman_model_asc_sort(const PacmanEntry * item1, const PacmanEntry * item2);
+    static int pacman_model_asc_compare(const PacmanEntry * item1, const PacmanEntry * item2);
+    static bool pacman_model_no_version_asc_sort(const PacmanEntry * item1, const PacmanEntry * item2);
+    static int pacman_model_no_version_asc_compare(const PacmanEntry * item1, const PacmanEntry * item2);
     QIcon changeStatusIcon(int index) const;
 };
 

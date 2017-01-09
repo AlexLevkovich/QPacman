@@ -4,22 +4,13 @@
 ********************************************************************************/
 
 #include "pacmanpackagereasonchanger.h"
-#include "static.h"
-#include "pacmanserverinterface.h"
 
-PacmanPackageReasonChanger::PacmanPackageReasonChanger(const QString & package,bool doDeps,QObject *parent) : PacmanProcessReader(parent) {
+PacmanPackageReasonChanger::PacmanPackageReasonChanger(const QString & su_password,const QString & package,bool doDeps,QObject *parent) : PacmanProcessReader(su_password,parent) {
     m_package = package;
     m_doDeps = doDeps;
 }
 
-QByteArray PacmanPackageReasonChanger::command() const {
-    return "CHANGE REASON";
+QString PacmanPackageReasonChanger::command() const {
+    return QString("%3 -D --%1 %2").arg(m_doDeps?"asdeps":"asexplicit").arg(m_package).arg(PACMAN_BIN);
 }
-
-void PacmanPackageReasonChanger::send_parameters() {
-    PacmanServerInterface::instance()->setPassword(Static::encryptedPassword);
-    PacmanServerInterface::instance()->setPackages(m_package);
-    PacmanServerInterface::instance()->setDependance(m_doDeps);
-}
-
 

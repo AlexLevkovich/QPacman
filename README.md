@@ -3,8 +3,6 @@ QPacman is GUI to Archlinux pacman utility.
 
 It contains three projects:
 
-QPacmanServer - dbus server program (works under root) - works with pacman utility.
-
 QPacmanTray   - tray icon - checks updates, loads QPacman.
 
 QPacman       - main program
@@ -13,7 +11,7 @@ QPacman       - main program
 
 pkgdir & srcdir/ is for pkgbild
 
-for subdir in $srcdir/QPacmanServer $srcdir/QPacmanTray $srcdir/QPacman
+for subdir in $srcdir/QPacmanTray $srcdir/QPacman
 
 do
 
@@ -29,5 +27,5 @@ done
 
 Qt verions: QT4 or QT5
 
-Depends: 'Qt >= 4', 'systemd' 'pacman' 'vorbis-tools' 'wget' 'procps-ng' 'coreutils'
+Depends: 'Qt4/qt5-base' 'pacman' 'vorbis-tools' 'wget' 'coreutils' 'xz' 'tar' 'util-linux' 'psmisc' 'gawk'
 

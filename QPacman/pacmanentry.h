@@ -120,6 +120,8 @@ public:
     static const QString afterColon(const QString & str);
     static const QString afterEqualSign(const QString & str);
     static const QString removeVersion(const QString & str);
+    static const QString pacmanDepToUrlParms(const QString & str);
+    static const QString urlParmsToPacmanDep(const QString & str);
     static CompareOper parseNameVersion(const QString & str,QString & name,QString & ver);
     static const QString parsePackageFileNameVersion(const QString & package_file);
     static const QStringList entriesListToStringList(const QList<PacmanEntry> & list);
@@ -164,6 +166,7 @@ private:
     static void afterBeforeColon(const QString & line,QString & str_before,QString & str_after);
     static bool splitname_ver(const QString & target,QString & name,QString & version);
     static const QString removeInstalledWord(const QString & str,bool * result = NULL);
+    static int versionIndex(const QString & str);
 };
 
 inline bool operator==(const PacmanEntry &e1, const PacmanEntry &e2) {
