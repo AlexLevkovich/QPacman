@@ -46,7 +46,7 @@ void LocalPackageMainWindow::init() {
     for (int i=0;i<m_packages.count();i++) {
         PacmanFilePackageInfoReader reader(m_packages[i]);
         reader.waitToComplete();
-        if (reader.exitCode() != 0) {
+        if (reader.exitCode() != 0 || !reader.info().isValid()) {
             QMetaObject::invokeMethod(qApp,"quit",Qt::QueuedConnection);
             return;
         }

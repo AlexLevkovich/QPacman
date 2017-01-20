@@ -458,7 +458,7 @@ QString PacmanEntry::toHtml() const {
     ret +=  QString("<tr>"
                     "<td bgcolor=\"%3\" style=\"text-align:left; \" width=\"%2\"><p >%1</p></td>"
                     "<td style=\"text-align:left; \" ><p >").arg(QObject::tr("Name")).arg(width).arg(first_col_color);
-    ret +=  QString("<a href=\"qpc://pack/%1\"><img src=\"qpc://pack/%1\"></a>").arg(pacmanDepToUrlParms(getName())) + "</p></td></tr>";
+    ret +=  QString("<a href=\"qpc://package/%1\"><img src=\"qpc://package/%1\"></a>").arg(pacmanDepToUrlParms(getName())) + "</p></td></tr>";
 
     ret +=  QString("<tr>"
                     "<td bgcolor=\"%3\" style=\"text-align:left; \" ><p >%1</p></td>"
@@ -488,20 +488,20 @@ QString PacmanEntry::toHtml() const {
     ret +=  QString("<tr>"
                     "<td bgcolor=\"%3\" style=\"text-align:left; \" ><p >%1</p></td>"
                     "<td style=\"text-align:left; \" ><p >").arg(QObject::tr("Groups")).arg(first_col_color);
-    for (i=0;i<groups.count();i++) ret += QString("<a href=\"qpc://group.%1\">%2</a>%3 ").arg(groups[i]).arg(groups[i]).arg((groups.count() == (i+1))?"":",");
+    for (i=0;i<groups.count();i++) ret += QString("<a href=\"qpc://group/%1\">%2</a> ").arg(groups[i]).arg(groups[i]);
     ret += "</p></td></tr>";
 
     ret +=  QString("<tr>"
                     "<td bgcolor=\"%3\" style=\"text-align:left; \" ><p >%1</p></td>"
                     "<td style=\"text-align:left; \" ><p >").arg(QObject::tr("Provides")).arg(first_col_color);
-    for (i=0;i<provides.count();i++) ret += QString("<a href=\"qpc://pack/%1\"><img src=\"qpc://pack/%1\"></a>%2 ").arg(pacmanDepToUrlParms(provides[i])).arg((provides.count() == (i+1))?"":",");
+    for (i=0;i<provides.count();i++) ret += QString("<a href=\"qpc://package/%1\"><img src=\"qpc://package/%1\"></a> ").arg(pacmanDepToUrlParms(provides[i]));
     ret += "</p></td></tr>";
 
     ret +=  QString("<tr>"
                     "<td bgcolor=\"%2\" style=\"text-align:left; \" ><p >%1</p></td>"
                     "<td style=\"text-align:left; \" ><p >").arg(QObject::tr("Depends On")).arg(first_col_color);
     for (i=0;i<dependon.count();i++) {
-        ret += QString("<a href=\"qpc://pack/%1\"><img src=\"qpc://pack/%1\"></a>%2 ").arg(pacmanDepToUrlParms(dependon[i])).arg((dependon.count() == (i+1))?"":",");
+        ret += QString("<a href=\"qpc://package/%1\"><img src=\"qpc://package/%1\"></a> ").arg(pacmanDepToUrlParms(dependon[i]));
     }
     ret += "</p></td></tr>";
 
@@ -510,32 +510,32 @@ QString PacmanEntry::toHtml() const {
                     "<td style=\"text-align:left; \" >").arg(QObject::tr("Optional Deps")).arg(first_col_color);
     for (i=0;i<optionaldeps.count();i++) {
         QString _desc = removeInstalledWord(optionaldeps[i].desc).simplified();
-        ret += QString("<li >") + QString("<a href=\"qpc://pack/%1\"><img src=\"qpc://pack/optional/%1\"></a> ").arg(pacmanDepToUrlParms(optionaldeps[i].package)) + QString("%1 %2</li>").arg(_desc.isEmpty()?"":":").arg(_desc);
+        ret += QString("<li >") + QString("<a href=\"qpc://package/%1\"><img src=\"qpc://package/%1\"></a> ").arg(pacmanDepToUrlParms(optionaldeps[i].package)) + QString("%1 %2</li>").arg(_desc.isEmpty()?"":":").arg(_desc);
     }
     ret += "</td></tr>";
 
     ret +=  QString("<tr>"
                     "<td bgcolor=\"%2\" style=\"text-align:left; \" ><p >%1</p></td>"
                     "<td style=\"text-align:left; \" ><p >").arg(QObject::tr("Required By")).arg(first_col_color);
-    for (i=0;i<requiredby.count();i++) ret += QString("<a href=\"qpc://pack/%1\"><img src=\"qpc://pack/%1\"></a>%2 ").arg(pacmanDepToUrlParms(requiredby[i])).arg((requiredby.count() == (i+1))?"":",");
+    for (i=0;i<requiredby.count();i++) ret += QString("<a href=\"qpc://package/%1\"><img src=\"qpc://package/%1\"></a> ").arg(pacmanDepToUrlParms(requiredby[i]));
     ret += "</p></td></tr>";
 
     ret +=  QString("<tr>"
                     "<td bgcolor=\"%2\" style=\"text-align:left; \" ><p >%1</p></td>"
                     "<td style=\"text-align:left; \" ><p >").arg(QObject::tr("Optional For")).arg(first_col_color);
-    for (i=0;i<optionalfor.count();i++) ret += QString("<a href=\"qpc://pack/%1\"><img src=\"qpc://pack/%1\"></a>%2 ").arg(pacmanDepToUrlParms(optionalfor[i])).arg((optionalfor.count() == (i+1))?"":",");
+    for (i=0;i<optionalfor.count();i++) ret += QString("<a href=\"qpc://package/%1\"><img src=\"qpc://package/%1\"></a> ").arg(pacmanDepToUrlParms(optionalfor[i]));
     ret += "</p></td></tr>";
 
     ret +=  QString("<tr>"
                     "<td bgcolor=\"%2\" style=\"text-align:left; \" ><p >%1</p></td>"
                     "<td style=\"text-align:left; \" ><p >").arg(QObject::tr("Conflicts With")).arg(first_col_color);
-    for (i=0;i<conflicts.count();i++) ret += QString("<a href=\"qpc://pack/%1\"><img src=\"qpc://pack/%1\"></a>%2 ").arg(pacmanDepToUrlParms(conflicts[i])).arg((conflicts.count() == (i+1))?"":",");
+    for (i=0;i<conflicts.count();i++) ret += QString("<a href=\"qpc://package/%1\"><img src=\"qpc://package/%1\"></a> ").arg(pacmanDepToUrlParms(conflicts[i]));
     ret += "</p></td></tr>";
 
     ret +=  QString("<tr>"
                     "<td bgcolor=\"%2\" style=\"text-align:left; \" ><p >%1</p></td>"
                     "<td style=\"text-align:left; \" ><p >").arg(QObject::tr("Replaces")).arg(first_col_color);
-    for (i=0;i<replaces.count();i++) ret += QString("<a href=\"qpc://pack/%1\"><img src=\"qpc://pack/%1\"></a>%2 ").arg(pacmanDepToUrlParms(replaces[i])).arg((replaces.count() == (i+1))?"":",");
+    for (i=0;i<replaces.count();i++) ret += QString("<a href=\"qpc://package/%1\"><img src=\"qpc://package/%1\"></a> ").arg(pacmanDepToUrlParms(replaces[i]));
     ret += "</p></td></tr>";
 
     ret +=  QString("<tr>"
@@ -563,7 +563,7 @@ QString PacmanEntry::toHtml() const {
     if (isInstalled()) {
          ret +=  QString("<tr>"
                          "<td bgcolor=\"%5\" style=\"text-align:left; \" ><p >%1</p></td>"
-                         "<td style=\"text-align:left; \" ><p >%2 (<a href=\"qpc://reason.%3\">%4</a>)</p></td>"
+                         "<td style=\"text-align:left; \" ><p >%2 (<a href=\"qpc://reason/%3\">%4</a>)</p></td>"
                          "</tr>").arg(QObject::tr("Install Reason")).arg(isExplicitly()?QObject::tr("Explicitly installed"):QObject::tr("Installed as a dependency for another package")).arg(name).arg(isExplicitly()?QObject::tr("Make it dependent"):QObject::tr("Make it explicit")).arg(first_col_color);
     }
 

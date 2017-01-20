@@ -284,3 +284,4 @@ void PacmanInstallPackagesReader::sendChosenProvider(const QString & provider) {
     waitForBytesWritten();
     currentProviders.clear();
 }
+

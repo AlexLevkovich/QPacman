@@ -27,8 +27,6 @@ public:
 protected:
     void setupChildProcess() {
         ::prctl(PR_SET_PDEATHSIG, SIGKILL);
-        ::setbuf(stdout,NULL);
-        ::setbuf(stderr,NULL);
     }
 };
 
@@ -106,9 +104,8 @@ void PacmanProcessReader::waitToComplete() {
 void PacmanProcessReader::terminate() {
     if (process->state() != QProcess::Running) return;
 
-    RootChildProcessKiller(m_su_password,process->pid()).waitToComplete();
-
     isTerminated = true;
+    RootChildProcessKiller(m_su_password,process->pid()).waitToComplete();
 }
 
 void PacmanProcessReader::start() {
@@ -118,35 +115,52 @@ void PacmanProcessReader::start() {
     }
 
     m_su_completed = !use_su();
-    process->setEnvironment(process->systemEnvironment() << "LANG=C");
+
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+
+    QString so_preload = env.value("LD_PRELOAD");
+    QString so_bin;
+    if (QFile(SO_BIN1).exists()) so_bin = SO_BIN1;
+    else if (QFile(SO_BIN2).exists()) so_bin = SO_BIN2;
+
+    env.insert("LANG","C");
+    if (!so_bin.isEmpty()) env.insert("LD_PRELOAD",QString("%2%1").arg(so_bin).arg(so_preload.isEmpty()?"":(so_preload+":")));
+    process->setProcessEnvironment(env);
+
     QStringList args;
     args << "-c";
-    if (use_su()) args << BASH_BIN << "-c";
-    args << command();
+    if (use_su()) {
+        if (!so_bin.isEmpty()) args << QString("LD_PRELOAD=%2%1 ").arg(so_bin).arg(so_preload.isEmpty()?"":(so_preload+":")) + BASH_BIN + " -c \"" + command() + "\"";
+        else args << BASH_BIN << "-c" << command();
+    }
+    else args << command();
     process->start(use_su()?SU_BIN:BASH_BIN,args);
 }
 
 void PacmanProcessReader::readyReadStandardError() {
-    QString errStr = QString::fromLocal8Bit(process->readAllStandardError());
-    m_errorStream += errStr;
-    errStr = m_lastErrorStream + errStr;
-    m_lastErrorStream.clear();
+    if (isTerminated) return;
 
-    QStringList errorLines = errStr.split("\n",QString::SkipEmptyParts);
-
-    QString err;
-    for (int i=0;i<(errorLines.count()-1);i++) {
-        err = errorLines.at(i);
-        err.remove('\r');
-        error(err);
-    }
-
-    if (errorLines.count() > 0) {
-        if (!m_su_completed && errorLines.last().simplified() == "Password:") {
-            m_su_completed = true;
-            write(m_su_password.toLocal8Bit()+'\n');
+    QString line;
+    for (int i=0;!isTerminated && availableErrorBytesCount() > 0;i++) {
+        line = QString::fromLocal8Bit(readErrorLine());
+        if (line.at(line.length()-1) == '\n') line.truncate(line.length()-1);
+        if (!line.isEmpty() && line.at(line.length()-1) == '\r') line.truncate(line.length()-1);
+        if (i == 0 && !m_lastErrorStream.isEmpty()) {
+            line = m_lastErrorStream + line;
+            m_lastErrorStream.clear();
         }
-        if (!error(errorLines.last())) m_lastErrorStream += errorLines.last();
+        if (availableErrorBytesCount() <= 0) {
+            if (!m_su_completed && line.simplified() == "Password:") {
+                m_su_completed = true;
+                write(m_su_password.toLocal8Bit()+'\n');
+            }
+            if (!error(line)) m_lastErrorStream += line;
+            else m_errorStream += line + '\n';
+        }
+        else {
+            error(line);
+            m_errorStream += line + '\n';
+        }
     }
 }
 
@@ -155,20 +169,30 @@ QString PacmanProcessReader::errorStream() const {
 }
 
 void PacmanProcessReader::readyReadStandardOutput() {
-    QString outStr = m_lastOutputStream + QString::fromLocal8Bit(process->readAllStandardOutput());
-    m_lastOutputStream.clear();
+    if (isTerminated) return;
 
-    QStringList outputLines = outStr.split("\n",QString::KeepEmptyParts);
-    if (outputLines.count() > 0) {
-        if (!outputLines.last().isEmpty()) m_lastOutputStream += outputLines.last();
-        outputLines.removeAt(outputLines.count()-1);
+    if (!isTerminated && availableOutputBytesCount() <= 0 && !m_lastOutputStream.isEmpty()) {
+        output(m_lastOutputStream);
+        return;
     }
 
-    QString out;
-    for (int i=0;i<outputLines.count();i++) {
-        out = outputLines.at(i);
-        out.remove('\r');
-        output(out);
+    QString line;
+    bool hasEnd = false;
+
+    for (int i=0;!isTerminated && availableOutputBytesCount() > 0;i++) {
+        line = QString::fromLocal8Bit(readOutputLine());
+        hasEnd = (line.at(line.length()-1) == '\n');
+        if (hasEnd) line.truncate(line.length()-1);
+        if (!line.isEmpty() && line.at(line.length()-1) == '\r') line.truncate(line.length()-1);
+        if (i == 0 && !m_lastOutputStream.isEmpty()) {
+            line = m_lastOutputStream + line;
+            m_lastOutputStream.clear();
+        }
+        if (availableOutputBytesCount() <= 0 && !hasEnd) {
+            m_lastOutputStream += line;
+            break;
+        }
+        output(line);
     }
 }
 
@@ -199,15 +223,15 @@ void PacmanProcessReader::onFinished(int /*code*/,QProcess::ExitStatus /*status*
     if (isFinished) return;
 
     isFinished = true;
-    if (process->bytesAvailable() > 0) readyReadStandardOutput();
-    if (process->bytesAvailable() > 0) readyReadStandardError();
+    if (!isTerminated) readyReadStandardOutput();
+    if (!isTerminated) readyReadStandardError();
+
+    if (isTerminated) m_code = -process->exitCode();
 
     QMetaObject::invokeMethod(this,"_finished",Qt::QueuedConnection);
 }
 
 void PacmanProcessReader::_finished() {
-    if (isTerminated) m_code = 0;
-
     if (!isTerminated && exitCode() != 0) {
     #ifndef IS_QPACMAN_CLIENT
         emit was_error(errorStream(),command());
@@ -224,6 +248,51 @@ bool PacmanProcessReader::output(const QString & /*out*/) { return true; }
 
 int PacmanProcessReader::exitCode() const {
     return process->exitCode() + m_code;
+}
+
+quint64 PacmanProcessReader::availableOutputBytesCount() {
+    QProcess::ProcessChannel tmp = process->readChannel();
+    process->setReadChannel(QProcess::StandardOutput);
+    quint64 ret = process->bytesAvailable();
+    process->setReadChannel(tmp);
+
+    return ret;
+}
+
+quint64 PacmanProcessReader::availableErrorBytesCount() {
+    QProcess::ProcessChannel tmp = process->readChannel();
+    process->setReadChannel(QProcess::StandardError);
+    quint64 ret = process->bytesAvailable();
+    process->setReadChannel(tmp);
+
+    return ret;
+}
+
+void PacmanProcessReader::waitForReadyRead(QProcess::ProcessChannel channel) {
+    if (isTerminated) return;
+
+    QProcess::ProcessChannel tmp = process->readChannel();
+    process->setReadChannel(channel);
+    process->waitForReadyRead(-1);
+    process->setReadChannel(tmp);
+}
+
+QByteArray PacmanProcessReader::readOutputLine(qint64 maxSize) {
+    QProcess::ProcessChannel tmp = process->readChannel();
+    process->setReadChannel(QProcess::StandardOutput);
+    QByteArray ret = process->readLine(maxSize);
+    process->setReadChannel(tmp);
+
+    return ret;
+}
+
+QByteArray PacmanProcessReader::readErrorLine(qint64 maxSize) {
+    QProcess::ProcessChannel tmp = process->readChannel();
+    process->setReadChannel(QProcess::StandardError);
+    QByteArray ret = process->readLine(maxSize);
+    process->setReadChannel(tmp);
+
+    return ret;
 }
 
 #include "pacmanprocessreader.moc"

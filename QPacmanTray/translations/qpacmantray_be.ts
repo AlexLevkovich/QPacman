@@ -45,7 +45,7 @@
         <translation type="unfinished">Падаць гукавы сігнал калі абнаўлення былі знойдзеныя</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+111"/>
+        <location filename="../mainwindow.cpp" line="+112"/>
         <location line="+42"/>
         <source>Quit</source>
         <translation type="unfinished">Выйсці</translation>
@@ -91,12 +91,12 @@
         <translation type="unfinished">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - праграма для аўтаматычнай праверкі абнаўленняў. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  неабходны, чтобы гэта праграма працавала.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версія %1.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Распрацоўшчык: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Ліцэнзія: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="+66"/>
+        <location line="+69"/>
         <source>The root&apos;s rights are needed to continue!!!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+40"/>
+        <location line="+42"/>
         <source>There were the errors during the last checking...</source>
         <translation type="unfinished">Былі памылкі падчас апошняй праверкі...</translation>
     </message>
@@ -115,7 +115,7 @@
         <translation type="obsolete">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - праграма для аўтаматычнай праверкі абнаўленняў. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  неабходны, чтобы гэта праграма працавала.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версія 2.0.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Распрацоўшчык: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Ліцэнзія: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="-117"/>
+        <location line="-122"/>
         <source>Cannot lock checkingLock!!!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -124,7 +124,7 @@
         <translation type="obsolete">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - праграма для аўтаматычнай праверкі абнаўленняў. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  неабходны, чтобы гэта праграма працавала.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версія 1.0.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Распрацоўшчык: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Ліцэнзія: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="+101"/>
+        <location line="+106"/>
         <source>Warning...</source>
         <translation type="unfinished">Папярэджанне...</translation>
     </message>
@@ -252,7 +252,7 @@ It is not good idea to abort pacman execution, Continue?</source>
 <context>
     <name>PacmanProcessReader</name>
     <message>
-        <location filename="../pacmanprocessreader.cpp" line="+178"/>
+        <location filename="../pacmanprocessreader.cpp" line="+202"/>
         <source>The process failed to start.</source>
         <translation type="unfinished">Працэс не ўдалося запусціць.</translation>
     </message>

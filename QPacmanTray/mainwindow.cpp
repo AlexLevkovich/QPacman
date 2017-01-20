@@ -8,6 +8,7 @@
 #include <QSettings>
 #include <QPixmap>
 #include <QProcess>
+#include <QFile>
 #include <QMessageBox>
 #include "pacmandbrefresher.h"
 #include "pacmansimpleupdatesreader.h"
@@ -288,12 +289,16 @@ void MainWindow::timeout() {
     showTray(errorIcon);
     tray->setToolTip(tr("Checking updates..."));
 
-    if (!checkRootAccess()) {
-        was_error(tr("The root's rights are needed to continue!!!"),"timeout");
-        return;
+    bool pacmansy_exists = QFile(PACMANSY_BIN).exists();
+
+    if (!pacmansy_exists) {
+        if (!checkRootAccess()) {
+            was_error(tr("The root's rights are needed to continue!!!"),"timeout");
+            return;
+        }
     }
 
-    refresher = new PacmanDBRefresher(su_password(),this);
+    refresher = new PacmanDBRefresher(pacmansy_exists?"":su_password(),this);
     connect(refresher,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(db_refreshed(PacmanProcessReader *)));
     connect(refresher,SIGNAL(was_error(const QString &,const QString &)),this,SLOT(was_error(const QString &,const QString &)));
 }
@@ -303,13 +308,14 @@ void MainWindow::checking_frame() {
 }
 
 void MainWindow::db_refreshed(PacmanProcessReader * reader) {
-    int code = reader->exitCode();
-    delete reader;
-    refresher = NULL;
-
     TimeOutEnd temp(this,true);
 
-    if (code != 0) return;
+    if (reader != NULL) {
+        int code = reader->exitCode();
+        delete reader;
+        refresher = NULL;
+        if (code != 0) return;
+    }
 
     PacmanSimpleUpdatesReader updatesreader;
     connect(&updatesreader,SIGNAL(was_error(const QString &,const QString &)),this,SLOT(was_error(const QString &,const QString &)));
@@ -416,7 +422,8 @@ void MainWindow::showEvent(QShowEvent * event) {
 void MainWindow::onGuiExited() {
     emit actionCheckUIUpdate(!isCheckingUpdates);
     emit actionUpdateUIUpdate(!isCheckingUpdates);
-    timeout();
+    timer.stop();
+    db_refreshed(NULL);
 }
 
 void MainWindow::onGuiStarted() {

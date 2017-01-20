@@ -10,6 +10,7 @@
 
 class QTextDocument;
 class PacmanItemModel;
+class QKeyEvent;
 
 class PacmanInfoBrowser : public QTextBrowser {
     Q_OBJECT
@@ -20,10 +21,12 @@ public:
 
 protected:
     void setSource(const QUrl & name);
+    void keyPressEvent(QKeyEvent *e);
 
 protected slots:
     void showContextMenu(const QPoint &pt);
     void openUrl(const QUrl & name);
+    void copy_selected();
 
 signals:
     void groupUrlSelected(const QString &);

@@ -16,7 +16,7 @@ PacmanDBRefresher::~PacmanDBRefresher() {
 }
 
 QString PacmanDBRefresher::command() const {
-    return QString("%2 --config %1 -Sy").arg(tempConf).arg(PACMAN_BIN);
+    return use_su()?QString("%2 --config %1 -Sy").arg(tempConf).arg(PACMAN_BIN):QString("%2 %1").arg(tempConf).arg(PACMANSY_BIN);
 }
 
 void PacmanDBRefresher::start() {

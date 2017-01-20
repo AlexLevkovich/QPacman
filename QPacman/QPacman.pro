@@ -14,12 +14,15 @@ TEMPLATE = app
 LIBS += -lcrypt
 
 DEFINES += PACMANENTRY
-DEFINES  += IS_QPACMAN_CLIENT
+DEFINES += IS_QPACMAN_CLIENT
 INCLUDEPATH += .
 
 isEmpty(INSTALL_PREFIX) {
     INSTALL_PREFIX = /usr/local
 }
+
+PATH = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib:$$PWD/..:$$PATH
+export(PATH)
 
 TRANS_DIR1 = $$OUT_PWD/translations
 TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
@@ -27,6 +30,11 @@ TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
 DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 DEFINES += TRANS_DIR1=\\\"$$TRANS_DIR1\\\"
 DEFINES += TRANS_DIR2=\\\"$$TRANS_DIR2\\\"
+
+SO_BIN1=$$INSTALL_PREFIX/lib/libsetbuf.so
+SO_BIN2=$$PWD/../bin/libsetbuf.so
+DEFINES += SO_BIN1=\\\"$$SO_BIN1\\\"
+DEFINES += SO_BIN2=\\\"$$SO_BIN2\\\"
 
 TAR_BIN = $$system(which tar 2>/dev/null)
 isEmpty( TAR_BIN ):error( "tar should be installed!!!" )
@@ -47,6 +55,9 @@ DEFINES += SU_BIN=\\\"$$SU_BIN\\\"
 PACMAN_BIN = $$system(which pacman 2>/dev/null)
 isEmpty( PACMAN_BIN ):error( "pacman should be installed!!!" )
 DEFINES += PACMAN_BIN=\\\"$$PACMAN_BIN\\\"
+
+PACMANSY_BIN = $$INSTALL_PREFIX/bin/pacmanSy
+DEFINES += PACMANSY_BIN=\\\"$$PACMANSY_BIN\\\"
 
 BASH_BIN = $$system(which bash 2>/dev/null)
 isEmpty( BASH_BIN ):error( "bash should be installed!!!" )

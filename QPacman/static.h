@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QTextDocumentFragment>
 
 #include <QMainWindow>
 
@@ -31,6 +32,7 @@ public:
     static const QString someProvidersAvailable(QWidget * parent,const QStringList & providers);
     static void init_tr_variables();
     static const QList<QAction *> childrenActions(QObject * main_object);
+    static const QString htmlFragmentToText(const QTextDocumentFragment & fragment);
 };
 
 #endif // STATIC_H

@@ -7,7 +7,7 @@
 
 PacmanFilePackageInfoReader::PacmanFilePackageInfoReader(const QString & package,QObject *parent) : PacmanProcessReader(parent) {
     m_package = package;
-    wasStdoutRead = false;
+    wasStderrRead = false;
 }
 
 QString PacmanFilePackageInfoReader::command() const {
@@ -15,21 +15,16 @@ QString PacmanFilePackageInfoReader::command() const {
 }
 
 bool PacmanFilePackageInfoReader::output(const QString & line) {
-    wasStdoutRead = true;
     if (!line.simplified().isEmpty()) entry.parseLine(line.toLocal8Bit());
+    if (availableOutputBytesCount() <= 0) terminate();
     return true;
 }
 
 bool PacmanFilePackageInfoReader::error(const QString & err) {
-    if (err.startsWith(".PKGINFO")) {
-        if (!wasStdoutRead) {
-            waitForReadyRead();
-        }
-        terminateProcess();
-        clearErrorStreamCache();
-        setCode(0);
-        onFinished(0,QProcess::NormalExit);
+    if (!wasStderrRead && !err.startsWith(".PKGINFO")) {
+        terminate();
+        setCode(1);
     }
-    else setCode(1);
+    else wasStderrRead = true;
     return true;
 }

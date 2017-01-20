@@ -7,6 +7,7 @@
 #include "static.h"
 #include <QMessageBox>
 #include <QShowEvent>
+#include <QFile>
 
 DBRefreshDialog::DBRefreshDialog(QWidget *parent) : QProgressDialog(parent) {
     setWindowTitle(tr("Please wait..."));
@@ -18,14 +19,18 @@ DBRefreshDialog::DBRefreshDialog(QWidget *parent) : QProgressDialog(parent) {
     dbRefresher = NULL;
     m_ok = false;
 
-    if (!Static::checkRootAccess()) {
-        QMessageBox::critical(this,Static::Error_Str,Static::RootRightsNeeded_Str,QMessageBox::Ok);
-        return;
+    bool pacmansy_exists = QFile(PACMANSY_BIN).exists();
+
+    if (!pacmansy_exists) {
+        if (!Static::checkRootAccess()) {
+            QMessageBox::critical(this,Static::Error_Str,Static::RootRightsNeeded_Str,QMessageBox::Ok);
+            return;
+        }
     }
 
     m_ok = true;
 
-    dbRefresher = new PacmanDBRefresher(Static::su_password,this);
+    dbRefresher = new PacmanDBRefresher(pacmansy_exists?"":Static::su_password,this);
     connect(dbRefresher,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(read_info_finished(PacmanProcessReader *)));
 }
 

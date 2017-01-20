@@ -5,9 +5,15 @@
 
 #include "pacmaninfobrowser.h"
 #include <QDesktopServices>
+#include <QApplication>
 #include <QMenu>
 #include <QProcess>
 #include "pacmaninfobrowserdocument.h"
+#include "static.h"
+#include <QTextDocumentFragment>
+#include <QClipboard>
+#include <QKeyEvent>
+#include <QDebug>
 
 PacmanInfoBrowser::PacmanInfoBrowser(QWidget *parent) : QTextBrowser(parent) {
     QDesktopServices::setUrlHandler("mailto",this,"openUrl");
@@ -28,31 +34,23 @@ void PacmanInfoBrowser::openUrl(const QUrl & url) {
 void PacmanInfoBrowser::setSource(const QUrl & name) {
     if (name.scheme() != "qpc") QDesktopServices::openUrl(name);
     else {
-        QString package = name.host();
-        if (package == "pack") package = name.path().mid(1);
-        QStringList parts = package.split(".");
-        if ((parts.count() >= 2) && (parts[0] == "group")) {
-            package="";
-            for (int i=1;i<parts.count();i++) package+=parts[i]+".";
-            emit groupUrlSelected(package.left(package.length()-1));
-        }
-        else if ((parts.count() >= 2) && (parts[0] == "reason")) {
-            package="";
-            for (int i=1;i<parts.count();i++) package+=parts[i]+".";
-            emit reasonUrlSelected(package.left(package.length()-1));
-        }
-        else emit packageUrlSelected(package);
+        QString type = name.host();
+        QString package = name.path().mid(1);
+        if (type == "package") emit packageUrlSelected(package);
+        if (type == "group") emit groupUrlSelected(package);
+        if (type == "reason") emit reasonUrlSelected(package);
     }
 }
 
 void PacmanInfoBrowser::showContextMenu(const QPoint &pt) {
-    QMenu * menu = createStandardContextMenu();
-    QList<QAction *> actions = menu->actions();
-    if (actions.count() > 2) {
-        menu->removeAction(actions[1]);
-    }
-    menu->exec(mapToGlobal(pt));
-    delete menu;
+    QMenu menu;
+    menu.addAction(QIcon("://pics/edit-copy.png"),tr("Copy"),this,SLOT(copy_selected()))->setEnabled(!textCursor().selection().isEmpty());
+    menu.addAction(QIcon("://pics/edit-select-all.png"),tr("Select All"),this,SLOT(selectAll()));
+    menu.exec(mapToGlobal(pt));
+}
+
+void PacmanInfoBrowser::copy_selected() {
+    QApplication::clipboard()->setText(Static::htmlFragmentToText(this->textCursor().selection()));
 }
 
 void PacmanInfoBrowser::setModel(PacmanItemModel * model) {
@@ -62,4 +60,12 @@ void PacmanInfoBrowser::setModel(PacmanItemModel * model) {
 
 void PacmanInfoBrowser::clearImageCache() {
     ((PacmanInfoBrowserDocument *)document())->clearImageCache();
+}
+
+void PacmanInfoBrowser::keyPressEvent(QKeyEvent *e) {
+    if (e->matches(QKeySequence::Copy)) {
+        copy_selected();
+        e->ignore();
+    }
+    else QTextBrowser::keyPressEvent(e);
 }

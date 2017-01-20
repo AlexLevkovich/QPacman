@@ -56,9 +56,9 @@ void FilterToolButton::fill(const QStringList & _groups) {
     QString all_str = tr("All");
     IdAction::addAction(IS_ALL,QIcon(":/pics/folder-tar.png"),all_str,state_menu);
     IdAction::addAction(IS_INSTALLED,QIcon(":/pics/dialog-ok-apply.png"),tr("Installed"),state_menu);
-    IdAction::addAction(IS_NONINSTALLED,tr("Non-Installed"),state_menu);
+    IdAction::addAction(IS_NONINSTALLED,QIcon(":/pics/notinstalled.png"),tr("Non-Installed"),state_menu);
     IdAction::addAction(IS_NEEDUPDATE,QIcon(":/pics/distro-upgrade.png"),tr("Updates"),state_menu);
-    IdAction::addAction(IS_ORPHANED,tr("Orphaned"),state_menu);
+    IdAction::addAction(IS_ORPHANED,QIcon(":/pics/dialog-ok-apply.png"),tr("Orphaned"),state_menu);
     IdAction::addAction(IS_MARKED,QIcon(":/pics/edit-select-all.png"),tr("Marked"),state_menu);
     state_menu->setTitle(tr("By state"));
     state_menu->setIcon(QIcon(":/pics/view-filter.png"));

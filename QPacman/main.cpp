@@ -23,6 +23,7 @@
 
 const char * pacman_version = "2.4";
 
+
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 

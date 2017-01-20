@@ -33,5 +33,7 @@
         <file>pics/installed.png</file>
         <file>pics/2down.png</file>
         <file>pics/help-hint.png</file>
+        <file>pics/edit-copy.png</file>
+        <file>pics/noicon.png</file>
     </qresource>
 </RCC>

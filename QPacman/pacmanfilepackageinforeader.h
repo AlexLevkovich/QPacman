@@ -23,7 +23,7 @@ protected:
 private:
     QString m_package;
     PacmanEntry entry;
-    bool wasStdoutRead;
+    bool wasStderrRead;
 };
 
 #endif // PacmanFilePackageInfoReader_H

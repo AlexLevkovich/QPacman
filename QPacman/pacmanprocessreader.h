@@ -42,8 +42,11 @@ protected:
     inline void setTerminated(bool flag) { isTerminated = flag; }
     inline bool wasFinished() { return isFinished; }
     inline void waitForBytesWritten() { process->waitForBytesWritten(-1); }
-    inline void waitForReadyRead() { process->waitForReadyRead(-1); }
-    inline void terminateProcess() { process->terminate(); }
+    void waitForReadyRead(QProcess::ProcessChannel channel = QProcess::StandardOutput);
+    quint64 availableOutputBytesCount();
+    quint64 availableErrorBytesCount();
+    QByteArray readOutputLine(qint64 maxSize = 0);
+    QByteArray readErrorLine(qint64 maxSize = 0);
 
     virtual bool error(const QString & err);
     virtual bool output(const QString & out);

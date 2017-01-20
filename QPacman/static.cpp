@@ -11,6 +11,10 @@
 #include <QApplication>
 #include "pacmanprovidersdialog.h"
 #include "suchecker.h"
+#include <QRegExp>
+#include <QList>
+#include <QUrl>
+#include <QDebug>
 
 QString Static::su_password;
 QString Static::Error_Str;
@@ -99,4 +103,34 @@ const QList<QAction *> Static::childrenActions(QObject * main_object) {
     }
 
     return actions;
+}
+
+const QString Static::htmlFragmentToText(const QTextDocumentFragment & fragment) {
+    struct TextMarker {
+        qint64 begin_index;
+        qint64 count;
+        QString replace_to;
+    } marker;
+
+    QString html = fragment.toHtml();
+    QRegExp imgTagRegex("\\<img[^\\>]*src\\s*=\\s*\"([^\"]*)\"[^\\>]*\\>", Qt::CaseInsensitive);
+    imgTagRegex.setMinimal(true);
+    QList<TextMarker> markers;
+    QUrl url;
+    marker.begin_index = 0;
+    while((marker.begin_index = imgTagRegex.indexIn(html, marker.begin_index)) != -1) {
+        marker.count = imgTagRegex.matchedLength();
+        url.setUrl(imgTagRegex.cap(1));
+        if (url.scheme() == "qpc") {
+            marker.replace_to = url.path().mid(1);
+            markers.append(marker);
+        }
+        marker.begin_index += marker.count;
+    }
+
+    for (int i=(markers.count()-1);i>=0;i--) {
+        html.replace(markers[i].begin_index,markers[i].count,markers[i].replace_to);
+    }
+
+    return QTextDocumentFragment::fromHtml(html).toPlainText();
 }

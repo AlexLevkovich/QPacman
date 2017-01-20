@@ -27,7 +27,7 @@
 <context>
     <name>DBRefreshDialog</name>
     <message>
-        <location filename="../dbrefreshdialog.cpp" line="+12"/>
+        <location filename="../dbrefreshdialog.cpp" line="+13"/>
         <source>Please wait...</source>
         <translation type="unfinished">Подождите пожалуйста...</translation>
     </message>
@@ -432,7 +432,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanProcessReader</name>
     <message>
-        <location filename="../pacmanprocessreader.cpp" line="+178"/>
+        <location filename="../pacmanprocessreader.cpp" line="+202"/>
         <source>The process failed to start.</source>
         <translation type="unfinished">Процесс не удалось запустить.</translation>
     </message>
@@ -695,7 +695,7 @@ Do you want to mark it for installation?</source>
         <translation type="obsolete">Все</translation>
     </message>
     <message>
-        <location filename="../static.cpp" line="+27"/>
+        <location filename="../static.cpp" line="+31"/>
         <source>All</source>
         <translation type="unfinished">Все</translation>
     </message>
@@ -742,7 +742,7 @@ Are you sure?</source>
 Вы уверены?</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="+41"/>
+        <location filename="../main.cpp" line="+42"/>
         <source>You should not be root!</source>
         <translation type="unfinished">Вы не должны быть суперпользователем!</translation>
     </message>
@@ -1282,6 +1282,19 @@ p, li { white-space: pre-wrap; }
 </source>
         <translation type="unfinished">QPacman: Не удается правильно разобрать выход из pacman !!!
 </translation>
+    </message>
+</context>
+<context>
+    <name>PacmanInfoBrowser</name>
+    <message>
+        <location filename="../pacmaninfobrowser.cpp" line="+47"/>
+        <source>Copy</source>
+        <translation type="unfinished">Скопировать</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Select All</source>
+        <translation type="unfinished">Выделить все</translation>
     </message>
 </context>
 </TS>

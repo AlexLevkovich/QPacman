@@ -27,7 +27,7 @@
 <context>
     <name>DBRefreshDialog</name>
     <message>
-        <location filename="../dbrefreshdialog.cpp" line="+12"/>
+        <location filename="../dbrefreshdialog.cpp" line="+13"/>
         <source>Please wait...</source>
         <translation type="unfinished">Пачакайце калі ласка...</translation>
     </message>
@@ -424,7 +424,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanProcessReader</name>
     <message>
-        <location filename="../pacmanprocessreader.cpp" line="+178"/>
+        <location filename="../pacmanprocessreader.cpp" line="+202"/>
         <source>The process failed to start.</source>
         <translation type="unfinished">Працэс не ўдалося запусціць.</translation>
     </message>
@@ -687,7 +687,7 @@ Do you want to mark it for installation?</source>
         <translation type="obsolete">Усё</translation>
     </message>
     <message>
-        <location filename="../static.cpp" line="+27"/>
+        <location filename="../static.cpp" line="+31"/>
         <source>All</source>
         <translation type="unfinished">Усё</translation>
     </message>
@@ -734,7 +734,7 @@ Are you sure?</source>
 Вы ўпэўненыя?</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="+41"/>
+        <location filename="../main.cpp" line="+42"/>
         <source>You should not be root!</source>
         <translation type="unfinished">Вы не павінны быць супер-карыстальнікам!</translation>
     </message>
@@ -1138,6 +1138,19 @@ p, li { white-space: pre-wrap; }
 </source>
         <translation type="unfinished">QPacman: Не атрымоўваецца правільна разабраць выхад з pacman!!!
 </translation>
+    </message>
+</context>
+<context>
+    <name>PacmanInfoBrowser</name>
+    <message>
+        <location filename="../pacmaninfobrowser.cpp" line="+47"/>
+        <source>Copy</source>
+        <translation type="unfinished">Скапіяваць</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Select All</source>
+        <translation type="unfinished">Вылучыць ўсе</translation>
     </message>
 </context>
 </TS>
