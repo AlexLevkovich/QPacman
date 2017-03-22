@@ -9,6 +9,8 @@
 SearchWidget::SearchWidget(QWidget *parent) : ToolBarWidget(parent), ui(new Ui::SearchWidget) {
     ui->setupUi(this);
 
+    m_saveFilterId = FilterToolButton::IS_UNKNOWN;
+
     connect(ui->filterButton,SIGNAL(selected(FilterToolButton::ItemId,const QString &)),this,SLOT(onSelectedFilter(FilterToolButton::ItemId,const QString &)));
     connect(ui->repoButton,SIGNAL(selected(const QString &)),this,SLOT(onSelectedRepo(const QString &)));
     connect(ui->categoryButton,SIGNAL(selected(CategoryToolButton::ItemId)),this,SLOT(onSelectedCategory(CategoryToolButton::ItemId)));
@@ -74,4 +76,31 @@ void SearchWidget::saveSearchText() {
 
 void SearchWidget::restoreSearchText() {
     ui->searchBox->setText(m_saveSearchText);
+}
+
+void SearchWidget::saveRepo() {
+    m_saveRepo = ui->repoButton->text();
+}
+
+void SearchWidget::restoreRepo() {
+    ui->repoButton->selectMenuItem(m_saveRepo);
+}
+
+void SearchWidget::saveAllFilters() {
+    saveFilter();
+    saveSearchText();
+    saveRepo();
+}
+
+void SearchWidget::restoreAllFilters() {
+    if (m_saveFilterId == FilterToolButton::IS_UNKNOWN) return;
+
+    restoreFilter();
+    restoreSearchText();
+    restoreRepo();
+
+    m_saveSearchText.clear();
+    m_saveFilter.clear();
+    m_saveRepo.clear();
+    m_saveFilterId = FilterToolButton::IS_UNKNOWN;
 }

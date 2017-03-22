@@ -6,7 +6,7 @@
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        fprintf(stderr,"One input parameter required: config_path!!!");
+        fprintf(stderr,"One input parameter required: config_path!!!\n");
         return 1;
     }
 
@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
     const char * argvs[] = {PACMAN_BIN,"--config",(const char *)argv[1],"-Sy",NULL};
 
     if (setuid(0) < 0) {
-        fprintf(stderr,"setuid(0) execution was failed!!!");
+        fprintf(stderr,"setuid(0) execution was failed!!!\n");
         return 1;
     }
 

@@ -9,16 +9,20 @@
 #include <QPixmap>
 #include <QProcess>
 #include <QFile>
+#include <QDir>
+#include <QMenu>
 #include <QMessageBox>
 #include "pacmandbrefresher.h"
 #include "pacmansimpleupdatesreader.h"
+#include "installprogressloop.h"
+#include "messagedialog.h"
 #include <QMessageBox>
 #include <QPushButton>
 #include "errordialog.h"
 #include <QDebug>
 #include "suchecker.h"
 #include "rootdialog.h"
-#include "simplecrypt.h"
+#include "static.h"
 #include <cpuid.h>
 
 extern const char * pacmantray_version;
@@ -32,71 +36,13 @@ static const char * message_str_part1 = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTM
 static const char * message_str_packg = "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">%1</p>";
 static const char * message_str_part2 = "</body></html>";
 
-class Cryptor {
-public:
-    static QString decrypt(const QString &password) {
-        return SimpleCrypt(getCpuHash()).decryptToString(password);
-    }
-
-    static QString encrypt(const QString &password) {
-        return SimpleCrypt(getCpuHash()).encryptToString(password);
-    }
-
-private:
-    static unsigned short getCpuHash() {
-        unsigned int level = 0;
-        unsigned int cpuinfo[4] = { 0, 0, 0, 0 };
-
-        __get_cpuid(level, &cpuinfo[0], &cpuinfo[1], &cpuinfo[2], &cpuinfo[3]);
-
-       unsigned short hash = 0;
-       unsigned int* ptr = (&cpuinfo[0]);
-       for ( unsigned int i = 0; i < 4; i++ )
-          hash += (ptr[i] & 0xFFFF) + ( ptr[i] >> 16 );
-
-       return hash;
-    }
-};
-
-static const QString su_password() {
-    QSettings settings;
-    return Cryptor::decrypt(settings.value("settings/su_password","").toString());
-}
-
-static void setSuPassword(const QString & su_password) {
-    QSettings settings;
-    settings.setValue("settings/su_password",Cryptor::encrypt(su_password));
-}
-
-static bool checkRootAccess() {
-    if (!su_password().isEmpty()) {
-        SuChecker suchecker(su_password());
-        suchecker.waitToComplete();
-        if (suchecker.ok()) return true;
-    }
-
-    for (int i=0;i<3;i++) {
-        RootDialog dlg;
-        if (dlg.exec() == QDialog::Rejected) break;
-
-        SuChecker suchecker(dlg.password());
-        suchecker.waitToComplete();
-        if (!suchecker.ok()) continue;
-
-        setSuPassword(dlg.password());
-        return true;
-    }
-
-    return false;
-}
-
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow),
                                           errorIcon(":/pics/kpk-important.png"),
-                                          packageIcon(":/pics/distro-upgrade.png"),
+                                          packageIcon(":/pics/package-update.png"),
                                           good_player(":/sound/KDE-Sys-App-Positive.ogg"),
                                           bad_player(":/sound/KDE-Sys-App-Error.ogg"),
-                                          checkingLock("/tmp/QPacmanTray_checker"),
+                                          checkingLock(QDir::tempPath()+QDir::separator()+"QPacmanTray_checker"),
                                           tray(NULL) {
     ui->setupUi(this);
 
@@ -118,10 +64,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     doPlaySound = settings.value("settings/playSound",true).toBool();
 
     checkUpdatesAction = new QAction(QIcon(":/pics/updates.png"),tr("Check the updates"),this);
-    updateAction = new QAction(QIcon(":/pics/PacmanTray-arch_logo.png"),tr("Update"),this);
+    updateAction = new QAction(QIcon(":/pics/fullupdate.png"),tr("Update"),this);
     errorAction = new QAction(errorIcon,tr("Show the last errors..."),this);
+    qpacmanAction = new QAction(QIcon(":/pics/Pacman-arch_logo.png"),tr("Show updates in QPacman..."),this);
+
+    connect(&tray,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+
+
     connect(checkUpdatesAction,SIGNAL(triggered()),this,SLOT(timeout()));
-    connect(updateAction,SIGNAL(triggered()),this,SLOT(onUpdate()));
+    connect(updateAction,SIGNAL(triggered()),this,SLOT(updateRequested()));
+    connect(qpacmanAction,SIGNAL(triggered()),this,SLOT(onLoadQPacman()));
     connect(errorAction,SIGNAL(triggered()),this,SLOT(onShowErrors()));
 
     connect(ui->toolBarWidget,SIGNAL(actionCheck_triggered()),checkUpdatesAction,SIGNAL(triggered()));
@@ -132,10 +84,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this,SIGNAL(actionErrorsUIUpdate(bool)),this,SLOT(onActionErrorsUIUpdate(bool)));
 
     connect(&movie,SIGNAL(frameChanged(int)),this,SLOT(checking_frame()));
+    connect(&wait_movie,SIGNAL(frameChanged(int)),this,SLOT(checking_frame()));
     connect(&timer,SIGNAL(timeout()),this,SLOT(timeout()));
 
     movie.setFileName(":/pics/checking.gif");
     movie.setSpeed(60);
+    wait_movie.setFileName(":/pics/waiting.gif");
 
     timeout();
     setVisible(false);
@@ -143,28 +97,26 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 }
 
 void MainWindow::showTray(const QIcon & icon) {
-    if (tray == NULL) {
-        tray = new QSystemTrayIcon(this);
-        QMenu * menu = new QMenu(this);
-        menu->addAction(checkUpdatesAction);
-        menu->addAction(updateAction);
-        menu->addAction(errorAction);
-        menu->addAction(tr("Settings..."),this,SLOT(onSettings()));
-        menu->addAction(tr("About..."),this,SLOT(onAbout()));
-        menu->addAction(tr("Quit"),this,SLOT(onQuit()));
-        tray->setContextMenu(menu);
-        connect(tray,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(trayActivated(QSystemTrayIcon::ActivationReason)));
+    if (!tray.isVisible()) {
+        QMenu * tray_menu = new QMenu(this);
+        tray_menu->addAction(checkUpdatesAction);
+        tray_menu->addAction(updateAction);
+        tray_menu->addAction(qpacmanAction);
+        tray_menu->addAction(errorAction);
+        tray_menu->addAction(tr("Settings..."),this,SLOT(onSettings()));
+        tray_menu->addAction(tr("About..."),this,SLOT(onAbout()));
+        tray_menu->addAction(tr("Quit"),this,SLOT(onQuit()));
+
+        tray.setContextMenu(tray_menu);
     }
-    tray->setIcon(icon);
-    tray->show();
+    tray.setIcon(icon);
+    if (!tray.isVisible()) tray.show();
 }
 
 void MainWindow::hideTray() {
-    if (tray == NULL) return;
-    QMenu * menu = tray->contextMenu();
-    delete tray;
-    if (menu != NULL) delete menu;
-    tray = NULL;
+    QMenu * tray_menu = tray.contextMenu();
+    if (tray_menu != NULL) tray_menu->deleteLater();
+    tray.hide();
 }
 
 void MainWindow::onActionCheckUIUpdate(bool flag) {
@@ -173,6 +125,7 @@ void MainWindow::onActionCheckUIUpdate(bool flag) {
 
 void MainWindow::onActionUpdateUIUpdate(bool flag) {
     updateAction->setEnabled(flag);
+    qpacmanAction->setEnabled(flag);
 }
 
 void MainWindow::onActionErrorsUIUpdate(bool flag) {
@@ -211,12 +164,39 @@ void MainWindow::trayActivated(QSystemTrayIcon::ActivationReason reason) {
     }
 }
 
-void MainWindow::onUpdate() {
-    QMetaObject::invokeMethod(this,"executePacman",Qt::QueuedConnection);
+void MainWindow::startFullUpdate() {
+    emit actionCheckUIUpdate(false);
+    emit actionUpdateUIUpdate(false);
+    emit actionErrorsUIUpdate(false);
+
+    if (!Static::checkRootAccess()) {
+        QMessageBox::critical(this,Static::Error_Str,Static::RootRightsNeeded_Str,QMessageBox::Ok);
+    }
+    else {
+        checkingLock.unlock();
+        if (!checkingLock.tryLock()) {
+            was_error(tr("Cannot lock checkingLock!!!"),"timeout");
+            return;
+        }
+
+        InstallProgressLoop iprogress_dlg(Static::su_password,this);
+        connect(&iprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
+        connect(&iprogress_dlg,SIGNAL(end_waiting_mode()),this,SLOT(stop_wait_animation()));
+        connect(&iprogress_dlg,SIGNAL(start_waiting_mode()),this,SLOT(start_wait_animation()));
+        if (iprogress_dlg.exec() == QDialog::Accepted) {
+            MessageDialog::post(Static::InstalledSuccess_Str,m_messages,tr("Post messages..."));
+        }
+        checkingLock.unlock();
+    }
+
+    onGuiExited();
+    m_messages.clear();
 }
 
-void MainWindow::executePacman() {
-    if (!isGuiAppActive()) QProcess::startDetached(QString("%1/bin/QPacman --updates").arg(INSTALL_PREFIX));
+void MainWindow::add_post_messages(const QString & package,const QStringList & messages) {
+    m_messages += Static::PostMessages_Str.arg(package)+"\n\n";
+    m_messages += messages.join("\n");
+    m_messages += '\n';
 }
 
 void MainWindow::onSettings() {
@@ -231,7 +211,7 @@ void MainWindow::onAbout() {
 }
 
 bool MainWindow::isGuiAppActive() {
-    QLockFile guiLock("/tmp/QPacman_client");
+    QLockFile guiLock(QDir::tempPath()+QDir::separator()+"QPacman_client");
     return !guiLock.tryLock();
 }
 
@@ -240,11 +220,11 @@ public:
     TimeOutEnd(MainWindow * mainWindow,bool lastUpdate = false) {
         this->mainWindow = mainWindow;
         this->lastUpdate = lastUpdate;
-		def_checking_updates = false;
+        def_checking_updates = false;
     }
 
     ~TimeOutEnd() {
-		mainWindow->isCheckingUpdates = def_checking_updates;
+        mainWindow->isCheckingUpdates = def_checking_updates;
         if (lastUpdate) mainWindow->movie.stop();
         emit mainWindow->actionCheckUIUpdate(!mainWindow->isGuiAppActive() && !mainWindow->isCheckingUpdates);
         emit mainWindow->actionUpdateUIUpdate(!mainWindow->isGuiAppActive() && !mainWindow->isCheckingUpdates && !mainWindow->wasError);
@@ -253,7 +233,8 @@ public:
         if (mainWindow->wasError || lastUpdate) mainWindow->checkingLock.unlock();
     }
 	
-	bool def_checking_updates;
+public:
+    bool def_checking_updates;
 
 private:
     MainWindow * mainWindow;
@@ -287,28 +268,21 @@ void MainWindow::timeout() {
 	packages.clear();
     movie.start();
     showTray(errorIcon);
-    tray->setToolTip(tr("Checking updates..."));
+    tray.setToolTip(tr("Checking updates..."));
 
-    bool pacmansy_exists = QFile(PACMANSY_BIN).exists();
-
-    if (!pacmansy_exists) {
-        if (!checkRootAccess()) {
-            was_error(tr("The root's rights are needed to continue!!!"),"timeout");
-            return;
-        }
-    }
-
-    refresher = new PacmanDBRefresher(pacmansy_exists?"":su_password(),this);
+    refresher = new PacmanDBRefresher("",this);
     connect(refresher,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(db_refreshed(PacmanProcessReader *)));
-    connect(refresher,SIGNAL(was_error(const QString &,const QString &)),this,SLOT(was_error(const QString &,const QString &)));
 }
 
 void MainWindow::checking_frame() {
-    showTray(QIcon(movie.currentPixmap()));
+    QMovie * p_movie = (QMovie *)this->sender();
+    showTray(QIcon(p_movie->currentPixmap()));
 }
 
 void MainWindow::db_refreshed(PacmanProcessReader * reader) {
-    TimeOutEnd temp(this,true);
+    if (reader != NULL && reader->exitCode() != 0) was_error(reader->errorStream(),tr("Refreshing pacman database"));
+
+    TimeOutEnd temp(this,reader != NULL);
 
     if (reader != NULL) {
         int code = reader->exitCode();
@@ -318,9 +292,11 @@ void MainWindow::db_refreshed(PacmanProcessReader * reader) {
     }
 
     PacmanSimpleUpdatesReader updatesreader;
-    connect(&updatesreader,SIGNAL(was_error(const QString &,const QString &)),this,SLOT(was_error(const QString &,const QString &)));
     updatesreader.waitToComplete();
-    if (updatesreader.exitCode() != 0) return;
+    if (updatesreader.exitCode() != 0) {
+        was_error(updatesreader.errorStream(),tr("Reading the list of updated packages"));
+        return;
+    }
 
     _areUpdates(updatesreader.packages());
 
@@ -335,7 +311,7 @@ void MainWindow::was_error(const QString & error,const QString & command) {
     m_errors[command] += error + '\n';
     wasError = true;
     showTray(errorIcon);
-    tray->setToolTip(QString(error_str).arg(tr("There were the errors during the last checking...")));
+    tray.setToolTip(QString(error_str).arg(tr("There were the errors during the last checking...")));
     playSoundForWasError();
 }
 
@@ -351,7 +327,7 @@ void MainWindow::_areUpdates(const QStringList & packages) {
         }
         if (packages.count() > 6) message_str+=QString(message_str_packg).arg("...");
         message_str+=message_str_part2;
-        tray->setToolTip(message_str);
+        tray.setToolTip(message_str);
 
         playSoundForCheckOk();
     }
@@ -359,7 +335,7 @@ void MainWindow::_areUpdates(const QStringList & packages) {
 }
 
 void MainWindow::updateRequested() {
-    onUpdate();
+    if (updateAction->isEnabled()) QMetaObject::invokeMethod(this,"startFullUpdate",Qt::QueuedConnection);
 }
 
 void MainWindow::showErrorsRequested() {
@@ -420,8 +396,6 @@ void MainWindow::showEvent(QShowEvent * event) {
 }
 
 void MainWindow::onGuiExited() {
-    emit actionCheckUIUpdate(!isCheckingUpdates);
-    emit actionUpdateUIUpdate(!isCheckingUpdates);
     timer.stop();
     db_refreshed(NULL);
 }
@@ -436,3 +410,15 @@ void MainWindow::terminate() {
     if (refresher != NULL) refresher->terminate();
 }
 
+void MainWindow::onLoadQPacman() {
+    if (!isGuiAppActive()) QProcess::startDetached(QString("%1/bin/QPacman --updates").arg(INSTALL_PREFIX));
+}
+
+void MainWindow::start_wait_animation() {
+    wait_movie.start();
+}
+
+void MainWindow::stop_wait_animation() {
+    wait_movie.stop();
+    showTray(packageIcon);
+}

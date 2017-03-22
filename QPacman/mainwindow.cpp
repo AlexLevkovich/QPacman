@@ -14,6 +14,7 @@
 #include "logwindow.h"
 #include "toolbarrightwidget.h"
 #include "pacmancachecleaner.h"
+#include "pacmanfileslistreader.h"
 #include "static.h"
 
 
@@ -76,15 +77,24 @@ void MainWindow::onSelectionChanged(const QModelIndex & index) {
     ui->pacInfoView->clearImageCache();
     ui->pacInfoView->setHtml(ui->packetView->row(index).toHtml());
     PacmanEntry row = ui->packetView->row(index);
+    ui->filesTree->clear();
     if (row.isInstalled()) {
-        ui->filesTree->fill(row.listFiles());
-    }
-    else {
-        ui->filesTree->clear();
+        if (row.listFiles().isEmpty()) {
+            PacmanFilesListReader * filesreader = new PacmanFilesListReader(row.getName(),this);
+            connect(filesreader,SIGNAL(files_ready(const QStringList &)),this,SLOT(files_ready(const QStringList &)));
+            connect(filesreader,SIGNAL(finished(PacmanProcessReader *)),filesreader,SLOT(deleteLater()));
+        }
+        else ui->filesTree->fill(row.listFiles());
     }
 
     ui->actionNext->setEnabled(ui->packetView->isSelectNextPossible());
     ui->actionPrevious->setEnabled(ui->packetView->isSelectPrevPossible());
+}
+
+void MainWindow::files_ready(const QStringList & files) {
+    PacmanFilesListReader * reader = (PacmanFilesListReader *)sender();
+    ((PacmanItemModel *)((QAbstractItemView *)ui->packetView)->model())->setFiles(reader->package(),files);
+    ui->filesTree->fill(files);
 }
 
 void MainWindow::onGroupUrlSelected(const QString & group) {
@@ -162,6 +172,8 @@ void MainWindow::on_actionApply_triggered() {
     if (to_removeall.count() > 0) {
         RemoveProgressLoop rprogress_dlg(Static::su_password,PacmanEntry::entriesListToNamesStringList(to_removeall),true,this);
         connect(&rprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
+        connect(&rprogress_dlg,SIGNAL(end_waiting_mode()),this,SLOT(stop_wait_indicator()));
+        connect(&rprogress_dlg,SIGNAL(start_waiting_mode()),this,SLOT(start_wait_indicator()));
         if (rprogress_dlg.exec() != QDialog::Accepted) return;
         removed_packages = rprogress_dlg.removedPackages();
     }
@@ -173,12 +185,16 @@ void MainWindow::on_actionApply_triggered() {
         if (remove_packages.count() > 0) {
             RemoveProgressLoop rprogress_dlg(Static::su_password,remove_packages,false,this);
             connect(&rprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
+            connect(&rprogress_dlg,SIGNAL(end_waiting_mode()),this,SLOT(stop_wait_indicator()));
+            connect(&rprogress_dlg,SIGNAL(start_waiting_mode()),this,SLOT(start_wait_indicator()));
             if (rprogress_dlg.exec() != QDialog::Accepted) return;
         }
     }
     if (to_install.count() > 0) {
         InstallProgressLoop iprogress_dlg(Static::su_password,PacmanEntry::entriesListToStringList(to_install),this);
         connect(&iprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
+        connect(&iprogress_dlg,SIGNAL(end_waiting_mode()),this,SLOT(stop_wait_indicator()));
+        connect(&iprogress_dlg,SIGNAL(start_waiting_mode()),this,SLOT(start_wait_indicator()));
         if (iprogress_dlg.exec() != QDialog::Accepted) {
             if (remove_packages.count() <= 0 &&
                 to_removeall.count() <= 0) return;
@@ -212,13 +228,8 @@ void MainWindow::on_actionRefreshList_triggered() {
 }
 
 void MainWindow::on_actionCacheCleanUp_triggered() {
-    if (!Static::checkRootAccess()) {
-        QMessageBox::critical(this,Static::Error_Str,Static::RootRightsNeeded_Str,QMessageBox::Ok);
-        return;
-    }
-
     if (QMessageBox::warning(this,Static::Warning_Str,tr("The contents of cache directory will be removed.\nAre you sure to continue?"),QMessageBox::Yes,QMessageBox::No) == QMessageBox::No) return;
-    PacmanCacheCleaner cleaner(Static::su_password);
+    PacmanCacheCleaner cleaner;
     cleaner.waitToComplete();
     if (cleaner.exitCode() != 0) return;
     QMessageBox::information(this,"Information...",tr("The contents of cache directory was removed succesfully!"));
@@ -272,4 +283,30 @@ void MainWindow::on_actionPrevious_triggered() {
 
 void MainWindow::on_actionNext_triggered() {
     ui->packetView->selectNext();
+}
+
+void MainWindow::on_actionFullUpdate_triggered() {
+    TempWinDisable temp(this);
+
+    if (!Static::checkRootAccess()) {
+        QMessageBox::critical(this,Static::Error_Str,Static::RootRightsNeeded_Str,QMessageBox::Ok);
+        return;
+    }
+
+    InstallProgressLoop iprogress_dlg(Static::su_password,this);
+    connect(&iprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
+    connect(&iprogress_dlg,SIGNAL(end_waiting_mode()),this,SLOT(stop_wait_indicator()));
+    connect(&iprogress_dlg,SIGNAL(start_waiting_mode()),this,SLOT(start_wait_indicator()));
+    iprogress_dlg.exec();
+    QMetaObject::invokeMethod(this,"on_actionRefreshList_triggered",Qt::QueuedConnection);
+}
+
+void MainWindow::stop_wait_indicator() {
+    ui->packetView->setVisible(true);
+    ui->waitView->setVisible(false);
+}
+
+void MainWindow::start_wait_indicator() {
+    ui->packetView->setVisible(false);
+    ui->waitView->setVisible(true);
 }

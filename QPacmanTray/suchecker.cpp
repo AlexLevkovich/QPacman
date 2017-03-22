@@ -1,1 +1,0 @@
-../QPacman/suchecker.cpp

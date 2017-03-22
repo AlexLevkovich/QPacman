@@ -8,7 +8,6 @@
 #include <QMessageBox>
 #include <QLayout>
 #include "pacmanrepositoryreader.h"
-#include "pacmanfileslistreader.h"
 #include "pacmanpackagereasonchanger.h"
 #include "installbuttondelegate.h"
 #include "static.h"
@@ -55,7 +54,21 @@ void PacmanView::read_package(PacmanEntry * item) {
     model->addRow(item);
 }
 
-void PacmanView::read_files_finished(PacmanProcessReader * ptr) {
+void PacmanView::checkReplaces() {
+    QList<QModelIndex> indexes = model->indexesCanReplaceInstalled();
+    if (indexes.count() > 0) {
+        for (int i=0;i<indexes.count();i++) {
+            PacmanEntry package = model->row(indexes[i]);
+            if (QMessageBox::warning(this,"Question...",tr("%1 replaces %2.\nDo you want to mark it for installation?").arg(package.getName()+"-"+package.getVersion()).arg(package.listReplaces().join(" and ")),QMessageBox::Yes,QMessageBox::No) == QMessageBox::No) continue;
+            model->chooseRow(indexes[i],true);
+            update(indexes[i]);
+            emit rowChoosingStateChanged(indexes[i]);
+        }
+    }
+}
+
+void PacmanView::read_packages_finished(PacmanProcessReader * ptr) {
+    model->sort();
     delete ptr;
 
     setModel(model);
@@ -69,7 +82,7 @@ void PacmanView::read_files_finished(PacmanProcessReader * ptr) {
     header()->setSectionsMovable(false);
 #else
     header()->setMovable(false);
-#endif    
+#endif
 
     if (waitView != NULL) {
         waitView->setVisible(false);
@@ -84,32 +97,6 @@ void PacmanView::read_files_finished(PacmanProcessReader * ptr) {
     if (_selEntry.isValid()) selectPackageByEntry(_selEntry);
 
     emit enableActions(true);
-}
-
-void PacmanView::checkReplaces() {
-    QList<QModelIndex> indexes = model->indexesCanReplaceInstalled();
-    if (indexes.count() > 0) {
-        for (int i=0;i<indexes.count();i++) {
-            PacmanEntry package = model->row(indexes[i]);
-            if (QMessageBox::warning(this,"Question...",tr("%1 replaces %2.\nDo you want to mark it for installation?").arg(package.getName()+"-"+package.getVersion()).arg(package.listReplaces().join(" and ")),QMessageBox::Yes,QMessageBox::No) == QMessageBox::No) continue;
-            model->chooseRow(indexes[i],true);
-            update(indexes[i]);
-            emit rowChoosingStateChanged(indexes[i]);
-        }
-    }
-}
-
-void PacmanView::files_ready(const QString & package,const QStringList & files) {
-    model->setFiles(package,files);
-}
-
-void PacmanView::read_packages_finished(PacmanProcessReader * ptr) {
-    model->sort();
-    delete ptr;
-
-    PacmanFilesListReader * filesreader = new PacmanFilesListReader(this);
-    connect(filesreader,SIGNAL(files_ready(const QString &,const QStringList &)),this,SLOT(files_ready(const QString &,const QStringList &)));
-    connect(filesreader,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(read_files_finished(PacmanProcessReader *)));
 }
 
 void PacmanView::refresh() {

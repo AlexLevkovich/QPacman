@@ -12,6 +12,10 @@ DEFINES += PACMAN_BIN=\\\"$$PACMAN_BIN\\\"
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/bin/
 INSTALLS += target
 
+isEmpty(INSTALL_PREFIX) {
+    INSTALL_PREFIX = /usr
+}
+
 unset(MANGLED_INSTALLS)
 for(x, INSTALLS):MANGLED_INSTALLS += install_$${x}
 

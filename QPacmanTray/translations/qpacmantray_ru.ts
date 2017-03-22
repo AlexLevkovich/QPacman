@@ -4,9 +4,8 @@
 <context>
     <name>ErrorDialog</name>
     <message>
-        <location filename="../errordialog.h" line="+15"/>
         <source>Pacman&apos;s error</source>
-        <translation type="unfinished">Pacman: ошибка</translation>
+        <translation type="obsolete">Pacman: ошибка</translation>
     </message>
     <message>
         <source>Show Log</source>
@@ -45,13 +44,13 @@
         <translation type="unfinished">Подать звуковой сигнал если обновления были найдены</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+112"/>
-        <location line="+42"/>
+        <location filename="../mainwindow.cpp" line="+58"/>
+        <location line="+50"/>
         <source>Quit</source>
         <translation type="unfinished">Выйти</translation>
     </message>
     <message>
-        <location line="-34"/>
+        <location line="-42"/>
         <source>Check the updates</source>
         <translation type="unfinished">Проверить обновления</translation>
     </message>
@@ -66,7 +65,12 @@
         <translation type="unfinished">Показать последние ошибки...</translation>
     </message>
     <message>
-        <location line="+30"/>
+        <location line="+1"/>
+        <source>Show updates in QPacman...</source>
+        <translation type="unfinished">Показать обновления в QPacman...</translation>
+    </message>
+    <message>
+        <location line="+37"/>
         <source>Settings...</source>
         <translation type="unfinished">Настройки...</translation>
     </message>
@@ -76,12 +80,17 @@
         <translation type="unfinished">О программе...</translation>
     </message>
     <message>
-        <location line="+137"/>
+        <location line="+80"/>
+        <source>Post messages...</source>
+        <translation type="unfinished">Сообщения...</translation>
+    </message>
+    <message>
+        <location line="+84"/>
         <source>Checking updates...</source>
         <translation type="unfinished">Проверка обновлений...</translation>
     </message>
     <message>
-        <location line="-63"/>
+        <location line="-64"/>
         <source>About QPacmanTray...</source>
         <translation type="unfinished">Об QPacmanTray...</translation>
     </message>
@@ -91,12 +100,17 @@
         <translation type="unfinished">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - приложение для автоматической проверки обновлений. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  необходим для работы этого приложения.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версия %1.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Разработчик: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Лицензия: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="+69"/>
-        <source>The root&apos;s rights are needed to continue!!!</source>
-        <translation type="unfinished"></translation>
+        <location line="+76"/>
+        <source>Refreshing pacman database</source>
+        <translation type="unfinished">Обновление базы данных pacman</translation>
     </message>
     <message>
-        <location line="+42"/>
+        <location line="+14"/>
+        <source>Reading the list of updated packages</source>
+        <translation type="unfinished">Чтение списка обновленных пакетов</translation>
+    </message>
+    <message>
+        <location line="+17"/>
         <source>There were the errors during the last checking...</source>
         <translation type="unfinished">Были ошибки во время последней проверки...</translation>
     </message>
@@ -115,7 +129,8 @@
         <translation type="obsolete">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - приложение для автоматической проверки обновлений. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  необходим для работы этого приложения.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версия 2.0.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Разработчик: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Лицензия: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="-122"/>
+        <location line="-197"/>
+        <location line="+80"/>
         <source>Cannot lock checkingLock!!!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -124,7 +139,7 @@
         <translation type="obsolete">&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanTray&lt;/span&gt; - приложение для автоматической проверки обновлений. &lt;span style=&quot; font-weight:600;&quot;&gt;QPacmanServer&lt;/span&gt;  необходим для работы этого приложения.&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;QPacmanTray версия 1.0.&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Разработчик: Alex Levkovich (&lt;a href=&quot;mailto:alevkovich@tut.by&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0057ae;&quot;&gt;alevkovich@tut.by&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Лицензия: GPL&lt;/p&gt;</translation>
     </message>
     <message>
-        <location line="+106"/>
+        <location line="+101"/>
         <source>Warning...</source>
         <translation type="unfinished">Предупреждение...</translation>
     </message>
@@ -229,14 +244,12 @@ It is not good idea to abort pacman execution, Continue?</source>
         <translation type="unfinished">Загружает и обновляет базу данных пакетов</translation>
     </message>
     <message>
-        <location/>
         <source>Load QPacman...</source>
-        <translation type="unfinished">Загрузить QPacman...</translation>
+        <translation type="obsolete">Загрузить QPacman...</translation>
     </message>
     <message>
-        <location/>
         <source>Executes QPacman application and selects updates to install</source>
-        <translation type="unfinished">Загружает QPacman и помечает пакеты для обновления</translation>
+        <translation type="obsolete">Загружает QPacman и помечает пакеты для обновления</translation>
     </message>
     <message>
         <location/>
@@ -248,33 +261,26 @@ It is not good idea to abort pacman execution, Continue?</source>
         <source>Shows the last errors</source>
         <translation type="unfinished">Показывает последние ошибки</translation>
     </message>
+    <message>
+        <location/>
+        <source>System Update</source>
+        <translation type="unfinished">Обновление системы</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Start updating of the system</source>
+        <translation type="unfinished">Запуск обновления системы</translation>
+    </message>
 </context>
 <context>
     <name>PacmanProcessReader</name>
     <message>
-        <location filename="../pacmanprocessreader.cpp" line="+202"/>
         <source>The process failed to start.</source>
-        <translation type="unfinished">Процесс не удалось запустить.</translation>
+        <translation type="obsolete">Процесс не удалось запустить.</translation>
     </message>
     <message>
-        <location line="+3"/>
         <source>The process crashed some time after starting successfully.</source>
-        <translation type="unfinished">Процесс убился через некоторое время после успешного запуска.</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>The last waitFor...() function timed out.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>An error occurred when attempting to write to the process-&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>An error occurred when attempting to read from the process-&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Процесс убился через некоторое время после успешного запуска.</translation>
     </message>
     <message>
         <source>An error occurred when attempting to write to the process.</source>
@@ -285,9 +291,8 @@ It is not good idea to abort pacman execution, Continue?</source>
         <translation type="obsolete">При попытке чтения из процесса произошла ошибка.</translation>
     </message>
     <message>
-        <location line="+3"/>
         <source>An unknown error occurred.</source>
-        <translation type="unfinished">Неизвестная ошибка.</translation>
+        <translation type="obsolete">Неизвестная ошибка.</translation>
     </message>
     <message>
         <source>The server is busy or invalid command was passed!</source>
@@ -343,41 +348,43 @@ It is not good idea to abort pacman execution, Continue?</source>
         <source>Cannot connect to dbus&apos; QPacmanServer!</source>
         <translation type="obsolete">Не могу соединиться с dbus&apos; QPacmanServer!</translation>
     </message>
+    <message>
+        <source>Warning...</source>
+        <translation type="obsolete">Предупреждение...</translation>
+    </message>
 </context>
 <context>
     <name>PacmanDBRefresher</name>
     <message>
-        <location filename="../pacmandbrefresher.cpp" line="+26"/>
         <source>Cannot copy pacman.conf to %1</source>
-        <translation type="unfinished">Невозможно скопировать pacman.conf в %1</translation>
+        <translation type="obsolete">Невозможно скопировать pacman.conf в %1</translation>
     </message>
 </context>
 <context>
     <name>RootDialog</name>
     <message>
-        <location filename="../rootdialog.ui"/>
-        <source>QPacman</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You need &lt;span style=&quot; font-weight:600;&quot;&gt;root privileges&lt;/span&gt; for the operations that can modify the system. Please enter &lt;span style=&quot; font-weight:600;&quot;&gt;root&apos;s&lt;/span&gt; password below or click &lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; to use this program as a viewer only.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вы должны иметь &lt;span style=&quot; font-weight:600;&quot;&gt;привилегии суперпользователя&lt;/span&gt; для операций которые меняют что либо в системе. Пожалуйста введите пароль для &lt;span style=&quot; font-weight:600;&quot;&gt;root&lt;/span&gt; или нажмите &lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; чтобы использовать эту программу только как просмотрщик.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вы должны иметь &lt;span style=&quot; font-weight:600;&quot;&gt;привилегии суперпользователя&lt;/span&gt; для операций которые меняют что либо в системе. Пожалуйста введите пароль для &lt;span style=&quot; font-weight:600;&quot;&gt;root&lt;/span&gt; или нажмите &lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; чтобы использовать эту программу только как просмотрщик.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location/>
         <source>Password: </source>
-        <translation type="unfinished">Пароль: </translation>
+        <translation type="obsolete">Пароль: </translation>
     </message>
 </context>
 <context>
     <name>PacmanSetupInfoReader</name>
     <message>
-        <location filename="../pacmansetupinforeader.cpp" line="+50"/>
         <source>QPacman: Cannot correctly parse the pacman&apos;s output!!!
 </source>
-        <translation type="unfinished">QPacman: Не удается правильно разобрать выход из pacman !!!
+        <translation type="obsolete">QPacman: Не удается правильно разобрать выход из pacman !!!
 </translation>
+    </message>
+</context>
+<context>
+    <name>PacmanUpdatePackagesReader</name>
+    <message>
+        <source>Cannot copy pacman.conf to %1</source>
+        <translation type="obsolete">Невозможно скопировать pacman.conf в %1</translation>
     </message>
 </context>
 </TS>

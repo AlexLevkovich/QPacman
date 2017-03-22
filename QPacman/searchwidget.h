@@ -27,8 +27,12 @@ public:
     bool setFilter(FilterToolButton::ItemId id,const QString & filter);
     void saveFilter();
     void restoreFilter();
+    void saveRepo();
+    void restoreRepo();
     void saveSearchText();
     void restoreSearchText();
+    void saveAllFilters();
+    void restoreAllFilters();
     FilterToolButton::ItemId filter();
 
 protected slots:
@@ -44,6 +48,7 @@ private:
     Ui::SearchWidget *ui;
     QString m_saveSearchText;
     QString m_saveFilter;
+    QString m_saveRepo;
     FilterToolButton::ItemId m_saveFilterId;
 };
 

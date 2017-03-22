@@ -12,9 +12,17 @@ TARGET = QPacmanTray
 TEMPLATE = app
 INCLUDEPATH += .
 
+INCLUDEPATH += $$PWD/../libqpacman
+LIBS += -L$$OUT_PWD/../libqpacman -lqpacman
+QMAKE_LFLAGS += "-Wl,-rpath,\'\$$OUT_PWD/../libqpacman\'"
+
 isEmpty(INSTALL_PREFIX) {
     INSTALL_PREFIX = /usr
 }
+
+OGG123_BIN = $$system(which ogg123 2>/dev/null)
+isEmpty( OGG123_BIN ):error( "ogg123 should be installed!!!" )
+DEFINES += OGG123_BIN=\\\"$$OGG123_BIN\\\"
 
 TRANS_DIR1 = $$OUT_PWD/translations
 TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
@@ -23,93 +31,21 @@ DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 DEFINES += TRANS_DIR1=\\\"$$TRANS_DIR1\\\"
 DEFINES += TRANS_DIR2=\\\"$$TRANS_DIR2\\\"
 
-SO_BIN1=$$INSTALL_PREFIX/lib/libsetbuf.so
-SO_BIN2=$$PWD/../bin/libsetbuf.so
-DEFINES += SO_BIN1=\\\"$$SO_BIN1\\\"
-DEFINES += SO_BIN2=\\\"$$SO_BIN2\\\"
-
-SU_BIN = $$system(which su 2>/dev/null)
-isEmpty( SU_BIN ):error( "su should be installed!!!" )
-DEFINES += SU_BIN=\\\"$$SU_BIN\\\"
-
-PACMAN_BIN = $$system(which pacman 2>/dev/null)
-isEmpty( PACMAN_BIN ):error( "pacman should be installed!!!" )
-DEFINES += PACMAN_BIN=\\\"$$PACMAN_BIN\\\"
-
-PACMANSY_BIN = $$INSTALL_PREFIX/bin/pacmanSy
-DEFINES += PACMANSY_BIN=\\\"$$PACMANSY_BIN\\\"
-
-WGET_BIN = $$system(which wget 2>/dev/null)
-isEmpty( WGET_BIN ):error( "wget should be installed!!!" )
-DEFINES += WGET_BIN=\\\"$$WGET_BIN\\\"
-
-BASH_BIN = $$system(which bash 2>/dev/null)
-isEmpty( BASH_BIN ):error( "bash should be installed!!!" )
-DEFINES += BASH_BIN=\\\"$$BASH_BIN\\\"
-
-RM_BIN = $$system(which rm 2>/dev/null)
-isEmpty( RM_BIN ):error( "rm should be installed!!!" )
-DEFINES += RM_BIN=\\\"$$RM_BIN\\\"
-
-KILL_BIN = $$system(which kill 2>/dev/null)
-isEmpty( KILL_BIN ):error( "kill should be installed!!!" )
-DEFINES += KILL_BIN=\\\"$$KILL_BIN\\\"
-
-PSTREE_BIN = $$system(which pstree 2>/dev/null)
-isEmpty( PSTREE_BIN ):error( "pstree should be installed!!!" )
-DEFINES += PSTREE_BIN=\\\"$$PSTREE_BIN\\\"
-
-AWK_BIN = $$system(which awk 2>/dev/null)
-isEmpty( AWK_BIN ):error( "awk should be installed!!!" )
-DEFINES += AWK_BIN=\\\"$$AWK_BIN\\\"
-
-TR_BIN = $$system(which tr 2>/dev/null)
-isEmpty( TR_BIN ):error( "tr should be installed!!!" )
-DEFINES += TR_BIN=\\\"$$TR_BIN\\\"
-
-lessThan(QT_MAJOR_VERSION, 5): {
-SOURCES += qlockfile.cpp \
-           qlockfile_unix.cpp
-HEADERS += qlockfile.h \
-           qlockfile_p.h
-}
-
 SOURCES += main.cpp\
         mainwindow.cpp \
     singleapplication.cpp \
-    pacmandbrefresher.cpp \
-    pacmanprocessreader.cpp \
-    errordialog.cpp \
-    pacmansimpleupdatesreader.cpp \
     toolbarwindow.cpp \
     jsondbsignals.cpp \
-    externalplayer.cpp \
-    wraplabel.cpp \
-    suchecker.cpp \
-    confsettings.cpp \
-    pacmansetupinforeader.cpp \
-    rootdialog.cpp \
-    simplecrypt.cpp
+    externalplayer.cpp
 
 HEADERS  += mainwindow.h \
     singleapplication.h \
-    pacmandbrefresher.h \
-    pacmanprocessreader.h \
-    errordialog.h \
-    pacmansimpleupdatesreader.h \
     toolbarwindow.h \
     jsondbsignals.h \
-    externalplayer.h \
-    wraplabel.h \
-    suchecker.h \
-    confsettings.h \
-    pacmansetupinforeader.h \
-    rootdialog.h \
-    simplecrypt.h
+    externalplayer.h
 
 FORMS    += mainwindow.ui \
-            toolbarwindow.ui \
-    rootdialog.ui
+            toolbarwindow.ui
 
 RESOURCES += \
     pics.qrc \

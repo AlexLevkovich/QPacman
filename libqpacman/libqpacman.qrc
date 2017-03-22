@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pics/edit-find.png</file>
+        <file>pics/package-installed.png</file>
+        <file>pics/package-removed.png</file>
+        <file>pics/package.png</file>
+        <file>pics/dialog-password.png</file>
+        <file>pics/kpk-important.png</file>
+        <file>pics/package-download.png</file>
+        <file>pics/security-low.png</file>
+    </qresource>
+</RCC>

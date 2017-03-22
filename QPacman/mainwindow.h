@@ -19,6 +19,7 @@ class SearchWidget;
 class LogWindow;
 class ToolbarRightWidget;
 class PacmanInstallPackagesReader;
+class PacmanProcessReader;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -55,6 +56,10 @@ private slots:
     void onEnableActions(bool flag);
     void on_actionPrevious_triggered();
     void on_actionNext_triggered();
+    void files_ready(const QStringList & files);
+    void on_actionFullUpdate_triggered();
+    void stop_wait_indicator();
+    void start_wait_indicator();
 
 private:
     Ui::MainWindow *ui;

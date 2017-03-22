@@ -20,7 +20,7 @@ ExternalPlayer::~ExternalPlayer() {
 void ExternalPlayer::play() {
     if (m_player.state() == QProcess::Running) return;
 
-    m_player.start("/usr/bin/ogg123 -");
+    m_player.start(QString("%1 -").arg(OGG123_BIN));
 }
 
 void ExternalPlayer::player_started() {

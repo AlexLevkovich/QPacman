@@ -156,6 +156,12 @@
    <property name="allowedAreas">
     <set>Qt::TopToolBarArea</set>
    </property>
+   <property name="iconSize">
+    <size>
+     <width>26</width>
+     <height>26</height>
+    </size>
+   </property>
    <property name="toolButtonStyle">
     <enum>Qt::ToolButtonIconOnly</enum>
    </property>
@@ -167,6 +173,7 @@
    </attribute>
    <addaction name="actionRefreshList"/>
    <addaction name="actionRefresh"/>
+   <addaction name="actionFullUpdate"/>
    <addaction name="actionCacheCleanUp"/>
    <addaction name="separator"/>
    <addaction name="actionPrevious"/>
@@ -308,6 +315,21 @@
    </property>
    <property name="shortcut">
     <string>Right</string>
+   </property>
+  </action>
+  <action name="actionFullUpdate">
+   <property name="icon">
+    <iconset resource="qpacman.qrc">
+     <normaloff>:/pics/fullupdate.png</normaloff>:/pics/fullupdate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Full Update</string>
+   </property>
+   <property name="toolTip">
+    <string>Full update of the system</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+U</string>
    </property>
   </action>
  </widget>

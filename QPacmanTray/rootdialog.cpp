@@ -1,1 +1,0 @@
-../QPacman/rootdialog.cpp

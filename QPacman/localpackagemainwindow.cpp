@@ -17,6 +17,7 @@
 #include "errordialog.h"
 #include "messagedialog.h"
 #include "pacmanlocalpackageslistdelegate.h"
+#include <QDebug>
 
 LocalPackageMainWindow::LocalPackageMainWindow(const QStringList & packages,QWidget *parent) : QMainWindow(parent), ui(new Ui::LocalPackageMainWindow) {
     ui->setupUi(this);
@@ -47,6 +48,7 @@ void LocalPackageMainWindow::init() {
         PacmanFilePackageInfoReader reader(m_packages[i]);
         reader.waitToComplete();
         if (reader.exitCode() != 0 || !reader.info().isValid()) {
+            qDebug() << "PacmanFilePackageInfoReader's rc=" << reader.exitCode() << " info: " << reader.info().toString();
             QMetaObject::invokeMethod(qApp,"quit",Qt::QueuedConnection);
             return;
         }
@@ -111,17 +113,13 @@ void LocalPackageMainWindow::on_actionInstall_triggered() {
     if (m_packages.count() > 0) {
         InstallFilesProgressLoop iprogress_dlg(Static::su_password,m_packages,this);
         connect(&iprogress_dlg,SIGNAL(post_messages(const QString &,const QStringList &)),this,SLOT(add_post_messages(const QString &,const QStringList &)));
-        connect(&iprogress_dlg,SIGNAL(showingProvidersList()),this,SLOT(stop_wait_indicator()));
-        connect(&iprogress_dlg,SIGNAL(hidingProvidersList()),this,SLOT(start_wait_indicator()));
-        connect(&iprogress_dlg,SIGNAL(showingPackageListDlg()),this,SLOT(stop_wait_indicator()));
-        connect(&iprogress_dlg,SIGNAL(hidingPackageListDlg()),this,SLOT(start_wait_indicator()));
-        connect(&iprogress_dlg,SIGNAL(showingFilesDownloadDlg()),this,SLOT(stop_wait_indicator()));
+        connect(&iprogress_dlg,SIGNAL(end_waiting_mode()),this,SLOT(stop_wait_indicator()));
+        connect(&iprogress_dlg,SIGNAL(start_waiting_mode()),this,SLOT(start_wait_indicator()));
         if (iprogress_dlg.exec() == QDialog::Accepted) {
-            if (m_messages.isEmpty()) QMessageBox::information(this,"Information...",Static::InstalledSuccess_Str);
-            else MessageDialog(Static::InstalledSuccess_Str,m_messages,this,tr("Post messages...")).exec();
-            qApp->quit();
+            MessageDialog::post(Static::InstalledSuccess_Str,m_messages,tr("Post messages..."));
         }
     }
+    close();
 }
 
 void LocalPackageMainWindow::add_post_messages(const QString & package,const QStringList & messages) {

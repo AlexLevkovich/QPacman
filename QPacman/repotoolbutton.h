@@ -14,6 +14,7 @@ class RepoToolButton : public ComboToolButton {
 public:
     explicit RepoToolButton(QWidget *parent = 0);
     void fill(const QStringList & repos);
+    void selectMenuItem(const QString & str);
 
 private slots:
     void onMenuItemSelected(QAction * action);

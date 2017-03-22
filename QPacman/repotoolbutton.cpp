@@ -45,3 +45,14 @@ void RepoToolButton::fill(const QStringList & repos) {
 void RepoToolButton::onMenuItemSelected(QAction * action) {
     emit selected(action->iconText());
 }
+
+void RepoToolButton::selectMenuItem(const QString & str) {
+    QList<QAction *> actions = menu()->actions();
+    for (int i=0;i<actions.count();i++) {
+        if (actions.at(i)->text() == str) {
+            setText(str);
+            emit selected(str);
+            break;
+        }
+    }
+}

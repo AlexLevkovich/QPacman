@@ -1,1 +1,0 @@
-../QPacman/confsettings.cpp

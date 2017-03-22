@@ -6,26 +6,16 @@
         <file>pics/down.png</file>
         <file>pics/delete.png</file>
         <file>pics/view-filter.png</file>
-        <file>pics/edit-find.png</file>
         <file>pics/Pacman-arch_logo.png</file>
         <file>pics/edit-undo.png</file>
         <file>pics/dialog-ok-apply.png</file>
         <file>pics/edit-select-all.png</file>
         <file>pics/view-refresh.png</file>
-        <file>pics/dialog-password.png</file>
         <file>pics/folder-tar.png</file>
-        <file>pics/system-log-out.png</file>
-        <file>pics/package-installed.png</file>
-        <file>pics/package-removed.png</file>
-        <file>pics/package.png</file>
-        <file>pics/kpk-important.png</file>
-        <file>pics/distro-upgrade.png</file>
         <file>pics/package-group.png</file>
         <file>pics/refresh-cache.png</file>
         <file>pics/configure.png</file>
         <file>pics/dialog-error.png</file>
-        <file>pics/package-download.png</file>
-        <file>pics/security-low.png</file>
         <file>pics/package-clean-up.png</file>
         <file>pics/package-info.png</file>
         <file>pics/package-update.png</file>
@@ -35,5 +25,9 @@
         <file>pics/help-hint.png</file>
         <file>pics/edit-copy.png</file>
         <file>pics/noicon.png</file>
+        <file>pics/fullupdate.png</file>
+        <file>pics/kpk-important.png</file>
+        <file>pics/package.png</file>
+        <file>pics/edit-find.png</file>
     </qresource>
 </RCC>

@@ -8,7 +8,6 @@
 
 #include <QMainWindow>
 #include <QSystemTrayIcon>
-#include <QMenu>
 #include <QMap>
 #include <QTimer>
 #include <QMovie>
@@ -27,6 +26,7 @@ class PacmanProcessReader;
 class ErrorDialog;
 class QPushButton;
 class PacmanDBRefresher;
+class QMenu;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -41,17 +41,15 @@ private slots:
     void on_buttonBox_rejected();
     void on_quitButtonBox_accepted();
     void trayActivated(QSystemTrayIcon::ActivationReason reason);
-    void onUpdate();
     void onSettings();
     void onAbout();
     void timeout();
     void checking_frame();
     void db_refreshed(PacmanProcessReader * reader);
-    void executePacman();
+    void startFullUpdate();
     void updateRequested();
     void showErrorsRequested();
     void onQuit();
-    void was_error(const QString & error,const QString & command);
     void onShowErrors();
     void _areUpdates(const QStringList & packages);
     void onGuiExited();
@@ -59,6 +57,10 @@ private slots:
     void onActionCheckUIUpdate(bool flag);
     void onActionUpdateUIUpdate(bool flag);
     void onActionErrorsUIUpdate(bool flag);
+    void add_post_messages(const QString & package,const QStringList & messages);
+    void onLoadQPacman();
+    void start_wait_animation();
+    void stop_wait_animation();
 
 public slots:
     void terminate();
@@ -73,12 +75,14 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-    QSystemTrayIcon * tray;
+    QSystemTrayIcon tray;
     QAction * checkUpdatesAction;
     QAction * updateAction;
     QAction * errorAction;
+    QAction * qpacmanAction;
     QTimer timer;
     QMovie movie;
+    QMovie wait_movie;
     QStringList packages;
     int interval;
     int err_interval;
@@ -95,12 +99,15 @@ private:
     QLockFile checkingLock;
     ExternalPlayer good_player;
     ExternalPlayer bad_player;
+    QString m_messages;
+    QMenu * tray_menu;
 
     bool isGuiAppActive();
     void playSoundForCheckOk();
     void playSoundForWasError();
     void showTray(const QIcon & icon);
     void hideTray();
+    void was_error(const QString & error,const QString & command);
 };
 
 #endif // MAINWINDOW_H

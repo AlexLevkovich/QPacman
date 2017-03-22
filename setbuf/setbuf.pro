@@ -7,6 +7,10 @@ CONFIG += plugin
 SOURCES += \
     libstdbuf.c
 
+isEmpty(INSTALL_PREFIX) {
+    INSTALL_PREFIX = /usr
+}
+
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/
 INSTALLS += target
 

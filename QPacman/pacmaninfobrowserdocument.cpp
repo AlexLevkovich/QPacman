@@ -5,6 +5,7 @@
 
 #include "pacmaninfobrowserdocument.h"
 #include "pacmanitemmodel.h"
+#include "static.h"
 #include <QFontMetrics>
 #include <QTextEdit>
 #include <QPainter>
@@ -31,10 +32,7 @@ QVariant PacmanInfoBrowserDocument::loadResource(int type,const QUrl & name) {
         else pixmap = QPixmap(":/pics/installed.png");
     }
     else {
-        QProcess pacman;
-        pacman.start(QString("%1 -Qi %2").arg(PACMAN_BIN).arg(img_name));
-        pacman.waitForFinished(-1);
-        if (pacman.exitCode() == 0) pixmap = QPixmap(":/pics/installed.png");
+        if (Static::isPackageInstalled(img_name) == 0) pixmap = QPixmap(":/pics/installed.png");
         else pixmap = QPixmap(":/pics/notinstalled.png");
     }
 
@@ -47,12 +45,30 @@ QVariant PacmanInfoBrowserDocument::loadResource(int type,const QUrl & name) {
     int img_height = qMin(height,pixmap.height());
     pixmap = pixmap.scaled((18*img_height)/15,img_height,Qt::KeepAspectRatio,Qt::SmoothTransformation);
     QPixmap ret(pixmap.width()+2+metrix.width(text),height);
+
+    QString package_name = text;
+    int package_name_len;
+    QString description;
+    int index = text.indexOf(' ');
+    if (index > 0) {
+        package_name = text.mid(0,index);
+        description = text.mid(index+1);
+        metrix.width(package_name);
+    }
+    package_name_len = metrix.width(package_name);
+
     ret.fill(Qt::transparent);
     QPainter painter(&ret);
     painter.drawPixmap(0,ret.height()-pixmap.height(),pixmap);
     painter.setFont(font);
     painter.setPen(textEdit->palette().color(QPalette::Link));
-    painter.drawText(QRect(pixmap.width()+2,ret.height()-metrix.height(),ret.width()-pixmap.width()-2,metrix.height()),Qt::AlignLeft|Qt::AlignBottom,text);
+    painter.drawText(QRect(pixmap.width()+2,ret.height()-metrix.height(),ret.width()-pixmap.width()-2,metrix.height()),Qt::AlignLeft|Qt::AlignBottom,package_name);
+    if (!description.isEmpty()) {
+        font.setUnderline(false);
+        painter.setFont(font);
+        painter.setPen(textEdit->palette().color(QPalette::Text));
+        painter.drawText(QRect(pixmap.width()+2+package_name_len,ret.height()-metrix.height(),ret.width()-pixmap.width()-2-package_name_len,metrix.height()),Qt::AlignLeft|Qt::AlignBottom," "+description);
+    }
 
     img_cache[name] = ret;
     return ret;

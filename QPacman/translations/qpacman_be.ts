@@ -4,45 +4,38 @@
 <context>
     <name>CategoryToolButton</name>
     <message>
-        <location filename="../categorytoolbutton.cpp" line="+11"/>
         <source>Search by name</source>
-        <translation type="unfinished">Пошук па імя</translation>
+        <translation type="obsolete">Пошук па імя</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Search by provider</source>
-        <translation type="unfinished">Шукаць па паданнях</translation>
+        <translation type="obsolete">Шукаць па паданнях</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Search in descriptions</source>
-        <translation type="unfinished">Шукаць у апісаннях</translation>
+        <translation type="obsolete">Шукаць у апісаннях</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Search by file name</source>
-        <translation type="unfinished">Шукаць па імя файла</translation>
+        <translation type="obsolete">Шукаць па імя файла</translation>
     </message>
 </context>
 <context>
     <name>DBRefreshDialog</name>
     <message>
-        <location filename="../dbrefreshdialog.cpp" line="+13"/>
         <source>Please wait...</source>
-        <translation type="unfinished">Пачакайце калі ласка...</translation>
+        <translation type="obsolete">Пачакайце калі ласка...</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Synchronizing package databases...</source>
-        <translation type="unfinished">Сінхранізацыя баз дадзеных...</translation>
+        <translation type="obsolete">Сінхранізацыя баз дадзеных...</translation>
     </message>
 </context>
 <context>
     <name>ErrorDialog</name>
     <message>
-        <location filename="../errordialog.h" line="+15"/>
         <source>Pacman&apos;s error</source>
-        <translation type="unfinished">Pacman: памылка</translation>
+        <translation type="obsolete">Pacman: памылка</translation>
     </message>
     <message>
         <source>Show Log</source>
@@ -60,14 +53,12 @@
 <context>
     <name>FilesDownloadDialog</name>
     <message>
-        <location filename="../filesdownloaddialog.ui"/>
         <source>Downloading...</source>
-        <translation type="unfinished">Запампоўванне...</translation>
+        <translation type="obsolete">Запампоўванне...</translation>
     </message>
     <message>
-        <location/>
         <source>Overal progress</source>
-        <translation type="unfinished">Агульны прагрэс</translation>
+        <translation type="obsolete">Агульны прагрэс</translation>
     </message>
     <message>
         <source>Error(s) during the downloading of
@@ -131,24 +122,20 @@
 <context>
     <name>InstallProgressDialog</name>
     <message>
-        <location filename="../installprogressdialog.cpp" line="+20"/>
         <source>Installing the packages...</source>
-        <translation type="unfinished">Усталёўка пакетаў...</translation>
+        <translation type="obsolete">Усталёўка пакетаў...</translation>
     </message>
     <message>
-        <location line="+3"/>
         <source>Preparing...</source>
-        <translation type="unfinished">Падрыхтоўка...</translation>
+        <translation type="obsolete">Падрыхтоўка...</translation>
     </message>
     <message>
-        <location line="+15"/>
         <source>Installing %1...</source>
-        <translation type="unfinished">Усталяванне %1...</translation>
+        <translation type="obsolete">Усталяванне %1...</translation>
     </message>
     <message>
-        <location line="+9"/>
         <source>Removing %1...</source>
-        <translation type="unfinished">Выдаленне %1...</translation>
+        <translation type="obsolete">Выдаленне %1...</translation>
     </message>
 </context>
 <context>
@@ -178,7 +165,7 @@
         <translation type="obsolete">Пакеты небылі ўстаноўлены!!! Калі ласка праверце залежнасці!</translation>
     </message>
     <message>
-        <location filename="../localpackagemainwindow.cpp" line="+121"/>
+        <location filename="../localpackagemainwindow.cpp" line="+119"/>
         <source>Post messages...</source>
         <translation type="unfinished">Паведамленні пасля ўстаноўкі...</translation>
     </message>
@@ -191,9 +178,8 @@
 <context>
     <name>LogWindow</name>
     <message>
-        <location filename="../logwindow.ui"/>
         <source>Message Log</source>
-        <translation type="unfinished">Лог паведамленняў</translation>
+        <translation type="obsolete">Лог паведамленняў</translation>
     </message>
 </context>
 <context>
@@ -289,7 +275,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+220"/>
+        <location filename="../mainwindow.cpp" line="+231"/>
         <source>The contents of cache directory will be removed.
 Are you sure to continue?</source>
         <translation type="unfinished">Усе змесціва папкі з кэшам будзе выдаленае. Вы ўпэўненыя?</translation>
@@ -298,6 +284,10 @@ Are you sure to continue?</source>
         <location line="+4"/>
         <source>The contents of cache directory was removed succesfully!</source>
         <translation type="unfinished">Змесціва папкі з кэшам было паспяхова выдаленае!</translation>
+    </message>
+    <message>
+        <source>Post messages...</source>
+        <translation type="obsolete">Паведамленні пасля ўстаноўкі...</translation>
     </message>
     <message>
         <location filename="../mainwindow.ui"/>
@@ -364,39 +354,49 @@ Are you sure to continue?</source>
         <source>Sets the selection to the next item</source>
         <translation type="unfinished">Вылучае наступны пункт у спісе</translation>
     </message>
+    <message>
+        <location/>
+        <source>Full Update</source>
+        <translation type="unfinished">Поўнае абнаўленне</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Full update of the system</source>
+        <translation type="unfinished">Поўнае абнаўленне сістэмы</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Alt+U</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PackageChangesDialog</name>
     <message>
-        <location filename="../packagechangesdialog.ui"/>
         <source>Additional changes...</source>
-        <translation type="unfinished">Дадатковыя змены...</translation>
+        <translation type="obsolete">Дадатковыя змены...</translation>
     </message>
     <message>
-        <location/>
         <source>Name</source>
-        <translation type="unfinished">Назва</translation>
+        <translation type="obsolete">Назва</translation>
     </message>
     <message>
-        <location/>
         <source>Version</source>
-        <translation type="unfinished">Версія</translation>
+        <translation type="obsolete">Версія</translation>
     </message>
     <message>
-        <location filename="../packagechangesdialog.cpp" line="+29"/>
         <source>The following packages will be removed</source>
-        <translation type="unfinished">Пакеты для выдалення</translation>
+        <translation type="obsolete">Пакеты для выдалення</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>The following packages will be installed</source>
-        <translation type="unfinished">Пакеты для ўсталёўкі</translation>
+        <translation type="obsolete">Пакеты для ўсталёўкі</translation>
     </message>
 </context>
 <context>
     <name>PacmanItemModel</name>
     <message>
-        <location filename="../pacmanitemmodel.cpp" line="+58"/>
+        <location filename="../pacmanitemmodel.cpp" line="+59"/>
         <source>Name of package</source>
         <translation type="unfinished">Назва пакета</translation>
     </message>
@@ -424,29 +424,12 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanProcessReader</name>
     <message>
-        <location filename="../pacmanprocessreader.cpp" line="+202"/>
         <source>The process failed to start.</source>
-        <translation type="unfinished">Працэс не ўдалося запусціць.</translation>
+        <translation type="obsolete">Працэс не ўдалося запусціць.</translation>
     </message>
     <message>
-        <location line="+3"/>
         <source>The process crashed some time after starting successfully.</source>
-        <translation type="unfinished">Працэс убіўся праз некаторы час пасля запуску.</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>The last waitFor...() function timed out.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>An error occurred when attempting to write to the process-&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>An error occurred when attempting to read from the process-&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Працэс убіўся праз некаторы час пасля запуску.</translation>
     </message>
     <message>
         <source>An error occurred when attempting to write to the process.</source>
@@ -457,9 +440,8 @@ Are you sure to continue?</source>
         <translation type="obsolete">Пры спробе чытання з працэсу адбылася памылка.</translation>
     </message>
     <message>
-        <location line="+3"/>
         <source>An unknown error occurred.</source>
-        <translation type="unfinished">Адбылася невядомая памылка.</translation>
+        <translation type="obsolete">Адбылася невядомая памылка.</translation>
     </message>
     <message>
         <source>The server is busy or invalid command was passed!</source>
@@ -469,19 +451,16 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanProvidersDialog</name>
     <message>
-        <location filename="../pacmanprovidersdialog.ui"/>
         <source>Choose the provider</source>
-        <translation type="unfinished">Абярыце пакет</translation>
+        <translation type="obsolete">Абярыце пакет</translation>
     </message>
     <message>
-        <location/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Some providers are available, select one, please...&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Магчымы варыянты - абярыце прымальны для вас...&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Магчымы варыянты - абярыце прымальны для вас...&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location/>
         <source>Name</source>
-        <translation type="unfinished">Назва</translation>
+        <translation type="obsolete">Назва</translation>
     </message>
 </context>
 <context>
@@ -505,7 +484,7 @@ Are you sure to continue?</source>
 <context>
     <name>PacmanView</name>
     <message>
-        <location filename="../pacmanview.cpp" line="+94"/>
+        <location filename="../pacmanview.cpp" line="+62"/>
         <source>%1 replaces %2.
 Do you want to mark it for installation?</source>
         <translation type="unfinished">%1 замяняе %2.
@@ -519,148 +498,101 @@ Do you want to mark it for installation?</source>
 <context>
     <name>PostErrorDlg</name>
     <message>
-        <location filename="../posterrordlg.cpp" line="+22"/>
         <source>Error(s) during executing of the command:
 %1</source>
-        <translation type="unfinished">Памылкі пры выкананні каманды:
+        <translation type="obsolete">Памылкі пры выкананні каманды:
 %1</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../pacmanentry.cpp" line="+430"/>
-        <location line="+30"/>
         <source>Name</source>
-        <translation type="unfinished">Назва</translation>
+        <translation type="obsolete">Назва</translation>
     </message>
     <message>
-        <location line="-30"/>
-        <location line="+36"/>
         <source>Version</source>
-        <translation type="unfinished">Версія</translation>
+        <translation type="obsolete">Версія</translation>
     </message>
     <message>
-        <location line="-36"/>
-        <location line="+41"/>
         <source>Description</source>
-        <translation type="unfinished">Апісанне</translation>
+        <translation type="obsolete">Апісанне</translation>
     </message>
     <message>
-        <location line="-40"/>
-        <location line="+45"/>
         <source>Architecture</source>
-        <translation type="unfinished">Aрхітэктура</translation>
+        <translation type="obsolete">Aрхітэктура</translation>
     </message>
     <message>
-        <location line="-45"/>
-        <location line="+50"/>
-        <source>URL</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="-50"/>
-        <location line="+55"/>
         <source>Licenses</source>
-        <translation type="unfinished">Ліцэнзіі</translation>
+        <translation type="obsolete">Ліцэнзіі</translation>
     </message>
     <message>
-        <location line="-54"/>
-        <location line="+58"/>
         <source>Groups</source>
-        <translation type="unfinished">Групы</translation>
+        <translation type="obsolete">Групы</translation>
     </message>
     <message>
-        <location line="-58"/>
-        <location line="+64"/>
         <source>Provides</source>
-        <translation type="unfinished">Прадстаўляе</translation>
+        <translation type="obsolete">Прадстаўляе</translation>
     </message>
     <message>
-        <location line="-64"/>
-        <location line="+70"/>
         <source>Depends On</source>
-        <translation type="unfinished">Залежыць ад</translation>
+        <translation type="obsolete">Залежыць ад</translation>
     </message>
     <message>
-        <location line="-69"/>
-        <location line="+77"/>
         <source>Optional Deps</source>
-        <translation type="unfinished">Дадаткова</translation>
+        <translation type="obsolete">Дадаткова</translation>
     </message>
     <message>
-        <location line="-77"/>
-        <location line="+86"/>
         <source>Required By</source>
-        <translation type="unfinished">Патрэбен пакетам</translation>
+        <translation type="obsolete">Патрэбен пакетам</translation>
     </message>
     <message>
-        <location line="-86"/>
-        <location line="+92"/>
         <source>Optional For</source>
-        <translation type="unfinished">Неабавязковы для</translation>
+        <translation type="obsolete">Неабавязковы для</translation>
     </message>
     <message>
-        <location line="-91"/>
-        <location line="+97"/>
         <source>Conflicts With</source>
-        <translation type="unfinished">Канфліктуе з</translation>
+        <translation type="obsolete">Канфліктуе з</translation>
     </message>
     <message>
-        <location line="-97"/>
-        <location line="+103"/>
         <source>Replaces</source>
-        <translation type="unfinished">Замяняе</translation>
+        <translation type="obsolete">Замяняе</translation>
     </message>
     <message>
-        <location line="-103"/>
-        <location line="+110"/>
         <source>Installed Size</source>
-        <translation type="unfinished">Усталяваны памер</translation>
+        <translation type="obsolete">Усталяваны памер</translation>
     </message>
     <message>
-        <location line="-109"/>
-        <location line="+114"/>
         <source>Packager</source>
-        <translation type="unfinished">Зборшчык</translation>
+        <translation type="obsolete">Зборшчык</translation>
     </message>
     <message>
-        <location line="-114"/>
-        <location line="+119"/>
         <source>Build Date</source>
-        <translation type="unfinished">Дата зборкі</translation>
+        <translation type="obsolete">Дата зборкі</translation>
     </message>
     <message>
-        <location line="-119"/>
-        <location line="+125"/>
         <source>Install Date</source>
-        <translation type="unfinished">Дата ўсталёўкі</translation>
+        <translation type="obsolete">Дата ўсталёўкі</translation>
     </message>
     <message>
-        <location line="-124"/>
-        <location line="+131"/>
         <source>Install Reason</source>
-        <translation type="unfinished">Прычына ўсталёўкі</translation>
+        <translation type="obsolete">Прычына ўсталёўкі</translation>
     </message>
     <message>
-        <location line="+0"/>
         <source>Explicitly installed</source>
-        <translation type="unfinished">Усталяваны асабіста</translation>
+        <translation type="obsolete">Усталяваны асабіста</translation>
     </message>
     <message>
-        <location line="+0"/>
         <source>Installed as a dependency for another package</source>
-        <translation type="unfinished">Усталяваны як залежнасць для іншага пакета</translation>
+        <translation type="obsolete">Усталяваны як залежнасць для іншага пакета</translation>
     </message>
     <message>
-        <location line="+0"/>
         <source>Make it dependent</source>
-        <translation type="unfinished">Зрабіць залежным</translation>
+        <translation type="obsolete">Зрабіць залежным</translation>
     </message>
     <message>
-        <location line="+0"/>
         <source>Make it explicit</source>
-        <translation type="unfinished">Зрабіць асабіста усталяваным</translation>
+        <translation type="obsolete">Зрабіць асабіста усталяваным</translation>
     </message>
     <message>
         <location filename="../pacmanitemmodel.cpp" line="-35"/>
@@ -687,54 +619,45 @@ Do you want to mark it for installation?</source>
         <translation type="obsolete">Усё</translation>
     </message>
     <message>
-        <location filename="../static.cpp" line="+31"/>
         <source>All</source>
-        <translation type="unfinished">Усё</translation>
+        <translation type="obsolete">Усё</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Error...</source>
-        <translation type="unfinished">Памылка...</translation>
+        <translation type="obsolete">Памылка...</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Warning...</source>
-        <translation type="unfinished">Папярэджанне...</translation>
+        <translation type="obsolete">Папярэджанне...</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Information...</source>
-        <translation type="unfinished">Інфармацыя...</translation>
+        <translation type="obsolete">Інфармацыя...</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Question...</source>
-        <translation type="unfinished">Пытанне...</translation>
+        <translation type="obsolete">Пытанне...</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>The packages were installed successfully!</source>
-        <translation type="unfinished">Пакеты былі ўдала ўстаноўлены!</translation>
+        <translation type="obsolete">Пакеты былі ўдала ўстаноўлены!</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Post messages for %1 package...</source>
-        <translation type="unfinished">Паведамленні для %1 пакета...</translation>
+        <translation type="obsolete">Паведамленні для %1 пакета...</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>The root&apos;s rights are needed to continue!!!</source>
-        <translation type="unfinished">Для працягу неабходныя правы супер-карыстальніка!!!</translation>
+        <translation type="obsolete">Для працягу неабходныя правы супер-карыстальніка!!!</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>It is not good idea to terminate the pacman&apos;s execution.
 Are you sure?</source>
-        <translation type="unfinished">Гэта дрэнная ідэя перарываць выкананне pacman. 
+        <translation type="obsolete">Гэта дрэнная ідэя перарываць выкананне pacman. 
 Вы ўпэўненыя?</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="+42"/>
+        <location filename="../main.cpp" line="+47"/>
         <source>You should not be root!</source>
         <translation type="unfinished">Вы не павінны быць супер-карыстальнікам!</translation>
     </message>
@@ -757,68 +680,20 @@ Please wait some time.</source>
         <source>QPacmanServer has killed! Please restart it.</source>
         <translation type="obsolete">QPacmanServer выгрузіўся! Перагрузіце яго.</translation>
     </message>
-    <message>
-        <location filename="../byteshumanizer.cpp" line="+6"/>
-        <source>B</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>KiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>MiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>GiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>TiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>PiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>EiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>ZiB</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>YiB</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>RemoveProgressDialog</name>
     <message>
-        <location filename="../removeprogressdialog.cpp" line="+18"/>
         <source>Removing the packages...</source>
-        <translation type="unfinished">Выдаленне пакетаў...</translation>
+        <translation type="obsolete">Выдаленне пакетаў...</translation>
     </message>
     <message>
-        <location line="+3"/>
         <source>Preparing...</source>
-        <translation type="unfinished">Падрыхтоўка...</translation>
+        <translation type="obsolete">Падрыхтоўка...</translation>
     </message>
     <message>
-        <location line="+12"/>
         <source>Removing %1...</source>
-        <translation type="unfinished">Выдаленне %1...</translation>
+        <translation type="obsolete">Выдаленне %1...</translation>
     </message>
 </context>
 <context>
@@ -832,19 +707,12 @@ Please wait some time.</source>
 <context>
     <name>RootDialog</name>
     <message>
-        <location filename="../rootdialog.ui"/>
-        <source>QPacman</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You need &lt;span style=&quot; font-weight:600;&quot;&gt;root privileges&lt;/span&gt; for the operations that can modify the system. Please enter &lt;span style=&quot; font-weight:600;&quot;&gt;root&apos;s&lt;/span&gt; password below or click &lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; to use this program as a viewer only.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вы павінны мець &lt;span style=&quot; font-weight:600;&quot;&gt;прывілеі супер-карыстальніка&lt;/span&gt; для аперацый якія змяняюць што альбо ў сістэме. Калі ласка увядзіце пароль для &lt;span style=&quot; font-weight:600;&quot;&gt;root&lt;/span&gt; або націсніце &lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; каб выкарыстоўваць гэтую праграму толькі як прагляднік.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вы павінны мець &lt;span style=&quot; font-weight:600;&quot;&gt;прывілеі супер-карыстальніка&lt;/span&gt; для аперацый якія змяняюць што альбо ў сістэме. Калі ласка увядзіце пароль для &lt;span style=&quot; font-weight:600;&quot;&gt;root&lt;/span&gt; або націсніце &lt;span style=&quot; font-weight:600;&quot;&gt;%1&lt;/span&gt; каб выкарыстоўваць гэтую праграму толькі як прагляднік.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location/>
         <source>Password: </source>
-        <translation type="unfinished">Пароль: </translation>
+        <translation type="obsolete">Пароль: </translation>
     </message>
 </context>
 <context>
@@ -1099,44 +967,32 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>MessageDialog</name>
-    <message>
-        <location filename="../messagedialog.h" line="+15"/>
-        <source>Pacman&apos;s message</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>PacmanDBRefresher</name>
     <message>
-        <location filename="../pacmandbrefresher.cpp" line="+26"/>
         <source>Cannot copy pacman.conf to %1</source>
-        <translation type="unfinished">Не ўдалося капіраваць pacman.conf у %1</translation>
+        <translation type="obsolete">Не ўдалося капіраваць pacman.conf у %1</translation>
     </message>
 </context>
 <context>
     <name>PacmanInstallPackagesReader</name>
     <message>
-        <location filename="../pacmaninstallpackagesreader.cpp" line="+42"/>
         <source>Cannot copy pacman.conf to %1</source>
-        <translation type="unfinished">Не ўдалося капіраваць pacman.conf у %1</translation>
+        <translation type="obsolete">Не ўдалося капіраваць pacman.conf у %1</translation>
     </message>
 </context>
 <context>
     <name>PacmanRemovePackagesReader</name>
     <message>
-        <location filename="../pacmanremovepackagesreader.cpp" line="+33"/>
         <source>Cannot copy pacman.conf to %1</source>
-        <translation type="unfinished">Не ўдалося капіраваць pacman.conf у %1</translation>
+        <translation type="obsolete">Не ўдалося капіраваць pacman.conf у %1</translation>
     </message>
 </context>
 <context>
     <name>PacmanSetupInfoReader</name>
     <message>
-        <location filename="../pacmansetupinforeader.cpp" line="+50"/>
         <source>QPacman: Cannot correctly parse the pacman&apos;s output!!!
 </source>
-        <translation type="unfinished">QPacman: Не атрымоўваецца правільна разабраць выхад з pacman!!!
+        <translation type="obsolete">QPacman: Не атрымоўваецца правільна разабраць выхад з pacman!!!
 </translation>
     </message>
 </context>
@@ -1151,6 +1007,13 @@ p, li { white-space: pre-wrap; }
         <location line="+1"/>
         <source>Select All</source>
         <translation type="unfinished">Вылучыць ўсе</translation>
+    </message>
+</context>
+<context>
+    <name>PacmanUpdatePackagesReader</name>
+    <message>
+        <source>Cannot copy pacman.conf to %1</source>
+        <translation type="obsolete">Не ўдалося капіраваць pacman.conf у %1</translation>
     </message>
 </context>
 </TS>

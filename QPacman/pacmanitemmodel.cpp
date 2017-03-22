@@ -4,6 +4,7 @@
 ********************************************************************************/
 
 #include "pacmanitemmodel.h"
+#include "pacmanfilefinder.h"
 #include <QFontMetrics>
 #include <QWidget>
 #include <QTreeView>
@@ -330,16 +331,28 @@ void PacmanItemModel::sort() {
 
 QList<int> PacmanItemModel::filterRecords(const QString & text,CategoryToolButton::ItemId cItemId,FilterToolButton::ItemId fItemId,const QString & group,const QString & repo) {
     QList<int> list;
+
+    QString packageName;
+    if (cItemId == CategoryToolButton::IS_FILE_NAME) {
+        PacmanFileFinder fileFinder(text);
+        fileFinder.waitToComplete();
+        packageName = fileFinder.package();
+    }
+
     for (int i=0;i<rows.count();i++) {
+        bool text_is_ok = false;
+        if (text.isEmpty() && packageName.isEmpty() && cItemId == CategoryToolButton::IS_FILE_NAME) text_is_ok = true;
+        else text_is_ok = (cItemId == CategoryToolButton::IS_FILE_NAME)?(rows[i]->toString() == packageName):rows[i]->containsText(text,cItemId);
+
         if (group.isEmpty()) {
-            if (((fItemId == FilterToolButton::IS_INSTALLED) && !rows[i]->isInstalled()) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_NONINSTALLED) && rows[i]->isInstalled()) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_NEEDUPDATE) && !rows[i]->isUpdate()) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_ORPHANED) && !rows[i]->isOrphaned()) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
-            else if (((fItemId == FilterToolButton::IS_MARKED) && !rows[i]->isChosen()) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
+            if (((fItemId == FilterToolButton::IS_INSTALLED) && !rows[i]->isInstalled()) || !text_is_ok || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_NONINSTALLED) && rows[i]->isInstalled()) || !text_is_ok || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_NEEDUPDATE) && !rows[i]->isUpdate()) || !text_is_ok || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_ORPHANED) && !rows[i]->isOrphaned()) || !text_is_ok || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
+            else if (((fItemId == FilterToolButton::IS_MARKED) && !rows[i]->isChosen()) || !text_is_ok || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
         }
         else{
-            if (!rows[i]->ownedByGroup(group) || !rows[i]->containsText(text,cItemId) || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
+            if (!rows[i]->ownedByGroup(group) || !text_is_ok || ((rows[i]->repo != repo) && !repo.isEmpty() && (rows[i]->repo != Static::RepoAll_Str))) list.append(i);
         }
     }
 

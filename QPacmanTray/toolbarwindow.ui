@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>426</width>
-    <height>46</height>
+    <height>54</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,7 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="pics.qrc">
+   <iconset>
     <normaloff>:/pics/PacmanTray-arch_logo</normaloff>:/pics/PacmanTray-arch_logo</iconset>
   </property>
   <widget class="QWidget" name="centralwidget"/>
@@ -61,19 +61,19 @@
   </action>
   <action name="actionUpdate_now">
    <property name="icon">
-    <iconset>
-     <normaloff>:/pics/Pacman-arch_logo.png</normaloff>:/pics/Pacman-arch_logo.png</iconset>
+    <iconset resource="../QPacman/qpacman.qrc">
+     <normaloff>:/pics/fullupdate.png</normaloff>:/pics/fullupdate.png</iconset>
    </property>
    <property name="text">
-    <string>Load QPacman...</string>
+    <string>System Update</string>
    </property>
    <property name="toolTip">
-    <string>Executes QPacman application and selects updates to install</string>
+    <string>Start updating of the system</string>
    </property>
   </action>
   <action name="actionErrors">
    <property name="icon">
-    <iconset resource="pics.qrc">
+    <iconset resource="../QPacman/qpacman.qrc">
      <normaloff>:/pics/kpk-important.png</normaloff>:/pics/kpk-important.png</iconset>
    </property>
    <property name="text">
@@ -85,6 +85,7 @@
   </action>
  </widget>
  <resources>
+  <include location="../QPacman/qpacman.qrc"/>
   <include location="pics.qrc"/>
  </resources>
  <connections/>
