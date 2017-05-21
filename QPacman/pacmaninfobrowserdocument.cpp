@@ -11,10 +11,6 @@
 #include <QPainter>
 #include <QProcess>
 
-#if QT_VERSION < 0x050000
-    #define query encodedQuery
-#endif
-
 PacmanInfoBrowserDocument::PacmanInfoBrowserDocument(QObject *parent) : QTextDocument(parent) {
     m_model = NULL;
 }
@@ -40,7 +36,7 @@ QVariant PacmanInfoBrowserDocument::loadResource(int type,const QUrl & name) {
         else pixmap = QPixmap(":/pics/notinstalled.png");
     }
 
-    QString text = PacmanEntry::urlParmsToPacmanDep(img_name + '?' + name.query());
+    QString text = PacmanEntry::urlParmsToPacmanDep(img_name + '?' + Static::urlQuery(name));
     QTextEdit * textEdit = (QTextEdit *)parent();
     QFont font = textEdit->font();
     font.setUnderline(true);
