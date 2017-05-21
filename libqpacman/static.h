@@ -8,6 +8,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QUrl>
 #include <QTextDocumentFragment>
 #include "libqpacman_global.h"
 #include <QMainWindow>
