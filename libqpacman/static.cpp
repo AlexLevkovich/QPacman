@@ -29,10 +29,6 @@ QString Static::RootRightsNeeded_Str;
 QString Static::PacmanTerminate_Str;
 QString Static::RepoAll_Str;
 
-#if QT_VERSION < 0x050000
-    #define query encodedQuery
-#endif
-
 void Static::init_tr_variables() {
     RepoAll_Str = QObject::tr("All");
     Error_Str = QObject::tr("Error...");
@@ -103,6 +99,21 @@ const QList<QAction *> Static::childrenActions(QObject * main_object) {
     return actions;
 }
 
+const QString Static::urlQuery(const QUrl & url) {
+#if QT_VERSION < 0x050000    
+    QList<QPair<QString, QString> > queries = url.queryItems();
+    QString ret;
+    for (int i=0;i<queries.count();i++) {
+        QPair<QString, QString> query = queries.at(i);
+        ret += (ret.isEmpty()?"":"&")+query.first+"="+query.second;
+    }
+    
+    return ret;
+#else    
+    return url.query();
+#endif
+}
+
 const QString Static::htmlFragmentToText(const QTextDocumentFragment & fragment) {
     struct TextMarker {
         qint64 begin_index;
@@ -120,7 +131,7 @@ const QString Static::htmlFragmentToText(const QTextDocumentFragment & fragment)
         marker.count = imgTagRegex.matchedLength();
         url.setUrl(imgTagRegex.cap(1));
         if (url.scheme() == "qpc") {
-            marker.replace_to = PacmanEntry::urlParmsToPacmanDep(url.path().mid(1)+"?"+url.query());
+            marker.replace_to = PacmanEntry::urlParmsToPacmanDep(url.path().mid(1)+"?"+urlQuery(url));        
             markers.append(marker);
         }
         marker.begin_index += marker.count;
