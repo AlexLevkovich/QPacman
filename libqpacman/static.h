@@ -35,6 +35,7 @@ public:
     static const QString htmlFragmentToText(const QTextDocumentFragment & fragment);
     static int isPackageInstalled(const QString & name);
     static void makeCentered(QWidget * wnd);
+    static const QString urlQuery(const QUrl & url);
 };
 
 #endif // STATIC_H
