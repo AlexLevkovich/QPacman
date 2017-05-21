@@ -29,6 +29,10 @@ QString Static::RootRightsNeeded_Str;
 QString Static::PacmanTerminate_Str;
 QString Static::RepoAll_Str;
 
+#if QT_VERSION < 0x050000
+    #define query encodedQuery
+#endif
+
 void Static::init_tr_variables() {
     RepoAll_Str = QObject::tr("All");
     Error_Str = QObject::tr("Error...");
