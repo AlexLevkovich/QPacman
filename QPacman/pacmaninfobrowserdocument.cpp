@@ -11,6 +11,10 @@
 #include <QPainter>
 #include <QProcess>
 
+#if QT_VERSION < 0x050000
+    #define query encodedQuery
+#endif
+
 PacmanInfoBrowserDocument::PacmanInfoBrowserDocument(QObject *parent) : QTextDocument(parent) {
     m_model = NULL;
 }
