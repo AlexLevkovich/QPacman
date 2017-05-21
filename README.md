@@ -22,5 +22,5 @@ make install
 
 Qt verions: QT4 or QT5
 
-Depends: 'Qt >= 4', 'pacman' 'vorbis-tools' 'wget' 'procps-ng' 'coreutils' 'util-linux'
+Depends: 'Qt >= 4', 'pacman' 'vorbis-tools' 'wget' 'coreutils' 'xz' 'tar' 'util-linux'
 
