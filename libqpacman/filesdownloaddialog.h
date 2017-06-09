@@ -34,6 +34,7 @@ private slots:
 
 public slots:
     void setNewDownload(const QString & url);
+    virtual void reject();
 
 signals:
     void canceled();
