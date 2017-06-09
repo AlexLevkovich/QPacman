@@ -8,7 +8,7 @@
 #include <QFileInfo>
 #include <QCloseEvent>
 #include <QKeyEvent>
-#include <QPushButton>
+#include <QApplication>
 #include "byteshumanizer.h"
 #include "static.h"
 #include "pacmaninstallpackagesreader.h"
@@ -27,10 +27,6 @@ FilesDownloadDialog::FilesDownloadDialog(PacmanUpdatePackagesReader * installer,
 
     Static::makeCentered(this);
     
-#if QT_VERSION < 0x050000
-    connect(ui->buttonBox->button(QDialogButtonBox::Cancel),SIGNAL(clicked()),this,SLOT(reject()));
-#endif      
-
     connect(installer,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(finished(PacmanProcessReader *)));
     connect(installer,SIGNAL(start_download(const QString &)),this,SLOT(setNewDownload(const QString &)));
     connect(installer,SIGNAL(download_progress(int)),this,SLOT(setValue(int)));
@@ -78,3 +74,11 @@ void FilesDownloadDialog::keyPressEvent(QKeyEvent *e) {
     if(e->key() == Qt::Key_Escape) e->ignore();
     else QDialog::keyPressEvent(e);
 }
+
+#if QT_VERSION < 0x050000
+void FilesDownloadDialog::reject() {
+    QCloseEvent event;
+    QApplication::sendEvent(this, &event);
+    if (event.isAccepted()) QDialog::reject();
+}
+#endif   
