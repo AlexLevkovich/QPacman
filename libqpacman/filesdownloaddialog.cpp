@@ -8,6 +8,7 @@
 #include <QFileInfo>
 #include <QCloseEvent>
 #include <QKeyEvent>
+#include <QPushButton>
 #include "byteshumanizer.h"
 #include "static.h"
 #include "pacmaninstallpackagesreader.h"
