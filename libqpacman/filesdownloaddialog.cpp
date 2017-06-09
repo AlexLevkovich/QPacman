@@ -25,6 +25,10 @@ FilesDownloadDialog::FilesDownloadDialog(PacmanUpdatePackagesReader * installer,
     ui->overalBar->setValue(0);
 
     Static::makeCentered(this);
+    
+#if QT_VERSION < 0x050000
+    connect(ui->buttonBox->button(QDialogButtonBox::Cancel),SIGNAL(clicked()),this,SLOT(reject()));
+#endif      
 
     connect(installer,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(finished(PacmanProcessReader *)));
     connect(installer,SIGNAL(start_download(const QString &)),this,SLOT(setNewDownload(const QString &)));
