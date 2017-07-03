@@ -103,11 +103,11 @@ updateqm.variable_out = PRE_TARGETDEPS
 updateqm.CONFIG += no_link
 QMAKE_EXTRA_COMPILERS += updateqm
 
-TRANSLATIONS_OUT = $$TRANS_DIR1/qpacman_ru.qm \
-                   $$TRANS_DIR1/qpacman_be.qm
+qmru.files = $$TRANS_DIR1/qpacman_ru.qm
+qmru.path = $$TRANS_DIR2/
 
-qmtr.files = $$TRANSLATIONS_OUT
-qmtr.path = $$TRANS_DIR2
+qmbe.files = $$TRANS_DIR1/qpacman_be.qm
+qmbe.path = $$TRANS_DIR2/
 
 desktop.files = $$PWD/QPacman.desktop
 desktop.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/applications/
@@ -121,4 +121,4 @@ kde.files = QPacmanKDEService.desktop
 greaterThan(QT_MAJOR_VERSION, 4): kde.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/kservices5/
 lessThan(QT_MAJOR_VERSION, 5): kde.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/kde4/services/ServiceMenus/
 
-INSTALLS += target qmtr desktop icon kde
+INSTALLS += target qmru qmbe desktop icon kde
