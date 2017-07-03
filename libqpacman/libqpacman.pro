@@ -190,7 +190,7 @@ updatets.commands = $$LUPDATE $$PWD/libqpacman.pro
 QMAKE_EXTRA_TARGETS += updatets
 
 transinstall.files = $$TRANS_DIR1/*.qm
-transinstall.path = $$TRANS_DIR2
+transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
 
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/
 INSTALLS += target transinstall
