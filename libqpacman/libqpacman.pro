@@ -193,6 +193,8 @@ INSTALL_TRANSLATIONS += $$TRANS_DIR1/libqpacman_ru.qm $$TRANS_DIR1/libqpacman_be
 transinstall.files = $$INSTALL_TRANSLATIONS
 transinstall.path = $$TRANS_DIR2
 
+INSTALLS += transinstall
+
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/
-INSTALLS += target transinstall
+INSTALLS += target
 
