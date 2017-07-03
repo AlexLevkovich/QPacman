@@ -25,7 +25,7 @@ export(PATH)
 
 TRANS_DIR1 = $$OUT_PWD/translations
 TRANS_DIR3 = $$OUT_PWD/../libqpacman/translations
-TRANS_DIR2 = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/qpacman
+TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
 
 DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 DEFINES += TRANS_DIR1=\\\"$$TRANS_DIR1\\\"
