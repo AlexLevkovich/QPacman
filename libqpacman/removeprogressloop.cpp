@@ -21,15 +21,7 @@ RemoveProgressLoop::RemoveProgressLoop(const QString & su_password,const QString
     wasCanceled = false;
     waiting_mode = true;
 
-    QStringList names;
-    QString name;
-    QString version;
-    for (int i=0;i<packages.count();i++) {
-        PacmanEntry::parseNameVersion(packages[i],name,version);
-        names.append(name);
-    }
-
-    remover = new PacmanRemovePackagesReader(su_password,names.join(" "),withDeps,this);
+    remover = new PacmanRemovePackagesReader(su_password,packages.join(" "),withDeps,this);
     connect(remover,SIGNAL(finished(PacmanProcessReader *)),this,SLOT(removing_packages_finished(PacmanProcessReader *)));
     connect(remover,SIGNAL(post_messages(const QString &,const QStringList &)),this,SIGNAL(post_messages(const QString &,const QStringList &)));
     connect(remover,SIGNAL(ready_to_process(double)),this,SLOT(readyToProcess(double)));
