@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
 
     QTranslator m_translator3;
     if(!m_translator3.load("libqpacman_" + lang, TRANS_DIR2))
-        m_translator3.load("libqpacman_" + lang, TRANS_DIR1);
+        m_translator3.load("libqpacman_" + lang, TRANS_DIR3);
     QApplication::installTranslator(&m_translator3);
 
     if (Static::userName() == "root") {

@@ -85,33 +85,21 @@ void FilterToolButton::fill(const QStringList & _groups) {
 }
 
 bool FilterToolButton::setFilter(FilterToolButton::ItemId id,const QString & filter) {
-    QList<QAction *> actions = menu()->actions();
-    for (int i=0;i<actions.count();i++) {
-        ItemId item_id = ((actions[i]->menu() == NULL)?((IdAction *)actions[i])->id():IS_UNKNOWN);
-
-        if (actions[i]->menu() == NULL) {
-            bool is_ok = ((id == IS_GROUP) && (id == item_id) && (actions[i]->text() == filter));
-            if (!is_ok) is_ok = ((id != IS_UNKNOWN) && (id != IS_GROUP) && (id == item_id));
-            if (is_ok) {
-                actions[i]->trigger();
-                triggerSignal(actions[i]);
-                return true;
-            }
-        }
-        else if (actions[i]->menu() != NULL) {
-            if (setFilter(actions[i]->menu(),id,filter)) return true;
-        }
-    }
-    return false;
+    return setFilter(menu()->actions(),id,filter);
 }
 
 bool FilterToolButton::setFilter(QMenu * menu,FilterToolButton::ItemId id,const QString & filter) {
-    QList<QAction *> actions = menu->actions();
+    return setFilter(menu->actions(),id,filter);
+}
+
+bool FilterToolButton::setFilter(const QList<QAction *> & actions,FilterToolButton::ItemId id,const QString & filter) {
     for (int i=0;i<actions.count();i++) {
         ItemId item_id = ((actions[i]->menu() == NULL)?((IdAction *)actions[i])->id():IS_UNKNOWN);
 
         if (actions[i]->menu() == NULL) {
-            bool is_ok = ((id == IS_GROUP) && (id == item_id) && (actions[i]->text() == filter));
+            QString filter_str = actions[i]->text();
+            if (filter_str.contains("&")) filter_str = filter_str.replace("&","");
+            bool is_ok = ((id == IS_GROUP) && (id == item_id) && (filter_str == filter));
             if (!is_ok) is_ok = ((id != IS_UNKNOWN) && (id != IS_GROUP) && (id == item_id));
             if (is_ok) {
                 actions[i]->trigger();
@@ -128,7 +116,9 @@ bool FilterToolButton::setFilter(QMenu * menu,FilterToolButton::ItemId id,const 
 
 void FilterToolButton::onMenuItemSelected(QAction * action) {
     is_sel = ((action->menu() == NULL)?((IdAction *)action)->id():IS_UNKNOWN);
-    emit selected(getSelectedId(),action->iconText());
+    QString filter = action->iconText();
+    if (filter.contains("&")) filter = filter.replace("&","");
+    emit selected(getSelectedId(),filter);
 }
 
 void FilterToolButton::triggerSignal(QAction * action) {

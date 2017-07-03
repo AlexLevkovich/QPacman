@@ -24,11 +24,13 @@ PATH = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib:$$PWD/..:$$PATH
 export(PATH)
 
 TRANS_DIR1 = $$OUT_PWD/translations
-TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
+TRANS_DIR3 = $$OUT_PWD/../libqpacman/translations
+TRANS_DIR2 = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/qpacman
 
 DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 DEFINES += TRANS_DIR1=\\\"$$TRANS_DIR1\\\"
 DEFINES += TRANS_DIR2=\\\"$$TRANS_DIR2\\\"
+DEFINES += TRANS_DIR3=\\\"$$TRANS_DIR3\\\"
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -102,7 +104,7 @@ updateqm.CONFIG += no_link
 QMAKE_EXTRA_COMPILERS += updateqm
 
 qm.files = $$TRANS_DIR1/*.qm
-qm.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/qpacman/
+qm.path = $$TRANS_DIR2/
 qm.CONFIG += no_check_exist
 
 desktop.files = QPacman.desktop

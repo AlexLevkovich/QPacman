@@ -38,6 +38,7 @@ private:
     FilterToolButton::ItemId is_sel;
 
     bool setFilter(QMenu * menu,FilterToolButton::ItemId id,const QString & filter);
+    bool setFilter(const QList<QAction *> & actions,FilterToolButton::ItemId id,const QString & filter);
 };
 
 #endif // FILTERTOOLBUTTON_H

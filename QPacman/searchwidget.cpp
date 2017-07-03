@@ -4,6 +4,7 @@
 ********************************************************************************/
 
 #include "searchwidget.h"
+#include "static.h"
 #include "ui_searchwidget.h"
 
 SearchWidget::SearchWidget(QWidget *parent) : ToolBarWidget(parent), ui(new Ui::SearchWidget) {
@@ -34,19 +35,34 @@ void SearchWidget::fillReposInCombo(const QStringList & repos) {
 }
 
 void SearchWidget::onSelectedFilter(FilterToolButton::ItemId itemId,const QString & group) {
-    emit search_changed(ui->searchBox->text(),ui->categoryButton->getSelectedId(),itemId,group,ui->repoButton->iconText());
+    QString repo = ui->repoButton->iconText();
+    if (repo.contains("&")) repo = repo.replace("&","");
+    if (repo == Static::RepoAll_Str) repo.clear();
+    emit search_changed(ui->searchBox->text(),ui->categoryButton->getSelectedId(),itemId,group,repo);
 }
 
 void SearchWidget::onSelectedRepo(const QString & repo) {
-    emit search_changed(ui->searchBox->text(),ui->categoryButton->getSelectedId(),ui->filterButton->getSelectedId(),ui->filterButton->iconText(),repo);
+    QString filter = ui->filterButton->iconText();
+    if (filter.contains("&")) filter = filter.replace("&","");
+    emit search_changed(ui->searchBox->text(),ui->categoryButton->getSelectedId(),ui->filterButton->getSelectedId(),filter,repo);
 }
 
 void SearchWidget::onSelectedCategory(CategoryToolButton::ItemId itemId) {
-    emit search_changed(ui->searchBox->text(),itemId,ui->filterButton->getSelectedId(),ui->filterButton->iconText(),ui->repoButton->iconText());
+    QString repo = ui->repoButton->iconText();
+    if (repo.contains("&")) repo = repo.replace("&","");
+    if (repo == Static::RepoAll_Str) repo.clear();
+    QString filter = ui->filterButton->iconText();
+    if (filter.contains("&")) filter = filter.replace("&","");
+    emit search_changed(ui->searchBox->text(),itemId,ui->filterButton->getSelectedId(),filter,repo);
 }
 
 void SearchWidget::onTextChanged(const QString & text) {
-    emit search_changed(text,ui->categoryButton->getSelectedId(),ui->filterButton->getSelectedId(),ui->filterButton->iconText(),ui->repoButton->iconText());
+    QString repo = ui->repoButton->iconText();
+    if (repo.contains("&")) repo = repo.replace("&","");
+    if (repo == Static::RepoAll_Str) repo.clear();
+    QString filter = ui->filterButton->iconText();
+    if (filter.contains("&")) filter = filter.replace("&","");
+    emit search_changed(text,ui->categoryButton->getSelectedId(),ui->filterButton->getSelectedId(),filter,repo);
 }
 
 void SearchWidget::clearSearchText() {

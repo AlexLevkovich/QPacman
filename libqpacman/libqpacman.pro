@@ -14,13 +14,13 @@ isEmpty(INSTALL_PREFIX) {
 }
 
 TRANS_DIR1 = $$OUT_PWD/translations
-TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
+TRANS_DIR2 = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/qpacman
 
 DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 DEFINES += TRANS_DIR1=\\\"$$TRANS_DIR1\\\"
 DEFINES += TRANS_DIR2=\\\"$$TRANS_DIR2\\\"
 
-SO_BIN1=$$INSTALL_PREFIX/lib/libsetbuf.so
+SO_BIN1=$$INSTALL_ROOT/$$INSTALL_PREFIX/lib/libsetbuf.so
 SO_BIN2=$$PWD/../bin/libsetbuf.so
 DEFINES += SO_BIN1=\\\"$$SO_BIN1\\\"
 DEFINES += SO_BIN2=\\\"$$SO_BIN2\\\"
@@ -190,7 +190,7 @@ updateqm.CONFIG += no_link
 QMAKE_EXTRA_COMPILERS += updateqm
 
 qm.files = $$TRANS_DIR1/*.qm
-qm.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/qpacman/
+qm.path = $$TRANS_DIR2/
 qm.CONFIG += no_check_exist
 
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/

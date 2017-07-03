@@ -19,7 +19,7 @@ void RepoToolButton::fill(const QStringList & repos) {
     connect(this,SIGNAL(triggered(QAction *)),this,SLOT(onMenuItemSelected(QAction *)));
 
     QIcon icon(":pics/repository.ico");
-    menu->addAction(icon,Static::RepoAll_Str);
+    menu->addAction(icon,Static::RepoAll_Str)->setProperty("All",1);
     for (int i=0;i<repos.count();i++) {
         if (!repos[i].isEmpty()) menu->addAction(icon,repos[i]);
     }
@@ -43,13 +43,20 @@ void RepoToolButton::fill(const QStringList & repos) {
 }
 
 void RepoToolButton::onMenuItemSelected(QAction * action) {
-    emit selected(action->iconText());
+    QString repo = action->iconText();
+    if (repo.contains("&")) repo = repo.replace("&","");
+    if (repo == Static::RepoAll_Str) repo.clear();
+    emit selected(repo);
 }
 
 void RepoToolButton::selectMenuItem(const QString & str) {
     QList<QAction *> actions = menu()->actions();
     for (int i=0;i<actions.count();i++) {
-        if (actions.at(i)->text() == str) {
+        QString repo = actions.at(i)->text();
+        if (repo.contains("&")) repo = repo.replace("&","");
+        if (repo == Static::RepoAll_Str) repo.clear();
+
+        if (repo == str) {
             setText(str);
             emit selected(str);
             break;
