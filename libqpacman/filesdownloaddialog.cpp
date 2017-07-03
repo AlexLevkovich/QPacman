@@ -75,10 +75,9 @@ void FilesDownloadDialog::keyPressEvent(QKeyEvent *e) {
     else QDialog::keyPressEvent(e);
 }
 
-#if QT_VERSION < 0x050000
 void FilesDownloadDialog::reject() {
     QCloseEvent event;
     QApplication::sendEvent(this, &event);
     if (event.isAccepted()) QDialog::reject();
 }
-#endif   
+
