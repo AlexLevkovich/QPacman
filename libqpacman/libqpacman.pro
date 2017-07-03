@@ -192,10 +192,10 @@ QMAKE_EXTRA_COMPILERS += updateqm
 TRANSLATIONS_OUT = $$TRANS_DIR1/libqpacman_ru.qm \
                    $$TRANS_DIR1/libqpacman_be.qm
 
-qm.files = $$TRANSLATIONS_OUT
-qm.path = $$TRANS_DIR2
+qmtr.files = $$TRANSLATIONS_OUT
+qmtr.path = $$TRANS_DIR2
 
 
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/
-INSTALLS += target qm
+INSTALLS += target qmtr
 
