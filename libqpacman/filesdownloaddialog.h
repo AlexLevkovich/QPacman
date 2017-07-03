@@ -34,8 +34,10 @@ private slots:
 
 public slots:
     void setNewDownload(const QString & url);
+#if QT_VERSION < 0x050000
     virtual void reject();
-
+#endif
+    
 signals:
     void canceled();
 
