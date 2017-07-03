@@ -43,7 +43,9 @@ void ComboToolButton::showEvent(QShowEvent * event) {
 }
 
 QString ComboToolButton::iconText() const {
-    return (curr_action == NULL)?text():curr_action->iconText();
+    QString text = (curr_action == NULL)?this->text():curr_action->iconText();
+    if (text.contains("&")) text = text.replace("&","");
+    return text;
 }
 
 QAction * ComboToolButton::currentAction() {

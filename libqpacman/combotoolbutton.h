@@ -17,7 +17,7 @@ class LIBQPACMANSHARED_EXPORT ComboToolButton : public QToolButton {
 public:
     explicit ComboToolButton(QWidget *parent = 0);
     QAction * currentAction();
-    QString iconText() const;
+    virtual QString iconText() const;
 
 protected:
     void showEvent(QShowEvent * event);

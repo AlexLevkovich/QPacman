@@ -49,6 +49,12 @@ void RepoToolButton::onMenuItemSelected(QAction * action) {
     emit selected(repo);
 }
 
+QString RepoToolButton::iconText() const {
+    QString text = ComboToolButton::iconText();
+    if (text == Static::RepoAll_Str) text.clear();
+    return text;
+}
+
 void RepoToolButton::selectMenuItem(const QString & str) {
     QList<QAction *> actions = menu()->actions();
     for (int i=0;i<actions.count();i++) {

@@ -189,9 +189,12 @@ updateqm.variable_out = PRE_TARGETDEPS
 updateqm.CONFIG += no_link
 QMAKE_EXTRA_COMPILERS += updateqm
 
-qm.files = $$TRANS_DIR1/*.qm
-qm.path = $$TRANS_DIR2/
-qm.CONFIG += no_check_exist
+TRANSLATIONS_OUT = $$TRANS_DIR1/libqpacman_ru.qm \
+                   $$TRANS_DIR1/libqpacman_be.qm
+
+qm.files = $$TRANSLATIONS_OUT
+qm.path = $$TRANS_DIR2
+
 
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/
 INSTALLS += target qm
