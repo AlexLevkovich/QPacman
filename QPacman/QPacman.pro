@@ -86,28 +86,25 @@ RESOURCES += qpacman.qrc
 TRANSLATIONS = $$PWD/translations/qpacman_ru.ts \
                $$PWD/translations/qpacman_be.ts
 
-LUPDATE = $$[QT_INSTALL_BINS]/lupdate -locations relative -no-ui-lines -no-sort
 LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+for(tsfile, TRANSLATIONS) {
+    qmfile = $$shadowed($$tsfile)
+    qmfile ~= s,.ts$,.qm,
+    qmdir = $$dirname(qmfile)
+    !exists($$qmdir) {
+        mkpath($$qmdir) | error("Aborting.")
+    }
+    command = $$LRELEASE -removeidentical $$tsfile -qm $$qmfile
+    system($$command) | error("Failed to run: $$command")
+}
 
+LUPDATE = $$[QT_INSTALL_BINS]/lupdate -locations relative -no-ui-lines -no-sort
 updatets.files = TRANSLATIONS
 updatets.commands = $$LUPDATE $$PWD/QPacman.pro
-
 QMAKE_EXTRA_TARGETS += updatets
 
-updateqm.depends = updatets
-updateqm.input = TRANSLATIONS
-updateqm.output = translations/${QMAKE_FILE_BASE}.qm
-updateqm.commands = $$LRELEASE ${QMAKE_FILE_IN} -qm ${QMAKE_FILE_OUT}
-updateqm.name = LRELEASE ${QMAKE_FILE_IN}
-updateqm.variable_out = PRE_TARGETDEPS
-updateqm.CONFIG += no_link
-QMAKE_EXTRA_COMPILERS += updateqm
-
-INSTALL_TRANSLATIONS += $$TRANS_DIR1/qpacman_ru.qm $$TRANS_DIR1/qpacman_be.qm
-transinstall.files = $$INSTALL_TRANSLATIONS
+transinstall.files = $$TRANS_DIR1/*.qm
 transinstall.path = $$TRANS_DIR2
-
-INSTALLS += transinstall
 
 desktop.files = $$PWD/QPacman.desktop
 desktop.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/applications/
@@ -121,4 +118,4 @@ kde.files = QPacmanKDEService.desktop
 greaterThan(QT_MAJOR_VERSION, 4): kde.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/kservices5/
 lessThan(QT_MAJOR_VERSION, 5): kde.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/kde4/services/ServiceMenus/
 
-INSTALLS += target desktop icon kde
+INSTALLS += target transinstall desktop icon kde
