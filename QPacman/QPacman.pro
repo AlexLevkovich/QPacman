@@ -87,12 +87,13 @@ TRANSLATIONS = $$PWD/translations/qpacman_ru.ts \
                $$PWD/translations/qpacman_be.ts
 
 LRELEASE = $$[QT_INSTALL_BINS]/lrelease
-for(tsfile, TRANSLATIONS) {
-    qmfile = $$shadowed($$tsfile)
+for(tsfile, TRANSLATIONS) { 
+    qmfile = $$basename(tsfile)
     qmfile ~= s,.ts$,.qm,
-    qmdir = $$dirname(qmfile)
+    qmdir = $$OUT_PWD/translations
+    qmfile = $$qmdir/$$qmfile
     !exists($$qmdir) {
-        mkpath($$qmdir) | error("Aborting.")
+        system($${QMAKE_MKDIR} \"$$qmdir\")
     }
     command = $$LRELEASE $$tsfile -qm $$qmfile
     system($$command) | error("Failed to run: $$command")
