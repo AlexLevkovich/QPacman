@@ -10,7 +10,7 @@ pacmanSy      - suid wrapper for pacman -Sy to start it with usual user permissi
 
 # COMPILATION:
 
-pkgdir is for pkgbild (ignote it you compile manually)
+pkgdir is for pkgbild (ignore it if you are going to compile manually)
 srcdir is dir with qpacman.pro
 If you does not want to install QPacman app then you have to add QPACMAN_CLIENT=OFF after qmake.
 If you does not want to install QPacmanTray app then you have to add QPACMAN_TRAY=OFF after qmake.
