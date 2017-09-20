@@ -4,6 +4,7 @@
 ********************************************************************************/
 
 #include "pacmanfilepackageinforeader.h"
+#include <QStringList>
 
 PacmanFilePackageInfoReader::PacmanFilePackageInfoReader(const QString & package,QObject *parent) : PacmanProcessReader(parent) {
     m_package = package;
@@ -22,7 +23,8 @@ bool PacmanFilePackageInfoReader::output(const QString & line) {
 
 bool PacmanFilePackageInfoReader::error(const QString & err) {
     if (!wasStderrRead && !err.startsWith(".PKGINFO")) {
-         if (!err.startsWith(QString("%1: ").arg(TAR_BIN))) {
+         QStringList arr = err.split(' ',QString::SkipEmptyParts);
+         if (arr.count() > 0 && !arr.at(0).endsWith(":")) {
             terminate();
             setCode(1);
          }
@@ -30,3 +32,4 @@ bool PacmanFilePackageInfoReader::error(const QString & err) {
     else wasStderrRead = true;
     return true;
 }
+
