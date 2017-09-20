@@ -53,26 +53,26 @@ RESOURCES += \
 TRANSLATIONS = $$PWD/translations/qpacmantray_ru.ts \
                $$PWD/translations/qpacmantray_be.ts
 
-LUPDATE = $$[QT_INSTALL_BINS]/lupdate -locations relative -no-ui-lines -no-sort
 LRELEASE = $$[QT_INSTALL_BINS]/lrelease
+for(tsfile, TRANSLATIONS) {
+    qmfile = $$basename(tsfile)
+    qmfile ~= s,.ts$,.qm,
+    qmdir = $$OUT_PWD/translations
+    qmfile = $$qmdir/$$qmfile
+    !exists($$qmdir) {
+        system($${QMAKE_MKDIR} \"$$qmdir\")
+    }
+    command = $$LRELEASE $$tsfile -qm $$qmfile
+    system($$command) | error("Failed to run: $$command")
+}
 
+LUPDATE = $$[QT_INSTALL_BINS]/lupdate -locations relative -no-ui-lines -no-sort
 updatets.files = TRANSLATIONS
-updatets.commands = $$LUPDATE $$PWD/QPacmanTray.pro
-
+updatets.commands = $$LUPDATE $$PWD/QPacman.pro
 QMAKE_EXTRA_TARGETS += updatets
 
-updateqm.depends = updatets
-updateqm.input = TRANSLATIONS
-updateqm.output = translations/${QMAKE_FILE_BASE}.qm
-updateqm.commands = $$LRELEASE ${QMAKE_FILE_IN} -qm ${QMAKE_FILE_OUT}
-updateqm.name = LRELEASE ${QMAKE_FILE_IN}
-updateqm.variable_out = PRE_TARGETDEPS
-updateqm.CONFIG += no_link
-QMAKE_EXTRA_COMPILERS += updateqm
-
-qm.files = $$TRANS_DIR1/*.qm
-qm.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/qpacman/
-qm.CONFIG += no_check_exist
+transinstall.files = $$TRANS_DIR1/*.qm
+transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
 
 desktop.files = QPacmanTray.desktop
 desktop.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/applications/
@@ -82,4 +82,4 @@ icon.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/pixmaps/
 
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/bin/
 
-INSTALLS += target qm desktop icon
+INSTALLS += target transinstall desktop icon
