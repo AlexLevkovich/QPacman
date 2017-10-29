@@ -20,7 +20,7 @@ DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 DEFINES += TRANS_DIR1=\\\"$$TRANS_DIR1\\\"
 DEFINES += TRANS_DIR2=\\\"$$TRANS_DIR2\\\"
 
-SO_BIN1=$$INSTALL_ROOT/$$INSTALL_PREFIX/lib/libsetbuf.so
+SO_BIN1=$$INSTALL_PREFIX/lib/libsetbuf.so
 SO_BIN2=$$PWD/../bin/libsetbuf.so
 DEFINES += SO_BIN1=\\\"$$SO_BIN1\\\"
 DEFINES += SO_BIN2=\\\"$$SO_BIN2\\\"
