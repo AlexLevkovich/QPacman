@@ -29,6 +29,7 @@ protected:
     virtual QString command() const;
     bool error(const QString & errorOut);
     bool output(const QString & out);
+    void waitForAllOutput();
 
 protected slots:
     virtual void onFinished(int code,QProcess::ExitStatus status);
