@@ -55,6 +55,7 @@ protected:
     virtual bool showErrorMessageAtExit();
 
     void waitForEmptyOutput();
+    void waitForEmptyError();
 
 private slots:
     void _finished();
