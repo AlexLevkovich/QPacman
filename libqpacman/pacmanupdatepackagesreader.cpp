@@ -11,6 +11,7 @@
 #include <QFile>
 #include <QDate>
 #include <QStringList>
+#include <QApplication>
 #include "confsettings.h"
 
 const QString PacmanUpdatePackagesReader::providerChooserStr("Enter a number (default=");
@@ -167,7 +168,7 @@ bool PacmanUpdatePackagesReader::error(const QString & error) {
         int index2 = error.indexOf("[Y/n]",0,Qt::CaseInsensitive);
         if (index2 != -1) {
             if (error.startsWith(":: Proceed with installation? [Y/n]")) {
-                waitForEmptyOutput();
+                waitForAllOutput();
                 install_wait = true;
                 emit ready_to_process(m_total_installed,m_total_removed);
                 return true;
@@ -282,3 +283,9 @@ void PacmanUpdatePackagesReader::sendChosenProvider(const QString & provider) {
     currentProviders.clear();
 }
 
+void PacmanUpdatePackagesReader::waitForAllOutput() {
+    while (true) {
+        if (m_total_installed > 0.0 && m_install_packages.count() > 0) break;
+        qApp->processEvents();
+    }
+}
