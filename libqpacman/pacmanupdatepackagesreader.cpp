@@ -62,22 +62,16 @@ bool PacmanUpdatePackagesReader::output(const QString & out) {
     QString name;
     QString version;
     QString line = out.simplified();
-    if (line.isEmpty()) {
-        if (packagesRead) packagesRead = false;
-        return true;
-    }
 
     if (line.startsWith(":: ")) {
         if (!line.startsWith(RETRIEVING_PKGS_STR)) m_outErrors += line + "\n";
     }
 
-    if (packagesRead || line.startsWith("Packages (")) {
-        int startindex = 0;
-        if (!packagesRead) {
-            packagesRead = true;
-            packagesWasRead = true;
-            startindex = 2;
-        }
+    if (!packagesRead && line.startsWith("Packages (")) {
+        int startindex = 2;
+        packagesRead = true;
+        packagesWasRead = true;
+
         QStringList parts = line.split(" ",QString::SkipEmptyParts);
         for (int i=startindex;i<parts.count();i++) {
             if (parts[i] == "[removal]") {
