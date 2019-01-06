@@ -292,6 +292,12 @@ void PacmanProcessReader::waitForEmptyOutput() {
     }
 }
 
+void PacmanProcessReader::waitForEmptyError() {
+    while (availableErrorBytesCount() > 0) {
+        qApp->processEvents();
+    }
+}
+
 bool PacmanProcessReader::showErrorMessageAtExit() {
     return true;
 }
