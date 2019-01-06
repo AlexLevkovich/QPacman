@@ -287,12 +287,14 @@ QByteArray PacmanProcessReader::readErrorLine(qint64 maxSize) {
 }
 
 void PacmanProcessReader::waitForEmptyOutput() {
+    qApp->processEvents();
     while (availableOutputBytesCount() > 0) {
         qApp->processEvents();
     }
 }
 
 void PacmanProcessReader::waitForEmptyError() {
+    qApp->processEvents();
     while (availableErrorBytesCount() > 0) {
         qApp->processEvents();
     }
