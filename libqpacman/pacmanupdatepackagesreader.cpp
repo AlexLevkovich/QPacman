@@ -74,7 +74,6 @@ bool PacmanUpdatePackagesReader::output(const QString & out) {
 
         QStringList parts = line.split(" ",QString::SkipEmptyParts);
         for (int i=startindex;i<parts.count();i++) {
-            qDebug() << parts[i];
             if (parts[i] == "[removal]") {
                 PacmanEntry::parseNameVersion(m_install_packages[m_install_packages.count()-1],name,version);
                 m_remove_packages.append(name+"-"+version);
@@ -169,6 +168,7 @@ bool PacmanUpdatePackagesReader::error(const QString & error) {
         if (index2 != -1) {
             if (error.startsWith(":: Proceed with installation? [Y/n]")) {
                 waitForEmptyOutput();
+                waitForEmptyError();
                 install_wait = true;
                 emit ready_to_process(m_total_installed,m_total_removed);
                 return true;
