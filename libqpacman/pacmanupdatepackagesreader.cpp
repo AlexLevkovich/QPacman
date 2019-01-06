@@ -68,6 +68,7 @@ bool PacmanUpdatePackagesReader::output(const QString & out) {
     }
 
     if (!packagesRead && line.startsWith("Packages (")) {
+        qDebug() << line;
         int startindex = 2;
         packagesRead = true;
         packagesWasRead = true;
