@@ -68,13 +68,13 @@ bool PacmanUpdatePackagesReader::output(const QString & out) {
     }
 
     if (!packagesRead && line.startsWith("Packages (")) {
-        qDebug() << line;
         int startindex = 2;
         packagesRead = true;
         packagesWasRead = true;
 
         QStringList parts = line.split(" ",QString::SkipEmptyParts);
         for (int i=startindex;i<parts.count();i++) {
+            qDebug() << parts[i];
             if (parts[i] == "[removal]") {
                 PacmanEntry::parseNameVersion(m_install_packages[m_install_packages.count()-1],name,version);
                 m_remove_packages.append(name+"-"+version);
