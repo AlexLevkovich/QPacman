@@ -168,7 +168,6 @@ bool PacmanUpdatePackagesReader::error(const QString & error) {
         if (index2 != -1) {
             if (error.startsWith(":: Proceed with installation? [Y/n]")) {
                 waitForEmptyOutput();
-                waitForEmptyError();
                 install_wait = true;
                 emit ready_to_process(m_total_installed,m_total_removed);
                 return true;
