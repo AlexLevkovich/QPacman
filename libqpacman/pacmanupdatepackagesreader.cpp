@@ -112,7 +112,6 @@ bool PacmanUpdatePackagesReader::output(const QString & out) {
     }
 
     if (packagesWasRead) {
-        qDebug() << line;
         if (line.startsWith(TOTAL_INSTALLED_STR)) m_total_installed = BytesHumanizer(line.mid(strlen(TOTAL_INSTALLED_STR)).trimmed()).value();
         if (line.startsWith(TOTAL_REMOVED_STR)) m_total_removed = BytesHumanizer(line.mid(strlen(TOTAL_REMOVED_STR)).trimmed()).value();
     }
