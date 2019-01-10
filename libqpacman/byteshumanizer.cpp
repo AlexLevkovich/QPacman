@@ -28,7 +28,7 @@ BytesHumanizer::BytesHumanizer(const QString & val) {
     if (index == -1) index = 0;
 
     bool ok = false;
-    m_value = value.split(" ",QString::SkipEmptyParts).at(0).toDouble(&ok);
+    m_value = value.split(" ",QString::SkipEmptyParts).at(0).replace(',','.').toDouble(&ok);
     if (!ok) {
         m_value = 0.0;
         m_was_error = true;
