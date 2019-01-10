@@ -112,6 +112,7 @@ bool PacmanUpdatePackagesReader::output(const QString & out) {
     }
 
     if (packagesWasRead) {
+        qDebug() << line;
         if (line.startsWith(TOTAL_INSTALLED_STR)) m_total_installed = BytesHumanizer(line.mid(strlen(TOTAL_INSTALLED_STR)).trimmed()).value();
         if (line.startsWith(TOTAL_REMOVED_STR)) m_total_removed = BytesHumanizer(line.mid(strlen(TOTAL_REMOVED_STR)).trimmed()).value();
     }
@@ -285,7 +286,6 @@ void PacmanUpdatePackagesReader::sendChosenProvider(const QString & provider) {
 
 void PacmanUpdatePackagesReader::waitForAllOutput() {
     while (true) {
-        qDebug() << m_total_installed << m_install_packages.count();
         if (m_total_installed > 0.0 && m_install_packages.count() > 0) break;
         qApp->processEvents();
     }
