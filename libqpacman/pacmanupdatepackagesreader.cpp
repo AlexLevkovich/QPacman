@@ -285,6 +285,7 @@ void PacmanUpdatePackagesReader::sendChosenProvider(const QString & provider) {
 
 void PacmanUpdatePackagesReader::waitForAllOutput() {
     while (true) {
+        qDebug() << m_total_installed << m_install_packages.count();
         if (m_total_installed > 0.0 && m_install_packages.count() > 0) break;
         qApp->processEvents();
     }
