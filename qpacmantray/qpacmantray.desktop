@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=2.0
+Terminal=false
+TryExec=qpacmantray
+Exec=qpacmantray
+Icon=qpacmantray
+Type=Application
+StartupNotify=false
+Categories=Application;System;
+Name=qpacmantray
+Comment=Tray icon to qpacman
+Comment[ru_RU]=Иконка панели задач для qpacman
+Comment[be_BY]=Абразок панэлі задач для qpacman
+Path=.

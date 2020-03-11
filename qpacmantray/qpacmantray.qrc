@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/">
+        <file>sound/KDE-Sys-App-Error.ogg</file>
+        <file>sound/KDE-Sys-App-Positive.ogg</file>
+        <file>pics/qpacman.svg</file>
+        <file>pics/qpacmantray.svg</file>
+        <file>pics/state-download.svg</file>
+        <file>pics/state-sync.svg</file>
+        <file>pics/application-exit.svg</file>
+        <file>pics/warning.svg</file>
+        <file>pics/checking.svg</file>
+        <file>pics/waiting.svg</file>
+    </qresource>
+</RCC>

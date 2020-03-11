@@ -1,26 +1,26 @@
-# QPacman
-QPacman is GUI to Archlinux pacman utility.
+# QPACMAN
+**qpacman** is GUI to Archlinux pacman utility.  
 
-It contains four subprojects:
+It contains four subprojects:  
 
-QPacmanTray   - tray icon - checks updates, loads QPacman.
-QPacman       - main program
-setbuf        - *.so library for LD_PRELOAD. It is needed to disable QProcess caching.
-pacmanSy      - suid wrapper for pacman -Sy to start it with usual user permission.
+**qpacman** - main program  
+**qpacmantray**  - tray icon - checks updates, loads qpacman  
+**qsu** - wrapper to execute qpacman under root  
+**libs** - contains two libraries: **qpacman** and **qalpm**  
 
 # COMPILATION:
 
-pkgdir is for pkgbild (ignore it if you are going to compile manually)
-srcdir is dir with qpacman.pro
-If you does not want to install QPacman app then you have to add QPACMAN_CLIENT=OFF after qmake.
-If you does not want to install QPacmanTray app then you have to add QPACMAN_TRAY=OFF after qmake.
+**pkgdir** is for pkgbild (ignore it if you are going to compile manually)  
+**srcdir** is the main dir with qpacman.pro  
+If you don't want to install **qpacman** app then you have to add QPACMAN_CLIENT=OFF after qmake.  
+If you don't want to install **qpacmantray** app then you have to add QPACMAN_TRAY=OFF after qmake.  
 
-cd $srcdir
-qmake "INSTALL_PREFIX=/usr" "INSTALL_ROOT=$pkgdir" CONFIG+=release CONFIG-=debug
-make
-make install
+cd $srcdir  
+qmake "INSTALL_PREFIX=/usr" "INSTALL_ROOT=$pkgdir" CONFIG+=release CONFIG-=debug  
+make  
+make install  
 
-Qt verions: QT4 or QT5
+**QT5 only**  
 
-Depends: 'Qt >= 4', 'pacman' 'vorbis-tools' 'wget' 'coreutils' 'xz' 'tar' 'util-linux'
+Depends: '**Qt >= 5: core,network,gui,multimedia,widgets,svg**', '**pacman**', '**pam**', '**libarchive**'  
 

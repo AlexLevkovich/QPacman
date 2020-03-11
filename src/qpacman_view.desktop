@@ -1,0 +1,15 @@
+[Desktop Entry]
+Categories=Application;System;
+Comment[en_US]=Yet another pacman's GUI package viewer
+Comment[ru_RU]=Еще один графический просмотрщик пакетов для pacman
+Comment[be_BY]=Яшчэ адзін графічны прагляднік пакетаў для pacman
+Comment=Yet another pacman's GUI package viewer
+Exec=qpacman --user
+Icon=qpacman
+MimeType=application/x-xz-compressed-tar;application/x-tar;
+Name=qpacman (viewer)
+Path=.
+StartupNotify=false
+Terminal=false
+Type=Application
+Version=2.0

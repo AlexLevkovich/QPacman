@@ -1,0 +1,48 @@
+#include "simpledownload.h"
+#include <QNetworkAccessManager>
+#include <QNetworkConfigurationManager>
+#include <QFileInfo>
+#include <QDir>
+
+#define CONNECT_TRY_COUNT 5
+
+SimpleDownload::SimpleDownload(const QUrl & url,const QString & outputName) : DownloaderInterface() {
+    m_url = url;
+    m_connect_attempt_count = CONNECT_TRY_COUNT;
+    m_size = 0;
+
+    m_manager = new QNetworkAccessManager(this);
+    m_manager->setConfiguration(QNetworkConfigurationManager().defaultConfiguration());
+    m_outputName = outputName;
+    if (!outputName.isEmpty() && !url.fileName().isEmpty() && QFileInfo(outputName).isDir()) {
+        m_outputName = QDir(m_outputName).path()+QDir::separator()+url.fileName();
+    }
+}
+
+void SimpleDownload::setErrorString(const QString & error) {
+    m_error = error;
+}
+
+QString SimpleDownload::errorString() {
+    return m_error;
+}
+
+bool SimpleDownload::start() {
+    setErrorString("");
+
+    if (isStarted()) {
+        setErrorString(tr("Downloading already has been started!!!"));
+        return false;
+    }
+
+    if (m_manager == NULL) {
+        setErrorString(tr("Invalid QNetworkAccessManager instance!!!"));
+        return false;
+    }
+
+    m_size = 0;
+
+    invokeMethod("private_start");
+
+    return true;
+}

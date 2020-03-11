@@ -1,19 +1,21 @@
-TEMPLATE = subdirs
+#-------------------------------------------------
+#
+# Project created by QtCreator 2019-01-29T09:15:44
+#
+#-------------------------------------------------
 
-SUBDIRS = setbuf pacmanSy \
-    qpacmankill \
-    pacmanrmcache \
-    libqpacman
+CONFIG += c++11
+TEMPLATE = subdirs
+SUBDIRS += libs \
+           qsu
 
 equals(QPACMAN_CLIENT, "ON") | isEmpty(QPACMAN_CLIENT) {
-    SUBDIRS += QPacman
-    QPacman.depends = setbuf pacmanSy libqpacman pacmanrmcache qpacmankill
+    SUBDIRS += src
+    src.depends = libs
 }
 equals(QPACMAN_TRAY, "ON") | isEmpty(QPACMAN_TRAY) {
-    SUBDIRS += QPacmanTray
-    QPacmanTray.depends = setbuf pacmanSy libqpacman qpacmankill
+    SUBDIRS += qpacmantray
+    qpacmantray.depends = libs
 }
 
-RESOURCES += \
-    libqpacman/qpacman.qrc
-
+qsu.depends = libs
