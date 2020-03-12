@@ -95,7 +95,7 @@ PRE_TARGETDEPS += TRANSLATIONS
 PRE_TARGETDEPS += LRELEASE_TARGET
 QMAKE_EXTRA_TARGETS += updatets releasets
 
-transinstall.files = $$TRANS_DIR1/*.qm
+transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/$$TARGET, .qm)
 transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
 
 desktop.files = $$PWD/qpacmantray.desktop
