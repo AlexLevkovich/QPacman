@@ -95,18 +95,6 @@ PRE_TARGETDEPS += TRANSLATIONS
 PRE_TARGETDEPS += LRELEASE_TARGET
 QMAKE_EXTRA_TARGETS += updatets releasets
 
-transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/$$TARGET, .qm)
-transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
-
-desktop.files = $$PWD/qpacmantray.desktop
-desktop.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/applications/
-
-icon.files = $$PWD/pics/qpacmantray.svg
-icon.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/pixmaps/
-
-target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/bin/
-INSTALLS += target transinstall desktop icon
-
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libs/qpacman/release/ -lqpacman
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libs/qpacman/debug/ -lqpacman
 else:unix: LIBS += -L$$OUT_PWD/../libs/qpacman/ -lqpacman
@@ -125,3 +113,16 @@ else:unix: LIBS += -L$$OUT_PWD/../libs/qalpm/ -lqalpm
 
 INCLUDEPATH += $$PWD/../libs/qalpm
 DEPENDPATH += $$PWD/../libs/qalpm
+
+transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/$$TARGET, .qm)
+transinstall.CONFIG += no_check_exist
+transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
+
+desktop.files = $$PWD/qpacmantray.desktop
+desktop.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/applications/
+
+icon.files = $$PWD/pics/qpacmantray.svg
+icon.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/pixmaps/
+
+target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/bin/
+INSTALLS += target transinstall desktop icon

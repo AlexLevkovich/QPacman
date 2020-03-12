@@ -135,7 +135,22 @@ PRE_TARGETDEPS += TRANSLATIONS
 PRE_TARGETDEPS += LRELEASE_TARGET
 QMAKE_EXTRA_TARGETS += updatets releasets
 
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libs/qpacman/release/ -lqpacman
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libs/qpacman/debug/ -lqpacman
+else:unix: LIBS += -L$$OUT_PWD/../libs/qpacman/ -lqpacman
+
+INCLUDEPATH += $$_PRO_FILE_PWD_/../libs/qpacman
+DEPENDPATH += $$_PRO_FILE_PWD_/../libs/qpacman
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libs/qalpm/release/ -lqalpm
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libs/qalpm/debug/ -lqalpm
+else:unix: LIBS += -L$$OUT_PWD/../libs/qalpm/ -lqalpm
+
+INCLUDEPATH += $$_PRO_FILE_PWD_/../libs/qalpm
+DEPENDPATH += $$_PRO_FILE_PWD_/../libs/qalpm
+
 transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/$$TARGET, .qm)
+transinstall.CONFIG += no_check_exist
 transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
 
 icon.files = $$PWD/pics/qpacman.svg
@@ -150,17 +165,3 @@ lessThan(QT_MAJOR_VERSION, 5): kde.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/
 
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/bin/
 INSTALLS += target transinstall icon desktop kde
-
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libs/qpacman/release/ -lqpacman
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libs/qpacman/debug/ -lqpacman
-else:unix: LIBS += -L$$OUT_PWD/../libs/qpacman/ -lqpacman
-
-INCLUDEPATH += $$_PRO_FILE_PWD_/../libs/qpacman
-DEPENDPATH += $$_PRO_FILE_PWD_/../libs/qpacman
-
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libs/qalpm/release/ -lqalpm
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libs/qalpm/debug/ -lqalpm
-else:unix: LIBS += -L$$OUT_PWD/../libs/qalpm/ -lqalpm
-
-INCLUDEPATH += $$_PRO_FILE_PWD_/../libs/qalpm
-DEPENDPATH += $$_PRO_FILE_PWD_/../libs/qalpm

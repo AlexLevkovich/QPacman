@@ -126,12 +126,13 @@ PRE_TARGETDEPS += TRANSLATIONS
 PRE_TARGETDEPS += LRELEASE_TARGET
 QMAKE_EXTRA_TARGETS += updatets releasets
 
-transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/$$TARGET, .qm)
+CONFIG += link_pkgconfig
+PKGCONFIG += libalpm libarchive
+LIBS += -lcrypt -lpam
+
+transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/lib$$TARGET, .qm)
+transinstall.CONFIG += no_check_exist
 transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
 
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/
 INSTALLS += target transinstall
-
-CONFIG += link_pkgconfig
-PKGCONFIG += libalpm libarchive
-LIBS += -lcrypt -lpam

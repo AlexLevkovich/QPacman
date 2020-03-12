@@ -185,12 +185,6 @@ PRE_TARGETDEPS += TRANSLATIONS
 PRE_TARGETDEPS += LRELEASE_TARGET
 QMAKE_EXTRA_TARGETS += updatets releasets
 
-transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/$$TARGET, .qm)
-transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
-
-target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/
-INSTALLS += target transinstall
-
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../qalpm/release/ -lqalpm
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../qalpm/debug/ -lqalpm
 else:unix: LIBS += -L$$OUT_PWD/../qalpm/ -lqalpm
@@ -200,3 +194,10 @@ DEPENDPATH += $$PWD/../qalpm
 
 RESOURCES += \
     libqpacman.qrc
+
+transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/lib$$TARGET, .qm)
+transinstall.CONFIG += no_check_exist
+transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
+
+target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/
+INSTALLS += target transinstall
