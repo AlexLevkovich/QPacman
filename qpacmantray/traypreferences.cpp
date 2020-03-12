@@ -36,8 +36,8 @@ TrayPreferences::TrayPreferences(QWidget *parent) : QMainWindow(parent), ui(new 
 
     connect(&m_timer,SIGNAL(timeout()),this,SLOT(on_actionCheck_for_updates_triggered()));
     connect(ui->actionPreferences,SIGNAL(triggered()),this,SIGNAL(showRequest()));
-    connect(qApp,SIGNAL(qpacmanStarted()),this,SLOT(qpacmanStarted()));
-    connect(qApp,SIGNAL(qpacmanEnded(qint64)),this,SLOT(qpacmanEnded(qint64)));
+    connect(qApp,SIGNAL(qpacmanStarted(const QStringList &)),this,SLOT(qpacmanStarted(const QStringList &)));
+    connect(qApp,SIGNAL(qpacmanEnded(const QStringList &,qint64)),this,SLOT(qpacmanEnded(const QStringList &,qint64)));
     connect(Alpm::instance(),SIGNAL(locking_changed(const QString &,bool)),this,SLOT(updateActions(const QString &,bool)));
 
     m_timer.start(0);
@@ -124,7 +124,7 @@ void TrayPreferences::on_actionUpdate_now_triggered() {
 
 void TrayPreferences::pacman_finished(int rc) {
     m_blocking_operation = false;
-    qpacmanEnded(rc);
+    qpacmanEnded(QStringList(),rc);
 }
 
 void TrayPreferences::on_actionQuit_triggered() {
@@ -135,13 +135,12 @@ void TrayPreferences::on_actionLoad_QPacman_triggered() {
     Static::startQPacman();
 }
 
-void TrayPreferences::qpacmanStarted() {
+void TrayPreferences::qpacmanStarted(const QStringList &) {
     m_tray->setVisible(false);
-    m_timer.stop();
 }
 
-void TrayPreferences::qpacmanEnded(qint64 rc) {
-    if (rc != 0) {
+void TrayPreferences::qpacmanEnded(const QStringList & parms,qint64 rc) {
+    if (rc != 0 || (parms.count() > 0 && parms[0] == "--user")) {
         updateActions();
         return;
     }

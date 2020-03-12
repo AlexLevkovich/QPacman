@@ -25,6 +25,7 @@
 #include "widgetgroup.h"
 #include "alpmlockingnotifier.h"
 #include "optionaldepsdlg.h"
+#include <QSignalBlocker>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -119,28 +120,44 @@ void MainWindow::refreshMaybeStarted(bool * ok) {
     *ok = true;
 }
 
+class LockFileArranger {
+private:
+    LockFileArranger(const QString & name) {
+        m_name = name;
+        if (!QFile(name).open(QIODevice::WriteOnly)) m_name.clear();
+    }
+    ~LockFileArranger() {
+        if (isCreated()) QFile(m_name).remove();
+    }
+    bool isCreated() const {
+        return !m_name.isEmpty();
+    }
+
+    QString m_name;
+    friend class MainWindow;
+};
+
 void MainWindow::updateSystemSyncDir(const QDir & sys_sync_path,const QDir & user_sync_path) {
     QStringList lock_files_to_wait;
     QString sys_lock_file = sys_sync_path.path()+QDir::separator()+".." + QDir::separator() + "db.lck";
     if (QFile(sys_lock_file).exists()) lock_files_to_wait.append(sys_lock_file);
     QString user_lock_file = user_sync_path.path()+QDir::separator()+".." + QDir::separator() + "db.lck";
     if (QFile(user_lock_file).exists()) lock_files_to_wait.append(user_lock_file);
+    const QSignalBlocker blocker(lock_notifier);
     if (lock_files_to_wait.count() > 0) {
         if (LockFileWaiter(lock_files_to_wait).exec() == QDialog::Rejected) {
             QCoreApplication::exit(100);
             return;
         }
     }
-    QFile sys_lock(sys_lock_file);
-    if (sys_lock.open(QIODevice::WriteOnly)) sys_lock.close();
-    else {
+    LockFileArranger sys_lock(sys_lock_file);
+    if (!sys_lock.isCreated()) {
         qDebug() << "Error:" << "something wrong: cannot create lock file:" << sys_lock_file;
         QCoreApplication::exit(101);
         return;
     }
-    QFile user_lock(user_lock_file);
-    if (user_lock.open(QIODevice::WriteOnly)) {
-        user_lock.close();
+    LockFileArranger user_lock(user_lock_file);
+    if (user_lock.isCreated()) {
         QString orig_user = QProcessEnvironment::systemEnvironment().value("ORIGINAL_USER","");
         if (orig_user.isEmpty()) {
             qDebug() << "Error:" << "something wrong with application setup, ask programmer what to do";
@@ -161,13 +178,11 @@ void MainWindow::updateSystemSyncDir(const QDir & sys_sync_path,const QDir & use
         return;
     }
     bool ret = copyDirectoryFiles(user_sync_path.path(),sys_sync_path.path(),"db");
-    user_lock.remove();
-    sys_lock.remove();
     if (!ret) {
         QCoreApplication::exit(102);
         return;
     }
-    QMetaObject::invokeMethod(this,"blockedOperationCompleted",Qt::QueuedConnection,Q_ARG(ThreadRun::RC,ThreadRun::OK));
+    //QMetaObject::invokeMethod(this,"blockedOperationCompleted",Qt::QueuedConnection,Q_ARG(ThreadRun::RC,ThreadRun::OK));
 }
 
 bool MainWindow::copyDirectoryFiles(const QString & fromDir,const QString & toDir,const QString & suffix) {

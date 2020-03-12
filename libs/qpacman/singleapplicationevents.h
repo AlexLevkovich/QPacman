@@ -22,7 +22,7 @@ public:
 signals:
     void secondInstanceStarted(const QStringList & parms,qint64 pid);
     void applicationStarted(const QString & appname,const QStringList & parms,qint64 pid);
-    void applicationExited(const QString & appname,qint64 pid,int rc);
+    void applicationExited(const QString & appname,const QStringList & parms,qint64 pid,int rc);
     void secondInstanceIAm();
 
 private slots:
@@ -34,7 +34,7 @@ private:
     void addStartEntry(int &argc,char **argv);
 
     SharedMemory shm_obj;
-    QString pgm_path;
+    QStringList m_args;
     qint64 pid;
 
     friend class SingleApplication;

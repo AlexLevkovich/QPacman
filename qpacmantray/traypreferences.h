@@ -39,8 +39,8 @@ private slots:
     void pacman_finished(int code);
     void on_actionLoad_QPacman_triggered();
     void updateActions(const QString & lock_path = QString(),bool locked = false);
-    void qpacmanStarted();
-    void qpacmanEnded(qint64 rc);
+    void qpacmanStarted(const QStringList & parms);
+    void qpacmanEnded(const QStringList & parms,qint64 rc);
     void post_resize_save();
 
 signals:

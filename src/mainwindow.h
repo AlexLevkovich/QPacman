@@ -70,6 +70,7 @@ private slots:
     void on_actionLog_triggered(bool checked);
     void on_actionInfo_triggered(bool checked);
     void logString(const QString & str);
+    void updateSystemSyncDir(const QDir & sys_sync_path,const QDir & user_sync_path);
 
 private:
     Ui::MainWindow *ui;
@@ -82,7 +83,6 @@ private:
     OptionalDepsDlg * optdep;
     AlpmLockingNotifier * lock_notifier;
 
-    void updateSystemSyncDir(const QDir & sys_sync_path,const QDir & user_sync_path);
     bool copyDirectoryFiles(const QString & fromDir,const QString & toDir,const QString & suffix = QString());
     void enableActions(bool flag);
     bool actionApplyState();

@@ -1,4 +1,4 @@
-# QPACMAN v. 2.0
+# QPACMAN v2.0
 **qpacman** is GUI to Archlinux pacman utility.  
 
 It contains four subprojects:  

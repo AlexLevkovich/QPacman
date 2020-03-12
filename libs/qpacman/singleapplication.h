@@ -25,14 +25,14 @@ protected:
 
 private slots:
     void applicationStarted(const QString & appname,const QStringList & parms,qint64 pid);
-    void applicationExited(const QString & appname,qint64 pid,int rc);
+    void applicationExited(const QString & appname,const QStringList & parms,qint64 pid,int rc);
     void exitSecondOne();
 
 signals:
     void firstInstanceAttempt();
     void secondInstanceAttempt(const QStringList & args);
-    void otherApplicationStarted(const QString & appname);
-    void otherApplicationExited(const QString & appname,qint64 rc);
+    void otherApplicationStarted(const QString & appname,const QStringList & parms,qint64 pid);
+    void otherApplicationExited(const QString & appname,const QStringList & parms,qint64 pid,qint64 rc);
 
 private:
     QList<QMainWindow *> activeMainWinds;

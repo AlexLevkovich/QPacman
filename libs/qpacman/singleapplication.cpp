@@ -15,7 +15,7 @@ SingleApplication::SingleApplication(int &argc, char **argv) : QApplication(argc
     connect(&app_events,SIGNAL(secondInstanceStarted(const QStringList &,qint64)),SIGNAL(secondInstanceAttempt(const QStringList &)));
     connect(&app_events,SIGNAL(secondInstanceIAm()),SLOT(exitSecondOne()));
     connect(&app_events,SIGNAL(applicationStarted(const QString &,const QStringList &,qint64)),SLOT(applicationStarted(const QString &,const QStringList &,qint64)));
-    connect(&app_events,SIGNAL(applicationExited(const QString &,qint64,int)),SLOT(applicationExited(const QString &,qint64,int)));
+    connect(&app_events,SIGNAL(applicationExited(const QString &,const QStringList &,qint64,int)),SLOT(applicationExited(const QString &,const QStringList &,qint64,int)));
     if (!app_events.isOtherInstanceAlreadyStarted()) QMetaObject::invokeMethod(this,"firstInstanceAttempt",Qt::QueuedConnection);
 }
 
@@ -23,12 +23,12 @@ void SingleApplication::exitSecondOne() {
     QCoreApplication::exit(127);
 }
 
-void SingleApplication::applicationStarted(const QString & appname,const QStringList &,qint64) {
-    emit otherApplicationStarted(QFileInfo(appname).fileName());
+void SingleApplication::applicationStarted(const QString & appname,const QStringList & parms,qint64 pid) {
+    emit otherApplicationStarted(QFileInfo(appname).fileName(),parms,pid);
 }
 
-void SingleApplication::applicationExited(const QString & appname,qint64,int rc) {
-    emit otherApplicationExited(QFileInfo(appname).fileName(),rc);
+void SingleApplication::applicationExited(const QString & appname,const QStringList & parms,qint64 pid,int rc) {
+    emit otherApplicationExited(QFileInfo(appname).fileName(),parms,pid,rc);
 }
 
 QList<QMainWindow *> SingleApplication::findMainWindows() {

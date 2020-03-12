@@ -135,7 +135,6 @@ QNetworkReply * SimpleDownloader::get(const QNetworkRequest & request) {
         return NULL;
     }
     m_reply = new NetworkReplyProxy(m_reply,m_timeout,this);
-    m_reply->ignoreSslErrors();
     return m_reply;
 }
 
@@ -148,6 +147,7 @@ void SimpleDownloader::private_start() {
     connect(m_reply,SIGNAL(finished()),this,SLOT(get_finished()));
     connect(m_reply,SIGNAL(readyRead()),this,SLOT(get_readyRead()));
     connect(m_reply,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(get_downloadProgress(qint64,qint64)));
+    connect(m_reply,&QNetworkReply::sslErrors,[=]() { m_reply->ignoreSslErrors(); });
 }
 
 void SimpleDownloader::was_error(QNetworkReply::NetworkError error) {

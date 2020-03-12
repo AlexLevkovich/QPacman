@@ -14,10 +14,10 @@ NetworkReplyProxy::NetworkReplyProxy(QNetworkReply* reply, int timeout, QObject*
     setUrl(m_reply->url());
     setReadBufferSize(m_reply->readBufferSize());
     setSslConfiguration(m_reply->sslConfiguration());
+    applyMetaData(false);
 
     m_timer.setInterval(0);
     setFinished(m_reply->isFinished());
-    applyMetaData(false);
     setOpenMode(ReadOnly);
 
     if (m_reply->error() != QNetworkReply::NoError) {
@@ -66,8 +66,8 @@ void NetworkReplyProxy::ignoreSslErrors() {
     m_reply->ignoreSslErrors();
 }
 
-void NetworkReplyProxy::applyMetaData(bool emit_signal) {
-    m_timer.stop();
+void NetworkReplyProxy::applyMetaData(bool signal) {
+    if (signal) m_timer.stop();
 
     foreach(QNetworkReply::RawHeaderPair header, m_reply->rawHeaderPairs())
         setRawHeader(header.first, header.second);
@@ -76,18 +76,19 @@ void NetworkReplyProxy::applyMetaData(bool emit_signal) {
                                            QNetworkRequest::HttpReasonPhraseAttribute,
                                            QNetworkRequest::RedirectionTargetAttribute,
                                            QNetworkRequest::ConnectionEncryptedAttribute,
-                                           QNetworkRequest::CacheLoadControlAttribute,
-                                           QNetworkRequest::CacheSaveControlAttribute,
                                            QNetworkRequest::SourceIsFromCacheAttribute,
-                                           QNetworkRequest::DoNotBufferUploadDataAttribute,
                                            QNetworkRequest::HttpPipeliningWasUsedAttribute,
+                                           QNetworkRequest::BackgroundRequestAttribute,
                                            QNetworkRequest::SpdyWasUsedAttribute,
                                            QNetworkRequest::HTTP2WasUsedAttribute,
+                                           QNetworkRequest::EmitAllUploadProgressSignalsAttribute,
                                            QNetworkRequest::OriginalContentLengthAttribute})
         setAttribute(attr, m_reply->attribute(attr));
 
-    if (emit_signal) emit metaDataChanged();
-    if (m_timer.interval() > 0) m_timer.start();
+    if (signal)  {
+       if (m_timer.interval() > 0) m_timer.start();
+       emit metaDataChanged();
+    }
 }
 
 void NetworkReplyProxy::errorInternal(QNetworkReply::NetworkError _error) {
@@ -104,7 +105,7 @@ void NetworkReplyProxy::readInternal() {
 void NetworkReplyProxy::handleReadyRead(bool is_finished) {
     m_timer.stop();
     readInternal();
-    if (bytesAvailable()) emit readyRead();
+    emit readyRead();
     if (is_finished) QMetaObject::invokeMethod(this,"handleFinished",Qt::QueuedConnection);
     else if (m_timer.interval() > 0) m_timer.start();
 }
@@ -122,6 +123,7 @@ void NetworkReplyProxy::setTimerInterval(int value) {
 }
 
 void NetworkReplyProxy::timeout() {
+    m_timer.stop();
     setError(QNetworkReply::TimeoutError,tr("Timeout interval is reached because of long device inactivity!"));
     emit error(QNetworkReply::TimeoutError);
     abort();

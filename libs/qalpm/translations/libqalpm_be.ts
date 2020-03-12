@@ -558,12 +558,12 @@ Do you want to delete it?</source>
     <name>MultiDownloader</name>
     <message>
         <location filename="../multidownloader.cpp" line="+153"/>
-        <location line="+346"/>
+        <location line="+345"/>
         <source>Downloading already has been started!!!</source>
         <translation type="unfinished">Загрузка ўжо распачатая !!!</translation>
     </message>
     <message>
-        <location line="-341"/>
+        <location line="-340"/>
         <source>Invalid count of threads has passed!!!</source>
         <translation type="unfinished">Колькасць патокаў ўстаноўлена не дакладна!!!</translation>
     </message>
@@ -601,7 +601,7 @@ Do you want to delete it?</source>
 <context>
     <name>NetworkReplyProxy</name>
     <message>
-        <location filename="../networkreplyproxy.cpp" line="+125"/>
+        <location filename="../networkreplyproxy.cpp" line="+127"/>
         <source>Timeout interval is reached because of long device inactivity!</source>
         <translation type="unfinished">Перавышаны інтэрвал затрымкі з-за доўгага сеткавага прастою!</translation>
     </message>

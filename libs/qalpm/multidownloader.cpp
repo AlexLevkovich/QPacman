@@ -419,7 +419,6 @@ QNetworkReply * MultiDownloader::get(const QNetworkRequest & request) {
         return NULL;
     }
     m_reply = new NetworkReplyProxy(m_reply,m_timeout,this);
-    m_reply->ignoreSslErrors();
     return m_reply;
 }
 
@@ -430,6 +429,7 @@ void MultiDownloader::private_start() {
     m_reply->setProperty("type","main");
     connect(m_reply,SIGNAL(metaDataChanged()),this,SLOT(mainMetaDataChanged()));
     connect(m_reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(was_error(QNetworkReply::NetworkError)));
+    connect(m_reply,&QNetworkReply::sslErrors,[=]() { m_reply->ignoreSslErrors(); });
 }
 
 void MultiDownloader::setDataLength(qint64 size) {
@@ -542,6 +542,7 @@ bool MultiDownloader::addNewPartDownload(int part_id,int try_counter) {
     connect(m_reply,SIGNAL(finished()),this,SLOT(child_finished()));
     connect(m_reply,SIGNAL(readyRead()),this,SLOT(child_readyRead()));
     connect(m_reply,SIGNAL(metaDataChanged()),this,SLOT(childMetaDataChanged()));
+    connect(m_reply,&QNetworkReply::sslErrors,[=]() { m_reply->ignoreSslErrors(); });
 
     return true;
 }
@@ -596,18 +597,16 @@ void MultiDownloader::was_error(const QString & error,QNetworkReply * reply) {
         if (reply != NULL) try_count = reply->property("try_counter").toInt();
         if (reply != NULL && try_count < m_connect_attempt_count) {
             try_count++;
-            invokeMethod("addNewPartDownload",Q_ARG(int,reply->property("part").toInt()),Q_ARG(int,try_count));
             reply->abort();
             reply->deleteLater();
+            invokeMethod("addNewPartDownload",Q_ARG(int,reply->property("part").toInt()),Q_ARG(int,try_count));
         }
         else {
             setErrorString(error);
             m_timer->stop();
             m_part_manager->close();
-            if (reply != NULL) {
-                reply->abort();
-                reply->deleteLater();
-            }
+            reply->abort();
+            reply->deleteLater();
             emit error_occured();
         }
     }

@@ -52,11 +52,8 @@ public:
 
 class StartEntry : public BaseEntry {
 public:
-    StartEntry(int &argc,char **argv,qint64 pid,const QList<qint64> & pids) {
-        pgm_name = QString::fromLocal8Bit(argv[0]);
-        for (int i=1;i<argc;i++) {
-            args.append(QString::fromLocal8Bit(argv[i]));
-        }
+    StartEntry(const QStringList & args,qint64 pid,const QList<qint64> & pids) {
+        m_args = args;
         this->pid = pid;
         this->pids = pids;
         this->timestamp = QDateTime::currentDateTime();
@@ -84,9 +81,7 @@ public:
     bool add(QDataStream & stream) {
         stream << (short)type();
         if (stream.status() == QDataStream::WriteFailed) return false;
-        stream << pgm_name;
-        if (stream.status() == QDataStream::WriteFailed) return false;
-        stream << args;
+        stream << m_args;
         if (stream.status() == QDataStream::WriteFailed) return false;
         stream << pid;
         if (stream.status() == QDataStream::WriteFailed) return false;
@@ -108,9 +103,7 @@ public:
             stream.device()->seek(old_pos);
             return false;
         }
-        stream >> pgm_name;
-        if (stream.status() != QDataStream::Ok) return false;
-        stream >> args;
+        stream >> m_args;
         if (stream.status() != QDataStream::Ok) return false;
         stream >> pid;
         if (stream.status() != QDataStream::Ok) return false;
@@ -121,11 +114,12 @@ public:
     }
 
     QString pgmName() const {
-        return pgm_name;
+        return m_args[0];
     }
 
     QStringList arguments() const {
-        return args;
+        if (m_args.count() <= 1) return QStringList();
+        return m_args.mid(1);
     }
 
     qint64 PID() const {
@@ -149,8 +143,7 @@ public:
     }
 
 private:
-    QString pgm_name;
-    QStringList args;
+    QStringList m_args;
     qint64 pid;
     QList<qint64> pids;
     QDateTime timestamp;
@@ -158,8 +151,8 @@ private:
 
 class EndEntry : public BaseEntry {
 public:
-    EndEntry(const QString & pgm_name,qint64 pid,int rc,const QList<qint64> & pids) {
-        this->pgm_name = pgm_name;
+    EndEntry(const QStringList & args,qint64 pid,int rc,const QList<qint64> & pids) {
+        this->m_args = args;
         this->pid = pid;
         this->rc = rc;
         this->pids = pids;
@@ -189,7 +182,7 @@ public:
     bool add(QDataStream & stream) {
         stream << (short)type();
         if (stream.status() == QDataStream::WriteFailed) return false;
-        stream << pgm_name;
+        stream << m_args;
         if (stream.status() == QDataStream::WriteFailed) return false;
         stream << pid;
         if (stream.status() == QDataStream::WriteFailed) return false;
@@ -213,7 +206,7 @@ public:
             stream.device()->seek(old_pos);
             return false;
         }
-        stream >> pgm_name;
+        stream >> m_args;
         if (stream.status() != QDataStream::Ok) return false;
         stream >> pid;
         if (stream.status() != QDataStream::Ok) return false;
@@ -226,7 +219,12 @@ public:
     }
 
     QString pgmName() const {
-        return pgm_name;
+        return m_args[0];
+    }
+
+    QStringList arguments() const {
+        if (m_args.count() <= 1) return QStringList();
+        return m_args.mid(1);
     }
 
     qint64 PID() const {
@@ -250,7 +248,7 @@ public:
     }
 
 private:
-    QString pgm_name;
+    QStringList m_args;
     qint64 pid;
     int rc;
     QList<qint64> pids;
@@ -331,13 +329,13 @@ SingleApplicationEvents::SingleApplicationEvents(int &argc,char **argv,QObject *
 }
 
 void SingleApplicationEvents::addExitEntry(int rc) {
-    if (pgm_path.isEmpty()) {
+    if (m_args.count() <= 0) {
         fprintf(stderr,"Error: pgm_path wasn't set!!!\n");
         QCoreApplication::exit(70);
     }
 
     if (!shm_obj.lock()) return;
-    EndEntry(pgm_path,pid,rc,shm_obj.otherInstancesPids()).add(&shm_obj);
+    EndEntry(m_args,pid,rc,shm_obj.otherInstancesPids()).add(&shm_obj);
     shm_obj.unlock();
 }
 
@@ -348,12 +346,15 @@ void SingleApplicationEvents::addStartEntry(int &argc,char **argv) {
         ::exit(70);
     }
 
-    pgm_path = QString::fromLocal8Bit(argv[0]);
+    m_args.clear();
+    for (int i=0;i<argc;i++) {
+        m_args.append(QString::fromLocal8Bit(argv[i]));
+    }
     pid = QCoreApplication::applicationPid();
 
     if (isOtherInstanceAlreadyStarted()) QMetaObject::invokeMethod(this,"secondInstanceIAm",Qt::QueuedConnection);
     if (!shm_obj.lock()) return;
-    StartEntry(argc,argv,pid,shm_obj.otherInstancesPids()).add(&shm_obj);
+    StartEntry(m_args,pid,shm_obj.otherInstancesPids()).add(&shm_obj);
     shm_obj.unlock();
 }
 
@@ -371,12 +372,12 @@ void SingleApplicationEvents::shm_changed() {
     for (i=0;i<start_entries.count();i++) {
         if (!start_entries[i].isValid()) continue;
         start_entries[i].makeLessValid(QCoreApplication::applicationPid());
-        if ((pgm_path == start_entries[i].pgmName()) && (pid != start_entries[i].PID())) QMetaObject::invokeMethod(this,"secondInstanceStarted",Qt::QueuedConnection,Q_ARG(QStringList,start_entries[i].arguments()),Q_ARG(qint64,start_entries[i].PID()));
+        if ((m_args[0] == start_entries[i].pgmName()) && (pid != start_entries[i].PID())) QMetaObject::invokeMethod(this,"secondInstanceStarted",Qt::QueuedConnection,Q_ARG(QStringList,start_entries[i].arguments()),Q_ARG(qint64,start_entries[i].PID()));
         else QMetaObject::invokeMethod(this,"applicationStarted",Qt::QueuedConnection,Q_ARG(QString,start_entries[i].pgmName()),Q_ARG(QStringList,start_entries[i].arguments()),Q_ARG(qint64,start_entries[i].PID()));
     }
     for (i=0;i<end_entries.count();i++) {
         end_entries[i].makeLessValid(QCoreApplication::applicationPid());
-        QMetaObject::invokeMethod(this,"applicationExited",Qt::QueuedConnection,Q_ARG(QString,end_entries[i].pgmName()),Q_ARG(qint64,end_entries[i].PID()),Q_ARG(int,end_entries[i].RC()));
+        QMetaObject::invokeMethod(this,"applicationExited",Qt::QueuedConnection,Q_ARG(QString,end_entries[i].pgmName()),Q_ARG(QStringList,end_entries[i].arguments()),Q_ARG(qint64,end_entries[i].PID()),Q_ARG(int,end_entries[i].RC()));
     }
 
     QByteArray data = SingleApplicationEvents::shared_id;
@@ -430,7 +431,7 @@ bool SingleApplicationEvents::isOtherInstanceAlreadyStarted() {
     }
 
     for (int i=0;i<start_entries.count();i++) {
-        if (start_entries[i].isRunning() && (start_entries[i].pgmName() == pgm_path) && (start_entries[i].PID() != pid)) {
+        if (start_entries[i].isRunning() && (start_entries[i].pgmName() == m_args[0]) && (start_entries[i].PID() != pid)) {
             shm_obj.unlock();
             return true;
         }

@@ -19,8 +19,8 @@ public:
     ~QPacmanTrayApplication();
 
 signals:
-    void qpacmanStarted();
-    void qpacmanEnded(qint64 rc);
+    void qpacmanStarted(const QStringList & parms);
+    void qpacmanEnded(const QStringList & parms,qint64 rc);
 
 public slots:
     void putMainWindowOnTop();
@@ -32,8 +32,8 @@ protected:
 private slots:
     void firstInstanceAttempted();
     void secondInstanceAttempted(const QStringList & args);
-    void otherApplicationStarted(const QString & appname);
-    void otherApplicationExited(const QString & appname,qint64 rc);
+    void otherApplicationStarted(const QString & appname,const QStringList & parms,qint64 pid);
+    void otherApplicationExited(const QString & appname,const QStringList & parms,qint64 pid,qint64 rc);
 
 private:
     void initMainWindow();

@@ -19,8 +19,8 @@ QPacmanTrayApplication::QPacmanTrayApplication(int &argc, char **argv) : SingleA
 
     connect(this,SIGNAL(firstInstanceAttempt()),this,SLOT(firstInstanceAttempted()));
     connect(this,SIGNAL(secondInstanceAttempt(const QStringList &)),this,SLOT(secondInstanceAttempted(const QStringList &)));
-    connect(this,SIGNAL(otherApplicationStarted(const QString &)),this,SLOT(otherApplicationStarted(const QString &)));
-    connect(this,SIGNAL(otherApplicationExited(const QString &,qint64)),this,SLOT(otherApplicationExited(const QString &,qint64)));
+    connect(this,SIGNAL(otherApplicationStarted(const QString &,const QStringList &,qint64)),this,SLOT(otherApplicationStarted(const QString &,const QStringList &,qint64)));
+    connect(this,SIGNAL(otherApplicationExited(const QString &,const QStringList &,qint64,qint64)),this,SLOT(otherApplicationExited(const QString &,const QStringList &,qint64,qint64)));
 }
 
 QPacmanTrayApplication::~QPacmanTrayApplication() {
@@ -64,12 +64,12 @@ void QPacmanTrayApplication::putMainWindowOnTop() {
     secondInstanceAttempted(QStringList());
 }
 
-void QPacmanTrayApplication::otherApplicationStarted(const QString & appname) {
+void QPacmanTrayApplication::otherApplicationStarted(const QString & appname,const QStringList & parms,qint64) {
     if (appname != "qpacman") return;
-    emit qpacmanStarted();
+    emit qpacmanStarted(parms);
 }
 
-void QPacmanTrayApplication::otherApplicationExited(const QString & appname,qint64 rc) {
+void QPacmanTrayApplication::otherApplicationExited(const QString & appname,const QStringList & parms,qint64,qint64 rc) {
     if (appname != "qpacman") return;
-    emit qpacmanEnded(rc);
+    emit qpacmanEnded(parms,rc);
 }

@@ -28,7 +28,7 @@ class NetworkReplyProxy : public QNetworkReply {
     void ignoreSslErrors();
 
   private slots:
-    void applyMetaData(bool emit_signal = true);
+    void applyMetaData(bool signal = true);
     void errorInternal(QNetworkReply::NetworkError _error);
     void handleReadyRead(bool is_finished = false);
     void handleFinished();

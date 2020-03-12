@@ -7,6 +7,7 @@
 #include "static.h"
 #include "themeicons.h"
 #include <QMenu>
+#include <QDebug>
 
 RepoToolButton::RepoToolButton(QWidget *parent) : ComboToolButton(parent) {
     setIcon(ThemeIcons::get(ThemeIcons::REPO));

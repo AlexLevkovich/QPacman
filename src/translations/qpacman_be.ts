@@ -95,14 +95,18 @@
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Заблакаваныя файлы:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
-        <location/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Either release or delete them or just press Cancel to exit from application&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Альбо адпусціце альбо выдаліце іх, альбо проста націсніце Скасаваць, каб выйсці з праграмы&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="obsolete">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Альбо адпусціце альбо выдаліце іх, альбо проста націсніце Скасаваць, каб выйсці з праграмы&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location/>
         <source>Delete</source>
         <translation type="unfinished">Выдаліць</translation>
+    </message>
+    <message>
+        <location/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Either release or delete (if nothing is really working now) them or just press Cancel to exit from application&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Альбо адпусціце альбо выдаліце (калі зараз рэальна нічога не працуе) іх, альбо проста націсніце Скасаваць, каб выйсці з праграмы&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -303,12 +307,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+65"/>
+        <location filename="../mainwindow.cpp" line="+66"/>
         <source>readonly mode</source>
         <translation type="unfinished">рэжым прагляду</translation>
     </message>
     <message>
-        <location line="+335"/>
+        <location line="+349"/>
         <source>The contents of cache directory will be removed.
 Are you sure to continue?</source>
         <translation type="unfinished">Змесціва кэша будзе выдалена.
@@ -836,7 +840,7 @@ Are you sure to continue?</source>
 <context>
     <name>RepoToolButton</name>
     <message>
-        <location filename="../repotoolbutton.cpp" line="+13"/>
+        <location filename="../repotoolbutton.cpp" line="+14"/>
         <source>Filters the packages by selected repository</source>
         <translation type="unfinished">Фільтруе пакеты па выбраным сховішчы</translation>
     </message>
