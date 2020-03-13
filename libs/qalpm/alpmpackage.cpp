@@ -14,7 +14,7 @@ bool operator<(const AlpmPackage::Dependence & dep1, const AlpmPackage::Dependen
     int ret;
     if ((ret = dep1.name().compare(dep2.name())) != 0) return (ret < 0);
     if ((ret = ((int)dep1.operation()) - ((int)dep2.operation())) != 0) return (ret < 0);
-    return (Alpm::pkg_vercmp(dep1.version(),dep2.version()) < 0);
+    return (AlpmPackage::pkg_vercmp(dep1.version(),dep2.version()) < 0);
 }
 
 AlpmPackage::Dependence::Dependence() {}
@@ -127,16 +127,23 @@ QString AlpmPackage::Dependence::toString() const {
     return m_version.isEmpty()?m_name:m_name+oper+m_version;
 }
 
-bool AlpmPackage::Dependence::isAppropriate(const AlpmPackage * pkg) {
+bool AlpmPackage::Dependence::isAppropriate(const AlpmPackage * pkg) const {
     if (pkg == NULL) return false;
 
     return isAppropriate(pkg->name(),pkg->version());
 }
 
-bool AlpmPackage::Dependence::isAppropriate(const QString & name,const QString & version) {
+bool AlpmPackage::Dependence::isAppropriate(const Dependence & dep) const {
+    if (m_name != dep.name()) return false;
+    if (m_operation == UNKNOWN && dep.operation() != UNKNOWN) return dep.isAppropriate(m_name,m_version);
+    if (m_operation != UNKNOWN && dep.operation() == UNKNOWN) return isAppropriate(dep.name(),dep.version());
+    return ((m_operation == dep.operation()) && (AlpmPackage::pkg_vercmp(dep.version(),m_version) == 0));
+}
+
+bool AlpmPackage::Dependence::isAppropriate(const QString & name,const QString & version) const {
     if (m_name != name) return false;
     if (m_operation == UNKNOWN) return true;
-    int ret = Alpm::pkg_vercmp(version,m_version);
+    int ret = AlpmPackage::pkg_vercmp(version,m_version);
     switch (m_operation) {
     case MORE:
         return (ret > 0);
@@ -159,21 +166,28 @@ bool AlpmPackage::Dependence::operator==(const AlpmPackage::Dependence & dep) {
     if (ret != 0) return false;
     ret = ((int)operation()) - ((int)dep.operation());
     if (ret != 0) return false;
-    return (Alpm::pkg_vercmp(version(),dep.version()) == 0);
+    return (AlpmPackage::pkg_vercmp(version(),dep.version()) == 0);
 }
 
-QList<AlpmPackage::Dependence> AlpmPackage::Dependence::findDepends() const {
+bool AlpmPackage::Dependence::operator<(const Dependence & dep) {
+    return (*this < dep);
+}
+
+QList<AlpmPackage::Dependence> AlpmPackage::Dependence::findDepends(uint provider_id) const {
     QList<AlpmPackage::Dependence> ret;
     Alpm * alpm = Alpm::instance();
     if (alpm == NULL) return ret;
 
-    QVector<AlpmPackage *> pkgs = alpm->findByFileName(name());
-    if (pkgs.count() <= 0) return ret;
+    QVector<AlpmPackage *> pkgs = version().isEmpty()?alpm->findByPackageName(name()):alpm->findByPackageNameVersion(name(),version());
+    if (pkgs.count() <= 0) {
+        pkgs = alpm->findByPackageNameProvides(*this);
+        if (pkgs.count() <= 0) return ret;
+    }
 
     for (int i=0;i<pkgs.count();i++) {
         if (pkgs[i]->isInstalled()) return pkgs[i]->depends();
     }
-    return pkgs[0]->depends();
+    return pkgs[((int)provider_id >= pkgs.count())?(pkgs.count()-1):(int)provider_id]->depends();
 }
 
 bool AlpmPackage::Dependence::isInstalled() const {
@@ -402,6 +416,43 @@ QStringList AlpmPackage::groups() const {
 QList<AlpmPackage::Dependence> AlpmPackage::depends() const {
     return m_depends;
 }
+
+/*QList<AlpmPackage::Dependence> AlpmPackage::resolve(const QList<AlpmPackage *> & additional_deps) const {
+    QList<AlpmPackage::Dependence> ret;
+    if (isInstalled()) return ret;
+
+    bool appropriate;
+    for (AlpmPackage::Dependence dep: depends()) {
+        appropriate = false;
+        for (AlpmPackage * pkg: additional_deps) {
+            if (dep.isAppropriate(pkg)) {
+                appropriate = true;
+                ret.append(dep);
+                break;
+            }
+        }
+        if (!appropriate) resolve_portion(dep,ret);
+    }
+
+    std::sort(ret.begin(),ret.end());
+    size_t index = 0;
+    ret.erase(std::remove_if(ret.begin(),ret.end(),[&ret,&index](const AlpmPackage::Dependence & dep) {
+        index++;
+        if (index == 1) return false;
+        return ret[index-2].isAppropriate(dep);
+    }),ret.end());
+
+    return ret;
+}
+
+void AlpmPackage::resolve_portion(const AlpmPackage::Dependence & dep,QList<AlpmPackage::Dependence> & list) const {
+    if (dep.isInstalled()) return;
+    qDebug() << dep.name() << dep.version();
+    list.append(dep);
+    for (AlpmPackage::Dependence subdep: dep.findDepends()) {
+        resolve_portion(subdep,list);
+    }
+}*/
 
 QList<AlpmPackage::Dependence> AlpmPackage::optdepends() const {
     return m_optdepends;
@@ -779,4 +830,8 @@ bool AlpmPackage::setChangeStatus(const UserChangeStatus & status) {
     if (!possibleChangeStatuses().contains(status)) return false;
     m_change_status = status;
     return true;
+}
+
+int AlpmPackage::pkg_vercmp(const QString & ver1, const QString & ver2) {
+    return ::alpm_pkg_vercmp(ver1.toLatin1().constData(),ver2.toLatin1().constData());
 }

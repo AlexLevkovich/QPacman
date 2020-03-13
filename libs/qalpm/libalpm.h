@@ -74,6 +74,9 @@ public:
     AlpmDB localDB() const;
     QVector<AlpmPackage *> find(const QRegularExpression & expr) const;
     QVector<AlpmPackage *> findByFileName(const QString & filename) const;
+    QVector<AlpmPackage *> findByPackageName(const QString & pkgname) const;
+    QVector<AlpmPackage *> findByPackageNameVersion(const QString & pkgname,const QString & version) const;
+    QVector<AlpmPackage *> findByPackageNameProvides(const AlpmPackage::Dependence & provide) const;
     bool queryPackages(bool use_eventloop = true); //generates listing_packages_completed() signal if use_eventloop == true
     const QVector<AlpmPackage *> & lastQueriedPackages() const;
     ThreadRun::RC updateDBs(bool force = false);
@@ -83,7 +86,6 @@ public:
     QVector<AlpmPackage *> updates() const;
 
 
-    static int pkg_vercmp(const QString & ver1, const QString & ver2);
     static Alpm * instance();
     static bool isOpen();
 

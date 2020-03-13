@@ -77,10 +77,12 @@ public:
         QString description() const;
         CompareOper operation() const;
         QString toString() const;
-        bool isAppropriate(const AlpmPackage * pkg);
-        bool isAppropriate(const QString & name,const QString & version);
+        bool isAppropriate(const AlpmPackage * pkg) const;
+        bool isAppropriate(const QString & name,const QString & version) const;
+        bool isAppropriate(const Dependence & dep) const;
         bool operator==(const Dependence & dep);
-        QList<Dependence> findDepends() const;
+        bool operator<(const Dependence & dep);
+        QList<Dependence> findDepends(uint provider_id = 0) const;
         bool isInstalled() const;
         QUrl url(const QString & type) const;
         alpm_depend_t to_alpm_depend() const;
@@ -151,6 +153,7 @@ public:
 
     static CompareOper parseNameVersion(const QString & str,QString & name,QString & ver);
     static CompareOper parseNameVersion(const QString & str,QString & repo,QString & name,QString & ver);
+    static int pkg_vercmp(const QString & ver1, const QString & ver2);
 
 protected:
     AlpmPackage(alpm_pkg_t *pkg);

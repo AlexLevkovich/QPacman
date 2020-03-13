@@ -155,15 +155,16 @@ int Static::compare_file_sizes(const QString & left,const QString & right) {
 }
 
 bool Static::isLeftDirNewer(const QDir & left,const QDir & right) {
-    QStringList left_files = leave_only_real_db_files(dirContents(left,"*"+AlpmDB::extention()));
-    QStringList right_files = leave_only_real_db_files(dirContents(right,"*"+AlpmDB::extention()));
+    QString ext = AlpmDB::extension();
+    QStringList left_files = leave_only_real_db_files(dirContents(left,"*"+ext));
+    QStringList right_files = leave_only_real_db_files(dirContents(right,"*"+ext));
     if (Alpm::instance() == NULL) return false;
 
     QList<AlpmDB> dbs = Alpm::instance()->allSyncDBs();
     QStringList expected_names;
     int i;
     for (i=0;i<dbs.count();i++) {
-        expected_names.append(dbs[i].name()+AlpmDB::extention());
+        expected_names.append(dbs[i].name()+ext);
     }
 
     QList<int> left_files_idxs;
@@ -204,8 +205,9 @@ const QStringList Static::leave_only_real_db_files(const QStringList & list) {
     QStringList db_names;
     QList<AlpmDB> list_dbs = Alpm::instance()->allSyncDBs();
     int i;
+    QString ext = AlpmDB::extension();
     for (i=0;i<list_dbs.count();i++) {
-        db_names << list_dbs[i].name()+AlpmDB::extention();
+        db_names << list_dbs[i].name()+ext;
     }
     for (i=(list.count()-1);i>=0;i--) {
         if (!db_names.contains(QFileInfo(list.at(i)).fileName())) ret_list.removeAt(i);

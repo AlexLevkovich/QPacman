@@ -56,7 +56,7 @@ public:
     bool update(bool force = false);
 
     AlpmDB & operator=(const AlpmDB &other);
-    static const QString extention();
+    static const QString extension();
 
     const QVector<AlpmPackage *> & packages() const;
     const QStringList & groups() const;

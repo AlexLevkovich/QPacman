@@ -121,8 +121,8 @@ QString AlpmDB::name() const {
     return QString::fromLocal8Bit(m_name);
 }
 
-const QString AlpmDB::extention() {
-    return QString::fromLocal8Bit(DBEXT);
+const QString AlpmDB::extension() {
+    return AlpmConfig::dbExtension();
 }
 
 bool AlpmDB::update(bool force) {
@@ -275,7 +275,7 @@ bool AlpmAbstractDB::no_version_asc_less(AlpmPackage * item1, AlpmPackage * item
 }
 
 bool AlpmAbstractDB::asc_version_equal(AlpmPackage * item1, AlpmPackage * item2) {
-    return !Alpm::pkg_vercmp(item1->version(),item2->version());
+    return !AlpmPackage::pkg_vercmp(item1->version(),item2->version());
 }
 
 bool AlpmAbstractDB::no_version_asc_equal(AlpmPackage * item1, AlpmPackage * item2) {

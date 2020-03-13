@@ -750,12 +750,12 @@ bool Alpm::dup_repo_cmp(AlpmPackage * pkg1, AlpmPackage * pkg2) {
 bool Alpm::sort_cmp(AlpmPackage * item1,AlpmPackage * item2) {
     int ret;
     if ((ret = item1->name().compare(item2->name())) != 0) return (ret < 0);
-    return (Alpm::pkg_vercmp(item1->version(),item2->version()) < 0);
+    return (AlpmPackage::pkg_vercmp(item1->version(),item2->version()) < 0);
 }
 
 bool Alpm::sort_equal_cmp(AlpmPackage * item1,AlpmPackage * item2) {
     if (item1->name().compare(item2->name())) return false;
-    return !Alpm::pkg_vercmp(item1->version(),item2->version());
+    return !AlpmPackage::pkg_vercmp(item1->version(),item2->version());
 }
 
 const QVector<AlpmPackage *> & Alpm::lastQueriedPackages() const {
@@ -947,7 +947,7 @@ ThreadRun::RC Alpm::downloadPackages(const QList<AlpmPackage *> & pkgs,QStringLi
 }
 
 bool Alpm::updates_cmp(AlpmPackage * item1,AlpmPackage * item2) {
-    return (Alpm::pkg_vercmp(item1->version(),item2->version()) > 0 &&
+    return (AlpmPackage::pkg_vercmp(item1->version(),item2->version()) > 0 &&
             item1->name().compare(item2->name()) == 0);
 }
 
@@ -1564,7 +1564,7 @@ bool Alpm::cleanCacheDirs() {
 bool Alpm::pkgLessThan(AlpmPackage * pkg1,AlpmPackage * pkg2) {
     int ret;
     if ((ret = pkg1->name().compare(pkg2->name())) != 0) return (ret < 0);
-    if ((ret = Alpm::pkg_vercmp(pkg1->version(),pkg2->version())) != 0) return (ret < 0);
+    if ((ret = AlpmPackage::pkg_vercmp(pkg1->version(),pkg2->version())) != 0) return (ret < 0);
     if (pkg1->repo() == "local") return true;
     if (pkg2->repo() == "local") return false;
     return (pkg1->repo().compare(pkg2->repo()) < 0);
@@ -1599,6 +1599,51 @@ QVector<AlpmPackage *> Alpm::findByFileName(const QString & filename) const {
     return ret;
 }
 
+QVector<AlpmPackage *> Alpm::findByPackageName(const QString & pkgname) const {
+    QVector<AlpmPackage *> ret;
+    if (!isValid(true)) return ret;
+
+    ret += localDB().findByPackageName(pkgname);
+    QList<AlpmDB> dbs = ((Alpm *)this)->allSyncDBs();
+    for (int i=0;i<dbs.count();i++) {
+        ret += dbs[i].findByPackageName(pkgname);
+    }
+
+    std::sort(ret.begin(),ret.end(),pkgLessThan);
+
+    return ret;
+}
+
+QVector<AlpmPackage *> Alpm::findByPackageNameVersion(const QString & pkgname,const QString & version) const {
+    QVector<AlpmPackage *> ret;
+    if (!isValid(true)) return ret;
+
+    ret += localDB().findByPackageNameVersion(pkgname,version);
+    QList<AlpmDB> dbs = ((Alpm *)this)->allSyncDBs();
+    for (int i=0;i<dbs.count();i++) {
+        ret += dbs[i].findByPackageNameVersion(pkgname,version);
+    }
+
+    std::sort(ret.begin(),ret.end(),pkgLessThan);
+
+    return ret;
+}
+
+QVector<AlpmPackage *> Alpm::findByPackageNameProvides(const AlpmPackage::Dependence & provide) const {
+    QVector<AlpmPackage *> ret;
+    if (!isValid(true)) return ret;
+
+    ret += localDB().findByPackageNameProvides(provide);
+    QList<AlpmDB> dbs = ((Alpm *)this)->allSyncDBs();
+    for (int i=0;i<dbs.count();i++) {
+        ret += dbs[i].findByPackageNameProvides(provide);
+    }
+
+    std::sort(ret.begin(),ret.end());
+
+    return ret;
+}
+
 QVector<AlpmPackage *> Alpm::find(const QRegularExpression & expr) const {
     QVector<AlpmPackage *> ret;
     if (!isValid(true)) return ret;
@@ -1626,8 +1671,4 @@ QStringList Alpm::repos() const {
 
 QStringList Alpm::groups() const {
     return m_groups;
-}
-
-int Alpm::pkg_vercmp(const QString & ver1, const QString & ver2) {
-    return ::alpm_pkg_vercmp(ver1.toLatin1().constData(),ver2.toLatin1().constData());
 }
