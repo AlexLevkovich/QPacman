@@ -57,7 +57,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../localpackagemainwindow.cpp" line="+42"/>
+        <location filename="../localpackagemainwindow.cpp" line="+44"/>
         <source>Install all as dependencies</source>
         <translation type="unfinished">Установить как зависимости</translation>
     </message>

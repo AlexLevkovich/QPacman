@@ -124,6 +124,8 @@ public:
     bool moveRowAtEnd(QStandardItem * item);
     SimpleProgressItem * previousProgressItem(QStandardItem * item);
     void clear();
+    bool doClearOnHide() const;
+    void setClearOnHide(bool flag);
 
 signals:
     void rootItemsCountChanged(quint64 count);

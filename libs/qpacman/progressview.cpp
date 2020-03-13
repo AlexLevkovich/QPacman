@@ -259,6 +259,14 @@ ProgressView::ProgressView(QWidget *parent,bool clear_on_hide) : QTreeView(paren
     connect(m_model,SIGNAL(itemChanged(QStandardItem *)),this,SLOT(itemChanged(QStandardItem *)));
 }
 
+bool ProgressView::doClearOnHide() const {
+    return m_clear_on_hide;
+}
+
+void ProgressView::setClearOnHide(bool flag) {
+    m_clear_on_hide = flag;
+}
+
 SimpleProgressItem * ProgressView::appendProgressRow(const QString & text,int min,int max,int value,const QIcon & icon) {
     QList<QStandardItem *> items;
     m_model->appendRow((items = createProgressRow(text,min,max,value,icon)));

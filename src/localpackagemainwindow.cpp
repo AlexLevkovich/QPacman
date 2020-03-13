@@ -22,6 +22,8 @@
 LocalPackageMainWindow::LocalPackageMainWindow(const QStringList & packages,QWidget *parent) : QMainWindow(parent), ui(new Ui::LocalPackageMainWindow) {
     ui->setupUi(this);
 
+    ui->progressView->setClearOnHide(false);
+
     view_group = new WidgetGroup(this);
     view_group->add(ui->splitter);
     view_group->add(ui->progressView);
