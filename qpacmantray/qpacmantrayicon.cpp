@@ -19,7 +19,7 @@ QPacmanTrayIcon::QPacmanTrayIcon(QAction * checkUpdatesAction,QAction * updateAc
     m_mainWindowAction = mainWindowAction;
     m_quitAction = quitAction;
 
-    setIcon(ThemeIcons::get(ThemeIcons::QPACMANTRAY));
+    setIcon(ThemeIcons::QPACMANTRAY);
 
     good_player.setMedia(QUrl("qrc:/sound/KDE-Sys-App-Positive.ogg"));
     bad_player.setMedia(QUrl("qrc:/sound/KDE-Sys-App-Error.ogg"));
@@ -28,8 +28,21 @@ QPacmanTrayIcon::QPacmanTrayIcon(QAction * checkUpdatesAction,QAction * updateAc
     connect(this,SIGNAL(fillingMenuRequest(QMenu *)),this,SLOT(fillingMenuRequest(QMenu *)));
 }
 
+void QPacmanTrayIcon::setIcon(ThemeIcons::Icon id) {
+    const QIcon icon = ThemeIcons::get(id);
+    m_id = icon.isNull()?ThemeIcons::null:id;
+    MovieTrayIcon::setIcon(icon);
+}
+
+void QPacmanTrayIcon::setIcon(ThemeIcons::Icon id,int input_frame_height,int delay) {
+    const QString name = ThemeIcons::name(id);
+    m_id = name.isEmpty()?ThemeIcons::null:id;
+    MovieTrayIcon::setIcon(name,input_frame_height,delay);
+}
+
 void QPacmanTrayIcon::clicked() {
-    if (m_checkUpdatesAction->isEnabled()) m_checkUpdatesAction->trigger();
+    if (m_checkUpdatesAction->isEnabled() && (m_id == ThemeIcons::WARNING)) m_checkUpdatesAction->trigger();
+    else if (m_updateAction->isEnabled() && (m_id == ThemeIcons::QPACMANTRAY)) m_updateAction->trigger();
 }
 
 void QPacmanTrayIcon::fillingMenuRequest(QMenu * menu) {
@@ -43,7 +56,7 @@ void QPacmanTrayIcon::fillingMenuRequest(QMenu * menu) {
 
 void QPacmanTrayIcon::updatesFound(const QStringList & pkgs) {
     if (pkgs.count() > 0) {
-        setIcon(ThemeIcons::name(ThemeIcons::QPACMANTRAY),22,1);
+        setIcon(ThemeIcons::QPACMANTRAY,22,1);
         if (!isVisible()) setVisible(true);
         QString message = pkgs.join('\n');
         QString title = tr("New packages are available:");
@@ -59,14 +72,14 @@ void QPacmanTrayIcon::updatesFound(const QStringList & pkgs) {
 }
 
 void QPacmanTrayIcon::checkingInProgress() {
-    setIcon(ThemeIcons::name(ThemeIcons::CHECKING_MOVIE),8,300);
+    setIcon(ThemeIcons::CHECKING_MOVIE,8,300);
     if (!isVisible()) setVisible(true);
     QString title = tr("The availability of new packages are being checked...");
     setToolTip(title,"");
 }
 
 void QPacmanTrayIcon::updateInProgress() {
-    setIcon(ThemeIcons::name(ThemeIcons::WAITING_MOVIE),22,300);
+    setIcon(ThemeIcons::WAITING_MOVIE,22,300);
     if (!isVisible()) setVisible(true);
     QString title = tr("The packages are being updated...");
     setToolTip(title,"");
@@ -80,7 +93,7 @@ void QPacmanTrayIcon::checkingCompleted(const QString & error) {
         setVisible(false);
     }
     else {
-        setIcon(ThemeIcons::get(ThemeIcons::WARNING));
+        setIcon(ThemeIcons::WARNING);
         if (!isVisible()) setVisible(true);
         QString title = tr("There were errors diring processing!");
         setToolTip(title,error);

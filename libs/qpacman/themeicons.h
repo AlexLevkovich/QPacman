@@ -11,6 +11,7 @@
 class ThemeIcons {
 public:
     enum Icon {
+        null,
         CHANGES_DLG,
         DOWNLOAD_AVERAGE,
         FIND,

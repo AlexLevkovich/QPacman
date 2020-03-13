@@ -163,7 +163,7 @@
 <context>
     <name>QPacmanTrayIcon</name>
     <message>
-        <location filename="../qpacmantrayicon.cpp" line="+49"/>
+        <location filename="../qpacmantrayicon.cpp" line="+62"/>
         <source>New packages are available:</source>
         <translation type="unfinished">Найдены обновления:</translation>
     </message>

@@ -7,6 +7,7 @@
 #define QPACMANTRAYICON_H
 
 #include "movietrayicon.h"
+#include "themeicons.h"
 #include <QAction>
 #include <QMediaPlayer>
 
@@ -28,6 +29,9 @@ private slots:
     void fillingMenuRequest(QMenu * menu);
 
 private:
+    void setIcon(ThemeIcons::Icon id);
+    void setIcon(ThemeIcons::Icon id,int input_frame_height,int delay);
+
     QMediaPlayer good_player;
     QMediaPlayer bad_player;
     QAction * m_checkUpdatesAction;
@@ -35,6 +39,7 @@ private:
     QAction * m_preferencesAction;
     QAction * m_mainWindowAction;
     QAction * m_quitAction;
+    ThemeIcons::Icon m_id;
 };
 
 #endif // QPACMANTRAYICON_H

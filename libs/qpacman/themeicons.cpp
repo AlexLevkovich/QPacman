@@ -250,6 +250,8 @@ const QString ThemeIcons::name(ThemeIcons::Icon id) {
             return QString::fromLocal8Bit("://pics/refresh-button.png");
         case REFRESH_BTN_SHADOW:
             return QString::fromLocal8Bit("://pics/refresh-button_shadow.png");
+        default:
+            break;
     }
 
     return QString();
