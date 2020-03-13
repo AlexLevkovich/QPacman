@@ -312,7 +312,7 @@
         <translation type="unfinished">рэжым прагляду</translation>
     </message>
     <message>
-        <location line="+349"/>
+        <location line="+348"/>
         <source>The contents of cache directory will be removed.
 Are you sure to continue?</source>
         <translation type="unfinished">Змесціва кэша будзе выдалена.

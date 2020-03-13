@@ -37,11 +37,11 @@ PacmanInfoBrowser::PacmanInfoBrowser(QWidget *parent) : CustomPopupTextBrowser(p
 }
 
 void PacmanInfoBrowser::openMailUrl(const QUrl & url) {
-    Static::runDetachedUnderOrigUser("xdg-email",QString::fromLatin1(url.toEncoded().constData()));
+    Static::runDetachedUnderOrigUser("xdg-email",QStringList() << QString::fromLatin1(url.toEncoded().constData()));
 }
 
 void PacmanInfoBrowser::openUrl(const QUrl & url) {
-    Static::runDetachedUnderOrigUser("xdg-open",QString::fromLatin1(url.toEncoded().constData()));
+    Static::runDetachedUnderOrigUser("xdg-open",QStringList() << QString::fromLatin1(url.toEncoded().constData()));
 }
 
 void PacmanInfoBrowser::setSource(const QUrl & name) {

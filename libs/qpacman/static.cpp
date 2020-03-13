@@ -222,10 +222,16 @@ const QByteArray Static::md5_summ(const QString & filepath) {
     return hash.result();
 }
 
-void Static::runDetachedUnderOrigUser(const QString & program,const QString & args) {
+void Static::runDetachedUnderOrigUser(const QString & program,const QStringList & args) {
     QProcess process;
-    process.setProgram(SU_BIN);
-    process.setArguments(QStringList() << "-" << getenv("ORIGINAL_USER") << "-c" << QString("DISPLAY=%1 %2 %3").arg(getenv("ORIGINAL_DISPLAY")).arg(program).arg(args));
+    if (getuid() == 0) {
+        process.setProgram(SU_BIN);
+        process.setArguments(QStringList() << "-" << getenv("ORIGINAL_USER") << "-c" << QString("DISPLAY=%1 %2 %3").arg(getenv("ORIGINAL_DISPLAY")).arg(program).arg(args.join(" ")));
+    }
+    else {
+        process.setProgram(program);
+        process.setArguments(args);
+    }
     process.startDetached();
 }
 

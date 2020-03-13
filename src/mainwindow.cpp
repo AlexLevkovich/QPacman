@@ -182,7 +182,6 @@ void MainWindow::updateSystemSyncDir(const QDir & sys_sync_path,const QDir & use
         QCoreApplication::exit(102);
         return;
     }
-    //QMetaObject::invokeMethod(this,"blockedOperationCompleted",Qt::QueuedConnection,Q_ARG(ThreadRun::RC,ThreadRun::OK));
 }
 
 bool MainWindow::copyDirectoryFiles(const QString & fromDir,const QString & toDir,const QString & suffix) {

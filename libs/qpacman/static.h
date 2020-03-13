@@ -48,7 +48,7 @@ public:
     static void setIniValue(const QString & key,const QVariant & value);
     static bool isLeftDirNewer(const QDir & left,const QDir & right);
     static const QStringList dirContents(const QDir & dir,const QString & nameFilter);
-    static void runDetachedUnderOrigUser(const QString & program,const QString & args);
+    static void runDetachedUnderOrigUser(const QString & program,const QStringList & args);
     static const QSize quadroSize(int dimension);
     static void setupTranslations(const QString & mainName,const QDir & installDir,const QDir & mainLocalDir,const QDir & alpmLocalDir,const QDir & libLocalDir);
 
