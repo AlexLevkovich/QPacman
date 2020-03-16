@@ -6,7 +6,6 @@ Comment[be_BY]=Яшчэ адзін графічны прагляднік пак�
 Comment=Yet another pacman's GUI package viewer
 Exec=qpacman --user
 Icon=qpacman
-MimeType=application/x-xz-compressed-tar;application/x-tar;
 Name=qpacman (viewer)
 Path=.
 StartupNotify=false
