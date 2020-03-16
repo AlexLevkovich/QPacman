@@ -431,7 +431,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Начинаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+308"/>
+        <location line="+309"/>
         <location line="+6"/>
         <location line="+187"/>
         <source>Skipping target: %1</source>

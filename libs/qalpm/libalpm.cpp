@@ -1065,11 +1065,12 @@ void Alpm::sync_sysupgrade_portion(QVector<AlpmPackage *> & add_pkgs,int startin
         else _lastindex = i;
     }
     if (_startindex == -1 || _lastindex == -1) return;
-    if (_startindex == _lastindex) return;
 
     for (i=(_startindex-1);i>=startindex;i--) {
         add_pkgs[i] = NULL;
     }
+
+    if (_startindex == _lastindex) return;
 
     int sel_index = _startindex;
     alpm_question_select_provider_t provider_question;
