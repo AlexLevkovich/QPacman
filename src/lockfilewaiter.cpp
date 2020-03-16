@@ -29,6 +29,7 @@ void LockFileWaiter::showEvent(QShowEvent * event) {
 
 void LockFileWaiter::on_buttonBox_rejected() {
     reject();
+    QCoreApplication::exit(100);
 }
 
 void LockFileWaiter::pathRejected(const QString &,Inotifier::Error) {
