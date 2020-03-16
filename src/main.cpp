@@ -13,7 +13,7 @@
 #include "qpacmanapplication.h"
 
 int main(int argc, char *argv[]) {
-    if (getuid() != 0 && (argc <= 1 || strcmp(argv[1],"--user"))) {
+    if (getuid() != 0 && (argc <= 1 || (strcmp(argv[1],"--user") || (argc != 2)))) {
         return Static::startUnderRoot(argc,argv);
     }
 
