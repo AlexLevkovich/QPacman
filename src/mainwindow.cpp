@@ -10,7 +10,6 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QActionGroup>
-#include <QProcessEnvironment>
 #include "static.h"
 #include "messagedialog.h"
 #include "dbrefresher.h"
@@ -18,14 +17,12 @@
 #include "packagedownloader.h"
 #include "themeicons.h"
 #include "actionapplier.h"
-#include <sys/types.h>
-#include <pwd.h>
 #include "lockfilewaiter.h"
 #include "exclusiveactiongroup.h"
 #include "widgetgroup.h"
 #include "alpmlockingnotifier.h"
 #include "optionaldepsdlg.h"
-#include <QSignalBlocker>
+#include "rootsyncdirupdater.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),ui(new Ui::MainWindow) {
     ui->setupUi(this);
@@ -114,108 +111,15 @@ void MainWindow::onDownloadRequested(AlpmPackage * pkg) {
 
 void MainWindow::refreshMaybeStarted(bool * ok) {
     QString userSyncDir = qgetenv("QPACMAN_SYNC_DIR");
-    if (Alpm::isOpen() && !userSyncDir.isEmpty() && QDir(userSyncDir).exists() && Static::isLeftDirNewer(QDir(userSyncDir),QDir(Alpm::instance()->dbDirPath()+QDir::separator()+QString::fromLocal8Bit("sync")))) {
-        updateSystemSyncDir(QDir(Alpm::instance()->dbDirPath()+QDir::separator()+QString::fromLatin1("sync")),QDir(userSyncDir));
+    if (Alpm::isOpen()) {
+        RootSyncDirUpdater updater(Alpm::instance()->dbDirPath()+QDir::separator()+QString::fromLatin1("sync"),userSyncDir,lock_notifier);
+        connect(&updater,&RootSyncDirUpdater::locked_files,[&](const QStringList & files) {
+            if (LockFileWaiter(files).exec() == QDialog::Rejected) ((RootSyncDirUpdater *)QObject::sender())->quit();
+        });
+        connect(&updater,&RootSyncDirUpdater::need_alpm_reload,[&] () { need_alpm_reload = true; });
+        updater.exec();
     }
     *ok = true;
-}
-
-class LockFileArranger {
-private:
-    LockFileArranger(const QString & name) {
-        m_name = name;
-        if (!QFile(name).open(QIODevice::WriteOnly)) m_name.clear();
-    }
-    ~LockFileArranger() {
-        if (isCreated()) QFile(m_name).remove();
-    }
-    bool isCreated() const {
-        return !m_name.isEmpty();
-    }
-
-    QString m_name;
-    friend class MainWindow;
-};
-
-void MainWindow::updateSystemSyncDir(const QDir & sys_sync_path,const QDir & user_sync_path) {
-    QStringList lock_files_to_wait;
-    QString sys_lock_file = sys_sync_path.path()+QDir::separator()+".." + QDir::separator() + "db.lck";
-    if (QFile(sys_lock_file).exists()) lock_files_to_wait.append(sys_lock_file);
-    QString user_lock_file = user_sync_path.path()+QDir::separator()+".." + QDir::separator() + "db.lck";
-    if (QFile(user_lock_file).exists()) lock_files_to_wait.append(user_lock_file);
-    const QSignalBlocker blocker(lock_notifier);
-    if (lock_files_to_wait.count() > 0) {
-        if (LockFileWaiter(lock_files_to_wait).exec() == QDialog::Rejected) {
-            QCoreApplication::exit(100);
-            return;
-        }
-    }
-    LockFileArranger sys_lock(sys_lock_file);
-    if (!sys_lock.isCreated()) {
-        qDebug() << "Error:" << "something wrong: cannot create lock file:" << sys_lock_file;
-        QCoreApplication::exit(101);
-        return;
-    }
-    LockFileArranger user_lock(user_lock_file);
-    if (user_lock.isCreated()) {
-        QString orig_user = QProcessEnvironment::systemEnvironment().value("ORIGINAL_USER","");
-        if (orig_user.isEmpty()) {
-            qDebug() << "Error:" << "something wrong with application setup, ask programmer what to do";
-            QCoreApplication::exit(103);
-            return;
-        }
-        struct passwd * pw = getpwnam(orig_user.toLocal8Bit().constData());
-        if (pw == NULL) {
-            qDebug() << "Error:" << "something wrong with application setup, ask programmer what to do";
-            QCoreApplication::exit(104);
-            return;
-        }
-        chown(user_lock_file.toLocal8Bit().constData(),pw->pw_uid,pw->pw_gid);
-    }
-    else {
-        qDebug() << "Error:" << "something wrong: cannot create user lock file:" << user_lock_file;
-        QCoreApplication::exit(102);
-        return;
-    }
-    bool ret = copyDirectoryFiles(user_sync_path.path(),sys_sync_path.path(),"db");
-    if (!ret) {
-        QCoreApplication::exit(102);
-        return;
-    }
-}
-
-bool MainWindow::copyDirectoryFiles(const QString & fromDir,const QString & toDir,const QString & suffix) {
-    QDir sourceDir(fromDir);
-    QDir targetDir(toDir);
-    if(!targetDir.exists() && !targetDir.mkdir(targetDir.absolutePath())) {
-        qDebug() << "Error:" << "cannot create dir:" << targetDir;
-        return false;
-    }
-    if(!sourceDir.exists()) {
-        qDebug() << "Error:" << "source dir does not exist:" << fromDir;
-        return false;
-    }
-
-    QFileInfoList fileInfoList = sourceDir.entryInfoList();
-    foreach (QFileInfo fileInfo, fileInfoList) {
-        if(fileInfo.fileName() == "." || fileInfo.fileName() == "..") continue;
-
-        if(fileInfo.isDir()) {
-            if(!copyDirectoryFiles(fileInfo.filePath(),targetDir.filePath(fileInfo.fileName()))) return false;
-        }
-        else {
-            if (!suffix.isEmpty() && fileInfo.suffix() != suffix) continue;
-            if(targetDir.exists(fileInfo.fileName())) targetDir.remove(fileInfo.fileName());
-            if(!QFile::copy(fileInfo.filePath(),targetDir.filePath(fileInfo.fileName()))) {
-                qDebug() << "Error:" << "cannot copy" << fileInfo.filePath() << "to" << targetDir.filePath(fileInfo.fileName());
-                return false;
-            }
-        }
-    }
-
-    need_alpm_reload = true;
-
-    return true;
 }
 
 void MainWindow::alpm_locking_changed() {

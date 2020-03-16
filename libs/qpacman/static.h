@@ -46,19 +46,12 @@ public:
         return settings.value("settings/"+key,(QVariant)defValue).value<T>();
     }
     static void setIniValue(const QString & key,const QVariant & value);
-    static bool isLeftDirNewer(const QDir & left,const QDir & right);
-    static const QStringList dirContents(const QDir & dir,const QString & nameFilter);
     static void runDetachedUnderOrigUser(const QString & program,const QStringList & args);
     static const QSize quadroSize(int dimension);
     static void setupTranslations(const QString & mainName,const QDir & installDir,const QDir & mainLocalDir,const QDir & alpmLocalDir,const QDir & libLocalDir);
 
 private:
     static void init_tr_variables();
-    static int have_file_with_same_name(const QStringList & arr,const QString & name);
-    static qint64 compare_file_dates(const QString & left,const QString & right);
-    static int compare_file_sizes(const QString & left,const QString & right);
-    static const QStringList leave_only_real_db_files(const QStringList & list);
-    static const QByteArray md5_summ(const QString & filepath);
 };
 
 #endif // STATIC_H
