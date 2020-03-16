@@ -117,6 +117,7 @@ void LocalPackageMainWindow::operation_completed(ThreadRun::RC) {
     forceInstall->setVisible(false);
     ui->actionLog->setVisible(true);
     connect(ui->actionCancel,SIGNAL(triggered()),this,SLOT(close()));
+    ui->actionCancel->setText(tr("Quit"));
 }
 
 void LocalPackageMainWindow::logString(const QString & str) {

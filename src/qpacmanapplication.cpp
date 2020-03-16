@@ -10,6 +10,8 @@
 #include "localpackagemainwindow.h"
 #include "dbrefresher.h"
 #include "packageinstaller.h"
+#include "progressview.h"
+#include "rootsyncdirupdater.h"
 #include <QFileInfo>
 #include <QDir>
 #include <QPlainTextEdit>
@@ -57,13 +59,22 @@ void QPacmanApplication::firstInstanceAttempted() {
 
 void QPacmanApplication::upgradePackages() {
     QString userSyncDir = qgetenv("QPACMAN_SYNC_DIR");
-    if (Alpm::isOpen() && !userSyncDir.isEmpty() && Static::isLeftDirNewer(QDir(userSyncDir),QDir(Alpm::instance()->dbDirPath()+QDir::separator()+QString::fromLatin1("sync")))) {
+    if (Alpm::isOpen()) {
         updateWindow = PackageProcessor::createMainProcessorWindow(&progressView,&logView,&cancelAction,&logAction);
-        DBRefresher * dbr = new DBRefresher(progressView,cancelAction);
-        connect(dbr,SIGNAL(completed(ThreadRun::RC)),SLOT(dbRefreshCompleted(ThreadRun::RC)),Qt::QueuedConnection);
-        connect(dbr,SIGNAL(logString(const QString &)),logView,SLOT(appendPlainText(const QString &)),Qt::QueuedConnection);
+        RootSyncDirUpdater * updater = new RootSyncDirUpdater(Alpm::instance()->dbDirPath()+QDir::separator()+QString::fromLatin1("sync"),userSyncDir);
+        connect(updater,&RootSyncDirUpdater::ok,[&] () {
+            RootSyncDirUpdater * sender = (RootSyncDirUpdater *)QObject::sender();
+            dbRefreshCompleted(ThreadRun::OK);
+            sender->deleteLater();
+        });
+        connect(updater,&RootSyncDirUpdater::error,[&] (const QString & err) {
+            RootSyncDirUpdater * sender = (RootSyncDirUpdater *)QObject::sender();
+            progressView->appendErrorRow(err);
+            dbRefreshCompleted(ThreadRun::BAD);
+            sender->deleteLater();
+        });
+        connect(updater,&RootSyncDirUpdater::need_alpm_reload,[&] () { Alpm::instance()->reopen(); });
     }
-    else dbRefreshCompleted(ThreadRun::OK);
 }
 
 void QPacmanApplication::dbRefreshCompleted(ThreadRun::RC rc) {
@@ -81,6 +92,7 @@ void QPacmanApplication::upgradeCompleted(ThreadRun::RC) {
      cancelAction->setEnabled(true);
      logAction->setEnabled(true);
      connect(cancelAction,SIGNAL(triggered()),updateWindow,SLOT(close()));
+     cancelAction->setText(tr("Quit"));
 }
 
 void QPacmanApplication::initMainWindow() {
