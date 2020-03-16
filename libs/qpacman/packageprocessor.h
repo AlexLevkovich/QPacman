@@ -50,9 +50,9 @@ protected:
     bool eventFilter(QObject *obj,QEvent *event);
 
 private slots:
+    void on_error(const QString & str);
     void on_information(const QString & str,bool significant);
     void on_event(const QString & str);
-    void on_error(const QString & str);
     void on_optdepends_event(const QString & pkgname,const StringStringMap & installed,const StringStringMap & pending);
     void on_event_progress(int percents);
     void on_hook(const QString & txt,int pos,int total);
