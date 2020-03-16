@@ -68,6 +68,7 @@ SOURCES += \
     packagedownloader.cpp \
     packageprocessor.cpp \
     progressview.cpp \
+    rootsyncdirupdater.cpp \
     settingswidget.cpp \
     sharedmemory.cpp \
     singleapplicationevents.cpp \
@@ -109,6 +110,7 @@ HEADERS += \
     packagedownloader.h \
     packageprocessor.h \
     progressview.h \
+    rootsyncdirupdater.h \
     settingswidget.h \
     sharedmemory.h \
     categorytoolbutton.h \
