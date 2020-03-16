@@ -393,7 +393,7 @@
         <translation type="unfinished">Недопустимое исключение произошло при создании общей памяти.</translation>
     </message>
     <message>
-        <location filename="../static.cpp" line="+36"/>
+        <location filename="../static.cpp" line="+35"/>
         <source>All</source>
         <translation type="unfinished">Все</translation>
     </message>
@@ -449,6 +449,59 @@ Are you sure?</source>
         <location filename="../usualuserupdateschecker.cpp" line="+22"/>
         <source>Alpm library is not initialized!</source>
         <translation type="unfinished">Библиотека Alpm не проинициализирована!</translation>
+    </message>
+</context>
+<context>
+    <name>RootSyncDirUpdater</name>
+    <message>
+        <location filename="../rootsyncdirupdater.cpp" line="+32"/>
+        <source>userSyncDir variable is empty or the dir it represents does not exist!!!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>sysSyncDir variable is empty or the dir it represents does not exist!!!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+75"/>
+        <source>something wrong with application setup, ask programmer what to do</source>
+        <translation type="unfinished">что-то не так с настройкой приложения, спросите программиста, что делать</translation>
+    </message>
+    <message>
+        <location line="-13"/>
+        <source>Something wrong: cannot create lock file: </source>
+        <translation type="unfinished">Что-то не так: не могу создать файл блокировки: </translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Something wrong with application setup, ask programmer what to do</source>
+        <translation type="unfinished">что-то не так с настройкой приложения, спросите программиста, что делать</translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Something wrong: cannot create user lock file: </source>
+        <translation type="unfinished">Что-то не так: не могу создать пользовательский файл блокировки: </translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>cannot create dir: </source>
+        <translation type="unfinished">невозможно создать каталог: </translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>source dir does not exist: </source>
+        <translation type="unfinished">Исходный каталог не существует: </translation>
+    </message>
+    <message>
+        <location line="+15"/>
+        <source>cannot copy </source>
+        <translation type="unfinished">невозможно копировать </translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source> to </source>
+        <translation type="unfinished"> в </translation>
     </message>
 </context>
 </TS>

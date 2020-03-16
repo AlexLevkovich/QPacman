@@ -67,6 +67,11 @@
         <translation type="unfinished">Паверх файлаў</translation>
     </message>
     <message>
+        <location line="+75"/>
+        <source>Quit</source>
+        <translation type="unfinished">Выйсцi</translation>
+    </message>
+    <message>
         <location filename="../localpackagemainwindow.ui"/>
         <source>Log</source>
         <translation type="unfinished">Журнал</translation>
@@ -307,12 +312,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+66"/>
+        <location filename="../mainwindow.cpp" line="+63"/>
         <source>readonly mode</source>
         <translation type="unfinished">рэжым прагляду</translation>
     </message>
     <message>
-        <location line="+348"/>
+        <location line="+255"/>
         <source>The contents of cache directory will be removed.
 Are you sure to continue?</source>
         <translation type="unfinished">Змесціва кэша будзе выдалена.
@@ -843,6 +848,18 @@ Are you sure to continue?</source>
         <location filename="../repotoolbutton.cpp" line="+14"/>
         <source>Filters the packages by selected repository</source>
         <translation type="unfinished">Фільтруе пакеты па выбраным сховішчы</translation>
+    </message>
+</context>
+<context>
+    <name>QPacmanApplication</name>
+    <message>
+        <source>Close</source>
+        <translation type="obsolete">Выйсцi</translation>
+    </message>
+    <message>
+        <location filename="../qpacmanapplication.cpp" line="+95"/>
+        <source>Quit</source>
+        <translation type="unfinished">Выйсцi</translation>
     </message>
 </context>
 </TS>
