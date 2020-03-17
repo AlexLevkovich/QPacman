@@ -454,7 +454,7 @@ Are you sure?</source>
 <context>
     <name>RootSyncDirUpdater</name>
     <message>
-        <location filename="../rootsyncdirupdater.cpp" line="+32"/>
+        <location filename="../rootsyncdirupdater.cpp" line="+33"/>
         <source>userSyncDir variable is empty or the dir it represents does not exist!!!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -494,7 +494,7 @@ Are you sure?</source>
         <translation type="unfinished">зыходны каталог не існуе: </translation>
     </message>
     <message>
-        <location line="+15"/>
+        <location line="+17"/>
         <source>cannot copy </source>
         <translation type="unfinished">немагчыма скапіяваць </translation>
     </message>
