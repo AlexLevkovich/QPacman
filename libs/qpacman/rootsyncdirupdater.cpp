@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include "alpmdb.h"
 #include "libalpm.h"
+#include "downloaderinterface.h"
 
 RootSyncDirUpdater::RootSyncDirUpdater(const QString & sysSyncDir,const QString & userSyncDir,AlpmLockingNotifier * locking_notifier,QObject *parent) : QEventLoop(parent) {
     m_locking_notifier = locking_notifier;
@@ -132,6 +133,7 @@ bool RootSyncDirUpdater::copyDirectoryFiles(const QString & fromDir,const QStrin
         return false;
     }
 
+    QString targetPath;
     QFileInfoList fileInfoList = sourceDir.entryInfoList();
     foreach (QFileInfo fileInfo, fileInfoList) {
         if(fileInfo.fileName() == "." || fileInfo.fileName() == "..") continue;
@@ -142,10 +144,12 @@ bool RootSyncDirUpdater::copyDirectoryFiles(const QString & fromDir,const QStrin
         else {
             if (!suffix.isEmpty() && fileInfo.suffix() != suffix) continue;
             if(targetDir.exists(fileInfo.fileName())) targetDir.remove(fileInfo.fileName());
-            if(!QFile::copy(fileInfo.filePath(),targetDir.filePath(fileInfo.fileName()))) {
-                emit error(QString::fromLatin1("copyDirectoryFiles: ") + tr("cannot copy ") + fileInfo.filePath() + tr(" to ") + targetDir.filePath(fileInfo.fileName()));
+            targetPath = targetDir.filePath(fileInfo.fileName());
+            if(!QFile::copy(fileInfo.filePath(),targetPath)) {
+                emit error(QString::fromLatin1("copyDirectoryFiles: ") + tr("cannot copy ") + fileInfo.filePath() + tr(" to ") + targetPath);
                 return false;
             }
+            DownloaderInterface::setFileDate(targetPath,fileInfo.lastModified());
         }
     }
 
