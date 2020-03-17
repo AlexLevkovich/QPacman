@@ -91,6 +91,11 @@
         <source>Play sound if updates were found</source>
         <translation type="unfinished">Проиграть мелодию в случае найденых обновлений</translation>
     </message>
+    <message>
+        <location/>
+        <source>Check for the updates right after qpacman instance has unloaded</source>
+        <translation type="unfinished">Проверять наличие обновлений сразу после выгрузки экземпляра qpacman</translation>
+    </message>
 </context>
 <context>
     <name>TrayPreferences</name>
@@ -155,7 +160,7 @@
         <translation type="unfinished">Показывает окно с настройками</translation>
     </message>
     <message>
-        <location filename="../traypreferences.cpp" line="+33"/>
+        <location filename="../traypreferences.cpp" line="+34"/>
         <source>Program</source>
         <translation type="unfinished">Программа</translation>
     </message>

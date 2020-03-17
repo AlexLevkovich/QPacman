@@ -16,7 +16,7 @@ class QMenu;
 class QPacmanTrayIcon : public MovieTrayIcon {
     Q_OBJECT
 public:
-    QPacmanTrayIcon(QAction * checkUpdatesAction,QAction * updateAction,QAction * preferencesAction,QAction * mainWindowAction,QAction * quitAction,QObject *parent = NULL);
+    QPacmanTrayIcon(QAction * checkUpdatesAction,QAction * updateAction,QAction * preferencesAction,QAction * mainWindowAction,QAction * quitAction,bool * use_sound,QObject *parent = NULL);
 
 public slots:
     void updatesFound(const QStringList & pkgs);
@@ -39,6 +39,7 @@ private:
     QAction * m_preferencesAction;
     QAction * m_mainWindowAction;
     QAction * m_quitAction;
+    bool * m_use_sound;
     ThemeIcons::Icon m_id;
 };
 

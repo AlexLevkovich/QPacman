@@ -25,7 +25,8 @@ TrayPreferences::TrayPreferences(QWidget *parent) : QMainWindow(parent), ui(new 
     ui->actionLoad_QPacman->setIcon(ThemeIcons::get(ThemeIcons::QPACMAN));
     ui->actionQuit->setIcon(ThemeIcons::get(ThemeIcons::QUIT));
 
-    m_tray = new QPacmanTrayIcon(ui->actionCheck_for_updates,ui->actionUpdate_now,ui->actionPreferences,ui->actionLoad_QPacman,ui->actionQuit,this);
+    m_use_sound = ui->trayOptions->doPlaySound();
+    m_tray = new QPacmanTrayIcon(ui->actionCheck_for_updates,ui->actionUpdate_now,ui->actionPreferences,ui->actionLoad_QPacman,ui->actionQuit,&m_use_sound,this);
 
     m_blocking_operation = false;
     m_timer.setSingleShot(true);
@@ -64,6 +65,7 @@ void TrayPreferences::resizeEvent(QResizeEvent *event) {
 void TrayPreferences::on_buttonBox_accepted() {
     ui->trayOptions->okPressed();
     ui->alpmOptions->okPressed();
+    m_use_sound = ui->trayOptions->doPlaySound();
     setVisible(false);
 }
 
@@ -140,7 +142,7 @@ void TrayPreferences::qpacmanStarted(const QStringList &) {
 }
 
 void TrayPreferences::qpacmanEnded(const QStringList & parms,qint64 rc) {
-    if (rc != 0 || (parms.count() > 0 && parms[0] == "--user")) {
+    if (rc != 0 || (parms.count() > 0 && parms[0] == "--user") || !ui->trayOptions->checkUpdatesIfQPacmanUnloaded()) {
         updateActions();
         return;
     }

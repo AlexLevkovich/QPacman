@@ -4,7 +4,6 @@
 ********************************************************************************/
 
 #include "qpacmantrayicon.h"
-#include "static.h"
 #include <QMovie>
 #include <QPixmap>
 #include <QFileInfo>
@@ -12,12 +11,13 @@
 #include <QMenu>
 #include <QDebug>
 
-QPacmanTrayIcon::QPacmanTrayIcon(QAction * checkUpdatesAction,QAction * updateAction,QAction * preferencesAction,QAction * mainWindowAction,QAction * quitAction,QObject *parent) : MovieTrayIcon(parent) {
+QPacmanTrayIcon::QPacmanTrayIcon(QAction * checkUpdatesAction,QAction * updateAction,QAction * preferencesAction,QAction * mainWindowAction,QAction * quitAction,bool * use_sound,QObject *parent) : MovieTrayIcon(parent) {
     m_checkUpdatesAction = checkUpdatesAction;
     m_updateAction = updateAction;
     m_preferencesAction = preferencesAction;
     m_mainWindowAction = mainWindowAction;
     m_quitAction = quitAction;
+    m_use_sound = use_sound;
 
     setIcon(ThemeIcons::QPACMANTRAY);
 
@@ -62,7 +62,7 @@ void QPacmanTrayIcon::updatesFound(const QStringList & pkgs) {
         QString title = tr("New packages are available:");
         setToolTip(title,message);
         showMessage(title,message);
-        if (Static::iniValue<bool>("playSound",false)) good_player.play();
+        if (*m_use_sound) good_player.play();
     }
     else {
         QString title = tr("No new packages are available!");
@@ -98,6 +98,6 @@ void QPacmanTrayIcon::checkingCompleted(const QString & error) {
         QString title = tr("There were errors diring processing!");
         setToolTip(title,error);
         showMessage(title,error);
-        if (Static::iniValue<bool>("playSound",false)) bad_player.play();
+        if (*m_use_sound) bad_player.play();
     }
 }

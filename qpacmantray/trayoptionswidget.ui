@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>392</width>
-    <height>169</height>
+    <width>434</width>
+    <height>193</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -84,6 +84,13 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="instQPacmanUpdtsCheck">
+     <property name="text">
+      <string>Check for the updates right after qpacman instance has unloaded</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QCheckBox" name="playCheck">

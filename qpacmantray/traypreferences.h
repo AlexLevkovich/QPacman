@@ -51,6 +51,7 @@ private:
     QPacmanTrayIcon * m_tray;
     bool m_blocking_operation;
     QTimer m_timer;
+    bool m_use_sound;
 };
 
 #endif // TRAYPREFERENCES_H
