@@ -9,6 +9,10 @@
 #include <QObject>
 #include <QString>
 #include <QNetworkProxy>
+#include <QDateTime>
+#include <QFileInfo>
+#include <sys/types.h>
+#include <utime.h>
 
 class DownloaderInterface : public QObject {
     Q_OBJECT
@@ -27,6 +31,15 @@ public:
     virtual int threadsCount() = 0;
     virtual int timeout() = 0;
     virtual void setTimeout(uint value) = 0;
+
+    static bool setFileDate(const QString & filename,const QDateTime & date) {
+        if (date.isNull()) return false;
+
+        struct utimbuf buf;
+        buf.actime = QFileInfo(filename).fileTime(QFileDevice::FileAccessTime).toTime_t();
+        buf.modtime = date.toTime_t();
+        return (!::utime(filename.toLocal8Bit().constData(),&buf));
+    }
 
 protected:
     virtual void setErrorString(const QString & error) = 0;

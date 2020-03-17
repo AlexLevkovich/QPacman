@@ -12,8 +12,6 @@
 #include <QDir>
 #include <QNetworkConfigurationManager>
 #include <QNetworkAccessManager>
-#include <sys/types.h>
-#include <utime.h>
 #include "networkreplyproxy.h"
 
 #define DEF_PART_LENGTH 524288
@@ -49,12 +47,7 @@ bool PartManager::isOpen() {
 
 void PartManager::close() {
     m_file.close();
-    if (!m_modif_time.isNull()) {
-        struct utimbuf buf;
-        buf.actime = QFileInfo(m_file.fileName()).fileTime(QFileDevice::FileAccessTime).toTime_t();
-        buf.modtime = m_modif_time.toTime_t();
-        ::utime(m_file.fileName().toLocal8Bit().constData(),&buf);
-    }
+    DownloaderInterface::setFileDate(m_file.fileName(),m_modif_time);
 }
 
 QString PartManager::outputName() const {

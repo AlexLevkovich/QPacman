@@ -9,8 +9,6 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QDateTime>
-#include <sys/types.h>
-#include <utime.h>
 #include "networkreplyproxy.h"
 
 SimpleDownloader::SimpleDownloader(const QUrl & url,const QString & outputName) : DownloaderInterface() {
@@ -57,12 +55,7 @@ bool SimpleDownloader::terminate() {
 }
 
 void SimpleDownloader::updateModiffTime() {
-    if (!m_modif_time.isNull()) {
-        struct utimbuf buf;
-        buf.actime = QFileInfo(m_out_file.fileName()).fileTime(QFileDevice::FileAccessTime).toTime_t();
-        buf.modtime = m_modif_time.toTime_t();
-        ::utime(m_out_file.fileName().toLocal8Bit().constData(),&buf);
-    }
+    setFileDate(m_out_file.fileName(),m_modif_time);
 }
 
 int SimpleDownloader::threadsCount() {
