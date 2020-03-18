@@ -2,7 +2,7 @@
 Actions=OpenPackageFiles;
 Type=Service
 ServiceTypes=KonqPopupMenu/Plugin
-MimeType=application/x-xz-compressed-tar
+MimeType=application/x-xz-compressed-tar;application/x-tar;application/x-zstd-compressed-tar;
 
 [Desktop Action OpenPackageFiles]
 Name=Install with qpacman...
