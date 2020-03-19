@@ -16,24 +16,19 @@ UsualUserUpdatesChecker::UsualUserUpdatesChecker(QObject * parent) : QObject(par
 
 void UsualUserUpdatesChecker::process() {
     connect(this,SIGNAL(ok(const QStringList &)),this,SLOT(deleteLater()),Qt::QueuedConnection);
-    connect(this,SIGNAL(error(const QString &)),this,SLOT(deleteLater()),Qt::QueuedConnection);
+    connect(this,SIGNAL(error(const QString &,int)),this,SLOT(deleteLater()),Qt::QueuedConnection);
 
     if (!Alpm::isOpen()) {
         m_last_error = tr("Alpm library is not initialized!");
-        emit error(m_last_error);
+        emit error(m_last_error,Alpm::ALPM_IS_NOT_OPEN);
         return;
     }
 
     emit database_updating();
-    if (Alpm::instance()->updateDBs() != ThreadRun::OK) {
-        m_last_error = Alpm::instance()->lastError();
-        emit error(m_last_error);
-        return;
-    }
-
-    if (!Alpm::instance()->reopen()) {
-        m_last_error = Alpm::instance()->lastError();
-        emit error(m_last_error);
+    if ((Alpm::instance()->updateDBs() != ThreadRun::OK) || !Alpm::instance()->reopen()) {
+        int err_id;
+        m_last_error = Alpm::instance()->lastError(&err_id);
+        emit error(m_last_error,err_id);
         return;
     }
 

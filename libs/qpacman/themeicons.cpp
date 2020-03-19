@@ -114,6 +114,7 @@ const QIcon ThemeIcons::get(ThemeIcons::Icon id) {
         case HELP:
             icon = QIcon::fromTheme("help-about");
             break;
+        case DELETE:
         case CLEAN_CACHE:
              icon = QIcon::fromTheme("edit-delete");
             break;
@@ -137,6 +138,9 @@ const QIcon ThemeIcons::get(ThemeIcons::Icon id) {
             break;
         case DLG_PASSWORD:
             icon = QIcon::fromTheme("dialog-password");
+            break;
+        case LOCKED:
+            icon = QIcon::fromTheme("emblem-locked");
             break;
         default:
             break;
@@ -216,6 +220,7 @@ const QString ThemeIcons::name(ThemeIcons::Icon id) {
             return QString::fromLocal8Bit("://pics/go-previous.svg");
         case HELP:
             return QString::fromLocal8Bit("://pics/help-about.svg");
+        case DELETE:
         case CLEAN_CACHE:
             return QString::fromLocal8Bit("://pics/edit-delete.svg");
         case PKG_GROUP:
@@ -250,6 +255,8 @@ const QString ThemeIcons::name(ThemeIcons::Icon id) {
             return QString::fromLocal8Bit("://pics/refresh-button.png");
         case REFRESH_BTN_SHADOW:
             return QString::fromLocal8Bit("://pics/refresh-button_shadow.png");
+        case LOCKED:
+            return QString::fromLocal8Bit("://pics/emblem-locked.svg");
         default:
             break;
     }

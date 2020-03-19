@@ -21,5 +21,9 @@
         <file>pics/edit-download.svg</file>
         <file>pics/dialog-password.svg</file>
         <file>pics/Archlinux-icon-crystal-64.svg</file>
+        <file>pics/edit-delete.svg</file>
+        <file>pics/dialog-cancel.svg</file>
+        <file>pics/application-exit.svg</file>
+        <file>pics/emblem-locked.svg</file>
     </qresource>
 </RCC>

@@ -22,7 +22,7 @@ public:
 
 signals:
     void ok(const QStringList & packages);
-    void error(const QString & error);
+    void error(const QString & error,int err_id);
     void database_updating();
     void getting_updates();
 

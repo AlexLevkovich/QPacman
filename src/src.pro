@@ -49,7 +49,6 @@ CONFIG += depend_includepath
 
 SOURCES += \
     infoview.cpp \
-    lockfilewaiter.cpp \
         main.cpp \
         mainwindow.cpp \
     fileslistwidget.cpp \
@@ -72,7 +71,6 @@ SOURCES += \
 
 HEADERS += \
     infoview.h \
-    lockfilewaiter.h \
         mainwindow.h \
     fileslistwidget.h \
     filtertoolbutton.h \
@@ -93,7 +91,6 @@ HEADERS += \
     qpacmanapplication.h
 
 FORMS += \
-    lockfilewaiter.ui \
         mainwindow.ui \
     searchwidget.ui \
     localpackagemainwindow.ui

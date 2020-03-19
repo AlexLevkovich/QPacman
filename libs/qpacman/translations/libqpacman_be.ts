@@ -504,4 +504,37 @@ Are you sure?</source>
         <translation type="unfinished"> у </translation>
     </message>
 </context>
+<context>
+    <name>LockFileWaiter</name>
+    <message>
+        <location filename="../lockfilewaiter.ui"/>
+        <source>Locked files have been found</source>
+        <translation type="unfinished">Былі знойдзеныя заблакаваныя файлы</translation>
+    </message>
+    <message>
+        <location/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;The following files are locked:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Наступныя файлы заблакаваныя:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Delete</source>
+        <translation type="unfinished">Выдаліць</translation>
+    </message>
+    <message>
+        <location/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Either release or delete (if nothing is really working now)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000;&quot;&gt;Выпусціце альбо выдаліце (калі нічога не працуе зараз)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Cancel</source>
+        <translation type="unfinished">Перапынiць</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Quit</source>
+        <translation type="unfinished">Выйсцi</translation>
+    </message>
+</context>
 </TS>

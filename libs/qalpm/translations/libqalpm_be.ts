@@ -233,7 +233,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Памылка пры загрузцы %1</translation>
     </message>
     <message>
-        <location line="+227"/>
+        <location line="+237"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Абнаўляем базу дадзеных: %1...</translation>
     </message>
@@ -266,7 +266,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-808"/>
+        <location filename="../libalpm.cpp" line="-818"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам трэба выбраць пастаўшчыка для пакета %1:
@@ -356,7 +356,7 @@ Do you want to delete it?</source>
 </translation>
     </message>
     <message>
-        <location line="+238"/>
+        <location line="+239"/>
         <source>The input package list is empty!</source>
         <translation type="unfinished">Спіс пакетаў пусты!</translation>
     </message>
@@ -391,9 +391,8 @@ Do you want to delete it?</source>
         <translation type="unfinished">Прычына можа быць зменена толькі для лакальных пакетаў!</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>The lock file exists!</source>
-        <translation type="unfinished">Быў створаны файл блакіроўкі!</translation>
+        <translation type="obsolete">Быў створаны файл блакіроўкі!</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -421,7 +420,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Немагчыма зарустить заданне ў патоку калі іншае яшчэ працуе!</translation>
     </message>
     <message>
-        <location line="+184"/>
+        <location line="+195"/>
         <source>Nothing to download!!!</source>
         <translation type="unfinished">Няма чаго загружаць!!!</translation>
     </message>

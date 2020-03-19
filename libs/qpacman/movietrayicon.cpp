@@ -71,6 +71,7 @@ void MovieTrayIcon::realMenuHide() {
 }
 
 void MovieTrayIcon::menuRequested() {
+    emit aboutToShow();
     if (m_menu->actions().count() > 0) m_menu->exec(QCursor::pos());
 }
 

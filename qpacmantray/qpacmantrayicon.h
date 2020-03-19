@@ -22,11 +22,13 @@ public slots:
     void updatesFound(const QStringList & pkgs);
     void checkingInProgress();
     void updateInProgress();
-    void checkingCompleted(const QString & error);
+    void checkingCompleted(const QString & error,int err_id);
 
 private slots:
     void clicked();
     void fillingMenuRequest(QMenu * menu);
+    void lockedFile_triggered();
+    void aboutToShow();
 
 private:
     void setIcon(ThemeIcons::Icon id);
@@ -39,8 +41,11 @@ private:
     QAction * m_preferencesAction;
     QAction * m_mainWindowAction;
     QAction * m_quitAction;
+    QAction * m_lockFilesAction;
     bool * m_use_sound;
     ThemeIcons::Icon m_id;
+    bool m_show_locking_files;
+    bool m_lock_dlg_shown;
 };
 
 #endif // QPACMANTRAYICON_H

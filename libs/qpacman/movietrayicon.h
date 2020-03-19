@@ -55,6 +55,7 @@ signals:
     void doubleClicked();
     void clicked();
     void middleClicked();
+    void aboutToShow();
 
 private:
     QStringList truncateMsg(const QString & msg) const;

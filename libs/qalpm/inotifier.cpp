@@ -68,7 +68,7 @@ void Inotifier::inotifyRegisterPath(const QString &path) {
             emit exhausted();
         }
         else {
-            qInfo() << "Inotifier" << "path is rejected:" << path;
+            qInfo() << "Inotifier" << "path is rejected:" << path << "errno=" << errno;
             emit rejected(path,(Inotifier::Error)errno);
         }
     }

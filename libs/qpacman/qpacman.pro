@@ -61,6 +61,7 @@ SOURCES += \
     combotoolbutton.cpp \
     custompopuptextbrowser.cpp \
     exclusiveactiongroup.cpp \
+    lockfilewaiter.cpp \
     messagedialog.cpp \
     movieicon.cpp \
     optionaldepsdlg.cpp \
@@ -105,6 +106,7 @@ HEADERS += \
     categorylistview.h \
     custompopuptextbrowser.h \
     exclusiveactiongroup.h \
+    lockfilewaiter.h \
     movieicon.h \
     optionaldepsdlg.h \
     packagedownloader.h \
@@ -147,6 +149,7 @@ HEADERS += \
     usualuserupdateschecker.h
 
 FORMS += \
+    lockfilewaiter.ui \
     optionaldepsdlg.ui \
     packagechangesdialog.ui \
     packageprovidersdialog.ui \

@@ -168,7 +168,12 @@
 <context>
     <name>QPacmanTrayIcon</name>
     <message>
-        <location filename="../qpacmantrayicon.cpp" line="+62"/>
+        <location filename="../qpacmantrayicon.cpp" line="+22"/>
+        <source>Remove lock files</source>
+        <translation type="unfinished">Выдаліць файлы блакавання</translation>
+    </message>
+    <message>
+        <location line="+62"/>
         <source>New packages are available:</source>
         <translation type="unfinished">Знойдзеныя абнаўлення:</translation>
     </message>
@@ -189,7 +194,7 @@
         <translation type="unfinished">Абнаўляюцца пакеты...</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+16"/>
         <source>There were errors diring processing!</source>
         <translation type="unfinished">Выяўленыя памылкі!</translation>
     </message>

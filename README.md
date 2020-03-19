@@ -20,6 +20,10 @@ qmake "INSTALL_PREFIX=/usr" "INSTALL_ROOT=$pkgdir" CONFIG+=release CONFIG-=debug
 make  
 make install  
 
+You can use **CONFIG+=USE_KDE** in qmake arguments if you need to use the extended KDE color scheme  
+Be sure that you've added the one more dependency to PKGBUILD: **kconfigwidgets**  
+
+
 **QT5 only**  
 
 Depends: '**Qt >= 5: core,network,gui,multimedia,widgets,svg**', '**pacman**', '**pam**', '**libarchive**'  

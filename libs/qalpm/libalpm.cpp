@@ -686,9 +686,10 @@ QString Alpm::arch() const {
     return QString::fromLocal8Bit(arch);
 }
 
-QString Alpm::lastError() const {
+QString Alpm::lastError(int * error_id) const {
     if (m_alpm_errno != ALPM_ERR_OK) {
         if (m_alpm_errno < 0) {
+            bool ok = true;
             switch (m_alpm_errno) {
             case PKG_LIST_IS_EMPTY:
                 return tr("The input package list is empty!");
@@ -704,8 +705,6 @@ QString Alpm::lastError() const {
                 return tr("The package class has not been properly intialized!");
             case REASON_WRONG_DB:
                 return tr("The reason can be changed only for local packages!");
-            case LOCK_FILE_EXISTS:
-                return tr("The lock file exists!");
             case CANNOT_GET_ROOT:
                 return tr("Cannot obtain the root rights!");
             case ALPM_CONFIG_FAILED:
@@ -718,15 +717,26 @@ QString Alpm::lastError() const {
                 return tr("Cannot invoke the function in the thread if other one is still working!");
             case CANNOT_LOAD_CONFIG:
                 return config.lastError();
+            default:
+                ok = false;
             }
+            if (ok && error_id != NULL) *error_id = m_alpm_errno;
         }
-        else return QString::fromLocal8Bit(alpm_strerror((alpm_errno_t)m_alpm_errno));
+        else {
+            if (error_id != NULL) *error_id = m_alpm_errno;
+            return QString::fromLocal8Bit(alpm_strerror((alpm_errno_t)m_alpm_errno));
+        }
     }
 
-    if (!isValid()) return QString::fromLocal8Bit(alpm_strerror(ALPM_ERR_HANDLE_NULL));
+    if (!isValid()) {
+        if (error_id != NULL) *error_id = ALPM_ERR_HANDLE_NULL;
+        return QString::fromLocal8Bit(alpm_strerror(ALPM_ERR_HANDLE_NULL));
+    }
 
     alpm_errno_t err = alpm_errno(m_alpm_handle);
+    if (error_id != NULL) *error_id = ALPM_ERR_OK;
     if (err == ALPM_ERR_OK) return QString();
+    if (error_id != NULL) *error_id = err;
     return QString::fromLocal8Bit(alpm_strerror(err));
 }
 

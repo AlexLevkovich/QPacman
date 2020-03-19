@@ -45,6 +45,7 @@ public:
         NEXT,
         PREV,
         HELP,
+        DELETE,
         CLEAN_CACHE,
         PKG_GROUP,
         UPDATE_ITEM,
@@ -63,7 +64,8 @@ public:
         NO_ICON,
         REFRESH_BTN,
         REFRESH_BTN_SHADOW,
-        ARCHLINUX
+        ARCHLINUX,
+        LOCKED
     };
     static const QIcon get(ThemeIcons::Icon id);
     static const QString name(ThemeIcons::Icon id);

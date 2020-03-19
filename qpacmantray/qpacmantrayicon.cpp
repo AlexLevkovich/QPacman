@@ -8,6 +8,8 @@
 #include <QPixmap>
 #include <QFileInfo>
 #include "themeicons.h"
+#include "libalpm.h"
+#include "lockfilewaiter.h"
 #include <QMenu>
 #include <QDebug>
 
@@ -17,7 +19,10 @@ QPacmanTrayIcon::QPacmanTrayIcon(QAction * checkUpdatesAction,QAction * updateAc
     m_preferencesAction = preferencesAction;
     m_mainWindowAction = mainWindowAction;
     m_quitAction = quitAction;
+    m_lockFilesAction = new QAction(ThemeIcons::get(ThemeIcons::LOCKED),tr("Remove lock files"));
     m_use_sound = use_sound;
+    m_lock_dlg_shown = false;
+    m_show_locking_files = false;
 
     setIcon(ThemeIcons::QPACMANTRAY);
 
@@ -26,6 +31,18 @@ QPacmanTrayIcon::QPacmanTrayIcon(QAction * checkUpdatesAction,QAction * updateAc
 
     connect(this,SIGNAL(clicked()),this,SLOT(clicked()));
     connect(this,SIGNAL(fillingMenuRequest(QMenu *)),this,SLOT(fillingMenuRequest(QMenu *)));
+    connect(this,SIGNAL(aboutToShow()),this,SLOT(aboutToShow()));
+    connect(m_lockFilesAction,SIGNAL(triggered()),this,SLOT(lockedFile_triggered()),Qt::QueuedConnection);
+}
+
+
+void QPacmanTrayIcon::lockedFile_triggered() {
+    m_lock_dlg_shown = true;
+    if (LockFileWaiter(QStringList() << Alpm::instance()->lockFilePath(),QString(),true).exec() == QDialog::Accepted) {
+        m_show_locking_files = false;
+        m_checkUpdatesAction->trigger();
+    }
+    m_lock_dlg_shown = false;
 }
 
 void QPacmanTrayIcon::setIcon(ThemeIcons::Icon id) {
@@ -45,11 +62,16 @@ void QPacmanTrayIcon::clicked() {
     else if (m_updateAction->isEnabled() && (m_id == ThemeIcons::QPACMANTRAY)) m_updateAction->trigger();
 }
 
+void QPacmanTrayIcon::aboutToShow() {
+    m_lockFilesAction->setVisible(m_show_locking_files && Alpm::instance()->isLocked() && !m_lock_dlg_shown);
+}
+
 void QPacmanTrayIcon::fillingMenuRequest(QMenu * menu) {
     menu->addAction(m_checkUpdatesAction);
     menu->addAction(m_updateAction);
     menu->addAction(m_preferencesAction);
     menu->addAction(m_mainWindowAction);
+    menu->addAction(m_lockFilesAction);
     menu->addSeparator();
     menu->addAction(m_quitAction);
 }
@@ -86,13 +108,15 @@ void QPacmanTrayIcon::updateInProgress() {
     showMessage(title,"");
 }
 
-void QPacmanTrayIcon::checkingCompleted(const QString & error) {
+void QPacmanTrayIcon::checkingCompleted(const QString & error,int err_id) {
     if (error.isEmpty()) {
         QString title = tr("No new packages are available!");
         setToolTip(title,"");
         setVisible(false);
+        m_show_locking_files = false;
     }
     else {
+        m_show_locking_files = (err_id == Alpm::HANDLE_LOCK);
         setIcon(ThemeIcons::WARNING);
         if (!isVisible()) setVisible(true);
         QString title = tr("There were errors diring processing!");

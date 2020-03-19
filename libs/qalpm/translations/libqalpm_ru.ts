@@ -233,7 +233,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Ошибка при загрузке %1</translation>
     </message>
     <message>
-        <location line="+227"/>
+        <location line="+237"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Обновляем базу данных: %1...</translation>
     </message>
@@ -266,7 +266,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-808"/>
+        <location filename="../libalpm.cpp" line="-818"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам нужно выбрать поставщика для пакета %1:
@@ -356,7 +356,7 @@ Do you want to delete it?</source>
 </translation>
     </message>
     <message>
-        <location line="+238"/>
+        <location line="+239"/>
         <source>The input package list is empty!</source>
         <translation type="unfinished">Список пакетов пуст!</translation>
     </message>
@@ -391,9 +391,8 @@ Do you want to delete it?</source>
         <translation type="unfinished">Причина может быть изменена только для локальных пакетов!</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>The lock file exists!</source>
-        <translation type="unfinished">Был создан файл блокировки!</translation>
+        <translation type="obsolete">Был создан файл блокировки!</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -421,7 +420,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Невозможно зарустить задание в потоке если другое еще работает!</translation>
     </message>
     <message>
-        <location line="+184"/>
+        <location line="+195"/>
         <source>Nothing to download!!!</source>
         <translation type="unfinished">Нечего загружать!!!</translation>
     </message>

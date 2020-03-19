@@ -93,7 +93,7 @@ void TrayPreferences::on_actionCheck_for_updates_triggered() {
     m_tray->checkingInProgress();
     UsualUserUpdatesChecker * checker = new UsualUserUpdatesChecker();
     connect(checker,SIGNAL(ok(const QStringList &)),this,SLOT(checker_ok(const QStringList &)));
-    connect(checker,SIGNAL(error(const QString &)),this,SLOT(checker_error(const QString &)));
+    connect(checker,SIGNAL(error(const QString &,int)),this,SLOT(checker_error(const QString &,int)));
 }
 
 void TrayPreferences::checker_ok(const QStringList & packages) {
@@ -104,11 +104,11 @@ void TrayPreferences::checker_ok(const QStringList & packages) {
     if (tray_visible) m_timer.start(ui->trayOptions->interval()*60000);
 }
 
-void TrayPreferences::checker_error(const QString & error) {
+void TrayPreferences::checker_error(const QString & error,int err_id) {
     m_blocking_operation = false;
     updateActions();
     bool tray_visible = m_tray->isVisible();
-    m_tray->checkingCompleted(error);
+    m_tray->checkingCompleted(error,err_id);
     if (tray_visible) m_timer.start(ui->trayOptions->errInterval()*60000);
 }
 
