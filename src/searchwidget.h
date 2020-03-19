@@ -23,6 +23,7 @@ public:
     void fillReposInCombo(const QStringList & repos);
     void clearSearchText();
     void clearFilter();
+    void setAllRepos();
     bool setFilter(FilterToolButton::ItemId id,const QString & filter);
 
     QString searchText() const;

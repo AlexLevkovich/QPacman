@@ -57,6 +57,10 @@ void SearchWidget::clearSearchText() {
     ui->searchBox->clear();
 }
 
+void SearchWidget::setAllRepos() {
+    ui->repoButton->selectAllMenuItem();
+}
+
 void SearchWidget::clearFilter() {
     ui->filterButton->setFilter(FilterToolButton::IS_ALL,"");
 }

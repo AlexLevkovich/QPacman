@@ -62,11 +62,24 @@ void RepoToolButton::selectMenuItem(const QString & str) {
     for (int i=0;i<actions.count();i++) {
         QString repo = actions.at(i)->text();
         if (repo.contains("&")) repo = repo.replace("&","");
-        if (repo == Static::RepoAll_Str) repo.clear();
 
         if (repo == str) {
             setText(str);
             emit selected(str);
+            break;
+        }
+    }
+}
+
+void RepoToolButton::selectAllMenuItem() {
+    QList<QAction *> actions = menu()->actions();
+    for (int i=0;i<actions.count();i++) {
+        QString repo = actions.at(i)->text();
+        if (repo.contains("&")) repo = repo.replace("&","");
+
+        if (repo == Static::RepoAll_Str && actions.at(i)->property("All").isValid()) {
+            setText(Static::RepoAll_Str);
+            emit selected(Static::RepoAll_Str);
             break;
         }
     }

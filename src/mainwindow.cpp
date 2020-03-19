@@ -158,6 +158,7 @@ void MainWindow::onGroupUrlSelected(const QString & group) {
 void MainWindow::onPackageUrlSelected(const QString & name,const QString & version,int operation) {
     searchWidget->clearSearchText();
     searchWidget->clearFilter();
+    searchWidget->setAllRepos();
     ui->packetView->selectPackage(AlpmPackage::Dependence(name,(AlpmPackage::CompareOper)operation,version));
 }
 
