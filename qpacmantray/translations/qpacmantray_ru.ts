@@ -105,62 +105,43 @@
         <translation type="unfinished">Настройки QPacmanTray...</translation>
     </message>
     <message>
-        <location/>
-        <source>toolBar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
         <source>System Update</source>
-        <translation type="unfinished">Обновление системы</translation>
+        <translation type="obsolete">Обновление системы</translation>
     </message>
     <message>
-        <location/>
         <source>Start updating of the system</source>
-        <translation type="unfinished">Запускает обновление системы</translation>
+        <translation type="obsolete">Запускает обновление системы</translation>
     </message>
     <message>
-        <location/>
         <source>Check now</source>
-        <translation type="unfinished">Проверить</translation>
+        <translation type="obsolete">Проверить</translation>
     </message>
     <message>
-        <location/>
         <source>Downloads and updates the pacman&apos;s database</source>
-        <translation type="unfinished">Загружает и обновляет базы данных пакетов</translation>
+        <translation type="obsolete">Загружает и обновляет базы данных пакетов</translation>
     </message>
     <message>
-        <location/>
         <source>Quit</source>
-        <translation type="unfinished">Выход</translation>
+        <translation type="obsolete">Выход</translation>
     </message>
     <message>
-        <location/>
         <source>Quit from this application</source>
-        <translation type="unfinished">Нажмите для выхода из приложения</translation>
+        <translation type="obsolete">Нажмите для выхода из приложения</translation>
     </message>
     <message>
-        <location/>
-        <source>QPacman</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
         <source>Loads QPacman application</source>
-        <translation type="unfinished">Запускает приложение QPacman</translation>
+        <translation type="obsolete">Запускает приложение QPacman</translation>
     </message>
     <message>
-        <location/>
         <source>Preferences...</source>
-        <translation type="unfinished">Настройки...</translation>
+        <translation type="obsolete">Настройки...</translation>
     </message>
     <message>
-        <location/>
         <source>Show tray icon preferences window</source>
-        <translation type="unfinished">Показывает окно с настройками</translation>
+        <translation type="obsolete">Показывает окно с настройками</translation>
     </message>
     <message>
-        <location filename="../traypreferences.cpp" line="+34"/>
+        <location filename="../traypreferences.cpp" line="+44"/>
         <source>Program</source>
         <translation type="unfinished">Программа</translation>
     </message>
@@ -168,12 +149,62 @@
 <context>
     <name>QPacmanTrayIcon</name>
     <message>
-        <location filename="../qpacmantrayicon.cpp" line="+22"/>
+        <location filename="../qpacmantrayicon.cpp" line="+17"/>
+        <source>Check now</source>
+        <translation type="unfinished">Проверить</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Downloads and updates the pacman&apos;s database</source>
+        <translation type="unfinished">Загружает и обновляет базы данных пакетов</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>System Update</source>
+        <translation type="unfinished">Обновление системы</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Starts updating of the system</source>
+        <translation type="unfinished">Запускает обновление системы</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Preferences...</source>
+        <translation type="unfinished">Настройки...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Shows tray icon preferences window</source>
+        <translation type="unfinished">Показывает окно с настройками</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>QPacman</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Loads QPacman application</source>
+        <translation type="unfinished">Запускает приложение QPacman</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Quit</source>
+        <translation type="unfinished">Выход</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Quits from this application</source>
+        <translation type="unfinished">Нажмите для выхода из приложения</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Remove lock files</source>
         <translation type="unfinished">Удалить файлы блокировки</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+69"/>
         <source>New packages are available:</source>
         <translation type="unfinished">Найдены обновления:</translation>
     </message>

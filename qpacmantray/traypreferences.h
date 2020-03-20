@@ -17,6 +17,8 @@ class TrayPreferences;
 }
 
 class QShowEvent;
+class QAction;
+class QToolBar;
 
 class TrayPreferences : public QMainWindow {
     Q_OBJECT
@@ -34,10 +36,10 @@ private slots:
     void on_actionCheck_for_updates_triggered();
     void on_actionUpdate_now_triggered();
     void on_actionQuit_triggered();
+    void on_actionLoad_QPacman_triggered();
     void checker_ok(const QStringList & packages);
     void checker_error(const QString & error,int err_id);
     void pacman_finished(int code);
-    void on_actionLoad_QPacman_triggered();
     void updateActions(const QString & lock_path = QString(),bool locked = false);
     void qpacmanStarted(const QStringList & parms);
     void qpacmanEnded(const QStringList & parms,qint64 rc);
@@ -52,6 +54,13 @@ private:
     bool m_blocking_operation;
     QTimer m_timer;
     bool m_use_sound;
+
+    QAction * actionCheck_for_updates;
+    QAction * actionUpdate_now;
+    QAction * actionPreferences;
+    QAction * actionLoad_QPacman;
+    QAction * actionQuit;
+    QToolBar * toolBar;
 };
 
 #endif // TRAYPREFERENCES_H

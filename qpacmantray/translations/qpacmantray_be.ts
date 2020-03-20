@@ -105,62 +105,43 @@
         <translation type="unfinished">Налады QPacmanTray...</translation>
     </message>
     <message>
-        <location/>
-        <source>toolBar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
         <source>System Update</source>
-        <translation type="unfinished">Абнаўленне сістэмы</translation>
+        <translation type="obsolete">Абнаўленне сістэмы</translation>
     </message>
     <message>
-        <location/>
         <source>Start updating of the system</source>
-        <translation type="unfinished">Запускае абнаўленне сістэмы</translation>
+        <translation type="obsolete">Запускае абнаўленне сістэмы</translation>
     </message>
     <message>
-        <location/>
         <source>Check now</source>
-        <translation type="unfinished">Праверыць</translation>
+        <translation type="obsolete">Праверыць</translation>
     </message>
     <message>
-        <location/>
         <source>Downloads and updates the pacman&apos;s database</source>
-        <translation type="unfinished">Загружае і абнаўляе базы дадзеных пакетаў</translation>
+        <translation type="obsolete">Загружае і абнаўляе базы дадзеных пакетаў</translation>
     </message>
     <message>
-        <location/>
         <source>Quit</source>
-        <translation type="unfinished">Выхад</translation>
+        <translation type="obsolete">Выхад</translation>
     </message>
     <message>
-        <location/>
         <source>Quit from this application</source>
-        <translation type="unfinished">Націсніце для выхаду з праграмы</translation>
+        <translation type="obsolete">Націсніце для выхаду з праграмы</translation>
     </message>
     <message>
-        <location/>
-        <source>QPacman</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location/>
         <source>Loads QPacman application</source>
-        <translation type="unfinished">Запускае QPacman</translation>
+        <translation type="obsolete">Запускае QPacman</translation>
     </message>
     <message>
-        <location/>
         <source>Preferences...</source>
-        <translation type="unfinished">Налады...</translation>
+        <translation type="obsolete">Налады...</translation>
     </message>
     <message>
-        <location/>
         <source>Show tray icon preferences window</source>
-        <translation type="unfinished">Паказвае акно з наладамі</translation>
+        <translation type="obsolete">Паказвае акно з наладамі</translation>
     </message>
     <message>
-        <location filename="../traypreferences.cpp" line="+34"/>
+        <location filename="../traypreferences.cpp" line="+44"/>
         <source>Program</source>
         <translation type="unfinished">Праграма</translation>
     </message>
@@ -168,12 +149,62 @@
 <context>
     <name>QPacmanTrayIcon</name>
     <message>
-        <location filename="../qpacmantrayicon.cpp" line="+22"/>
+        <location filename="../qpacmantrayicon.cpp" line="+17"/>
+        <source>Check now</source>
+        <translation type="unfinished">Праверыць</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Downloads and updates the pacman&apos;s database</source>
+        <translation type="unfinished">Загружае і абнаўляе базы дадзеных пакетаў</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>System Update</source>
+        <translation type="unfinished">Абнаўленне сістэмы</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Starts updating of the system</source>
+        <translation type="unfinished">Запускае абнаўленне сістэмы</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Preferences...</source>
+        <translation type="unfinished">Налады...</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Shows tray icon preferences window</source>
+        <translation type="unfinished">Паказвае акно з наладамі</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>QPacman</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Loads QPacman application</source>
+        <translation type="unfinished">Запускае QPacman</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Quit</source>
+        <translation type="unfinished">Выхад</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Quits from this application</source>
+        <translation type="unfinished">Націсніце для выхаду з праграмы</translation>
+    </message>
+    <message>
+        <location line="+1"/>
         <source>Remove lock files</source>
         <translation type="unfinished">Выдаліць файлы блакавання</translation>
     </message>
     <message>
-        <location line="+62"/>
+        <location line="+69"/>
         <source>New packages are available:</source>
         <translation type="unfinished">Знойдзеныя абнаўлення:</translation>
     </message>

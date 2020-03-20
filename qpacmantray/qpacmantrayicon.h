@@ -16,7 +16,18 @@ class QMenu;
 class QPacmanTrayIcon : public MovieTrayIcon {
     Q_OBJECT
 public:
-    QPacmanTrayIcon(QAction * checkUpdatesAction,QAction * updateAction,QAction * preferencesAction,QAction * mainWindowAction,QAction * quitAction,bool * use_sound,QObject *parent = NULL);
+    QPacmanTrayIcon(bool * use_sound = NULL,QObject *parent = NULL);
+    ~QPacmanTrayIcon();
+
+    QAction * checkUpdatesAction() { return m_checkUpdatesAction; }
+    QAction * updateAction() { return m_updateAction; }
+    QAction * preferencesAction() { return m_preferencesAction; }
+    QAction * mainWindowAction() { return m_mainWindowAction; }
+    QAction * quitAction() { return m_quitAction; }
+    QAction * lockFilesAction() { return m_lockFilesAction; }
+
+    void setIcon(ThemeIcons::Icon id);
+    void setIcon(ThemeIcons::Icon id,int input_frame_height,int delay);
 
 public slots:
     void updatesFound(const QStringList & pkgs);
@@ -26,16 +37,14 @@ public slots:
 
 private slots:
     void clicked();
-    void fillingMenuRequest(QMenu * menu);
     void lockedFile_triggered();
-    void aboutToShow();
+    void menuAboutToShow(QMenu * menu);
 
 private:
-    void setIcon(ThemeIcons::Icon id);
-    void setIcon(ThemeIcons::Icon id,int input_frame_height,int delay);
+    void initMenu(QMenu * menu);
 
-    QMediaPlayer good_player;
-    QMediaPlayer bad_player;
+    QMediaPlayer * good_player;
+    QMediaPlayer * bad_player;
     QAction * m_checkUpdatesAction;
     QAction * m_updateAction;
     QAction * m_preferencesAction;

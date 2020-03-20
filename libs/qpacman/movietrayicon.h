@@ -6,24 +6,13 @@
 #ifndef MOVIETRAYICON_H
 #define MOVIETRAYICON_H
 
-#include <QSystemTrayIcon>
 #include <QList>
 #include <QIcon>
 #include <QMenu>
 #include "movieicon.h"
+#include <QSystemTrayIcon>
 
 class QEvent;
-
-class TrayMenu : public QMenu {
-    Q_OBJECT
-public:
-    TrayMenu();
-protected:
-    void showEvent(QShowEvent * event);
-    void leaveEvent(QEvent *event);
-    void enterEvent(QEvent *event);
-    bool eventFilter(QObject *obj, QEvent *event);
-};
 
 class MovieTrayIcon : public QObject {
     Q_OBJECT
@@ -46,8 +35,13 @@ public:
 private slots:
     void frameChanged(int id);
     void activatedReason(QSystemTrayIcon::ActivationReason reason);
-    void menuRequested();
-    void realMenuHide();
+    void setMenu();
+    void setTrayVisible(bool flag);
+    void checkTopLevelWindows();
+
+protected:
+    virtual void initMenu(QMenu * menu);
+    bool eventFilter(QObject *watched, QEvent *event);
 
 signals:
     void messageClicked();
@@ -55,14 +49,14 @@ signals:
     void doubleClicked();
     void clicked();
     void middleClicked();
-    void aboutToShow();
+    void menuAboutToShow(QMenu * menu);
 
 private:
     QStringList truncateMsg(const QString & msg) const;
 
-    QSystemTrayIcon m_tray_icon;
+    QSystemTrayIcon * m_tray_icon;
     MovieIcon m_movie;
-    TrayMenu * m_menu;
+    QMenu * m_menu;
     bool first_time_menu_show;
 
     static const int MAX_LINE_MSG_COUNT;

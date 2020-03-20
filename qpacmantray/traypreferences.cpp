@@ -11,6 +11,7 @@
 #include <QApplication>
 #include <QFileInfo>
 #include <QDir>
+#include <QToolBar>
 #include "themeicons.h"
 #include "ui_traypreferences.h"
 #include "messagedialog.h"
@@ -19,14 +20,23 @@
 TrayPreferences::TrayPreferences(QWidget *parent) : QMainWindow(parent), ui(new Ui::TrayPreferences) {
     ui->setupUi(this);
 
-    ui->actionCheck_for_updates->setIcon(ThemeIcons::get(ThemeIcons::UPDATE_REPOS));
-    ui->actionUpdate_now->setIcon(ThemeIcons::get(ThemeIcons::SYNC));
-    ui->actionPreferences->setIcon(ThemeIcons::get(ThemeIcons::CONFIGURE));
-    ui->actionLoad_QPacman->setIcon(ThemeIcons::get(ThemeIcons::QPACMAN));
-    ui->actionQuit->setIcon(ThemeIcons::get(ThemeIcons::QUIT));
-
     m_use_sound = ui->trayOptions->doPlaySound();
-    m_tray = new QPacmanTrayIcon(ui->actionCheck_for_updates,ui->actionUpdate_now,ui->actionPreferences,ui->actionLoad_QPacman,ui->actionQuit,&m_use_sound,this);
+    m_tray = new QPacmanTrayIcon(&m_use_sound,this);
+
+    actionCheck_for_updates = m_tray->checkUpdatesAction();
+    actionUpdate_now = m_tray->updateAction();
+    actionPreferences = m_tray->preferencesAction();
+    actionLoad_QPacman = m_tray->mainWindowAction();
+    actionQuit = m_tray->quitAction();
+
+    addToolBar(toolBar = new QToolBar(this));
+    toolBar->setMovable(false);
+    toolBar->setFloatable(false);
+    toolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    toolBar->addAction(actionCheck_for_updates);
+    toolBar->addAction(actionUpdate_now);
+    toolBar->addAction(actionLoad_QPacman);
+    toolBar->addAction(actionQuit);
 
     m_blocking_operation = false;
     m_timer.setSingleShot(true);
@@ -35,8 +45,12 @@ TrayPreferences::TrayPreferences(QWidget *parent) : QMainWindow(parent), ui(new 
     ui->categoryList->addCategory("Alpm",ui->alpmOptions,ThemeIcons::get(ThemeIcons::ARCHLINUX));
     ui->categoryList->select(ui->trayOptions);
 
+    connect(actionPreferences,SIGNAL(triggered()),this,SIGNAL(showRequest()));
+    connect(actionCheck_for_updates,SIGNAL(triggered()),this,SLOT(on_actionCheck_for_updates_triggered()));
+    connect(actionUpdate_now,SIGNAL(triggered()),this,SLOT(on_actionUpdate_now_triggered()));
+    connect(actionLoad_QPacman,SIGNAL(triggered()),this,SLOT(on_actionLoad_QPacman_triggered()));
+    connect(actionQuit,SIGNAL(triggered()),this,SLOT(on_actionQuit_triggered()));
     connect(&m_timer,SIGNAL(timeout()),this,SLOT(on_actionCheck_for_updates_triggered()));
-    connect(ui->actionPreferences,SIGNAL(triggered()),this,SIGNAL(showRequest()));
     connect(qApp,SIGNAL(qpacmanStarted(const QStringList &)),this,SLOT(qpacmanStarted(const QStringList &)));
     connect(qApp,SIGNAL(qpacmanEnded(const QStringList &,qint64)),this,SLOT(qpacmanEnded(const QStringList &,qint64)));
     connect(Alpm::instance(),SIGNAL(locking_changed(const QString &,bool)),this,SLOT(updateActions(const QString &,bool)));
@@ -74,14 +88,14 @@ void TrayPreferences::on_buttonBox_rejected() {
 }
 
 void TrayPreferences::updateActions(const QString &,bool locked) {
-    ui->actionUpdate_now->setEnabled(!m_blocking_operation);
-    ui->actionCheck_for_updates->setEnabled(!m_blocking_operation);
-    ui->actionQuit->setEnabled(!m_blocking_operation);
-    ui->actionLoad_QPacman->setEnabled(!m_blocking_operation);
+    actionUpdate_now->setEnabled(!m_blocking_operation);
+    actionCheck_for_updates->setEnabled(!m_blocking_operation);
+    actionQuit->setEnabled(!m_blocking_operation);
+    actionLoad_QPacman->setEnabled(!m_blocking_operation);
     if (!m_blocking_operation && Alpm::isOpen()) {
-        ui->actionUpdate_now->setEnabled(!locked);
-        ui->actionCheck_for_updates->setEnabled(!locked);
-        ui->actionQuit->setEnabled(!locked);
+        actionUpdate_now->setEnabled(!locked);
+        actionCheck_for_updates->setEnabled(!locked);
+        actionQuit->setEnabled(!locked);
     }
 }
 

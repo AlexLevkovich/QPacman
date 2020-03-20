@@ -179,7 +179,7 @@ bool MovieIcon::add(const QIcon & icon) {
     if (icon.isNull()) return false;
     if (!m_size.isValid()) {
         QList<QSize> sizes = icon.availableSizes();
-        if (sizes.count() <= 0) return false;
+        if (sizes.count() <= 0) sizes << QSize(256,256);
         std::sort(sizes.begin(),sizes.end());
         m_size = sizes.last();
     }
