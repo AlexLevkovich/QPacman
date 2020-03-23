@@ -250,8 +250,23 @@ Do you want to delete it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../archivefilesiterator.cpp" line="+36"/>
+        <location filename="../archivefilesiterator.cpp" line="+35"/>
         <source>Cannot init archive&apos;s handle!!!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+269"/>
+        <source>Alpm is not open!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>The package has been not found!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+21"/>
+        <source>Invalid entry name for stat()!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

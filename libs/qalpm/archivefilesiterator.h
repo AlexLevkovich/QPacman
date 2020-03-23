@@ -8,17 +8,23 @@
 
 #include <QStringList>
 #include <QObject>
+#include <QDateTime>
 #include "alpmfuture.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 struct archive;
 class ArchiveFileReader;
+class InstalledPackageFileReader;
+class ArchiveEntry;
 
 class ArchiveFileIterator {
 public:
     ArchiveFileIterator(const ArchiveFileIterator & other);
     bool operator!=(const ArchiveFileIterator& other) const;
     ArchiveFileIterator & operator++();
-    QString operator*() const;
+    ArchiveEntry * operator*() const;
     ArchiveFileIterator & operator=(const ArchiveFileIterator &other);
 
 private:
@@ -29,13 +35,49 @@ private:
     friend class ArchiveFileReader;
 };
 
-class ArchiveFileReader {
+class ArchiveEntry {
+public:
+    virtual QString entryName() const = 0;
+    virtual QString entrySymLink() const = 0;
+    virtual QDateTime entryModificationDate() const = 0;
+    virtual QDateTime entryLastAccessDate() const = 0;
+    virtual QDateTime entryCreateDate() const = 0;
+    virtual bool entryIsDir() const = 0;
+    virtual bool entryIsFile() const = 0;
+    virtual bool entryIsSymLink() const = 0;
+    virtual bool entryIsSocket() const = 0;
+    virtual bool entryIsFIFO() const = 0;
+    virtual bool entryIsChar() const = 0;
+    virtual bool entryIsBlock() const = 0;
+    virtual mode_t entryPerm() const = 0;
+    virtual qint64 entryUid() const = 0;
+    virtual qint64 entryGid() const = 0;
+    virtual qint64 entrySize() const = 0;
+};
+
+class ArchiveFileReader : public ArchiveEntry {
 public:
     ArchiveFileReader(const QString & archive_path);
     virtual ~ArchiveFileReader();
-    bool hasNext() const;
-    QString next() const;
+    bool next() const;
+
     QString entryName() const;
+    QString entrySymLink() const;
+    QDateTime entryModificationDate() const;
+    QDateTime entryLastAccessDate() const;
+    QDateTime entryCreateDate() const;
+    bool entryIsDir() const;
+    bool entryIsFile() const;
+    bool entryIsSymLink() const;
+    bool entryIsSocket() const;
+    bool entryIsFIFO() const;
+    bool entryIsChar() const;
+    bool entryIsBlock() const;
+    mode_t entryPerm() const;
+    qint64 entryUid() const;
+    qint64 entryGid() const;
+    qint64 entrySize() const;
+
     bool atEnd() const;
     QString errorString() const;
 
@@ -45,7 +87,7 @@ public:
 
     static const QStringList fileList(const QString & archive_path,bool add_root_slash = false);
 protected:
-    // returns false by default
+    // returns false by default, it might be used to omit some files during iteration
     virtual bool omitText(const QString & path) const;
 
 private:
@@ -71,6 +113,65 @@ public:
     static const QStringList fileList(const QString & archive_path,bool add_root_slash = false);
 protected:
     bool omitText(const QString & path) const;
+};
+
+class LocalFileIterator {
+public:
+    LocalFileIterator(const LocalFileIterator & other);
+    bool operator!=(const LocalFileIterator& other) const;
+    LocalFileIterator & operator++();
+    ArchiveEntry * operator*() const;
+    LocalFileIterator & operator=(const LocalFileIterator &other);
+
+private:
+    LocalFileIterator(InstalledPackageFileReader * reader = NULL);
+    bool atEnd() const;
+
+    InstalledPackageFileReader * m_reader;
+    friend class InstalledPackageFileReader;
+};
+
+class InstalledPackageFileReader : public ArchiveEntry {
+public:
+    InstalledPackageFileReader(const QString & pkg_name);
+    bool next() const;
+
+    QString entryName() const;
+    QString entrySymLink() const;
+    QDateTime entryModificationDate() const;
+    QDateTime entryLastAccessDate() const;
+    QDateTime entryCreateDate() const;
+    bool entryIsDir() const;
+    bool entryIsFile() const;
+    bool entryIsSymLink() const;
+    bool entryIsSocket() const;
+    bool entryIsFIFO() const;
+    bool entryIsChar() const;
+    bool entryIsBlock() const;
+    mode_t entryPerm() const;
+    qint64 entryUid() const;
+    qint64 entryGid() const;
+    qint64 entrySize() const;
+
+    bool atEnd() const;
+    QString errorString() const;
+
+    // std::iterator compability functions
+    LocalFileIterator begin() const;
+    LocalFileIterator end() const;
+
+    static const QStringList fileList(const QString & pkg_name);
+
+private:
+    bool isValid() const;
+    bool stat() const;
+
+    qint64 m_index;
+    QStringList m_files;
+    QString m_error;
+    struct stat m_stat;
+
+    friend class LocalFileIterator;
 };
 
 class ArchiveFileReaderLoop : public ThreadRun {
