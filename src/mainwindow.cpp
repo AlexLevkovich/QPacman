@@ -382,10 +382,16 @@ bool MainWindow::actionApplyState() {
 }
 
 void MainWindow::on_actionPrevious_triggered() {
+    searchWidget->clearSearchText();
+    searchWidget->clearFilter();
+    searchWidget->setAllRepos();
     ui->packetView->selectPrev();
 }
 
 void MainWindow::on_actionNext_triggered() {
+    searchWidget->clearSearchText();
+    searchWidget->clearFilter();
+    searchWidget->setAllRepos();
     ui->packetView->selectNext();
 }
 

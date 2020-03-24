@@ -19,7 +19,7 @@
     <message>
         <location filename="../localpackagemainwindow.ui"/>
         <source>Local package installer...</source>
-        <translation type="unfinished">Установщик локальных пакетов</translation>
+        <translation type="unfinished">Установщик локальных пакетов...</translation>
     </message>
     <message>
         <location/>
@@ -329,6 +329,26 @@ Are you sure to continue?</source>
         <source>The contents of cache directory was not removed!</source>
         <translation type="unfinished">Сожержимое кэша не было удалено полностью!</translation>
     </message>
+    <message>
+        <location filename="../mainwindow.ui"/>
+        <source>Size</source>
+        <translation type="unfinished">Размер</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Permissions</source>
+        <translation type="unfinished">Разрешения</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Modification Date</source>
+        <translation type="unfinished">Дата изменения</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Name</source>
+        <translation type="unfinished">Название</translation>
+    </message>
 </context>
 <context>
     <name>ReinstallOptionsWidget</name>
@@ -362,7 +382,7 @@ Are you sure to continue?</source>
 <context>
     <name>FilesListWidget</name>
     <message>
-        <location filename="../fileslistwidget.cpp" line="+174"/>
+        <location filename="../fileslistwidget.cpp" line="+152"/>
         <source>Download the package and update...</source>
         <translation type="unfinished">Загрузить пакет и обновить...</translation>
     </message>

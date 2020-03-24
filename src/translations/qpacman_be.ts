@@ -329,6 +329,26 @@ Are you sure to continue?</source>
         <source>The contents of cache directory was not removed!</source>
         <translation type="unfinished">Змесціва кэша не выдалена!</translation>
     </message>
+    <message>
+        <location filename="../mainwindow.ui"/>
+        <source>Size</source>
+        <translation type="unfinished">Памер</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Permissions</source>
+        <translation type="unfinished">Дазволы</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Modification Date</source>
+        <translation type="unfinished">Дата мадыфікацыі</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Name</source>
+        <translation type="unfinished">Назва</translation>
+    </message>
 </context>
 <context>
     <name>ReinstallOptionsWidget</name>
@@ -362,7 +382,7 @@ Are you sure to continue?</source>
 <context>
     <name>FilesListWidget</name>
     <message>
-        <location filename="../fileslistwidget.cpp" line="+174"/>
+        <location filename="../fileslistwidget.cpp" line="+152"/>
         <source>Download the package and update...</source>
         <translation type="unfinished">Загрузіць пакет і абнавіць...</translation>
     </message>

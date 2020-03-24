@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>841</width>
-    <height>625</height>
+    <height>641</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -135,7 +135,22 @@
               </attribute>
               <column>
                <property name="text">
-                <string notr="true"/>
+                <string>Name</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Size</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Permissions</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Modification Date</string>
                </property>
               </column>
              </widget>
