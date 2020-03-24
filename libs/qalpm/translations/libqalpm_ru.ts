@@ -255,7 +255,7 @@ Do you want to delete it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+269"/>
+        <location line="+277"/>
         <source>Alpm is not open!</source>
         <translation type="unfinished"></translation>
     </message>

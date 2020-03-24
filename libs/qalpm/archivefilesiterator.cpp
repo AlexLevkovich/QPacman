@@ -22,7 +22,7 @@ ArchiveFileIterator::ArchiveFileIterator(const ArchiveFileIterator &other) {
     *this = other;
 }
 
-ArchiveFileIterator::ArchiveFileIterator(ArchiveFileReader * reader,off_t pos) {
+ArchiveFileIterator::ArchiveFileIterator(ArchiveReader * reader,off_t pos) {
     m_reader = reader;
     if (atEnd() || !m_reader->setPos(pos)) m_reader = NULL;
     else if (!m_reader->next()) m_reader = NULL;
@@ -119,11 +119,15 @@ bool ArchiveFileIterator::atEnd() const {
 
 ArchiveFileIterator ArchiveFileReader::begin() const {
     if (!isValid()) return ArchiveFileReader::end();
-    return ArchiveFileIterator((ArchiveFileReader *)this,m_begin);
+    return ArchiveFileIterator((ArchiveReader *)this,m_begin);
 }
 
 ArchiveFileIterator ArchiveFileReader::end() const {
     return ArchiveFileIterator();
+}
+
+ArchiveEntry * ArchiveFileReader::entry() {
+    return this;
 }
 
 bool ArchiveFileReader::atEnd() const {
@@ -217,7 +221,7 @@ bool ArchiveFileReader::entryIsBlock() const {
 
 mode_t ArchiveFileReader::entryPerm() const {
     if (m_entry == NULL) return 0;
-    return archive_entry_perm(m_entry);
+    return archive_entry_mode(m_entry);
 }
 
 qint64 ArchiveFileReader::entryUid() const {
@@ -237,7 +241,7 @@ qint64 ArchiveFileReader::entrySize() const {
 
 ArchiveEntry * ArchiveFileIterator::operator*() const {
     if (atEnd()) return NULL;
-    return m_reader;
+    return m_reader->entry();
 }
 
 ArchiveFileIterator & ArchiveFileIterator::operator=(const ArchiveFileIterator &other) {
@@ -259,6 +263,10 @@ bool PackageFileReader::omitText(const QString & path) const {
     return (path == ".MTREE" || path == ".BUILDINFO" || path == ".PKGINFO");
 }
 
+QString PackageFileReader::entryName() const {
+    return QDir::separator()+ArchiveFileReader::entryName();
+}
+
 const QStringList PackageFileReader::fileList(const QString & archive_path,bool add_root_slash) {
     QStringList ret;
 
@@ -269,9 +277,8 @@ const QStringList PackageFileReader::fileList(const QString & archive_path,bool 
     return ret;
 }
 
-ArchiveFileReaderLoop::ArchiveFileReaderLoop(ArchiveFileReader * reader,bool add_root_slash,QObject * parent) : ThreadRun(parent) {
+ArchiveFileReaderLoop::ArchiveFileReaderLoop(ArchiveReader * reader,QObject * parent) : ThreadRun(parent) {
     m_reader = reader;
-    m_add_root_slash = add_root_slash;
     QMetaObject::invokeMethod(this,"init",Qt::QueuedConnection);
 }
 
@@ -281,14 +288,15 @@ ArchiveFileReaderLoop::~ArchiveFileReaderLoop() {
 
 void ArchiveFileReaderLoop::init() {
     bool ok;
-    run<bool>(ok,this,&ArchiveFileReaderLoop::processing,m_add_root_slash);
+    run<bool>(ok,this,&ArchiveFileReaderLoop::processing);
     deleteLater();
 }
 
-bool ArchiveFileReaderLoop::processing(bool add_root_slash) {
+bool ArchiveFileReaderLoop::processing() {
     for(ArchiveEntry * inst : *m_reader) {
         if (isTerminateFlagSet()) break;
-        QMetaObject::invokeMethod(this,"filePath",Qt::QueuedConnection,Q_ARG(QString,(add_root_slash?QDir::separator():QChar())+inst->entryName()));
+        qRegisterMetaType<mode_t>("mode_t");
+        QMetaObject::invokeMethod(this,"fileInfo",Qt::QueuedConnection,Q_ARG(QString,inst->entryName()),Q_ARG(qint64,inst->entrySize()),Q_ARG(QString,inst->entrySymLink()),Q_ARG(QDateTime,inst->entryModificationDate()),Q_ARG(mode_t,inst->entryPerm()));
     }
     if (!m_reader->errorString().isEmpty()) {
         QMetaObject::invokeMethod(this,"error",Qt::QueuedConnection,Q_ARG(QString,m_reader->errorString()));
@@ -432,47 +440,26 @@ QString InstalledPackageFileReader::errorString() const {
     return m_error;
 }
 
-LocalFileIterator InstalledPackageFileReader::begin() const {
-    if (!isValid()) return LocalFileIterator();
-    return LocalFileIterator((InstalledPackageFileReader *)this);
+ArchiveFileIterator InstalledPackageFileReader::begin() const {
+    if (m_files.count() <= 0) return ArchiveFileIterator();
+    return ArchiveFileIterator((ArchiveReader *)this,0);
 }
 
-LocalFileIterator InstalledPackageFileReader::end() const {
-    return LocalFileIterator();
+ArchiveFileIterator InstalledPackageFileReader::end() const {
+    return ArchiveFileIterator();
 }
 
-LocalFileIterator::LocalFileIterator(const LocalFileIterator & other) {
-    *this = other;
+off_t InstalledPackageFileReader::pos() const {
+    return m_index;
 }
 
-LocalFileIterator::LocalFileIterator(InstalledPackageFileReader * reader) {
-    m_reader = reader;
+bool InstalledPackageFileReader::setPos(off_t pos) {
+    m_index = pos;
+    return isValid();
 }
 
-bool LocalFileIterator::operator!=(const LocalFileIterator& other) const {
-    if (atEnd() && other.atEnd()) return false;
-    if (atEnd() || other.atEnd()) return true;
-
-    return ((m_reader->m_index != other.m_reader->m_index) || (m_reader != other.m_reader));
-}
-
-LocalFileIterator & LocalFileIterator::operator++() {
-    if (atEnd() || !m_reader->next()) m_reader = NULL;
-    return *this;
-}
-
-ArchiveEntry * LocalFileIterator::operator*() const {
-    if (atEnd()) return NULL;
-    return m_reader;
-}
-
-LocalFileIterator & LocalFileIterator::operator=(const LocalFileIterator &other) {
-    m_reader = other.m_reader;
-    return *this;
-}
-
-bool LocalFileIterator::atEnd() const {
-    return (m_reader == NULL);
+ArchiveEntry * InstalledPackageFileReader::entry() {
+    return this;
 }
 
 const QStringList InstalledPackageFileReader::fileList(const QString & pkg_name) {

@@ -4,6 +4,7 @@
 ********************************************************************************/
 
 #include "fileslistwidget.h"
+#include "byteshumanizer.h"
 #include <QApplication>
 #include <QDir>
 #include <QFileInfo>
@@ -30,6 +31,8 @@ FilesListWidget::FilesListWidget(QWidget *parent) : QTreeWidget(parent) {
     in_rect = false;
     m_do_refresh_picture = true;
     setHeaderHidden(true);
+    setRootIsDecorated(false);
+    setSelectionMode(QAbstractItemView::NoSelection);
     m_refresh_pix.load(ThemeIcons::name(ThemeIcons::REFRESH_BTN));
     m_refresh_shadow_pix.load(ThemeIcons::name(ThemeIcons::REFRESH_BTN_SHADOW));
     pix = m_refresh_pix;
@@ -52,101 +55,72 @@ void FilesListWidget::fill(AlpmPackage * pkg) {
     update();
 
     m_pkg = pkg;
-    QStringList files;
-    if (!pkg->isFile()) files = pkg->files();
+    m_files.clear();
+    if (!Alpm::isOpen()) return;
+
+    if (reader != NULL) {
+        reader->setTerminateFlag();
+        QMetaObject::invokeMethod(this,"refill",Qt::QueuedConnection);
+        return;
+    }
 
     QString pkg_cache_path;
-    if (!pkg->isInstalled() && files.isEmpty()) {
-        if (reader != NULL) reader->setTerminateFlag();
-        if (!Alpm::isOpen() || !pkg->isDownloaded(&pkg_cache_path) || pkg_cache_path.isEmpty()) {
-            if (reader != NULL) {
-                QMetaObject::invokeMethod(this,"fill",Qt::QueuedConnection,Q_ARG(AlpmPackage *,pkg));
-                return;
-            }
-            setRootIsDecorated(false);
-            m_do_refresh_picture = true;
-            update();
-            setSelectionMode(QAbstractItemView::NoSelection);
-            return;
-        }
-        else {
-            if (reader != NULL) {
-                QMetaObject::invokeMethod(this,"fill",Qt::QueuedConnection,Q_ARG(AlpmPackage *,pkg));
-                return;
-            }
-            m_do_refresh_picture = false;
-            update();
-            setRootIsDecorated(true);
-            setSelectionMode(QAbstractItemView::ExtendedSelection);
-            m_files.clear();
+    if (!pkg->isInstalled() && !pkg->isDownloaded(&pkg_cache_path)) {
+        reader = new ArchiveFileReaderLoop(new InstalledPackageFileReader(pkg->name()));
+    }
+    else if (!pkg->isInstalled() && pkg->isDownloaded(&pkg_cache_path) && !pkg_cache_path.isEmpty()) {
+        reader = new ArchiveFileReaderLoop(new PackageFileReader(pkg_cache_path));
+    }
+    else if (pkg->isInstalled()) reader = new ArchiveFileReaderLoop(new InstalledPackageFileReader(pkg->name()));
 
-            (wait_ind = new WaitIndicator(this->viewport()))->start();
-            reader = new ArchiveFileReaderLoop(new PackageFileReader(pkg_cache_path));
-            connect(reader,SIGNAL(filePath(const QString &)),this,SLOT(newFilePath(const QString &)));
-            connect(reader,SIGNAL(destroyed()),SLOT(readerDestroyed()));
-        }
-    }
-    else {
-        if (reader != NULL) ThreadRun::setTerminateFlag();
-        if (reader != NULL) {
-            QMetaObject::invokeMethod(this,"fill",Qt::QueuedConnection,Q_ARG(AlpmPackage *,pkg));
-            return;
-        }
-        fill(files);
-    }
+    connect(reader,SIGNAL(fileInfo(const QString &,qint64,const QString &,const QDateTime &,mode_t)),this,SLOT(newFileEntry(const QString &,qint64,const QString &,const QDateTime &,mode_t)));
+    connect(reader,SIGNAL(destroyed()),SLOT(readerDestroyed()));
 }
 
 void FilesListWidget::readerDestroyed() {
     if (wait_ind != NULL) delete wait_ind;
     wait_ind = NULL;
-    if (!reader->isTerminateFlagSet()) fill();
+    if (!reader->isTerminateFlagSet()) {
+        reader = NULL;
+        if (m_files.isEmpty()) {
+            m_do_refresh_picture = (!m_pkg->isInstalled() && !m_pkg->isDownloaded(NULL));
+            setHeaderHidden(m_do_refresh_picture);
+            update();
+            setSelectionMode(m_do_refresh_picture?QAbstractItemView::NoSelection:QAbstractItemView::SingleSelection);
+            return;
+        }
+        m_do_refresh_picture = false;
+        setHeaderHidden(false);
+        setSelectionMode(QAbstractItemView::SingleSelection);
+        fill();
+    }
     reader = NULL;
 }
 
-void FilesListWidget::newFilePath(const QString & path) {
-    QFileInfo fi(path);
+void FilesListWidget::newFileEntry(const QString & name,qint64 size,const QString & linkContents,const QDateTime & mdate,mode_t perms) {
+    if (wait_ind == NULL) (wait_ind = new WaitIndicator(this->viewport()))->start();
+    QFileInfo fi(name);
     if (fi.dir().path() == ".") {
-        m_files["/"].append(path);
+        m_files["/"].append(FilesListWidget::FileEntry(name,size,linkContents,mdate,perms));
     }
     else {
-        m_files[fi.dir().path()].append(fi.fileName());
+        m_files[fi.dir().path()].append(FilesListWidget::FileEntry(fi.fileName(),size,linkContents,mdate,perms));
     }
-}
-
-void FilesListWidget::fill(const QStringList & files) {
-    m_do_refresh_picture = false;
-    update();
-    setRootIsDecorated(true);
-    setSelectionMode(QAbstractItemView::ExtendedSelection);
-    m_files.clear();
-
-    for (int i=0;i<files.count();i++) {
-
-        QFileInfo fi(files[i]);
-        if (fi.dir().path() == ".") {
-            m_files["/"].append(files[i]);
-        }
-        else {
-            m_files[fi.dir().path()].append(fi.fileName());
-        }
-    }
-
-    fill();
 }
 
 void FilesListWidget::fill() {
     QString prev_key;
     QString key;
-    QStringList values;
-    QMapIterator<QString, QStringList> i(m_files);
+    QList<FileEntry> values;
+    QMapIterator<QString,QList<FileEntry> > i(m_files);
     while (i.hasNext()) {
         i.next();
         key = i.key();
-        if (!prev_key.isEmpty() && ((m_files[prev_key].count() <= 0) || ((m_files[prev_key].count() == 1) && (m_files[prev_key])[0].isEmpty())) && key.contains(prev_key)) m_files.remove(prev_key);
+        if (!prev_key.isEmpty() && ((m_files[prev_key].count() <= 0) || ((m_files[prev_key].count() == 1) && (m_files[prev_key])[0].name().isEmpty())) && key.contains(prev_key)) m_files.remove(prev_key);
         prev_key = key;
     }
 
-    i = QMapIterator<QString, QStringList>(m_files);
+    i = QMapIterator<QString,QList<FileEntry> >(m_files);
     while (i.hasNext()) {
         i.next();
         QTreeWidgetItem * item = new QTreeWidgetItem(this);
@@ -154,15 +128,19 @@ void FilesListWidget::fill() {
         item->setIcon(0,folderIcon);
         values = i.value();
         for (int j=0;j<values.count();j++) {
-            if (!values[j].isEmpty()) {
+            if (!values[j].name().isEmpty()) {
                 QTreeWidgetItem * child_item = new QTreeWidgetItem(item);
-                child_item->setText(0,values[j]);
+                child_item->setText(0,values[j].name());
                 child_item->setIcon(0,fileIcon);
+                child_item->setText(1,values[j].size());
+                child_item->setText(2,values[j].perm());
+                child_item->setText(3,values[j].mdate());
             }
         }
     }
 
     expandAll();
+    resizeColumnToContents(0);
 }
 
 void FilesListWidget::paintEvent(QPaintEvent *event) {
@@ -218,8 +196,123 @@ bool FilesListWidget::event(QEvent *event) {
 
 void FilesListWidget::mousePressEvent(QMouseEvent *event) {
     QTreeWidget::mousePressEvent(event);
-    if (rootIsDecorated()) return;
+    if (!m_do_refresh_picture) return;
 
     if (in_rect && (m_pkg != NULL) && !m_pkg->isDownloaded(NULL)) emit downloadRequested(m_pkg);
     else if (m_pkg->isDownloaded(NULL)) refill();
+}
+
+void strmode(int mode, char *p) {
+     /* print type */
+    switch (mode & S_IFMT) {
+    case S_IFDIR:			/* directory */
+        *p++ = 'd';
+        break;
+    case S_IFCHR:			/* character special */
+        *p++ = 'c';
+        break;
+    case S_IFBLK:			/* block special */
+        *p++ = 'b';
+        break;
+    case S_IFREG:			/* regular */
+        *p++ = '-';
+        break;
+    case S_IFLNK:			/* symbolic link */
+        *p++ = 'l';
+        break;
+#ifdef S_IFSOCK
+    case S_IFSOCK:			/* socket */
+        *p++ = 's';
+        break;
+#endif
+#ifdef S_IFIFO
+    case S_IFIFO:			/* fifo */
+        *p++ = 'p';
+        break;
+#endif
+    default:			/* unknown */
+        *p++ = '?';
+        break;
+    }
+    /* usr */
+    if (mode & S_IRUSR)
+        *p++ = 'r';
+    else
+        *p++ = '-';
+    if (mode & S_IWUSR)
+        *p++ = 'w';
+    else
+        *p++ = '-';
+    switch (mode & (S_IXUSR | S_ISUID)) {
+    case 0:
+        *p++ = '-';
+        break;
+    case S_IXUSR:
+        *p++ = 'x';
+        break;
+    case S_ISUID:
+        *p++ = 'S';
+        break;
+    case S_IXUSR | S_ISUID:
+        *p++ = 's';
+        break;
+    }
+    /* group */
+    if (mode & S_IRGRP)
+        *p++ = 'r';
+    else
+        *p++ = '-';
+    if (mode & S_IWGRP)
+        *p++ = 'w';
+    else
+        *p++ = '-';
+    switch (mode & (S_IXGRP | S_ISGID)) {
+    case 0:
+        *p++ = '-';
+        break;
+    case S_IXGRP:
+        *p++ = 'x';
+        break;
+    case S_ISGID:
+        *p++ = 'S';
+        break;
+    case S_IXGRP | S_ISGID:
+        *p++ = 's';
+        break;
+    }
+    /* other */
+    if (mode & S_IROTH)
+        *p++ = 'r';
+    else
+        *p++ = '-';
+    if (mode & S_IWOTH)
+        *p++ = 'w';
+    else
+        *p++ = '-';
+    switch (mode & (S_IXOTH | S_ISVTX)) {
+    case 0:
+        *p++ = '-';
+        break;
+    case S_IXOTH:
+        *p++ = 'x';
+        break;
+    case S_ISVTX:
+        *p++ = 'T';
+        break;
+    case S_IXOTH | S_ISVTX:
+        *p++ = 't';
+        break;
+    }
+    *p++ = ' ';		/* will be a '+' if ACL's implemented */
+    *p = '\0';
+}
+
+FilesListWidget::FileEntry::FileEntry(const QString & name,qint64 size,const QString & linkContents,const QDateTime & mdate,mode_t perms) {
+    m_name = name;
+    m_size = BytesHumanizer(size).toString();
+    m_linkContents = linkContents;
+    m_mdate = mdate.toString("ddd MMM dd yyyy hh:mm:ss");
+    char mode_str[12];
+    strmode(perms,mode_str);
+    m_perms = QString::fromLatin1(mode_str);
 }

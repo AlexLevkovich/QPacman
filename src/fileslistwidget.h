@@ -12,6 +12,7 @@
 class QLabel;
 class ArchiveFileReaderLoop;
 class WaitIndicator;
+class ArchiveEntry;
 
 class FilesListWidget : public QTreeWidget {
     Q_OBJECT
@@ -23,7 +24,7 @@ public slots:
     void refill();
 
 private slots:
-    void newFilePath(const QString & path);
+    void newFileEntry(const QString & name,qint64 size,const QString & linkContents,const QDateTime & mdate,mode_t perms);
     void readerDestroyed();
 
 protected:
@@ -37,8 +38,25 @@ signals:
     void downloadRequested(AlpmPackage * pkg);
 
 private:
-    void fill(const QStringList & files);
     void fill();
+
+    class FileEntry {
+    public:
+        FileEntry() {}
+        FileEntry(const QString & name,qint64 size,const QString & linkContents,const QDateTime & mdate,mode_t perms);
+
+        QString name() const { return m_name; }
+        QString size() const { return m_size; }
+        QString linkContents() const { return m_linkContents; }
+        QString mdate() const { return m_mdate; }
+        QString perm() const { return m_perms; }
+    private:
+        QString m_name;
+        QString m_size;
+        QString m_linkContents;
+        QString m_mdate;
+        QString m_perms;
+    };
 
     QIcon folderIcon;
     QIcon fileIcon;
@@ -54,7 +72,7 @@ private:
     bool in_rect;
     AlpmPackage * m_pkg;
     ArchiveFileReaderLoop * reader;
-    QMap<QString,QStringList> m_files;
+    QMap<QString,QList<FileEntry> > m_files;
     WaitIndicator * wait_ind;
 };
 

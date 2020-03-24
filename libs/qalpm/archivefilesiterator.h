@@ -15,6 +15,7 @@
 #include <fcntl.h>
 
 struct archive;
+class ArchiveReader;
 class ArchiveFileReader;
 class InstalledPackageFileReader;
 class ArchiveEntry;
@@ -28,11 +29,29 @@ public:
     ArchiveFileIterator & operator=(const ArchiveFileIterator &other);
 
 private:
-    ArchiveFileIterator(ArchiveFileReader * reader = NULL,off_t pos = (off_t)-1);
+    ArchiveFileIterator(ArchiveReader * reader = NULL,off_t pos = (off_t)-1);
     bool atEnd() const;
 
-    ArchiveFileReader * m_reader;
+    ArchiveReader * m_reader;
+
     friend class ArchiveFileReader;
+    friend class InstalledPackageFileReader;
+};
+
+class ArchiveReader {
+public:
+    virtual ~ArchiveReader() {}
+
+    virtual ArchiveEntry * entry() = 0;
+    virtual bool next() const = 0;
+    virtual bool atEnd() const = 0;
+    virtual QString errorString() const = 0;
+    virtual off_t pos() const = 0;
+    virtual bool setPos(off_t pos) = 0;
+
+    // std::iterator compability functions
+    virtual ArchiveFileIterator begin() const = 0;
+    virtual ArchiveFileIterator end() const = 0;
 };
 
 class ArchiveEntry {
@@ -55,13 +74,13 @@ public:
     virtual qint64 entrySize() const = 0;
 };
 
-class ArchiveFileReader : public ArchiveEntry {
+class ArchiveFileReader : public ArchiveEntry, public ArchiveReader {
 public:
     ArchiveFileReader(const QString & archive_path);
     virtual ~ArchiveFileReader();
     bool next() const;
 
-    QString entryName() const;
+    virtual QString entryName() const;
     QString entrySymLink() const;
     QDateTime entryModificationDate() const;
     QDateTime entryLastAccessDate() const;
@@ -96,6 +115,7 @@ private:
     off_t pos() const;
     bool setPos(off_t pos);
     void init();
+    ArchiveEntry * entry();
 
     QString m_entryname;
     archive * m_archive;
@@ -103,35 +123,18 @@ private:
     off_t m_begin;
     struct archive_entry * m_entry;
     QString m_error;
-
-    friend class ArchiveFileIterator;
 };
 
 class PackageFileReader : public ArchiveFileReader {
 public:
     PackageFileReader(const QString & archive_path);
+    QString entryName() const;
     static const QStringList fileList(const QString & archive_path,bool add_root_slash = false);
 protected:
     bool omitText(const QString & path) const;
 };
 
-class LocalFileIterator {
-public:
-    LocalFileIterator(const LocalFileIterator & other);
-    bool operator!=(const LocalFileIterator& other) const;
-    LocalFileIterator & operator++();
-    ArchiveEntry * operator*() const;
-    LocalFileIterator & operator=(const LocalFileIterator &other);
-
-private:
-    LocalFileIterator(InstalledPackageFileReader * reader = NULL);
-    bool atEnd() const;
-
-    InstalledPackageFileReader * m_reader;
-    friend class InstalledPackageFileReader;
-};
-
-class InstalledPackageFileReader : public ArchiveEntry {
+class InstalledPackageFileReader : public ArchiveEntry, public ArchiveReader {
 public:
     InstalledPackageFileReader(const QString & pkg_name);
     bool next() const;
@@ -157,21 +160,22 @@ public:
     QString errorString() const;
 
     // std::iterator compability functions
-    LocalFileIterator begin() const;
-    LocalFileIterator end() const;
+    ArchiveFileIterator begin() const;
+    ArchiveFileIterator end() const;
 
     static const QStringList fileList(const QString & pkg_name);
 
 private:
     bool isValid() const;
     bool stat() const;
+    off_t pos() const;
+    bool setPos(off_t pos);
+    ArchiveEntry * entry();
 
-    qint64 m_index;
+    off_t m_index;
     QStringList m_files;
     QString m_error;
     struct stat m_stat;
-
-    friend class LocalFileIterator;
 };
 
 class ArchiveFileReaderLoop : public ThreadRun {
@@ -181,18 +185,18 @@ public:
     // reader will be deleted automatically as well as ArchiveFileReaderLoop
     // so all do you need is `new ArchiveFileReaderLoop()`
     // connect to filePath() and this->destroyed() signal indicates completing the processing
-    ArchiveFileReaderLoop(ArchiveFileReader * reader,bool add_root_slash = true,QObject * parent = NULL);
+    ArchiveFileReaderLoop(ArchiveReader * reader,QObject * parent = NULL);
     ~ArchiveFileReaderLoop();
 signals:
-    void filePath(const QString & path);
-    void error(const QString & path);
+    void fileInfo(const QString & name,qint64 size,const QString & linkContents,const QDateTime & mdate,mode_t perms);
+    void error(const QString & err);
 private slots:
     void init();
 private:
-    bool processing(bool add_root_slash);
+    bool processing();
 
-    ArchiveFileReader * m_reader;
-    bool m_add_root_slash;
+    ArchiveReader * m_reader;
 };
+Q_DECLARE_METATYPE(mode_t)
 
 #endif // ARCHIVEFILESITERATOR_H
