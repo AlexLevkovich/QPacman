@@ -98,7 +98,11 @@ void FilesListWidget::readerDestroyed() {
 }
 
 void FilesListWidget::newFileEntry(const QString & name,qint64 size,const QString & linkContents,const QDateTime & mdate,mode_t perms) {
-    if (wait_ind == NULL) (wait_ind = new WaitIndicator(this->viewport()))->start();
+    if (wait_ind == NULL) {
+        m_do_refresh_picture = false;
+        update();
+        (wait_ind = new WaitIndicator(this->viewport()))->start();
+    }
     QFileInfo fi(name);
     if (fi.dir().path() == ".") {
         m_files["/"].append(FilesListWidget::FileEntry(name,size,linkContents,mdate,perms));
