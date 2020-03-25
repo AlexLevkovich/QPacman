@@ -146,7 +146,7 @@ void AlpmDownloader::download_error() {
 void AlpmDownloader::download_completed() {
     QFile(downloader->outputName()+".save").remove();
     processEvents();
-    emit progress(m_out_file_name,m_downloaded,downloader->dataLength(),100,0);
+    emit progress(m_out_file_name,(downloader->dataLength() > 0)?downloader->dataLength():m_downloaded,downloader->dataLength(),100,0);
     if (isRunning()) exit(0);
 }
 
