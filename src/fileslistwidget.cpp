@@ -100,6 +100,7 @@ void FilesListWidget::readerDestroyed() {
 void FilesListWidget::newFileEntry(const QString & name,qint64 size,const QString & linkContents,const QDateTime & mdate,mode_t perms) {
     if (wait_ind == NULL) {
         m_do_refresh_picture = false;
+        setHeaderHidden(true);
         update();
         (wait_ind = new WaitIndicator(this->viewport()))->start();
     }

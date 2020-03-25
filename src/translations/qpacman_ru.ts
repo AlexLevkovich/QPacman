@@ -382,7 +382,7 @@ Are you sure to continue?</source>
 <context>
     <name>FilesListWidget</name>
     <message>
-        <location filename="../fileslistwidget.cpp" line="+156"/>
+        <location filename="../fileslistwidget.cpp" line="+157"/>
         <source>Download the package and update...</source>
         <translation type="unfinished">Загрузить пакет и обновить...</translation>
     </message>
