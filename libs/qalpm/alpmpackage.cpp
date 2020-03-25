@@ -299,8 +299,12 @@ void AlpmPackage::init(alpm_pkg_t * m_pkg) {
         }
         else {
             m_dbname = QString::fromLocal8Bit(alpm_db_get_name(db_t));
-            alpm_list_t * list = alpm_db_get_servers(db_t);
-            m_remoteloc = (!list)?QString():QString::fromLocal8Bit((const char *)list->data);
+            AlpmList<char> locs(alpm_db_get_servers(db_t),AlpmList<char>::ignorefree);
+            do {
+                 if (locs.isEmpty()) break;
+                 m_remotelocs.append(QString::fromLocal8Bit((const char *)locs.valuePtr()));
+            } while(locs.next());
+            locs.detach();
 
             if (m_dbname == QString::fromLatin1("local")) setInstalled(true);
             else {
@@ -357,8 +361,8 @@ QString AlpmPackage::filePath() const {
     return m_filepath;
 }
 
-QString AlpmPackage::remoteLocation() const {
-    return m_remoteloc;
+QStringList AlpmPackage::remoteLocations() const {
+    return m_remotelocs;
 }
 
 bool AlpmPackage::isDownloaded(QString * path_pkg_file) const {
@@ -748,7 +752,7 @@ AlpmPackage & AlpmPackage::operator=(const AlpmPackage &other) {
     m_url = other.m_url;
     m_filename = other.m_filename;
     m_arch = other.m_arch;
-    m_remoteloc = other.m_remoteloc;
+    m_remotelocs = other.m_remotelocs;
     m_build_date = other.m_build_date;
     m_install_date = other.m_install_date;
     m_packager = other.m_packager;

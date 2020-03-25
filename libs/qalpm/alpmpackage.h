@@ -148,7 +148,7 @@ public:
 
     QString toString() const;
     QString fileName() const;
-    QString remoteLocation() const;
+    QStringList remoteLocations() const;
     QString filePath() const;
 
     static CompareOper parseNameVersion(const QString & str,QString & name,QString & ver);
@@ -181,7 +181,7 @@ private:
     QUrl m_url;
     QString m_filename;
     QString m_arch;
-    QString m_remoteloc;
+    QStringList m_remotelocs;
     QDateTime m_build_date;
     QDateTime m_install_date;
     QString m_packager;

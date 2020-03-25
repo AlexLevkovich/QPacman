@@ -84,6 +84,7 @@ bool AlpmConfig::setConfPath(const QString & conf_filepath) {
     remotefilesiglevel = ini_file.value("options/RemoteFileSigLevel",siglevel.join(" ")).toString().trimmed().split(" ",QString::SkipEmptyParts);
     holdpkgs2 = ini_file.value("options/HoldPkg","").toString().split(" ",QString::SkipEmptyParts);
     cachedirs = ini_file.value("options/CacheDir",CACHEDIR).toString().split(" ",QString::SkipEmptyParts);
+    if (getuid() != 0) cachedirs.prepend(QDir::tempPath());
     hookdirs = ini_file.value("options/HookDir",HOOKDIR).toString().split(" ",QString::SkipEmptyParts);
     ignoregroups = ini_file.value("options/IgnoreGroup","").toString().split(" ",QString::SkipEmptyParts);
     ignorepkgs = ini_file.value("options/IgnorePkg","").toString().split(" ",QString::SkipEmptyParts);

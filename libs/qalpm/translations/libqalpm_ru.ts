@@ -14,7 +14,7 @@
         <translation type="unfinished">Невозможно определить архитектуру системы!</translation>
     </message>
     <message>
-        <location line="+128"/>
+        <location line="+129"/>
         <source>Pacman&apos;s conf file is unknown!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -435,17 +435,17 @@ Do you want to delete it?</source>
         <translation type="unfinished">Невозможно зарустить задание в потоке если другое еще работает!</translation>
     </message>
     <message>
-        <location line="+195"/>
+        <location line="+221"/>
         <source>Nothing to download!!!</source>
         <translation type="unfinished">Нечего загружать!!!</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+11"/>
         <source>Starting the download of %1</source>
         <translation type="unfinished">Начинаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+309"/>
+        <location line="+297"/>
         <location line="+6"/>
         <location line="+187"/>
         <source>Skipping target: %1</source>

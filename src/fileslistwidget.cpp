@@ -206,7 +206,9 @@ void FilesListWidget::mousePressEvent(QMouseEvent *event) {
     else if (m_pkg->isDownloaded(NULL)) refill();
 }
 
-void strmode(int mode, char *p) {
+static const QString strmode(int mode) {
+    QByteArray arr(11,' ');
+    char * p = arr.data();
      /* print type */
     switch (mode & S_IFMT) {
     case S_IFDIR:			/* directory */
@@ -307,8 +309,7 @@ void strmode(int mode, char *p) {
         *p++ = 't';
         break;
     }
-    *p++ = ' ';		/* will be a '+' if ACL's implemented */
-    *p = '\0';
+    return QString::fromLatin1(arr);
 }
 
 FilesListWidget::FileEntry::FileEntry(const QString & name,qint64 size,const QString & linkContents,const QDateTime & mdate,mode_t perms) {
@@ -316,7 +317,5 @@ FilesListWidget::FileEntry::FileEntry(const QString & name,qint64 size,const QSt
     m_size = BytesHumanizer(size).toString();
     m_linkContents = linkContents;
     m_mdate = mdate.toString("ddd MMM dd yyyy hh:mm:ss");
-    char mode_str[12];
-    strmode(perms,mode_str);
-    m_perms = QString::fromLatin1(mode_str);
+    m_perms = strmode(perms);
 }

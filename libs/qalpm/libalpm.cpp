@@ -902,31 +902,60 @@ int Alpm::update_dbs(bool force) {
     return ALPM_ERR_OK;
 }
 
-QStringList Alpm::download_packages(qint64 download_size,const QStringList & download_urls) {
+QString Alpm::download_package(const QString & download_url) const {
+    QString cache_dir = cacheDirs().at(0);
+    if (Alpm::operation_fetch_fn(download_url,cache_dir,true) == -1) return QString();
+    return cache_dir+QDir::separator()+QUrl(download_url).fileName();
+}
+
+QString Alpm::download_package(AlpmPackage * pkg) const {
+    QString ret;
+    for (QString remote_loc: pkg->remoteLocations()) {
+        if (remote_loc.isEmpty()) continue;
+        ret = download_package(remote_loc+QDir::separator()+pkg->fileName());
+        if (!ret.isEmpty()) break;
+    }
+    return ret;
+}
+
+QStringList Alpm::download_packages(const QList<AlpmPackage *> & pkgs) {
     QStringList downloaded_paths;
     if (!isValid(true)) return downloaded_paths;
 
     m_percent = -1;
 
-    if (download_urls.count() <= 0 || download_size <= 0) {
+    qint64 download_size = 0;
+    alpm_pkg_t * handle;
+    int i;
+    for (i=0;i<pkgs.count();i++) {
+        if (pkgs.at(i)->remoteLocations().isEmpty()) continue;
+        handle = pkgs.at(i)->handle();
+        if (handle == NULL) continue;
+        download_size += alpm_pkg_download_size(handle);
+    }
+
+    if (download_size <= 0) {
         QMetaObject::invokeMethod(p_alpm,"error",Qt::QueuedConnection,Q_ARG(QString,tr("Nothing to download!!!")));
         QMetaObject::invokeMethod(p_alpm,"download_failed",Qt::QueuedConnection);
         return downloaded_paths;
     }
 
-    QMetaObject::invokeMethod(this,"full_download_size_found",Qt::QueuedConnection,Q_ARG(qint64,download_size));
+    if (download_size > 0) QMetaObject::invokeMethod(this,"full_download_size_found",Qt::QueuedConnection,Q_ARG(qint64,download_size));
 
     QString filename;
-    for (int i=0;i<download_urls.count();i++) {
-        filename = QUrl(download_urls.at(i)).fileName();
+    QString out_path;
+    for (i=0;i<pkgs.count();i++) {
+        filename = pkgs.at(i)->fileName();
         emit_information(tr("Starting the download of %1").arg(filename));
         QMetaObject::invokeMethod(p_alpm,"download_start",Qt::QueuedConnection,Q_ARG(QString,filename));
-        if (Alpm::operation_fetch_fn(download_urls.at(i),cacheDirs().at(0),true) == -1) {
+        out_path = download_package(pkgs.at(i));
+        if (!out_path.isEmpty()) downloaded_paths.append(out_path);
+        else {
             QMetaObject::invokeMethod(p_alpm,"download_failed",Qt::QueuedConnection);
             return downloaded_paths;
         }
-        downloaded_paths.append(cacheDirs().at(0)+QDir::separator()+filename);
     }
+
     QMetaObject::invokeMethod(p_alpm,"download_completed",Qt::QueuedConnection);
 
     return downloaded_paths;
@@ -935,22 +964,8 @@ QStringList Alpm::download_packages(qint64 download_size,const QStringList & dow
 ThreadRun::RC Alpm::downloadPackages(const QList<AlpmPackage *> & pkgs,QStringList * paths) {
     if (!isValid(true)) return ThreadRun::BAD;
 
-    QStringList download_urls;
-    qint64 download_size = 0;
-    alpm_pkg_t * handle;
-    QString loc;
-    int i;
-    for (i=0;i<pkgs.count();i++) {
-        loc = pkgs.at(i)->remoteLocation();
-        if (loc.isEmpty()) continue;
-        handle = pkgs.at(i)->handle();
-        if (handle == NULL) continue;
-        download_size += alpm_pkg_download_size(handle);
-        download_urls.append(loc+QDir::separator()+pkgs.at(i)->fileName());
-    }
-
     QStringList downloaded_paths;
-    ThreadRun::RC rc = run<QStringList>(downloaded_paths,this,&Alpm::download_packages,download_size,download_urls);
+    ThreadRun::RC rc = run<QStringList>(downloaded_paths,this,&Alpm::download_packages,pkgs);
     emit pkgs_downloaded(downloaded_paths);
     if (rc == ThreadRun::OK && paths != NULL) *paths = downloaded_paths;
     return (downloaded_paths.count() <= 0 && rc == ThreadRun::OK)?ThreadRun::BAD:rc;
@@ -971,10 +986,10 @@ int Alpm::find_updates_in_list(const QVector<AlpmPackage *> & m_list,AlpmPackage
     return -1;
 }
 
-QVector<AlpmPackage *> Alpm::check_updates() {
+QVector<AlpmPackage *> Alpm::check_updates() const {
     QVector<AlpmPackage *> ret;
 
-    queryPackages(false);
+    ((Alpm *)this)->queryPackages(false);
     const QVector<AlpmPackage *> & pkgs = lastQueriedPackages();
 
     for (int i=0;i<pkgs.count();i++) {
@@ -1543,8 +1558,6 @@ QStringList Alpm::cacheDirs() const {
     if (!isValid(true)) return QStringList();
 
     QStringList ret;
-    if (getuid() != 0) return (ret << QDir::tempPath());
-
     AlpmList<char> dirs(alpm_option_get_cachedirs(m_alpm_handle),AlpmList<char>::ignorefree);
     if (dirs.count() <= 0) return ret;
 

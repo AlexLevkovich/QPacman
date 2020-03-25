@@ -195,8 +195,10 @@ private:
     int remove_packages(const QList<AlpmPackage *> & m_pkgs,bool remove_cascade);
     int update_dbs(bool force);
     int query_packages();
-    QStringList download_packages(qint64 download_size,const QStringList & download_urls);
-    QVector<AlpmPackage *> check_updates();
+    QStringList download_packages(const QList<AlpmPackage *> & pkgs);
+    QString download_package(const QString & download_url) const;
+    QString download_package(AlpmPackage * pkg) const;
+    QVector<AlpmPackage *> check_updates() const;
 
     static const QStringList dirContents(const QDir & dir,const QString & nameFilter);
     static int operation_fetch_fn(const QString & url,const QString & localpath,bool force);

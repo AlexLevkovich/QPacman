@@ -249,9 +249,9 @@ InfoView::InfoView(QWidget *parent) : CustomPopupTextBrowser(parent) {
     insertText(table->cellAt(11,0).firstCursorPosition(),"HoldPkg");
     insertText(table->cellAt(11,1).firstCursorPosition(),config.holdPkgs().join(" "));
     insertText(table->cellAt(12,0).firstCursorPosition(),"CacheDir");
-    insertText(table->cellAt(12,1).firstCursorPosition(),config.cacheDirs().join(" "));
+    insertText(table->cellAt(12,1).firstCursorPosition(),config.cacheDirs().join("\n"));
     insertText(table->cellAt(13,0).firstCursorPosition(),"HookDir");
-    insertText(table->cellAt(13,1).firstCursorPosition(),config.hookDirs().join(" "));
+    insertText(table->cellAt(13,1).firstCursorPosition(),config.hookDirs().join("\n"));
     insertText(table->cellAt(14,0).firstCursorPosition(),"IgnoreGroup");
     insertText(table->cellAt(14,1).firstCursorPosition(),config.ignoreGroups().join(" "));
     insertText(table->cellAt(15,0).firstCursorPosition(),"IgnorePkg");
