@@ -45,7 +45,26 @@ PackageProcessor::PackageProcessor(ProgressView * view,QAction * cancelAction,Op
 
     connect(Alpm::instance(),SIGNAL(information(const QString &)),this,SIGNAL(logString(const QString &)));
     connect(Alpm::instance(),SIGNAL(optdepends_event(const QString &,const StringStringMap &,const StringStringMap &)),this,SLOT(on_optdepends_event(const QString &,const StringStringMap &,const StringStringMap &)));
-    connect(Alpm::instance(),SIGNAL(event(const QString &)),this,SLOT(on_event(const QString &)));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::all_hooks,[&](const QString & message) { on_event(1,message); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_pkg_deps,[&](const QString & message) { on_event(2,message); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_file_conflicts,[&](const QString & message) { on_event(3,message); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::resolving_pkg_deps,[&](const QString & message) { on_event(4,message); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_internal_conflicts,[&](const QString & message) { on_event(5,message); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_integrity,[&](const QString & message) { on_event(6,message); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_diskspace,[&](const QString & message) { on_event(7,message); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_keyring,[&](const QString & message) { on_event(8,message); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_key_download,[&](const QString & message) { on_event(9,message); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::loading_pkg_files,[&](const QString & message) { on_event(10,message); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::all_hooks_completed,[&]() { on_event_completed(1); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_pkg_deps_completed,[&]() { on_event_completed(2); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_file_conflicts_completed,[&]() { on_event_completed(3); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::resolving_pkg_deps_completed,[&]() { on_event_completed(4); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_internal_conflicts_completed,[&]() { on_event_completed(5); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_integrity_completed,[&]() { on_event_completed(6); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_diskspace_completed,[&]() { on_event_completed(7); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_keyring_completed,[&]() { on_event_completed(8); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::checking_key_download_completed,[&]() { on_event_completed(9); }));
+    alpm_connections.append(connect(Alpm::instance(),&Alpm::loading_pkg_files_completed,[&]() { on_event_completed(10); }));
     connect(Alpm::instance(),SIGNAL(error(const QString &)),this,SLOT(on_error(const QString &)));
     connect(Alpm::instance(),SIGNAL(hook(const QString &,int,int)),this,SLOT(on_hook(const QString &,int,int)));
     connect(Alpm::instance(),SIGNAL(information(const QString &,bool)),this,SLOT(on_information(const QString &,bool)));
@@ -71,6 +90,10 @@ PackageProcessor::PackageProcessor(ProgressView * view,QAction * cancelAction,Op
 
     if (m_cancelAction != NULL) m_cancelAction->setEnabled(false);
     QMetaObject::invokeMethod(this,"exec_process",Qt::QueuedConnection);
+}
+
+PackageProcessor::~PackageProcessor() {
+    for (QMetaObject::Connection conn: alpm_connections) disconnect(conn);
 }
 
 void PackageProcessor::exec_process() {
@@ -148,15 +171,21 @@ bool PackageProcessor::eventFilter(QObject *obj,QEvent *event) {
         m_max_download_size = 0;
         m_downloaded_size = 0;
         m_xfered = 0;
-    }
-    if ((obj == &pkgChangeDlg) && (event->type() == QEvent::Show)) {
-        if (eventItem != NULL) eventItem->setMax();
+        eventItem = NULL;
+        eventItems.clear();
+        for (QMetaObject::Connection conn: alpm_connections) disconnect(conn);
     }
     return QObject::eventFilter(obj,event);
 }
 
-void PackageProcessor::on_event(const QString & str) {
+void PackageProcessor::on_event(int id,const QString & str) {
     eventItem = progressView->appendEventProgressRow(str);
+    eventItems.insert(id,eventItem);
+}
+
+void PackageProcessor::on_event_completed(int id) {
+    SimpleProgressItem * eventItem = eventItems.contains(id)?eventItems[id]:NULL;
+    if (eventItem != NULL) eventItem->setMax();
 }
 
 void PackageProcessor::on_error(const QString & str) {

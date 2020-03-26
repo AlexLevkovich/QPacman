@@ -128,7 +128,7 @@ void QPacmanTrayIcon::checkingCompleted(const QString & error,int err_id) {
         m_show_locking_files = false;
     }
     else {
-        m_show_locking_files = (err_id == Alpm::HANDLE_LOCK);
+        m_show_locking_files = (err_id == Alpm::UNABLE_TO_LOCK_DB);
         setIcon(ThemeIcons::WARNING);
         if (!isVisible()) setVisible(true);
         QString title = tr("There were errors diring processing!");

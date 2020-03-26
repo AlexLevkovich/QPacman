@@ -7,6 +7,7 @@
 #define PACKAGEPROCESSOR_H
 
 #include <QObject>
+#include <QMap>
 #include "packagechangesdialog.h"
 #include "packageprovidersdialog.h"
 #include "questiondialog.h"
@@ -34,6 +35,7 @@ class PackageProcessor : public PackageProcessorBase {
     Q_OBJECT
 public:
     PackageProcessor(ProgressView * view = NULL,QAction * cancelAction = NULL,OptionalDepsDlg * optdlg = NULL,QObject *parent = nullptr);
+    ~PackageProcessor();
     static QMainWindow * createMainProcessorWindow(ProgressView ** view,QPlainTextEdit ** logView,QAction ** cancelAction,QAction ** logAction);
 
 protected:
@@ -52,7 +54,7 @@ protected:
 private slots:
     void on_error(const QString & str);
     void on_information(const QString & str,bool significant);
-    void on_event(const QString & str);
+    void on_event(int id,const QString & str);
     void on_optdepends_event(const QString & pkgname,const StringStringMap & installed,const StringStringMap & pending);
     void on_event_progress(int percents);
     void on_hook(const QString & txt,int pos,int total);
@@ -66,6 +68,7 @@ private slots:
     void downloadok();
     void on_itemAdded(QStandardItem * item0,QStandardItem * item1);
     void exec_process();
+    void on_event_completed(int id);
 
 protected slots:
     virtual ThreadRun::RC process() = 0;
@@ -92,6 +95,8 @@ private:
     SimpleProgressItem * overalInstallItem;
     SimpleProgressItem * removeItem;
     SimpleProgressItem * overalRemoveItem;
+    QMap<int,SimpleProgressItem *> eventItems;
+    QList<QMetaObject::Connection> alpm_connections;
 
     friend class ActionApplier;
 };

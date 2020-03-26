@@ -45,60 +45,59 @@ public:
         THREAD_IS_ALREADY_RUNNING     = -13,
         CANNOT_LOAD_CONFIG            = -14,
         USER_REFUSAL                  = -15,
-        OK                            = ALPM_ERR_OK,
-        MEMORY                        = ALPM_ERR_MEMORY,
-        SYSTEM                        = ALPM_ERR_SYSTEM,
-        BADPERMS                      = ALPM_ERR_BADPERMS,
+        OK_CODE                       = ALPM_ERR_OK,
+        OUT_OF_MEMORY                 = ALPM_ERR_MEMORY,
+        UNEXPECTED_ERR                = ALPM_ERR_SYSTEM,
+        BAD_PERMS                     = ALPM_ERR_BADPERMS,
         NOT_A_FILE                    = ALPM_ERR_NOT_A_FILE,
         NOT_A_DIR                     = ALPM_ERR_NOT_A_DIR,
         WRONG_ARGS                    = ALPM_ERR_WRONG_ARGS,
-        DISK_SPACE                    = ALPM_ERR_DISK_SPACE,
-        HANDLE_NULL                   = ALPM_ERR_HANDLE_NULL,
-        HANDLE_NOT_NULL               = ALPM_ERR_HANDLE_NOT_NULL,
-        HANDLE_LOCK                   = ALPM_ERR_HANDLE_LOCK,
-        DB_OPEN                       = ALPM_ERR_DB_OPEN,
-        DB_CREATE                     = ALPM_ERR_DB_CREATE,
-        DB_NULL                       = ALPM_ERR_DB_NULL,
-        DB_NOT_NULL                   = ALPM_ERR_DB_NOT_NULL,
+        NO_FREE_DISK_SPACE            = ALPM_ERR_DISK_SPACE,
+        LIB_IS_NOT_INITIALIZED        = ALPM_ERR_HANDLE_NULL,
+        LIB_IS_OPEN_ALREADY           = ALPM_ERR_HANDLE_NOT_NULL,
+        UNABLE_TO_LOCK_DB             = ALPM_ERR_HANDLE_LOCK,
+        CANNOT_OPEN_DB                = ALPM_ERR_DB_OPEN,
+        CANNOT_CREATE_DB              = ALPM_ERR_DB_CREATE,
+        DB_IS_NOT_INITIALIZED         = ALPM_ERR_DB_NULL,
+        DB_IS_OPEN_ALREADY            = ALPM_ERR_DB_NOT_NULL,
         DB_NOT_FOUND                  = ALPM_ERR_DB_NOT_FOUND,
         DB_INVALID                    = ALPM_ERR_DB_INVALID,
         DB_INVALID_SIG                = ALPM_ERR_DB_INVALID_SIG,
-        DB_VERSION                    = ALPM_ERR_DB_VERSION,
-        DB_WRITE                      = ALPM_ERR_DB_WRITE,
-        DB_REMOVE                     = ALPM_ERR_DB_REMOVE,
+        DB_INCORRECT_VERSION          = ALPM_ERR_DB_VERSION,
+        CANNOT_UPDATE_DB              = ALPM_ERR_DB_WRITE,
+        CANNOT_REMOVE_DB              = ALPM_ERR_DB_REMOVE,
         SERVER_BAD_URL                = ALPM_ERR_SERVER_BAD_URL,
-        SERVER_NONE                   = ALPM_ERR_SERVER_NONE,
-        TRANS_NOT_NULL                = ALPM_ERR_TRANS_NOT_NULL,
-        TRANS_NULL                    = ALPM_ERR_TRANS_NULL,
+        NO_CONFIGURED_SERVERS         = ALPM_ERR_SERVER_NONE,
+        TRANS_IS_INITIALIZED_ALREADY  = ALPM_ERR_TRANS_NOT_NULL,
+        TRANS_IS_NOT_INITIALIZED      = ALPM_ERR_TRANS_NOT_INITIALIZED,
+        TRANS_IS_NOT_INITIALIZED_NULL = ALPM_ERR_TRANS_NULL,
         TRANS_DUP_TARGET              = ALPM_ERR_TRANS_DUP_TARGET,
-        TRANS_NOT_INITIALIZED         = ALPM_ERR_TRANS_NOT_INITIALIZED,
-        TRANS_NOT_PREPARED            = ALPM_ERR_TRANS_NOT_PREPARED,
-        TRANS_ABORT                   = ALPM_ERR_TRANS_ABORT,
-        TRANS_TYPE                    = ALPM_ERR_TRANS_TYPE,
-        TRANS_NOT_LOCKED              = ALPM_ERR_TRANS_NOT_LOCKED,
-        TRANS_HOOK_FAILED             = ALPM_ERR_TRANS_HOOK_FAILED,
-        PKG_NOT_FOUND                 = ALPM_ERR_PKG_NOT_FOUND,
-        PKG_IGNORED                   = ALPM_ERR_PKG_IGNORED,
-        PKG_INVALID                   = ALPM_ERR_PKG_INVALID,
-        PKG_INVALID_CHECKSUM          = ALPM_ERR_PKG_INVALID_CHECKSUM,
-        PKG_INVALID_SIG               = ALPM_ERR_PKG_INVALID_SIG,
-        PKG_MISSING_SIG               = ALPM_ERR_PKG_MISSING_SIG,
-        PKG_OPEN                      = ALPM_ERR_PKG_OPEN,
-        PKG_CANT_REMOVE               = ALPM_ERR_PKG_CANT_REMOVE,
-        PKG_INVALID_NAME              = ALPM_ERR_PKG_INVALID_NAME,
-        PKG_INVALID_ARCH              = ALPM_ERR_PKG_INVALID_ARCH,
-        PKG_REPO_NOT_FOUND            = ALPM_ERR_PKG_REPO_NOT_FOUND,
-        SIG_MISSING                   = ALPM_ERR_SIG_MISSING,
-        SIG_INVALID                   = ALPM_ERR_SIG_INVALID,
+        TRANS_IS_NOT_PREPARED         = ALPM_ERR_TRANS_NOT_PREPARED,
+        TRANS_IS_ABORTED              = ALPM_ERR_TRANS_ABORT,
+        TRANS_TYPE_UNCOMPATIBLE_OPER  = ALPM_ERR_TRANS_TYPE,
+        TRANS_IS_NOT_LOCKED           = ALPM_ERR_TRANS_NOT_LOCKED,
+        TRANS_HOOK_IS_FAILED          = ALPM_ERR_TRANS_HOOK_FAILED,
+        PKG_IS_NOT_FOUND              = ALPM_ERR_PKG_NOT_FOUND,
+        PKG_IS_IGNORED                = ALPM_ERR_PKG_IGNORED,
+        PKG_IS_INVALID                = ALPM_ERR_PKG_INVALID,
+        PKG_HAS_INVALID_CHECKSUM      = ALPM_ERR_PKG_INVALID_CHECKSUM,
+        PKG_HAS_INVALID_SIG           = ALPM_ERR_PKG_INVALID_SIG,
+        PKG_HAS_MISSING_SIG           = ALPM_ERR_PKG_MISSING_SIG,
+        CANNOT_OPEN_PKG               = ALPM_ERR_PKG_OPEN,
+        CANNOT_REMOVE_PKG             = ALPM_ERR_PKG_CANT_REMOVE,
+        PKG_HAS_INVALID_NAME          = ALPM_ERR_PKG_INVALID_NAME,
+        PKG_HAS_INVALID_ARCH          = ALPM_ERR_PKG_INVALID_ARCH,
+        PKG_REPO_IS_NOT_FOUND         = ALPM_ERR_PKG_REPO_NOT_FOUND,
+        SIG_IS_MISSING                = ALPM_ERR_SIG_MISSING,
+        SIG_IS_INVALID                = ALPM_ERR_SIG_INVALID,
         UNSATISFIED_DEPS              = ALPM_ERR_UNSATISFIED_DEPS,
         CONFLICTING_DEPS              = ALPM_ERR_CONFLICTING_DEPS,
-        FILE_CONFLICTS                = ALPM_ERR_FILE_CONFLICTS,
-        RETRIEVE                      = ALPM_ERR_RETRIEVE,
+        FILE_CONFLICTS_ARE_FOUND      = ALPM_ERR_FILE_CONFLICTS,
+        FAILED_RETRIEVE_FILES         = ALPM_ERR_RETRIEVE,
         INVALID_REGEX                 = ALPM_ERR_INVALID_REGEX,
-        LIBARCHIVE                    = ALPM_ERR_LIBARCHIVE,
-        LIBCURL                       = ALPM_ERR_LIBCURL,
-        EXTERNAL_DOWNLOAD             = ALPM_ERR_EXTERNAL_DOWNLOAD,
-        GPGME                         = ALPM_ERR_GPGME,
+        LIBARCHIVE_ERR                = ALPM_ERR_LIBARCHIVE,
+        EXTERNAL_DOWNLOAD_ERR         = ALPM_ERR_EXTERNAL_DOWNLOAD,
+        GPGME_ERR                     = ALPM_ERR_GPGME,
         MISSING_CAPABILITY_SIGNATURES = ALPM_ERR_MISSING_CAPABILITY_SIGNATURES
     };
 
@@ -144,6 +143,7 @@ public:
     static bool isOpen();
 
 signals:
+    // progresses
     void install_progress(const QString & pkg_name,int percent,size_t n_targets,size_t current_target);
     void remove_progress(const QString & pkg_name,int percent,size_t n_targets,size_t current_target);
     void conflicts_progress(int percent);
@@ -151,6 +151,8 @@ signals:
     void integrity_progress(int percent);
     void load_progress(int percent);
     void keyring_progress(int percent);
+
+    // downloads
     void download_starting();
     void full_download_size_found(qint64 total);
     void download_completed();
@@ -161,22 +163,43 @@ signals:
     void download_failed(const QString & filename);
     void download_progress(const QString & filename,qint64 xfered,qint64 total);
 
+    // questions. Qt::QueuedConnection is forbidden!!!
     void question(const QString & str,bool * answer);
     void install_packages_confirmation(const QStringList & install,const QStringList & remove,qint64 dl_size,qint64 install_size,qint64 remove_size,bool * answer);
     void remove_packages_confirmation(const QStringList & remove,qint64 remove_size,bool * answer);
     void select_provider(const QString & pkgname,const QStringList & providers,int * answer);
 
+    // informational events
     void optdepends_event(const QString & pkgname,const StringStringMap & installed_deps,const StringStringMap & pending_deps);
-    void event(const QString & str);
     void error(const QString & str);
     void information(const QString & str,bool significant = false);
+    void all_hooks(const QString & infostr);
     void hook(const QString & str,int pos,int total);
-
+    void hook_completed(const QString & name);
+    void all_hooks_completed();
+    void checking_file_conflicts(const QString & infostr);
+    void checking_file_conflicts_completed();
+    void checking_pkg_deps(const QString & infostr);
+    void checking_pkg_deps_completed();
+    void checking_internal_conflicts(const QString & infostr);
+    void checking_internal_conflicts_completed();
+    void transaction_completed();
+    void checking_integrity(const QString & infostr);
+    void checking_integrity_completed();
+    void checking_diskspace(const QString & infostr);
+    void checking_diskspace_completed();
     void listing_packages_completed();
-
+    void resolving_pkg_deps(const QString & infostr);
+    void resolving_pkg_deps_completed();
+    void checking_keyring(const QString & infostr);
+    void checking_keyring_completed();
+    void checking_key_download(const QString & infostr);
+    void checking_key_download_completed();
+    void loading_pkg_files(const QString & infostr);
+    void loading_pkg_files_completed();
     void pkgs_downloaded(const QStringList & paths);
 
-    // event for possible database changes
+    // events for possible database changes
     void locking_changed(const QString & path,bool locked);
     void dbs_updated(bool ok);
     void pkgs_installed(const QStringList & installed_pkgs,const QStringList & removed_pkgs);
@@ -222,7 +245,6 @@ private:
 
     void emit_question(const QString & message,bool * answer);
     void emit_information(const QString & message,bool significant = false);
-    void emit_event(const QString & message);
     void emit_error(const QString & message);
     void emit_install_packages_confirmation(const QStringList & install,const QStringList & remove,qint64 dl_size,qint64 install_size,qint64 remove_size,bool * answer);
     void emit_remove_packages_confirmation(const QStringList & remove,qint64 remove_size,bool * answer);

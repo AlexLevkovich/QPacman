@@ -256,7 +256,7 @@
 <context>
     <name>PackageProcessor</name>
     <message>
-        <location filename="../packageprocessor.cpp" line="+100"/>
+        <location filename="../packageprocessor.cpp" line="+123"/>
         <source>Log</source>
         <translation type="unfinished">Паведамлення</translation>
     </message>
@@ -281,7 +281,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+71"/>
+        <location line="+77"/>
         <location line="+6"/>
         <source>Overal download progress</source>
         <translation type="unfinished">Агульны прагрэс загрузкі</translation>

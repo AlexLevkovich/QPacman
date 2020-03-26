@@ -74,7 +74,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+303"/>
+        <location filename="../libalpm.cpp" line="+298"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 у IgnorePkg/IgnoreGroup. Усё роўна ўсталяваць?</translation>
     </message>
@@ -123,57 +123,57 @@ Do you want to delete it?</source>
         <translation type="unfinished">Запускаюцца прад-транзакцыйныя скрыпты...</translation>
     </message>
     <message>
-        <location line="+2"/>
+        <location line="+0"/>
         <source>Running post-transaction hooks...</source>
         <translation type="unfinished">Запускаюцца пасля-транзакцыйныя скрыпты...</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+15"/>
         <source>Checking dependencies...</source>
         <translation type="unfinished">Праверка залежнасцяў...</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+7"/>
         <source>Checking for file conflicts...</source>
         <translation type="unfinished">Праверка канфліктаў...</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+8"/>
         <source>Resolving dependencies...</source>
         <translation type="unfinished">Развязанне залежнасцей ...</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+7"/>
         <source>Looking for conflicting packages...</source>
         <translation type="unfinished">Шукаем канфліктуючыя пакеты ...</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+6"/>
         <source>Processing package changes...</source>
         <translation type="unfinished">Правяраем змены ў пакетах...</translation>
     </message>
     <message>
-        <location line="+22"/>
+        <location line="+23"/>
         <source>Checking package integrity...</source>
         <translation type="unfinished">Праверка цэласнасці пакетаў...</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+7"/>
         <source>Checking keyring...</source>
         <translation type="unfinished">Правяраем keyring...</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+7"/>
         <source>Downloading required keys...</source>
         <translation type="unfinished">Загружаем неабходныя ключы...</translation>
     </message>
     <message>
-        <location line="+3"/>
+        <location line="+7"/>
         <source>Loading package files...</source>
         <translation type="unfinished">Падгружаем файлы пакетаў...</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+7"/>
         <source>Executing an internal scriplet...</source>
         <translation type="unfinished">Выконваем ўнутраныя скрыпты...</translation>
     </message>
@@ -183,12 +183,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пачынаем загрузку пакетаў...</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+5"/>
         <source>Checking available disk space...</source>
         <translation type="unfinished">Правераем наяўнасць даступнага месца ...</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+9"/>
         <source>%1 optionally requires %2</source>
         <translation type="unfinished">%1 неабавязкова патрабуе %2</translation>
     </message>
@@ -208,7 +208,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">%1 захаваны як %1.pacsave</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+35"/>
         <source>Packages have been retrieved successfully!</source>
         <translation type="unfinished">Усе пакеты загружаныя!</translation>
     </message>
@@ -218,7 +218,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Не ўсе пакеты загружаныя :(</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+16"/>
         <source>Starting the download of %1</source>
         <translation type="unfinished">Пачынаем загрузку %1</translation>
     </message>
@@ -233,7 +233,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Памылка пры загрузцы %1</translation>
     </message>
     <message>
-        <location line="+237"/>
+        <location line="+235"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Абнаўляем базу дадзеных: %1...</translation>
     </message>
@@ -281,7 +281,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-818"/>
+        <location filename="../libalpm.cpp" line="-877"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам трэба выбраць пастаўшчыка для пакета %1:
@@ -371,7 +371,7 @@ Do you want to delete it?</source>
 </translation>
     </message>
     <message>
-        <location line="+239"/>
+        <location line="+300"/>
         <source>The input package list is empty!</source>
         <translation type="unfinished">Спіс пакетаў пусты!</translation>
     </message>
@@ -435,7 +435,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Немагчыма зарустить заданне ў патоку калі іншае яшчэ працуе!</translation>
     </message>
     <message>
-        <location line="+221"/>
+        <location line="+219"/>
         <source>Nothing to download!!!</source>
         <translation type="unfinished">Няма чаго загружаць!!!</translation>
     </message>
