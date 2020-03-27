@@ -632,31 +632,21 @@ void MultiDownloader::child_finished() {
     if (!isStarted()) {
         m_timer->stop();
         m_part_manager->close();
-        invokeMethod("emit_download_terminated");
+        emit download_terminated();
         return;
     }
 
     if (m_part_manager->writtenLength() >= dataLength()) {
         m_timer->stop();
         m_part_manager->close();
-        invokeMethod("emit_download_completed");
+        emit progress(dataLength(),100,0);
+        emit download_completed();
         return;
     }
 
     if (countWorkingParts() >= m_threads_count) return;
 
     invokeMethod("addNewPartDownload");
-}
-
-void MultiDownloader::emit_download_completed() {
-    m_part_manager->close();
-    emit progress(dataLength(),100,0);
-    emit download_completed();
-}
-
-void MultiDownloader::emit_download_terminated() {
-    m_part_manager->close();
-    emit download_terminated();
 }
 
 void MultiDownloader::ontimeout() {

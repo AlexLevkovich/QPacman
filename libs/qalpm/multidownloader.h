@@ -132,8 +132,6 @@ private slots:
     void mainMetaDataChanged();
     void childMetaDataChanged();
     void child_readyRead();
-    void emit_download_completed();
-    void emit_download_terminated();
     void ontimeout();
     bool addNewPartDownload(int part_id = -1,int try_counter = 1);
 
