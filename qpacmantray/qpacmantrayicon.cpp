@@ -7,11 +7,34 @@
 #include <QMovie>
 #include <QPixmap>
 #include <QFileInfo>
+#include <QMediaPlayer>
 #include "themeicons.h"
 #include "libalpm.h"
 #include "lockfilewaiter.h"
 #include <QMenu>
 #include <QDebug>
+
+class MediaPlayer : public QMediaPlayer {
+private:
+    MediaPlayer(const QUrl & url) : QMediaPlayer() {
+        setMedia(url);
+    }
+    static void play(const QUrl & url) {
+        MediaPlayer * player = new MediaPlayer(url);
+        connect(player,&QMediaPlayer::stateChanged,[=](QMediaPlayer::State state) {
+            if (state == QMediaPlayer::PlayingState) return;
+            player->deleteLater();
+        });
+        ((QMediaPlayer *)player)->play();
+    }
+public:
+    static void play_good() {
+        play(QUrl("qrc:/sound/KDE-Sys-App-Positive.ogg"));
+    }
+    static void play_bad() {
+        play(QUrl("qrc:/sound/KDE-Sys-App-Error.ogg"));
+    }
+};
 
 QPacmanTrayIcon::QPacmanTrayIcon(bool * use_sound,QObject *parent) : MovieTrayIcon(parent) {
     m_checkUpdatesAction = new QAction(ThemeIcons::get(ThemeIcons::UPDATE_REPOS),tr("Check now"),this);
@@ -31,19 +54,9 @@ QPacmanTrayIcon::QPacmanTrayIcon(bool * use_sound,QObject *parent) : MovieTrayIc
 
     setIcon(ThemeIcons::QPACMANTRAY);
 
-    good_player = new QMediaPlayer();
-    good_player->setMedia(QUrl("qrc:/sound/KDE-Sys-App-Positive.ogg"));
-    bad_player = new QMediaPlayer();
-    bad_player->setMedia(QUrl("qrc:/sound/KDE-Sys-App-Error.ogg"));
-
     connect(this,SIGNAL(clicked()),this,SLOT(clicked()));
     connect(this,SIGNAL(menuAboutToShow(QMenu *)),this,SLOT(menuAboutToShow(QMenu *)));
     connect(m_lockFilesAction,SIGNAL(triggered()),this,SLOT(lockedFile_triggered()),Qt::QueuedConnection);
-}
-
-QPacmanTrayIcon::~QPacmanTrayIcon() {
-    delete good_player;
-    delete bad_player;
 }
 
 void QPacmanTrayIcon::lockedFile_triggered() {
@@ -96,7 +109,7 @@ void QPacmanTrayIcon::updatesFound(const QStringList & pkgs) {
         QString title = tr("New packages are available:");
         setToolTip(title,message);
         showMessage(title,message);
-        if (m_use_sound != NULL && *m_use_sound) good_player->play();
+        if (m_use_sound != NULL && *m_use_sound) MediaPlayer::play_good();
     }
     else {
         QString title = tr("No new packages are available!");
@@ -134,6 +147,6 @@ void QPacmanTrayIcon::checkingCompleted(const QString & error,int err_id) {
         QString title = tr("There were errors diring processing!");
         setToolTip(title,error);
         showMessage(title,error);
-        if (m_use_sound != NULL && *m_use_sound) bad_player->play();
+        if (m_use_sound != NULL && *m_use_sound) MediaPlayer::play_bad();
     }
 }

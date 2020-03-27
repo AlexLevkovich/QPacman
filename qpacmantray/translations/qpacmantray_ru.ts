@@ -149,7 +149,7 @@
 <context>
     <name>QPacmanTrayIcon</name>
     <message>
-        <location filename="../qpacmantrayicon.cpp" line="+17"/>
+        <location filename="../qpacmantrayicon.cpp" line="+40"/>
         <source>Check now</source>
         <translation type="unfinished">Проверить</translation>
     </message>
@@ -204,7 +204,7 @@
         <translation type="unfinished">Удалить файлы блокировки</translation>
     </message>
     <message>
-        <location line="+69"/>
+        <location line="+59"/>
         <source>New packages are available:</source>
         <translation type="unfinished">Найдены обновления:</translation>
     </message>

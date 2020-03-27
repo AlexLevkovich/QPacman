@@ -9,7 +9,6 @@
 #include "movietrayicon.h"
 #include "themeicons.h"
 #include <QAction>
-#include <QMediaPlayer>
 
 class QMenu;
 
@@ -17,7 +16,6 @@ class QPacmanTrayIcon : public MovieTrayIcon {
     Q_OBJECT
 public:
     QPacmanTrayIcon(bool * use_sound = NULL,QObject *parent = NULL);
-    ~QPacmanTrayIcon();
 
     QAction * checkUpdatesAction() { return m_checkUpdatesAction; }
     QAction * updateAction() { return m_updateAction; }
@@ -43,8 +41,6 @@ private slots:
 private:
     void initMenu(QMenu * menu);
 
-    QMediaPlayer * good_player;
-    QMediaPlayer * bad_player;
     QAction * m_checkUpdatesAction;
     QAction * m_updateAction;
     QAction * m_preferencesAction;
