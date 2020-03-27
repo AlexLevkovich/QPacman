@@ -178,25 +178,27 @@ signals:
     void hook_completed(const QString & name);
     void all_hooks_completed();
     void checking_file_conflicts(const QString & infostr);
-    void checking_file_conflicts_completed();
+    void file_conflicts_checked();
     void checking_pkg_deps(const QString & infostr);
-    void checking_pkg_deps_completed();
+    void pkg_deps_checked();
     void checking_internal_conflicts(const QString & infostr);
-    void checking_internal_conflicts_completed();
+    void internal_conflicts_checked();
     void transaction_completed();
     void checking_integrity(const QString & infostr);
-    void checking_integrity_completed();
+    void integrity_checked();
     void checking_diskspace(const QString & infostr);
-    void checking_diskspace_completed();
+    void diskspace_checked();
     void listing_packages_completed();
     void resolving_pkg_deps(const QString & infostr);
-    void resolving_pkg_deps_completed();
+    void pkg_deps_resolved();
     void checking_keyring(const QString & infostr);
-    void checking_keyring_completed();
+    void keyring_checked();
     void checking_key_download(const QString & infostr);
-    void checking_key_download_completed();
+    void key_download_checked();
     void loading_pkg_files(const QString & infostr);
-    void loading_pkg_files_completed();
+    void pkg_files_loaded();
+    void starting_scriplet(const QString & infostr);
+    void scriplet_executed();
     void pkgs_downloaded(const QStringList & paths);
 
     // events for possible database changes
@@ -252,6 +254,8 @@ private:
     void emit_progress(const char * signal,int percent);
     void emit_select_provider(const QString & pkgname,const QStringList & providers,int * answer);
     void emit_optdepends_event(const QString & pkgname,const StringStringMap & installed_deps,const StringStringMap & pending_deps);
+    bool emit_event(const char *member,QGenericArgument val0 = QGenericArgument(),QGenericArgument val1 = QGenericArgument(),QGenericArgument val2 = QGenericArgument(),QGenericArgument val3 = QGenericArgument(),QGenericArgument val4 = QGenericArgument(),QGenericArgument val5 = QGenericArgument(),QGenericArgument val6 = QGenericArgument(),QGenericArgument val7 = QGenericArgument(),QGenericArgument val8 = QGenericArgument(),QGenericArgument val9 = QGenericArgument());
+    bool emit_option(const char *member,QGenericArgument val0 = QGenericArgument(),QGenericArgument val1 = QGenericArgument(),QGenericArgument val2 = QGenericArgument(),QGenericArgument val3 = QGenericArgument(),QGenericArgument val4 = QGenericArgument(),QGenericArgument val5 = QGenericArgument(),QGenericArgument val6 = QGenericArgument(),QGenericArgument val7 = QGenericArgument(),QGenericArgument val8 = QGenericArgument(),QGenericArgument val9 = QGenericArgument());
 
     bool do_process_targets(bool remove,QStringList & install_targets,QStringList & remove_targets);
     int find_updates_in_list(const QVector<AlpmPackage *> & m_list,AlpmPackage * value);

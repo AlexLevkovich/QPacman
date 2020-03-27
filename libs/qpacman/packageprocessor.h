@@ -35,7 +35,6 @@ class PackageProcessor : public PackageProcessorBase {
     Q_OBJECT
 public:
     PackageProcessor(ProgressView * view = NULL,QAction * cancelAction = NULL,OptionalDepsDlg * optdlg = NULL,QObject *parent = nullptr);
-    ~PackageProcessor();
     static QMainWindow * createMainProcessorWindow(ProgressView ** view,QPlainTextEdit ** logView,QAction ** cancelAction,QAction ** logAction);
 
 protected:
@@ -96,7 +95,6 @@ private:
     SimpleProgressItem * removeItem;
     SimpleProgressItem * overalRemoveItem;
     QMap<int,SimpleProgressItem *> eventItems;
-    QList<QMetaObject::Connection> alpm_connections;
 
     friend class ActionApplier;
 };

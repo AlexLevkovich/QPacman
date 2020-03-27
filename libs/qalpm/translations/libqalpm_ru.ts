@@ -74,7 +74,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+298"/>
+        <location filename="../libalpm.cpp" line="+307"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 в IgnorePkg/IgnoreGroup. Все равно устанавливать?</translation>
     </message>
@@ -118,7 +118,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Импортировать ключ PGP %1%2/%3, &quot;%4&quot;, созданный: %5%6?</translation>
     </message>
     <message>
-        <location line="+140"/>
+        <location line="+143"/>
         <source>Running pre-transaction hooks...</source>
         <translation type="unfinished">Запускаются пред-транзакционные скрипты...</translation>
     </message>
@@ -281,7 +281,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-877"/>
+        <location filename="../libalpm.cpp" line="-881"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам нужно выбрать поставщика для пакета %1:
@@ -314,7 +314,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Вы согласны? : </translation>
     </message>
     <message>
-        <location line="+114"/>
+        <location line="+115"/>
         <source>(%1/%2) downloaded</source>
         <translation type="unfinished">(%1/%2) загружено</translation>
     </message>
@@ -371,7 +371,7 @@ Do you want to delete it?</source>
 </translation>
     </message>
     <message>
-        <location line="+300"/>
+        <location line="+303"/>
         <source>The input package list is empty!</source>
         <translation type="unfinished">Список пакетов пуст!</translation>
     </message>
@@ -572,12 +572,12 @@ Do you want to delete it?</source>
     <name>MultiDownloader</name>
     <message>
         <location filename="../multidownloader.cpp" line="+153"/>
-        <location line="+345"/>
+        <location line="+335"/>
         <source>Downloading already has been started!!!</source>
         <translation type="unfinished">Загрузка уже начата!!!</translation>
     </message>
     <message>
-        <location line="-340"/>
+        <location line="-330"/>
         <source>Invalid count of threads has passed!!!</source>
         <translation type="unfinished">Количество потоков установлено не верно!!!</translation>
     </message>

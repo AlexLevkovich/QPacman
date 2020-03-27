@@ -45,29 +45,37 @@ void Alpm::lockFileChanged(const QString & path) {
     emit locking_changed(path,QFile(path).exists());
 }
 
+bool Alpm::emit_event(const char *member,QGenericArgument val0,QGenericArgument val1,QGenericArgument val2,QGenericArgument val3,QGenericArgument val4,QGenericArgument val5,QGenericArgument val6,QGenericArgument val7,QGenericArgument val8,QGenericArgument val9) {
+    return QMetaObject::invokeMethod(this,member,Qt::QueuedConnection,val0,val1,val2,val3,val4,val5,val6,val7,val8,val9);
+}
+
+bool Alpm::emit_option(const char *member,QGenericArgument val0,QGenericArgument val1,QGenericArgument val2,QGenericArgument val3,QGenericArgument val4,QGenericArgument val5,QGenericArgument val6,QGenericArgument val7,QGenericArgument val8,QGenericArgument val9) {
+    return QMetaObject::invokeMethod(this,member,(QThread::currentThread() != qApp->thread())?Qt::BlockingQueuedConnection:Qt::DirectConnection,val0,val1,val2,val3,val4,val5,val6,val7,val8,val9);
+}
+
 void Alpm::emit_information(const QString & message,bool significant) {
-    if (!message.isEmpty()) QMetaObject::invokeMethod(this,"information",Qt::QueuedConnection,Q_ARG(QString,message),Q_ARG(bool,significant));
+    if (!message.isEmpty()) emit_event("information",Q_ARG(QString,message),Q_ARG(bool,significant));
 }
 
 void Alpm::emit_error(const QString & message) {
-    if (!message.isEmpty()) QMetaObject::invokeMethod(this,"error",Qt::QueuedConnection,Q_ARG(QString,message));
+    if (!message.isEmpty()) emit_event("error",Q_ARG(QString,message));
 }
 
 void Alpm::emit_question(const QString & message,bool * answer) {
-    QMetaObject::invokeMethod(this,"question",(QThread::currentThread() != qApp->thread())?Qt::BlockingQueuedConnection:Qt::DirectConnection,Q_ARG(QString,message),Q_ARG(bool *,answer));
+    emit_option("question",Q_ARG(QString,message),Q_ARG(bool *,answer));
     emit_information(message+(*answer?": Y":": N"));
 }
 
 void Alpm::emit_progress(const char * signal,const QString & pkg_name,int percent,size_t n_targets,size_t current_target) {
-    QMetaObject::invokeMethod(this,signal,Qt::QueuedConnection,Q_ARG(QString,pkg_name),Q_ARG(int,percent),Q_ARG(size_t,n_targets),Q_ARG(size_t,current_target));
+    emit_event(signal,Q_ARG(QString,pkg_name),Q_ARG(int,percent),Q_ARG(size_t,n_targets),Q_ARG(size_t,current_target));
 }
 
 void Alpm::emit_progress(const char * signal,int percent) {
-    QMetaObject::invokeMethod(this,signal,Qt::QueuedConnection,Q_ARG(int,percent));
+    emit_event(signal,Q_ARG(int,percent));
 }
 
 void Alpm::emit_select_provider(const QString & pkgname,const QStringList & providers,int * answer) {
-    QMetaObject::invokeMethod(this,"select_provider",(QThread::currentThread() != qApp->thread())?Qt::BlockingQueuedConnection:Qt::DirectConnection,Q_ARG(QString,pkgname),Q_ARG(QStringList,providers),Q_ARG(int *,answer));
+    emit_option("select_provider",Q_ARG(QString,pkgname),Q_ARG(QStringList,providers),Q_ARG(int *,answer));
     QString info = tr("You need to pick up what provider to use for %1 package:\n").arg(pkgname);
     for (int i=1;i<=providers.count();i++) {
         info += QString("%1) ").arg(i) + providers.at(i-1) + "\n";
@@ -77,7 +85,7 @@ void Alpm::emit_select_provider(const QString & pkgname,const QStringList & prov
 }
 
 void Alpm::emit_optdepends_event(const QString & pkgname,const StringStringMap & installed_deps,const StringStringMap & pending_deps) {
-    QMetaObject::invokeMethod(this,"optdepends_event",Qt::QueuedConnection,Q_ARG(QString,pkgname),Q_ARG(StringStringMap,installed_deps),Q_ARG(StringStringMap,pending_deps));
+    emit_event("optdepends_event",Q_ARG(QString,pkgname),Q_ARG(StringStringMap,installed_deps),Q_ARG(StringStringMap,pending_deps));
 }
 
 bool Alpm::string_name_cmp(const QString & item1,const QString & item2) {
@@ -94,8 +102,8 @@ void Alpm::emit_install_packages_confirmation(const QStringList & _install,const
     QStringList remove = _remove;
     std::sort(install.begin(),install.end(),string_name_cmp);
     std::sort(remove.begin(),remove.end(),string_name_cmp);
-    QMetaObject::invokeMethod(this,"install_packages_confirmation",(QThread::currentThread() != qApp->thread())?Qt::BlockingQueuedConnection:Qt::DirectConnection,Q_ARG(QStringList,install),Q_ARG(QStringList,remove),Q_ARG(qint64,dl_size),Q_ARG(qint64,install_size),Q_ARG(qint64,remove_size),Q_ARG(bool *,ok));
-    QMetaObject::invokeMethod(this,"full_download_size_found",(QThread::currentThread() != qApp->thread())?Qt::BlockingQueuedConnection:Qt::DirectConnection,Q_ARG(qint64,dl_size));
+    emit_option("install_packages_confirmation",Q_ARG(QStringList,install),Q_ARG(QStringList,remove),Q_ARG(qint64,dl_size),Q_ARG(qint64,install_size),Q_ARG(qint64,remove_size),Q_ARG(bool *,ok));
+    emit_option("full_download_size_found",Q_ARG(qint64,dl_size));
     QString info;
     if (remove.count() > 0) {
         info += tr("The following packages will be removed:\n");
@@ -112,7 +120,7 @@ void Alpm::emit_install_packages_confirmation(const QStringList & _install,const
 void Alpm::emit_remove_packages_confirmation(const QStringList & _remove,qint64 remove_size,bool * ok) {
     QStringList remove = _remove;
     std::sort(remove.begin(),remove.end(),string_name_cmp);
-    QMetaObject::invokeMethod(this,"remove_packages_confirmation",(QThread::currentThread() != qApp->thread())?Qt::BlockingQueuedConnection:Qt::DirectConnection,Q_ARG(QStringList,remove),Q_ARG(qint64,remove_size),Q_ARG(bool *,ok));
+    emit_option("remove_packages_confirmation",Q_ARG(QStringList,remove),Q_ARG(qint64,remove_size),Q_ARG(bool *,ok));
     QString info = tr("The following packages will be removed:\n");
     info += remove.join("\n");
     info += "\n";
@@ -223,6 +231,7 @@ int Alpm::operation_fetch_fn(const QString & url,const QString & localpath,bool)
     QObject::connect(downloader,SIGNAL(error(const QString &)),p_alpm,SIGNAL(information(const QString &)));
     QObject::connect(downloader,SIGNAL(error(const QString &)),p_alpm,SIGNAL(error(const QString &)));
     int ret = downloader->exec();
+    QCoreApplication::processEvents();
     delete downloader;
     return (ret == 2)?-1:ret;
 }
@@ -231,7 +240,7 @@ void Alpm::operation_download_fn(const QString & filename,qint64 bytes_downloade
     if(bytes_downloaded == 0 && length <= 0) return;
     if (length < 0) length = 0;
     emit_information(tr("(%1/%2) downloaded").arg(bytes_downloaded).arg(length));
-    QMetaObject::invokeMethod(this,"download_progress",Qt::QueuedConnection,Q_ARG(QString,filename),Q_ARG(qint64,bytes_downloaded),Q_ARG(qint64,length));
+    emit_event("download_progress",Q_ARG(QString,filename),Q_ARG(qint64,bytes_downloaded),Q_ARG(qint64,length));
 }
 
 int Alpm::operation_fetch_fn(const char *url, const char *localpath,int force) {
@@ -505,11 +514,14 @@ QList<AlpmPackage *> OverwriteHandler::m_forcedpkgs;
 
 void Alpm::operation_event_fn(alpm_event_t * event) {
     m_percent = -1;
+
+    if ((prev_event_type == ALPM_EVENT_SCRIPTLET_INFO) && (event->type != ALPM_EVENT_SCRIPTLET_INFO)) p_alpm->emit_event("scriplet_executed");
+
     switch(event->type) {
         case ALPM_EVENT_HOOK_START:
         {
             QString message = (event->hook.when == ALPM_HOOK_PRE_TRANSACTION)?QObject::tr("Running pre-transaction hooks..."):QObject::tr("Running post-transaction hooks...");
-            QMetaObject::invokeMethod(p_alpm,"all_hooks",Qt::QueuedConnection,Q_ARG(QString,message));
+            p_alpm->emit_event("all_hooks",Q_ARG(QString,message));
             p_alpm->emit_information(message);
             break;
         }
@@ -517,21 +529,21 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
         {
             alpm_event_hook_run_t *e = &event->hook_run;
             QString txt = e->desc?QString::fromLocal8Bit(e->desc):QString::fromLocal8Bit(e->name);
-            QMetaObject::invokeMethod(p_alpm,"hook",Qt::QueuedConnection,Q_ARG(QString,txt),Q_ARG(int,(int)e->position),Q_ARG(int,(int)e->total));
+            p_alpm->emit_event("hook",Q_ARG(QString,txt),Q_ARG(int,(int)e->position),Q_ARG(int,(int)e->total));
             p_alpm->emit_information(QString("%1/%2 %3").arg(e->position).arg(e->total).arg(txt));
             break;
         }
         case ALPM_EVENT_CHECKDEPS_START:
         {
             QString message = QObject::tr("Checking dependencies...");
-            QMetaObject::invokeMethod(p_alpm,"checking_pkg_deps",Qt::QueuedConnection,Q_ARG(QString,message));
+            p_alpm->emit_event("checking_pkg_deps",Q_ARG(QString,message));
             p_alpm->emit_information(message);
             break;
         }
         case ALPM_EVENT_FILECONFLICTS_START:
         {
             QString message = QObject::tr("Checking for file conflicts...");
-            QMetaObject::invokeMethod(p_alpm,"checking_file_conflicts",Qt::QueuedConnection,Q_ARG(QString,message));
+            p_alpm->emit_event("checking_file_conflicts",Q_ARG(QString,message));
             p_alpm->emit_information(message);
             OverwriteHandler::addPkgFiles();
             break;
@@ -539,14 +551,14 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
         case ALPM_EVENT_RESOLVEDEPS_START:
         {
             QString message = QObject::tr("Resolving dependencies...");
-            QMetaObject::invokeMethod(p_alpm,"resolving_pkg_deps",Qt::QueuedConnection,Q_ARG(QString,message));
+            p_alpm->emit_event("resolving_pkg_deps",Q_ARG(QString,message));
             p_alpm->emit_information(message);
             break;
         }
         case ALPM_EVENT_INTERCONFLICTS_START:
         {
             QString message = QObject::tr("Looking for conflicting packages...");
-            QMetaObject::invokeMethod(p_alpm,"checking_internal_conflicts",Qt::QueuedConnection,Q_ARG(QString,message));
+            p_alpm->emit_event("checking_internal_conflicts",Q_ARG(QString,message));
             p_alpm->emit_information(message);
             break;
         }
@@ -575,45 +587,45 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
         case ALPM_EVENT_INTEGRITY_START:
         {
             QString message = QObject::tr("Checking package integrity...");
-            QMetaObject::invokeMethod(p_alpm,"checking_integrity",Qt::QueuedConnection,Q_ARG(QString,message));
+            p_alpm->emit_event("checking_integrity",Q_ARG(QString,message));
             p_alpm->emit_information(message);
             break;
         }
         case ALPM_EVENT_KEYRING_START:
         {
             QString message = QObject::tr("Checking keyring...");
-            QMetaObject::invokeMethod(p_alpm,"checking_keyring",Qt::QueuedConnection,Q_ARG(QString,message));
+            p_alpm->emit_event("checking_keyring",Q_ARG(QString,message));
             p_alpm->emit_information(message);
             break;
         }
         case ALPM_EVENT_KEY_DOWNLOAD_START:
         {
             QString message = QObject::tr("Downloading required keys...");
-            QMetaObject::invokeMethod(p_alpm,"checking_key_download",Qt::QueuedConnection,Q_ARG(QString,message));
+            p_alpm->emit_event("checking_key_download",Q_ARG(QString,message));
             p_alpm->emit_information(message);
             break;
         }
         case ALPM_EVENT_LOAD_START:
         {
             QString message = QObject::tr("Loading package files...");
-            QMetaObject::invokeMethod(p_alpm,"loading_pkg_files",Qt::QueuedConnection,Q_ARG(QString,message));
+            p_alpm->emit_event("loading_pkg_files",Q_ARG(QString,message));
             p_alpm->emit_information(message);
             break;
         }
         case ALPM_EVENT_SCRIPTLET_INFO:
         {
-            if (prev_event_type != ALPM_EVENT_SCRIPTLET_INFO) p_alpm->emit_information(QObject::tr("Executing an internal scriplet..."),true);
+            if (prev_event_type != ALPM_EVENT_SCRIPTLET_INFO) p_alpm->emit_event("starting_scriplet",Q_ARG(QString,QObject::tr("Executing an internal scriplet...")));
             p_alpm->emit_information(QString::fromLocal8Bit((const char *)event->scriptlet_info.line));
             break;
         }
         case ALPM_EVENT_RETRIEVE_START:
             p_alpm->emit_information(QObject::tr("Retrieving packages..."));
-            QMetaObject::invokeMethod(p_alpm,"download_starting",Qt::QueuedConnection);
+            p_alpm->emit_event("download_starting");
             break;
         case ALPM_EVENT_DISKSPACE_START:
         {
             QString message = QObject::tr("Checking available disk space...");
-            QMetaObject::invokeMethod(p_alpm,"checking_diskspace",Qt::QueuedConnection,Q_ARG(QString,message));
+            p_alpm->emit_event("checking_diskspace",Q_ARG(QString,message));
             p_alpm->emit_information(message);
             break;
         }
@@ -644,50 +656,50 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
             break;
         /* all the simple done events, with fallthrough for each */
         case ALPM_EVENT_FILECONFLICTS_DONE:
-            QMetaObject::invokeMethod(p_alpm,"checking_file_conflicts_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("file_conflicts_checked");
             break;
         case ALPM_EVENT_CHECKDEPS_DONE:
-            QMetaObject::invokeMethod(p_alpm,"checking_pkg_deps_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("pkg_deps_checked");
             break;
         case ALPM_EVENT_RESOLVEDEPS_DONE:
-            QMetaObject::invokeMethod(p_alpm,"resolving_pkg_deps_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("pkg_deps_resolved");
             break;
         case ALPM_EVENT_INTERCONFLICTS_DONE:
-            QMetaObject::invokeMethod(p_alpm,"checking_internal_conflicts_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("internal_conflicts_checked");
             break;
         case ALPM_EVENT_TRANSACTION_DONE:
-            QMetaObject::invokeMethod(p_alpm,"transaction_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("transaction_completed");
             break;
         case ALPM_EVENT_INTEGRITY_DONE:
-            QMetaObject::invokeMethod(p_alpm,"checking_integrity_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("integrity_checked");
             break;
         case ALPM_EVENT_KEYRING_DONE:
-            QMetaObject::invokeMethod(p_alpm,"checking_keyring_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("keyring_checked");
             break;
         case ALPM_EVENT_KEY_DOWNLOAD_DONE:
-            QMetaObject::invokeMethod(p_alpm,"checking_key_download_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("key_download_checked");
             break;
         case ALPM_EVENT_LOAD_DONE:
-            QMetaObject::invokeMethod(p_alpm,"loading_pkg_files_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("pkg_files_loaded");
             break;
         case ALPM_EVENT_DISKSPACE_DONE:
-            QMetaObject::invokeMethod(p_alpm,"checking_diskspace_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("diskspace_checked");
             break;
         case ALPM_EVENT_RETRIEVE_DONE:
             p_alpm->emit_information(QObject::tr("Packages have been retrieved successfully!"));
-            QMetaObject::invokeMethod(p_alpm,"download_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("download_completed");
             break;
         case ALPM_EVENT_RETRIEVE_FAILED:
             p_alpm->emit_information(QObject::tr("Packages have not been retrieved :("));
-            QMetaObject::invokeMethod(p_alpm,"download_failed",Qt::QueuedConnection);
+            p_alpm->emit_event("download_failed");
             break;
         case ALPM_EVENT_HOOK_DONE:
-            QMetaObject::invokeMethod(p_alpm,"all_hooks_completed",Qt::QueuedConnection);
+            p_alpm->emit_event("all_hooks_completed");
             break;
         case ALPM_EVENT_HOOK_RUN_DONE:
         {
             alpm_event_hook_run_t *e = &event->hook_run;
-            QMetaObject::invokeMethod(p_alpm,"hook_completed",Qt::QueuedConnection,Q_ARG(QString,e->desc?QString::fromLocal8Bit(e->desc):QString::fromLocal8Bit(e->name)));
+            p_alpm->emit_event("hook_completed",Q_ARG(QString,e->desc?QString::fromLocal8Bit(e->desc):QString::fromLocal8Bit(e->name)));
             break;
         }
         case ALPM_EVENT_PKGDOWNLOAD_START:
@@ -695,7 +707,7 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
                 alpm_event_pkgdownload_t *e = &event->pkgdownload;
                 QString filename = QString::fromLocal8Bit((const char *)e->file);
                 p_alpm->emit_information(QObject::tr("Starting the download of %1").arg(filename));
-                QMetaObject::invokeMethod(p_alpm,"download_start",Qt::QueuedConnection,Q_ARG(QString,filename));
+                p_alpm->emit_event("download_start",Q_ARG(QString,filename));
             }
             break;
         case ALPM_EVENT_PKGDOWNLOAD_DONE:
@@ -703,7 +715,7 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
                 alpm_event_pkgdownload_t *e = &event->pkgdownload;
                 QString filename = QString::fromLocal8Bit((const char *)e->file);
                 p_alpm->emit_information(QObject::tr("Done the download of %1").arg(filename));
-                QMetaObject::invokeMethod(p_alpm,"download_done",Qt::QueuedConnection,Q_ARG(QString,filename));
+                p_alpm->emit_event("download_done",Q_ARG(QString,filename));
             }
             break;
         case ALPM_EVENT_PKGDOWNLOAD_FAILED:
@@ -711,7 +723,7 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
                 alpm_event_pkgdownload_t *e = &event->pkgdownload;
                 QString filename = QString::fromLocal8Bit((const char *)e->file);
                 p_alpm->emit_information(QObject::tr("Failed the download of %1").arg(filename));
-                QMetaObject::invokeMethod(p_alpm,"download_failed",Qt::QueuedConnection,Q_ARG(QString,filename));
+                p_alpm->emit_event("download_failed",Q_ARG(QString,filename));
             }
             break;
     }
@@ -924,7 +936,7 @@ bool Alpm::queryPackages(bool use_eventloop) {
 
     if (use_eventloop) {
         bool ret = (run<int>(m_alpm_errno,this,&Alpm::query_packages) == ThreadRun::OK) && m_alpm_errno == ALPM_ERR_OK;
-        QMetaObject::invokeMethod(this,"listing_packages_completed",Qt::QueuedConnection);
+        emit_event("listing_packages_completed");
         return ret;
     }
 
@@ -944,7 +956,7 @@ int Alpm::update_dbs(bool force) {
 
     QList<AlpmDB> dbs = allSyncDBs();
     for (int i=0;i<dbs.count();i++) {
-        QMetaObject::invokeMethod(this,"download_db_start",Qt::QueuedConnection,Q_ARG(QString,dbs[i].name()));
+        emit_event("download_db_start",Q_ARG(QString,dbs[i].name()));
         emit_information(QObject::tr("Updating %1 db...").arg(dbs[i].name()));
         if (!dbs[i].update(force)) {
             emit_information(lastError());
@@ -989,28 +1001,28 @@ QStringList Alpm::download_packages(const QList<AlpmPackage *> & pkgs) {
     }
 
     if (download_size <= 0) {
-        QMetaObject::invokeMethod(p_alpm,"error",Qt::QueuedConnection,Q_ARG(QString,tr("Nothing to download!!!")));
-        QMetaObject::invokeMethod(p_alpm,"download_failed",Qt::QueuedConnection);
+        emit_error(tr("Nothing to download!!!"));
+        emit_event("download_failed");
         return downloaded_paths;
     }
 
-    if (download_size > 0) QMetaObject::invokeMethod(this,"full_download_size_found",Qt::QueuedConnection,Q_ARG(qint64,download_size));
+    if (download_size > 0) emit_event("full_download_size_found",Q_ARG(qint64,download_size));
 
     QString filename;
     QString out_path;
     for (i=0;i<pkgs.count();i++) {
         filename = pkgs.at(i)->fileName();
         emit_information(tr("Starting the download of %1").arg(filename));
-        QMetaObject::invokeMethod(p_alpm,"download_start",Qt::QueuedConnection,Q_ARG(QString,filename));
+        emit_event("download_start",Q_ARG(QString,filename));
         out_path = download_package(pkgs.at(i));
         if (!out_path.isEmpty()) downloaded_paths.append(out_path);
         else {
-            QMetaObject::invokeMethod(p_alpm,"download_failed",Qt::QueuedConnection);
+            emit_event("download_failed");
             return downloaded_paths;
         }
     }
 
-    QMetaObject::invokeMethod(p_alpm,"download_completed",Qt::QueuedConnection);
+    emit_event("download_completed");
 
     return downloaded_paths;
 }
