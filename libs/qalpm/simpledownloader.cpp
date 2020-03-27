@@ -238,8 +238,8 @@ void SimpleDownloader::get_finished() {
     emit progress(m_downloaded,100,0);
     m_is_started = false;
 
-    if (m_terminated) invokeMethod("download_terminated");
-    else invokeMethod("download_completed");
+    if (m_terminated) emit download_terminated();
+    else emit download_completed();
 }
 
 void SimpleDownloader::get_readyRead() {
