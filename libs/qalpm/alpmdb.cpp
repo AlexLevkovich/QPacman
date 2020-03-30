@@ -133,6 +133,7 @@ bool AlpmDB::update(bool force) {
         return false;
     }
 
+    Alpm::p_alpm->m_download_errs.clear();
     return (alpm_db_update(force?1:0,m_db_handle) >= 0);
 }
 
