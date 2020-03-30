@@ -231,8 +231,6 @@ int Alpm::operation_fetch_fn(const QString & url,const QString & localpath,bool)
     QObject::connect(downloader,SIGNAL(progress(const QString &,qint64,qint64,int,qint64)),p_alpm,SLOT(operation_download_fn(const QString &,qint64,qint64,int,qint64)));
     QObject::connect(downloader,&AlpmDownloader::error,p_alpm,[&](const QString & err) {m_download_errs.append(err);});
     int ret = downloader->exec();
-    QCoreApplication::processEvents();
-    QCoreApplication::processEvents();
     delete downloader;
     return (ret == 2)?-1:ret;
 }
@@ -240,8 +238,8 @@ int Alpm::operation_fetch_fn(const QString & url,const QString & localpath,bool)
 void Alpm::operation_download_fn(const QString & filename,qint64 bytes_downloaded,qint64 length,int,qint64) {
     if(bytes_downloaded == 0 && length <= 0) return;
     if (length < 0) length = 0;
-    emit_information(tr("(%1/%2) downloaded").arg(bytes_downloaded).arg(length));
-    emit_event("download_progress",Q_ARG(QString,filename),Q_ARG(qint64,bytes_downloaded),Q_ARG(qint64,length));
+    emit information(tr("(%1/%2) downloaded").arg(bytes_downloaded).arg(length));
+    emit download_progress(filename,bytes_downloaded,length);
 }
 
 int Alpm::operation_fetch_fn(const char *url, const char *localpath,int force) {
