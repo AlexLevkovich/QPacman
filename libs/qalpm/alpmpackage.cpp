@@ -847,6 +847,8 @@ int AlpmPackage::pkg_vercmp(const QString & ver1, const QString & ver2) {
 }
 
 QUrl AlpmPackage::iconUrl() const {
+    if (name() == "qpacman") return QUrl("qrc://pics/qpacman.svg");
+
     if (m_pool == NULL) {
         m_pool = new AppStream::Pool(qApp);
         if (!m_pool->load()) {

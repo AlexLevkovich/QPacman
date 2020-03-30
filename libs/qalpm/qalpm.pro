@@ -139,3 +139,8 @@ transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
 
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/
 INSTALLS += target transinstall
+
+DISTFILES +=
+
+RESOURCES += \
+    qalpm.qrc
