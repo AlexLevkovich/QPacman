@@ -126,9 +126,12 @@ PRE_TARGETDEPS += TRANSLATIONS
 PRE_TARGETDEPS += LRELEASE_TARGET
 QMAKE_EXTRA_TARGETS += updatets releasets
 
+!exists("$$INSTALL_PREFIX/lib/libpam.so"): error("pam package needs to be installed!")
+!exists("$$INSTALL_PREFIX/lib/libAppStreamQt.so"): error("appstream-qt package needs to be installed!")
+
 CONFIG += link_pkgconfig
 PKGCONFIG += libalpm libarchive
-LIBS += -lcrypt -lpam
+LIBS += -lcrypt -lpam -lAppStreamQt
 
 transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/lib$$TARGET, .qm)
 transinstall.CONFIG += no_check_exist

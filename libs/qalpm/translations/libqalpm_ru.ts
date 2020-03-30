@@ -74,7 +74,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+307"/>
+        <location filename="../libalpm.cpp" line="+308"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 в IgnorePkg/IgnoreGroup. Все равно устанавливать?</translation>
     </message>
@@ -178,7 +178,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Выполняем внутренние скрипты...</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="+6"/>
         <source>Retrieving packages...</source>
         <translation type="unfinished">Начинаем загрузку пакетов...</translation>
     </message>
@@ -213,7 +213,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Все пакеты загружены!</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+5"/>
         <source>Packages have not been retrieved :(</source>
         <translation type="unfinished">Не все пакеты загружены :(</translation>
     </message>
@@ -228,7 +228,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">%1 загружен</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+10"/>
         <source>Failed the download of %1</source>
         <translation type="unfinished">Ошибка при загрузке %1</translation>
     </message>
@@ -281,7 +281,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-881"/>
+        <location filename="../libalpm.cpp" line="-885"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам нужно выбрать поставщика для пакета %1:
@@ -371,7 +371,7 @@ Do you want to delete it?</source>
 </translation>
     </message>
     <message>
-        <location line="+303"/>
+        <location line="+307"/>
         <source>The input package list is empty!</source>
         <translation type="unfinished">Список пакетов пуст!</translation>
     </message>

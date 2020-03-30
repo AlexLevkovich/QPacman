@@ -274,6 +274,7 @@ private:
     QVector<AlpmPackage *> m_packages;
     QMap<AlpmPackage *,QVector<AlpmPackage *> > m_replaces;
 
+    static QStringList m_download_errs;
     static int prev_event_type;
     static int m_percent;
     static Alpm * p_alpm;

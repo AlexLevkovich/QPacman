@@ -18,6 +18,7 @@ Alpm * Alpm::p_alpm = NULL;
 int Alpm::m_percent = -1;
 int Alpm::prev_event_type = -1;
 AlpmConfig * Alpm::p_config = NULL;
+QStringList Alpm::m_download_errs;
 
 template<class ForwardIt, class T, class Compare> static ForwardIt binary_search_ex(ForwardIt first, ForwardIt last, const T& value, Compare comp) {
     ForwardIt it = std::lower_bound(first, last, value, comp);
@@ -228,9 +229,9 @@ Alpm * Alpm::instance() {
 int Alpm::operation_fetch_fn(const QString & url,const QString & localpath,bool) {
     AlpmDownloader * downloader = new AlpmDownloader(QUrl(url),localpath,AlpmConfig::downloaderThreadCount(),p_config->doDisableDownloadTimeout()?0:AlpmConfig::downloaderTimeout(),AlpmConfig::downloaderProxy());
     QObject::connect(downloader,SIGNAL(progress(const QString &,qint64,qint64,int,qint64)),p_alpm,SLOT(operation_download_fn(const QString &,qint64,qint64,int,qint64)));
-    QObject::connect(downloader,SIGNAL(error(const QString &)),p_alpm,SIGNAL(information(const QString &)));
-    QObject::connect(downloader,SIGNAL(error(const QString &)),p_alpm,SIGNAL(error(const QString &)));
+    QObject::connect(downloader,&AlpmDownloader::error,p_alpm,[&](const QString & err) {m_download_errs.append(err);});
     int ret = downloader->exec();
+    QCoreApplication::processEvents();
     QCoreApplication::processEvents();
     delete downloader;
     return (ret == 2)?-1:ret;
@@ -568,22 +569,22 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
         case ALPM_EVENT_PACKAGE_OPERATION_START:
             break;
         case ALPM_EVENT_PACKAGE_OPERATION_DONE:
-            {
-                alpm_event_package_operation_t *e = &event->package_operation;
-                switch(e->operation) {
-                    case ALPM_PACKAGE_INSTALL:
-                        display_optdepends(e->newpkg);
-                        break;
-                    case ALPM_PACKAGE_UPGRADE:
-                    case ALPM_PACKAGE_DOWNGRADE:
-                        display_new_optdepends(e->oldpkg, e->newpkg);
-                        break;
-                    case ALPM_PACKAGE_REINSTALL:
-                    case ALPM_PACKAGE_REMOVE:
-                        break;
-                }
+        {
+            alpm_event_package_operation_t *e = &event->package_operation;
+            switch(e->operation) {
+            case ALPM_PACKAGE_INSTALL:
+                display_optdepends(e->newpkg);
+                break;
+            case ALPM_PACKAGE_UPGRADE:
+            case ALPM_PACKAGE_DOWNGRADE:
+                display_new_optdepends(e->oldpkg, e->newpkg);
+                break;
+            case ALPM_PACKAGE_REINSTALL:
+            case ALPM_PACKAGE_REMOVE:
+                break;
             }
             break;
+        }
         case ALPM_EVENT_INTEGRITY_START:
         {
             QString message = QObject::tr("Checking package integrity...");
@@ -619,6 +620,7 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
             break;
         }
         case ALPM_EVENT_RETRIEVE_START:
+            m_download_errs.clear();
             p_alpm->emit_information(QObject::tr("Retrieving packages..."));
             p_alpm->emit_event("download_starting");
             break;
@@ -630,30 +632,30 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
             break;
         }
         case ALPM_EVENT_OPTDEP_REMOVAL:
-            {
-                alpm_event_optdep_removal_t *e = &event->optdep_removal;
-                char * dep_string = alpm_dep_compute_string(e->optdep);
-                p_alpm->emit_information(QObject::tr("%1 optionally requires %2").arg(QString::fromLocal8Bit((const char *)alpm_pkg_get_name(e->pkg))).
+        {
+            alpm_event_optdep_removal_t *e = &event->optdep_removal;
+            char * dep_string = alpm_dep_compute_string(e->optdep);
+            p_alpm->emit_information(QObject::tr("%1 optionally requires %2").arg(QString::fromLocal8Bit((const char *)alpm_pkg_get_name(e->pkg))).
                                                                                   arg(QString::fromLocal8Bit((const char *)dep_string)));
-                free(dep_string);
-            }
+            free(dep_string);
             break;
+        }
         case ALPM_EVENT_DATABASE_MISSING:
             p_alpm->emit_information(QObject::tr("Database file for '%1' does not exist, you need to update your databases!").
                                                                                   arg(QString::fromLocal8Bit((const char *)event->database_missing.dbname)));
             break;
         case ALPM_EVENT_PACNEW_CREATED:
-            {
-                alpm_event_pacnew_created_t *e = &event->pacnew_created;
-                p_alpm->emit_information(QObject::tr("%1 installed as %12.pacnew").arg(QString::fromLocal8Bit((const char *)e->file)));
-            }
+        {
+            alpm_event_pacnew_created_t *e = &event->pacnew_created;
+            p_alpm->emit_information(QObject::tr("%1 installed as %12.pacnew").arg(QString::fromLocal8Bit((const char *)e->file)));
             break;
+        }
         case ALPM_EVENT_PACSAVE_CREATED:
-            {
-                alpm_event_pacsave_created_t *e = &event->pacsave_created;
-                p_alpm->emit_information(QObject::tr("%1 saved as %1.pacsave").arg(QString::fromLocal8Bit((const char *)e->file)));
-            }
+        {
+            alpm_event_pacsave_created_t *e = &event->pacsave_created;
+            p_alpm->emit_information(QObject::tr("%1 saved as %1.pacsave").arg(QString::fromLocal8Bit((const char *)e->file)));
             break;
+        }
         /* all the simple done events, with fallthrough for each */
         case ALPM_EVENT_FILECONFLICTS_DONE:
             p_alpm->emit_event("file_conflicts_checked");
@@ -690,6 +692,7 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
             p_alpm->emit_event("download_completed");
             break;
         case ALPM_EVENT_RETRIEVE_FAILED:
+            m_download_errs.removeDuplicates();
             p_alpm->emit_information(QObject::tr("Packages have not been retrieved :("));
             p_alpm->emit_event("download_failed");
             break;
@@ -703,29 +706,31 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
             break;
         }
         case ALPM_EVENT_PKGDOWNLOAD_START:
-            {
-                alpm_event_pkgdownload_t *e = &event->pkgdownload;
-                QString filename = QString::fromLocal8Bit((const char *)e->file);
-                p_alpm->emit_information(QObject::tr("Starting the download of %1").arg(filename));
-                p_alpm->emit_event("download_start",Q_ARG(QString,filename));
-            }
+        {
+            alpm_event_pkgdownload_t *e = &event->pkgdownload;
+            QString filename = QString::fromLocal8Bit((const char *)e->file);
+            p_alpm->emit_information(QObject::tr("Starting the download of %1").arg(filename));
+            p_alpm->emit_event("download_start",Q_ARG(QString,filename));
             break;
+        }
         case ALPM_EVENT_PKGDOWNLOAD_DONE:
-            {
-                alpm_event_pkgdownload_t *e = &event->pkgdownload;
-                QString filename = QString::fromLocal8Bit((const char *)e->file);
-                p_alpm->emit_information(QObject::tr("Done the download of %1").arg(filename));
-                p_alpm->emit_event("download_done",Q_ARG(QString,filename));
-            }
+        {
+            alpm_event_pkgdownload_t *e = &event->pkgdownload;
+            QString filename = QString::fromLocal8Bit((const char *)e->file);
+            p_alpm->emit_information(QObject::tr("Done the download of %1").arg(filename));
+            p_alpm->emit_event("download_done",Q_ARG(QString,filename));
             break;
+        }
         case ALPM_EVENT_PKGDOWNLOAD_FAILED:
-            {
-                alpm_event_pkgdownload_t *e = &event->pkgdownload;
-                QString filename = QString::fromLocal8Bit((const char *)e->file);
-                p_alpm->emit_information(QObject::tr("Failed the download of %1").arg(filename));
-                p_alpm->emit_event("download_failed",Q_ARG(QString,filename));
-            }
+        {
+            p_alpm->emit_information(m_download_errs.last());
+            p_alpm->emit_error(m_download_errs.last());
+            alpm_event_pkgdownload_t *e = &event->pkgdownload;
+            QString filename = QString::fromLocal8Bit((const char *)e->file);
+            p_alpm->emit_information(QObject::tr("Failed the download of %1").arg(filename));
+            p_alpm->emit_event("download_failed",Q_ARG(QString,filename));
             break;
+        }
     }
     prev_event_type = event->type;
 }
@@ -792,7 +797,7 @@ QString Alpm::lastError(int * error_id) const {
         }
         else {
             if (error_id != NULL) *error_id = m_alpm_errno;
-            return QString::fromLocal8Bit(alpm_strerror((alpm_errno_t)m_alpm_errno));
+            return ((m_alpm_errno == EXTERNAL_DOWNLOAD_ERR) && !m_download_errs.isEmpty())?m_download_errs.join("\n"):QString::fromLocal8Bit(alpm_strerror((alpm_errno_t)m_alpm_errno));
         }
     }
 
@@ -805,7 +810,7 @@ QString Alpm::lastError(int * error_id) const {
     if (error_id != NULL) *error_id = ALPM_ERR_OK;
     if (err == ALPM_ERR_OK) return QString();
     if (error_id != NULL) *error_id = err;
-    return QString::fromLocal8Bit(alpm_strerror(err));
+    return ((err == (alpm_errno_t)EXTERNAL_DOWNLOAD_ERR) && !m_download_errs.isEmpty())?m_download_errs.join("\n"):QString::fromLocal8Bit(alpm_strerror(err));
 }
 
 QList<AlpmDB> Alpm::allSyncDBs() const {

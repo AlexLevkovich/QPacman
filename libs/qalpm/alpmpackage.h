@@ -9,12 +9,17 @@
 #include <alpm.h>
 #include <QStringList>
 #include <QUrl>
+#include <QHash>
 #include <QDateTime>
 #include <QRegularExpression>
 #include "alpmlist.h"
+#include <AppStreamQt/component.h>
 
 class Alpm;
 class AlpmDB;
+namespace AppStream {
+class Pool;
+}
 
 typedef int (*calculate_first_column_width)(const QString * field_names,int count);
 
@@ -151,6 +156,8 @@ public:
     QStringList remoteLocations() const;
     QString filePath() const;
 
+    QUrl iconUrl() const;
+
     static CompareOper parseNameVersion(const QString & str,QString & name,QString & ver);
     static CompareOper parseNameVersion(const QString & str,QString & repo,QString & name,QString & ver);
     static int pkg_vercmp(const QString & ver1, const QString & ver2);
@@ -195,6 +202,9 @@ private:
     AlpmPackage::Type m_type;
     off_t m_pkg_size;
     off_t m_pkg_isize;
+
+    static AppStream::Pool * m_pool;
+    static QHash<QString, AppStream::Component> m_appInfo;
 
     friend class Alpm;
     friend class AlpmDB;

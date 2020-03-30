@@ -689,7 +689,7 @@ Are you sure to continue?</source>
         <translation type="unfinished">Выдаліць з залежнасцямi</translation>
     </message>
     <message>
-        <location filename="../pacmaninfobrowser.cpp" line="+182"/>
+        <location filename="../pacmaninfobrowser.cpp" line="+184"/>
         <source>Name</source>
         <translation type="unfinished">Назва</translation>
     </message>

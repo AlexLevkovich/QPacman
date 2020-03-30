@@ -45,18 +45,18 @@ void TextEditHelper::insertLink(const QTextCursor & cursor,const QString & url,c
     QTextCursor(cursor).insertText(text.isEmpty()?url:text,txtfmt);
 }
 
-void TextEditHelper::insertImage(const QTextCursor & cursor,const QString & url,bool isLink) {
+void TextEditHelper::insertImage(const QTextCursor & cursor,const QString & name,const QSize & size,const QUrl & url) const {
     QTextImageFormat imageft;
-    imageft.setAnchor(isLink);
-    if (isLink) imageft.setAnchorHref(url);
-    imageft.setName(url);
+    if (!url.isEmpty()) {
+        imageft.setAnchor(true);
+        imageft.setAnchorHref(url.toString());
+    }
+    imageft.setName(name);
+    if (size.isValid()) {
+        imageft.setWidth(size.width());
+        imageft.setHeight(size.height());
+    }
     QTextCursor(cursor).insertImage(imageft);
-}
-
-QString TextEditHelper::insertImage(const QTextCursor & cursor,const QString & url,const QSize & size) const {
-    QString name = "image"+QString::number(qrand());
-    ((TextEditHelper *)this)->insertImage(cursor,QImage(url),name,size);
-    return name;
 }
 
 void TextEditHelper::insertImage(const QTextCursor & cursor,const QImage & image,const QString & name,const QSize & size) {

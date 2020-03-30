@@ -9,6 +9,7 @@
 #include <QTextCursor>
 #include <QPalette>
 #include <QFont>
+#include <QUrl>
 
 class QTextTable;
 
@@ -23,9 +24,8 @@ protected:
     void insertText(const QTextCursor & cursor,const QString & text,QFont::Weight weight);
     void insertLink(const QTextCursor & cursor,const QString & url,const QString & text = QString());
     void insertLink(const QTextCursor & cursor,const QString & url,const QString & text,QFont::Weight weight);
-    QString insertImage(const QTextCursor & cursor,const QString & url,const QSize & size = QSize()) const;
+    void insertImage(const QTextCursor & cursor,const QString & name,const QSize & size = QSize(),const QUrl & url = QUrl()) const;
     void insertImage(const QTextCursor & cursor,const QImage & image,const QString & name,const QSize & size = QSize());
-    void insertImage(const QTextCursor & cursor,const QString & url,bool isLink);
     QTextTable * insertTable(const QTextCursor & cursor,int rows,int columns,qreal border,Qt::Alignment aligment = Qt::AlignLeft,bool hasHeader = false);
     void setupTableHeader(QTextTable * table,const QColor & background,const QColor & foreground);
     void setTableRowColors(QTextTable * table,const QColor & evenBackground,const QColor & oddBackground);

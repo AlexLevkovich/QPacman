@@ -70,7 +70,9 @@ void PacmanInfoBrowser::fillByInfo(AlpmPackage * pkg) {
     QTextTableFormat tbfmt(table->format());
     tbfmt.setColumnWidthConstraints(QVector<QTextLength>() << QTextLength(QTextLength::FixedLength,width) << QTextLength(QTextLength::PercentageLength,100));
     table->setFormat(tbfmt);
-    setCellText(table,0,0,fieldNames[0],color,textColor,true);
+    QUrl icon_url = pkg->iconUrl();
+    if (!icon_url.isEmpty()) insertImage(table->cellAt(0,0).lastCursorPosition(),icon_url.toString(),QSize(64,64),pkg->url());
+    else setCellText(table,0,0,fieldNames[0],color,textColor,true);
     setCellText(table,1,0,fieldNames[1],color,textColor,true);
     setCellText(table,1,1,pkg->version());
     setCellText(table,2,0,fieldNames[19],color,textColor,true);

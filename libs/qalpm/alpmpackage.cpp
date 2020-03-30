@@ -7,8 +7,14 @@
 #include "libalpm.h"
 #include "alpmdb.h"
 #include <QByteArray>
+#include <AppStreamQt/pool.h>
+#include <AppStreamQt/image.h>
+#include <AppStreamQt/icon.h>
 #include <QDebug>
 #include "archivefilesiterator.h"
+
+AppStream::Pool * AlpmPackage::m_pool = NULL;
+QHash<QString, AppStream::Component> AlpmPackage::m_appInfo;
 
 bool operator<(const AlpmPackage::Dependence & dep1, const AlpmPackage::Dependence & dep2) {
     int ret;
@@ -838,4 +844,36 @@ bool AlpmPackage::setChangeStatus(const UserChangeStatus & status) {
 
 int AlpmPackage::pkg_vercmp(const QString & ver1, const QString & ver2) {
     return ::alpm_pkg_vercmp(ver1.toLatin1().constData(),ver2.toLatin1().constData());
+}
+
+QUrl AlpmPackage::iconUrl() const {
+    if (m_pool == NULL) {
+        m_pool = new AppStream::Pool(qApp);
+        if (!m_pool->load()) {
+            qWarning() << "Unable to open AppStream pool:" << m_pool->lastError();
+            return QUrl();
+        }
+
+        const QList<AppStream::Component> apps = m_pool->componentsByKind(AppStream::Component::KindDesktopApp);
+        for (const AppStream::Component &app : apps) {
+            const QStringList pkgNames = app.packageNames();
+            for (const QString &pkgName : pkgNames) {
+                m_appInfo.insertMulti(pkgName, app);
+            }
+        }
+    }
+
+    QUrl url64;
+    QUrl url;
+    if (m_appInfo.contains(name())) {
+        AppStream::Component app = m_appInfo.value(name());
+        const QList<AppStream::Icon> icons = app.icons();
+        for (const AppStream::Icon &icon : icons) {
+            if (icon.isEmpty()) continue;
+            if (icon.width() < 64 && url.isEmpty()) url = icon.url();
+            else if (url64.isEmpty()) url64 = icon.url();
+        }
+    }
+
+    return url64.isEmpty()?url:url64;
 }
