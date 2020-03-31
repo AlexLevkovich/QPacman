@@ -228,7 +228,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">%1 загружаны</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="+12"/>
         <source>Failed the download of %1</source>
         <translation type="unfinished">Памылка пры загрузцы %1</translation>
     </message>
@@ -281,7 +281,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-883"/>
+        <location filename="../libalpm.cpp" line="-885"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам трэба выбраць пастаўшчыка для пакета %1:
@@ -371,7 +371,7 @@ Do you want to delete it?</source>
 </translation>
     </message>
     <message>
-        <location line="+307"/>
+        <location line="+309"/>
         <source>The input package list is empty!</source>
         <translation type="unfinished">Спіс пакетаў пусты!</translation>
     </message>

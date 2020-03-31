@@ -721,8 +721,10 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
         }
         case ALPM_EVENT_PKGDOWNLOAD_FAILED:
         {
-            p_alpm->emit_information(m_download_errs.last());
-            p_alpm->emit_error(m_download_errs.last());
+            if (!m_download_errs.isEmpty()) {
+                p_alpm->emit_information(m_download_errs.last());
+                p_alpm->emit_error(m_download_errs.last());
+            }
             alpm_event_pkgdownload_t *e = &event->pkgdownload;
             QString filename = QString::fromLocal8Bit((const char *)e->file);
             p_alpm->emit_information(QObject::tr("Failed the download of %1").arg(filename));
