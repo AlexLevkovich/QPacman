@@ -1033,6 +1033,8 @@ QStringList Alpm::download_packages(const QList<AlpmPackage *> & pkgs) {
 ThreadRun::RC Alpm::downloadPackages(const QList<AlpmPackage *> & pkgs,QStringList * paths) {
     if (!isValid(true)) return ThreadRun::BAD;
 
+    m_download_errs.clear();
+
     QStringList downloaded_paths;
     ThreadRun::RC rc = run<QStringList>(downloaded_paths,this,&Alpm::download_packages,pkgs);
     emit pkgs_downloaded(downloaded_paths);
