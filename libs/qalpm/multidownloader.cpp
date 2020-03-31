@@ -700,6 +700,7 @@ bool MultiDownloader::saveState(const QString & outputName) {
     stream << errorString();
     stream << dataLength();
     stream << m_prev_bytes_written;
+    stream << m_timeout;
     return (stream.status() == QDataStream::Ok);
 }
 
@@ -726,6 +727,7 @@ bool MultiDownloader::continueSaved(const QString & inputName) {
     stream >> m_error;
     stream >> m_size;
     stream >> m_prev_bytes_written;
+    stream >> m_timeout;
     if (stream.status() != QDataStream::Ok) return false;
 
     if (m_size == 0) {

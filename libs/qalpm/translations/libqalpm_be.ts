@@ -572,12 +572,12 @@ Do you want to delete it?</source>
     <name>MultiDownloader</name>
     <message>
         <location filename="../multidownloader.cpp" line="+153"/>
-        <location line="+335"/>
+        <location line="+336"/>
         <source>Downloading already has been started!!!</source>
         <translation type="unfinished">Загрузка ўжо распачатая !!!</translation>
     </message>
     <message>
-        <location line="-330"/>
+        <location line="-331"/>
         <source>Invalid count of threads has passed!!!</source>
         <translation type="unfinished">Колькасць патокаў ўстаноўлена не дакладна!!!</translation>
     </message>
