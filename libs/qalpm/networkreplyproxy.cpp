@@ -105,9 +105,14 @@ void NetworkReplyProxy::readInternal() {
 void NetworkReplyProxy::handleReadyRead(bool is_finished) {
     m_timer.stop();
     readInternal();
-    emit readyRead();
-    if (is_finished) QMetaObject::invokeMethod(this,"handleFinished",Qt::QueuedConnection);
-    else if (m_timer.interval() > 0) m_timer.start();
+    if (is_finished) {
+        if (bytesAvailable() > 0) emit readyRead();
+        QMetaObject::invokeMethod(this,"handleFinished",Qt::QueuedConnection);
+    }
+    else {
+        emit readyRead();
+        if (m_timer.interval() > 0) m_timer.start();
+    }
 }
 
 int NetworkReplyProxy::timerInterval() const {
