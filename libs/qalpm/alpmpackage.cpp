@@ -865,10 +865,22 @@ QUrl AlpmPackage::iconUrl() const {
         }
     }
 
+    QUrl url = icon_url(name());
+    if (url.isEmpty()) {
+        for (Dependence dep: provides()) {
+            url = icon_url(dep.name());
+            if (!url.isEmpty()) break;
+        }
+    }
+
+    return url;
+}
+
+QUrl AlpmPackage::icon_url(const QString & name) const {
     QUrl url64;
     QUrl url;
-    if (m_appInfo.contains(name())) {
-        AppStream::Component app = m_appInfo.value(name());
+    if (m_appInfo.contains(name)) {
+        AppStream::Component app = m_appInfo.value(name);
         const QList<AppStream::Icon> icons = app.icons();
         for (const AppStream::Icon &icon : icons) {
             if (icon.isEmpty()) continue;

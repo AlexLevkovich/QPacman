@@ -171,6 +171,7 @@ private:
     void init(alpm_pkg_t * m_pkg);
     alpm_pkg_t * handle() const;
     void setInstalled(bool installed);
+    QUrl icon_url(const QString & name) const;
 
     QString m_name;
     QString m_version;
