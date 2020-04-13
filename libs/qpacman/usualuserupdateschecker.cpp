@@ -11,18 +11,25 @@
 #include <QSettings>
 
 UsualUserUpdatesChecker::UsualUserUpdatesChecker(QObject * parent) : QObject(parent) {
+    m_started = false;
+
+    connect(this,SIGNAL(ok(const QStringList &)),this,SLOT(deleteLater()),Qt::QueuedConnection);
+    connect(this,SIGNAL(error(const QString &,int)),this,SLOT(deleteLater()),Qt::QueuedConnection);
+    connect(&network_manager,&QNetworkConfigurationManager::onlineStateChanged,[&](bool online) { if (online && !m_started) QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection); });
+
     QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection);
 }
 
 void UsualUserUpdatesChecker::process() {
-    connect(this,SIGNAL(ok(const QStringList &)),this,SLOT(deleteLater()),Qt::QueuedConnection);
-    connect(this,SIGNAL(error(const QString &,int)),this,SLOT(deleteLater()),Qt::QueuedConnection);
-
     if (!Alpm::isOpen()) {
         m_last_error = tr("Alpm library is not initialized!");
         emit error(m_last_error,Alpm::ALPM_IS_NOT_OPEN);
         return;
     }
+
+    if (!network_manager.isOnline()) return;
+
+    m_started = true;
 
     emit database_updating();
     if ((Alpm::instance()->updateDBs() != ThreadRun::OK) || !Alpm::instance()->reopen()) {

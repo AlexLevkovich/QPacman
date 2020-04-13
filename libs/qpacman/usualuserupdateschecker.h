@@ -6,7 +6,7 @@
 #ifndef USUALUSERUPDATESCHECKER_H
 #define USUALUSERUPDATESCHECKER_H
 
-#include <QObject>
+#include <QNetworkConfigurationManager>
 
 class Static;
 class AlpmPackage;
@@ -32,6 +32,8 @@ private slots:
 private:
     QString m_last_error;
     QStringList m_updates;
+    QNetworkConfigurationManager network_manager;
+    bool m_started;
 };
 
 #endif // USUALUSERUPDATESCHECKER_H
