@@ -7,6 +7,7 @@
 #define USUALUSERUPDATESCHECKER_H
 
 #include <QNetworkConfigurationManager>
+#include <QTimer>
 
 class Static;
 class AlpmPackage;
@@ -33,6 +34,7 @@ private:
     QString m_last_error;
     QStringList m_updates;
     QNetworkConfigurationManager network_manager;
+    QTimer m_timer;
     bool m_started;
 };
 

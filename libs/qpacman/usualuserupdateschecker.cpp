@@ -6,17 +6,23 @@
 #include "usualuserupdateschecker.h"
 #include "static.h"
 #include "libalpm.h"
+#include "alpmconfig.h"
 #include "alpmdb.h"
 #include <QEventLoop>
 #include <QSettings>
 
 UsualUserUpdatesChecker::UsualUserUpdatesChecker(QObject * parent) : QObject(parent) {
     m_started = false;
+    m_timer.setSingleShot(true);
+    m_timer.setInterval(AlpmConfig::downloaderTimeout());
 
     connect(this,SIGNAL(ok(const QStringList &)),this,SLOT(deleteLater()),Qt::QueuedConnection);
     connect(this,SIGNAL(error(const QString &,int)),this,SLOT(deleteLater()),Qt::QueuedConnection);
     connect(&network_manager,&QNetworkConfigurationManager::onlineStateChanged,[&](bool online) { if (online && !m_started) QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection); });
-
+    if (m_timer.interval() > 0) {
+        connect(&m_timer,&QTimer::timeout,[&]() {if (!m_started) {m_started = true;QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection);}});
+        m_timer.start();
+    }
     QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection);
 }
 
@@ -27,8 +33,9 @@ void UsualUserUpdatesChecker::process() {
         return;
     }
 
-    if (!network_manager.isOnline()) return;
+    if (!m_started && !network_manager.isOnline()) return;
 
+    m_timer.stop();
     m_started = true;
 
     emit database_updating();
