@@ -215,7 +215,7 @@ private:
     void query_packages_portion(QVector<AlpmPackage *> & pkgs,int startindex,int lastindex);
     void sync_sysupgrade_portion(QVector<AlpmPackage *> & add_pkgs,int startindex,int lastindex);
     void fill_replaces();
-    bool sync_sysupgrade();
+    int sync_sysupgrade(int m_install_flags);
     int install_packages(const QList<AlpmPackage *> & m_pkgs,int m_install_flags,const QList<AlpmPackage *> & forcedpkgs);
     int remove_packages(const QList<AlpmPackage *> & m_pkgs,bool remove_cascade);
     int update_dbs(bool force);

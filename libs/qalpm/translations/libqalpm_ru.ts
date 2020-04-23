@@ -14,7 +14,7 @@
         <translation type="unfinished">Невозможно определить архитектуру системы!</translation>
     </message>
     <message>
-        <location line="+129"/>
+        <location line="+130"/>
         <source>Pacman&apos;s conf file is unknown!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -445,24 +445,24 @@ Do you want to delete it?</source>
         <translation type="unfinished">Начинаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+299"/>
+        <location line="+325"/>
         <location line="+6"/>
-        <location line="+187"/>
+        <location line="+182"/>
         <source>Skipping target: %1</source>
         <translation type="unfinished">Пропускаем %1</translation>
     </message>
     <message>
-        <location line="-184"/>
+        <location line="-179"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="-19"/>
         <source>Starting full system upgrade...</source>
         <translation type="unfinished">Начинаем полное обновление системы...</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="+36"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 имеет неправильную архитектуру</translation>
     </message>

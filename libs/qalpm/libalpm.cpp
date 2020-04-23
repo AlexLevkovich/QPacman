@@ -1194,7 +1194,7 @@ void Alpm::sync_sysupgrade_portion(QVector<AlpmPackage *> & add_pkgs,int startin
     }
 }
 
-bool Alpm::sync_sysupgrade() {
+int Alpm::sync_sysupgrade(int m_install_flags) {
     if (m_packages.isEmpty()) queryPackages(false);
 
     QVector<AlpmPackage *> add_pkgs;
@@ -1277,12 +1277,31 @@ bool Alpm::sync_sysupgrade() {
 
     add_pkgs.erase(std::remove_if(add_pkgs.begin(),add_pkgs.end(),[](AlpmPackage * pkg){return !pkg;}),add_pkgs.end());
 
+    QStringList syncfirst = config.syncFirstPkgs();
+    if (!syncfirst.isEmpty() && !add_pkgs.isEmpty()) {
+        QVector<AlpmPackage *> syncfirst_pkgs;
+        for (int i=(add_pkgs.count()-1);i>=0;i--) {
+            if (syncfirst.contains(add_pkgs[i]->name())) syncfirst_pkgs.append(add_pkgs.takeAt(i));
+        }
+        if (!syncfirst_pkgs.isEmpty()) {
+            ::alpm_trans_release(m_alpm_handle);
+            int ret = install_packages(syncfirst_pkgs.toList(),0,QList<AlpmPackage *>());
+            if (ret != ALPM_ERR_OK) return ret;
+
+            if (alpm_trans_init(m_alpm_handle,m_install_flags)) {
+                emit_information(lastError());
+                emit_error(lastError());
+                return alpm_errno(m_alpm_handle);
+            }
+        }
+    }
+
     for (j=0;j<remove_pkgs.count();j++) {
         if (alpm_remove_pkg(m_alpm_handle,remove_pkgs[j]->handle())) {
             QString err = QString("%1: %2").arg(remove_pkgs[j]->name()).arg(lastError());
             emit_information(err);
             emit_error(err);
-            return false;
+            return alpm_errno(m_alpm_handle);
         }
     }
 
@@ -1291,11 +1310,11 @@ bool Alpm::sync_sysupgrade() {
             QString err = QString("%1: %2").arg(add_pkgs[j]->name()).arg(lastError());
             emit_information(err);
             emit_error(err);
-            return false;
+            return alpm_errno(m_alpm_handle);
         }
     }
 
-    return true;
+    return ALPM_ERR_OK;
 }
 
 int Alpm::install_packages(const QList<AlpmPackage *> & m_pkgs,int m_install_flags,const QList<AlpmPackage *> & forcedpkgs) {
@@ -1312,30 +1331,32 @@ int Alpm::install_packages(const QList<AlpmPackage *> & m_pkgs,int m_install_fla
         return alpm_errno(m_alpm_handle);
     }
 
-    alpm_pkg_t * handle;
-    for (int i=0;i<m_pkgs.count();i++) {
-        handle = m_pkgs[i]->handle();
-        if (handle == NULL) {
-            emit_information(tr("Skipping target: %1").arg(m_pkgs[i]->toString()));
-            continue;
-        }
-        int ret = alpm_add_pkg(m_alpm_handle,handle);
-        if (ret) {
-            if(alpm_errno(m_alpm_handle) == ALPM_ERR_TRANS_DUP_TARGET) {
-                emit_information(tr("Skipping target: %1").arg(m_pkgs[i]->toString()));
-                continue;
-            }
-            err = tr("%1: %2").arg(m_pkgs[i]->name()).arg(lastError());
-            emit_information(err);
-            emit_error(err);
-            return alpm_errno(m_alpm_handle);
-        }
-    }
-
     if (m_pkgs.count() <= 0) {
         emit_information(tr("Starting full system upgrade..."),true);
         alpm_logaction(m_alpm_handle,LOGPREFIX,"starting full system upgrade\n");
-        if(!sync_sysupgrade()) return alpm_errno(m_alpm_handle);
+        int ret = sync_sysupgrade(m_install_flags);
+        if(ret != ALPM_ERR_OK) return ret;
+    }
+    else {
+        alpm_pkg_t * handle;
+        for (int i=0;i<m_pkgs.count();i++) {
+            handle = m_pkgs[i]->handle();
+            if (handle == NULL) {
+                emit_information(tr("Skipping target: %1").arg(m_pkgs[i]->toString()));
+                continue;
+            }
+            int ret = alpm_add_pkg(m_alpm_handle,handle);
+            if (ret) {
+                if(alpm_errno(m_alpm_handle) == ALPM_ERR_TRANS_DUP_TARGET) {
+                    emit_information(tr("Skipping target: %1").arg(m_pkgs[i]->toString()));
+                    continue;
+                }
+                err = tr("%1: %2").arg(m_pkgs[i]->name()).arg(lastError());
+                emit_information(err);
+                emit_error(err);
+                return alpm_errno(m_alpm_handle);
+            }
+        }
     }
 
     alpm_list_t *data = NULL;

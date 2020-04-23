@@ -58,6 +58,7 @@ public:
     QStringList remoteFileSigLevel() const { return remotefilesiglevel; }
     QStringList holdPkgs() const { return holdpkgs2; }
     QStringList cacheDirs() const { return cachedirs; }
+    QStringList syncFirstPkgs() const { return syncfirst; }
     QStringList hookDirs() const { return hookdirs; }
     QStringList ignoreGroups() const { return ignoregroups; }
     QStringList ignorePkgs() const { return ignorepkgs; }
@@ -97,6 +98,7 @@ private:
     QStringList remotefilesiglevel;
     QStringList holdpkgs2;
     QStringList cachedirs;
+    QStringList syncfirst;
     QStringList hookdirs;
     QStringList ignoregroups;
     QStringList ignorepkgs;
