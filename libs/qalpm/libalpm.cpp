@@ -1286,13 +1286,12 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
         if (!syncfirst_pkgs.isEmpty()) {
             ::alpm_trans_release(m_alpm_handle);
             int ret = install_packages(syncfirst_pkgs.toList(),0,QList<AlpmPackage *>());
-            if (ret != ALPM_ERR_OK) return ret;
-
             if (alpm_trans_init(m_alpm_handle,m_install_flags)) {
                 emit_information(lastError());
                 emit_error(lastError());
                 return alpm_errno(m_alpm_handle);
             }
+            if (ret != ALPM_ERR_OK) return ret;
         }
     }
 
