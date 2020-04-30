@@ -821,13 +821,19 @@ AlpmDB Alpm::localDB() const {
     return m_localDB;
 }
 
-bool Alpm::dup_repo_cmp(AlpmPackage * pkg1, AlpmPackage * pkg2) {
+bool Alpm::pkg_equal_cmp(AlpmPackage * pkg1, AlpmPackage * pkg2) {
     int ret = pkg1->name().compare(pkg2->name());
     if (ret) return false;
-    ret = pkg1->version().compare(pkg2->version());
+    ret = AlpmPackage::pkg_vercmp(pkg1->version(),pkg2->version());
     if (ret) return false;
-    if (pkg1->repo() == "local" || pkg2->repo() == "local") return true;
     return pkg1->repo().compare(pkg2->repo()) == 0;
+}
+
+bool Alpm::pkg_less_cmp(AlpmPackage * pkg1, AlpmPackage * pkg2) {
+    int ret;
+    if ((ret = pkg1->name().compare(pkg2->name())) != 0) return (ret < 0);
+    if ((ret = AlpmPackage::pkg_vercmp(pkg1->version(),pkg2->version())) != 0) return (ret < 0);
+    return (pkg1->repo().compare(pkg2->repo()) < 0);
 }
 
 bool Alpm::sort_cmp(AlpmPackage * item1,AlpmPackage * item2) {
@@ -1210,6 +1216,8 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
     while (i.hasNext()) {
         i.next();
         new_pkgs = i.value();
+        std::sort(new_pkgs.begin(),new_pkgs.end(),pkg_equal_cmp);
+        new_pkgs.erase(std::unique(new_pkgs.begin(),new_pkgs.end(),pkg_less_cmp),new_pkgs.end());
 
         sel_index = 0;
         provider_question.use_index = 0;
@@ -1232,11 +1240,11 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
 
         question.replace = 0;
         question.oldpkg = i.key()->handle(),
-        question.newpkg = i.value()[sel_index]->handle(),
+        question.newpkg = new_pkgs[sel_index]->handle(),
         question.newdb = alpm_pkg_get_db(question.newpkg);
         operation_question_fn((alpm_question_t *)&question);
         if (question.replace) {
-            add_pkgs.append(i.value()[sel_index]);
+            add_pkgs.append(new_pkgs[sel_index]);
             remove_pkgs.append(i.key());
         }
     }
@@ -1258,6 +1266,8 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
     }
 
     add_pkgs.erase(std::remove_if(add_pkgs.begin(),add_pkgs.end(),[](AlpmPackage * pkg){return !pkg;}),add_pkgs.end());
+    std::sort(add_pkgs.begin(),add_pkgs.end(),pkg_equal_cmp);
+    add_pkgs.erase(std::unique(add_pkgs.begin(),add_pkgs.end(),pkg_less_cmp),add_pkgs.end());
 
     int startindex = -1;
     int lastindex = -1;

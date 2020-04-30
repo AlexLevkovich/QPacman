@@ -42,13 +42,13 @@
         <translation type="unfinished">Версия</translation>
     </message>
     <message>
-        <location filename="../packagechangesdialog.cpp" line="+33"/>
-        <location line="+6"/>
+        <location filename="../packagechangesdialog.cpp" line="+34"/>
+        <location line="+7"/>
         <source>The following packages will be removed</source>
         <translation type="unfinished">Пакеты для удаления</translation>
     </message>
     <message>
-        <location line="-5"/>
+        <location line="-6"/>
         <source>The following packages will be installed</source>
         <translation type="unfinished">Пакеты для установки</translation>
     </message>
@@ -256,7 +256,7 @@
 <context>
     <name>PackageProcessor</name>
     <message>
-        <location filename="../packageprocessor.cpp" line="+121"/>
+        <location filename="../packageprocessor.cpp" line="+117"/>
         <source>Log</source>
         <translation type="unfinished">Сообщения</translation>
     </message>

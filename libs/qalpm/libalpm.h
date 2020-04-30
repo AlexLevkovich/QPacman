@@ -236,7 +236,8 @@ private:
     static void display_optdepends(alpm_pkg_t * pkg);
     static void display_new_optdepends(alpm_pkg_t *oldpkg, alpm_pkg_t *newpkg);
     static int depend_cmp(const void *d1, const void *d2);
-    static bool dup_repo_cmp(AlpmPackage * pkg1, AlpmPackage * pkg2);
+    static bool pkg_equal_cmp(AlpmPackage * pkg1, AlpmPackage * pkg2);
+    static bool pkg_less_cmp(AlpmPackage * pkg1, AlpmPackage * pkg2);
     static bool updates_cmp(AlpmPackage * item1,AlpmPackage * item2);
     static bool sort_cmp(AlpmPackage * item1,AlpmPackage * item2);
     static bool string_name_cmp(const QString & item1,const QString & item2);

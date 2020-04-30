@@ -233,7 +233,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Ошибка при загрузке %1</translation>
     </message>
     <message>
-        <location line="+235"/>
+        <location line="+241"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Обновляем базу данных: %1...</translation>
     </message>
@@ -281,7 +281,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-885"/>
+        <location filename="../libalpm.cpp" line="-891"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам нужно выбрать поставщика для пакета %1:
@@ -435,7 +435,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Невозможно зарустить задание в потоке если другое еще работает!</translation>
     </message>
     <message>
-        <location line="+219"/>
+        <location line="+225"/>
         <source>Nothing to download!!!</source>
         <translation type="unfinished">Нечего загружать!!!</translation>
     </message>
@@ -445,7 +445,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Начинаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+324"/>
+        <location line="+328"/>
         <location line="+6"/>
         <location line="+182"/>
         <source>Skipping target: %1</source>
