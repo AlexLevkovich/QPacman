@@ -30,12 +30,14 @@ PackageChangesDialog::~PackageChangesDialog() {
 }
 
 void PackageChangesDialog::install_packages_confirmation(const QStringList & install,const QStringList & remove,qint64,qint64 install_size,qint64 remove_size,bool * answer) {
+    ui->packagesList->clear();
     fill(remove,tr("The following packages will be removed")+" (-"+BytesHumanizer(remove_size).toString()+")",ThemeIcons::get(ThemeIcons::PKG_REMOVED));
     fill(install,(tr("The following packages will be installed")+" (%1%2)").arg((install_size>0)?"+":"").arg(BytesHumanizer(install_size).toString()),ThemeIcons::get(ThemeIcons::PKG_INSTALLED));
     *answer = (exec() == QDialog::Accepted);
 }
 
 void PackageChangesDialog::remove_packages_confirmation(const QStringList & remove,qint64 remove_size,bool * answer) {
+    ui->packagesList->clear();
     fill(remove,tr("The following packages will be removed")+" (-"+BytesHumanizer(remove_size).toString()+")",ThemeIcons::get(ThemeIcons::PKG_REMOVED));
     *answer = (exec() == QDialog::Accepted);
 }
