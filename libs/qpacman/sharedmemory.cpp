@@ -248,7 +248,9 @@ bool SharedMemory::lock() {
             if (errno != EINTR) {
                 if (errno == EDEADLK) {
                     fprintf(stderr,"Error: deadlock detected!\n");
-                    ::exit(122);
+                    ::usleep(100);
+                    errno = EINTR;
+                    continue;
                 }
                 return false;
             }

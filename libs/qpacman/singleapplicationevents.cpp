@@ -340,7 +340,7 @@ void SingleApplicationEvents::addExitEntry(int rc) {
 }
 
 void SingleApplicationEvents::addStartEntry(int &argc,char **argv) {
-    if (argc < 1) {
+    if (argc < 1 || argv == NULL) {
         fprintf(stderr,"Error: incorrect count of input parameters!!!\n");
         shm_obj.close();
         ::exit(70);
