@@ -86,10 +86,6 @@ PackageProcessor::PackageProcessor(ProgressView * view,QAction * cancelAction,Op
     connect(progressView,SIGNAL(rowAdded(QStandardItem *,QStandardItem *)),this,SLOT(on_itemAdded(QStandardItem *,QStandardItem *)),Qt::QueuedConnection);
     if (m_optionalDepsDlg != NULL) connect(m_optionalDepsDlg,&QObject::destroyed,this,[&]() { m_optionalDepsDlg = NULL; });
 
-    pkgChangeDlg.installEventFilter(this);
-    pkgProviderDlg.installEventFilter(this);
-    questionDlg.installEventFilter(this);
-
     if (m_cancelAction != NULL) m_cancelAction->setEnabled(false);
     QMetaObject::invokeMethod(this,"exec_process",Qt::QueuedConnection);
 }
