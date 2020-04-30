@@ -826,7 +826,7 @@ bool Alpm::pkg_equal_cmp(AlpmPackage * pkg1, AlpmPackage * pkg2) {
     if (ret) return false;
     ret = AlpmPackage::pkg_vercmp(pkg1->version(),pkg2->version());
     if (ret) return false;
-    return pkg1->repo().compare(pkg2->repo()) == 0;
+    return !pkg1->repo().compare(pkg2->repo());
 }
 
 bool Alpm::pkg_less_cmp(AlpmPackage * pkg1, AlpmPackage * pkg2) {
@@ -1216,8 +1216,8 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
     while (i.hasNext()) {
         i.next();
         new_pkgs = i.value();
-        std::sort(new_pkgs.begin(),new_pkgs.end(),pkg_equal_cmp);
-        new_pkgs.erase(std::unique(new_pkgs.begin(),new_pkgs.end(),pkg_less_cmp),new_pkgs.end());
+        std::sort(new_pkgs.begin(),new_pkgs.end(),pkg_less_cmp);
+        new_pkgs.erase(std::unique(new_pkgs.begin(),new_pkgs.end(),pkg_equal_cmp),new_pkgs.end());
 
         sel_index = 0;
         provider_question.use_index = 0;
@@ -1266,8 +1266,8 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
     }
 
     add_pkgs.erase(std::remove_if(add_pkgs.begin(),add_pkgs.end(),[](AlpmPackage * pkg){return !pkg;}),add_pkgs.end());
-    std::sort(add_pkgs.begin(),add_pkgs.end(),pkg_equal_cmp);
-    add_pkgs.erase(std::unique(add_pkgs.begin(),add_pkgs.end(),pkg_less_cmp),add_pkgs.end());
+    std::sort(add_pkgs.begin(),add_pkgs.end(),pkg_less_cmp);
+    add_pkgs.erase(std::unique(add_pkgs.begin(),add_pkgs.end(),pkg_equal_cmp),add_pkgs.end());
 
     int startindex = -1;
     int lastindex = -1;
