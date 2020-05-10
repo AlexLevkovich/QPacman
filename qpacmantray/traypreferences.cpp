@@ -129,7 +129,6 @@ void TrayPreferences::checker_error(const QString & error,int err_id) {
 void TrayPreferences::on_actionUpdate_now_triggered() {
     m_blocking_operation = true;
     updateActions();
-    m_tray->updateInProgress();
     if (!Static::startQPacman(QStringList() << "--update",this,SLOT(pacman_finished(int)))) {
         m_blocking_operation = false;
         updateActions();
