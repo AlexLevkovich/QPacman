@@ -333,9 +333,9 @@ void Alpm::operation_question_fn(alpm_question_t * question) {
         case ALPM_QUESTION_REMOVE_PKGS:
             {
                 AlpmList<alpm_pkg_t> namelist(question->remove_pkgs.packages);
-                QString message(QObject::tr("The following package(s) cannot be upgraded due to unresolvable dependencies:\n"));
+                QString message(QObject::tr("The following packages cannot be upgraded due to unresolvable dependencies:\n"));
                 message += namelist.toString(alpm_item_string_fn,QString("     "));
-                message += QObject::tr("Do you want to skip the above package(s) for this upgrade?");
+                message += QObject::tr("Do you want to skip upgrading these packages?");
                 p_alpm->emit_question(message,&answer);
                 question->remove_pkgs.skip = answer?1:0;
                 namelist.detach();

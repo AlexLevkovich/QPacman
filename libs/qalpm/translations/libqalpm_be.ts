@@ -94,16 +94,26 @@
         <translation type="unfinished">%1 ды %2 канфліктуюць (%3-%4). Выдаліць %5?</translation>
     </message>
     <message>
-        <location line="+12"/>
         <source>The following package(s) cannot be upgraded due to unresolvable dependencies:
 </source>
-        <translation type="unfinished">Наступныя пакеты не могуць быць абноўлены з-за непапраўных залежнасцяў:
+        <translation type="obsolete">Наступныя пакеты не могуць быць абноўлены з-за непапраўных залежнасцяў:
+</translation>
+    </message>
+    <message>
+        <source>Do you want to skip the above package(s) for this upgrade?</source>
+        <translation type="obsolete">Вы хочаце прапусціць вышэйзгаданыя пакеты для гэтага абнаўлення?</translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>The following packages cannot be upgraded due to unresolvable dependencies:
+</source>
+        <translation type="unfinished">Наступныя пакеты не могуць быць абноўлены з-за невырашальных залежнасцяў:
 </translation>
     </message>
     <message>
         <location line="+2"/>
-        <source>Do you want to skip the above package(s) for this upgrade?</source>
-        <translation type="unfinished">Вы хочаце прапусціць вышэйзгаданыя пакеты для гэтага абнаўлення?</translation>
+        <source>Do you want to skip upgrading these packages?</source>
+        <translation type="unfinished">Вы хочаце прапусціць абнаўленне гэтых пакетаў?</translation>
     </message>
     <message>
         <location line="+26"/>
