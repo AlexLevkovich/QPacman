@@ -61,12 +61,20 @@ public:
         DO_REINSTALL_ASDEPS = 128
     };
 
+    enum SearchFieldType {
+        DESC = 0,
+        NAME = 1,
+        FILE_NAME = 2,
+        PROVIDER = 3
+    };
+
     class Dependence {
     private:
         QString m_name;
         QString m_version;
         QString m_description;
         CompareOper m_operation;
+        char m_installed;
 
         QString urlParms() const;
 
@@ -91,6 +99,7 @@ public:
         bool isInstalled() const;
         QUrl url(const QString & type) const;
         alpm_depend_t to_alpm_depend() const;
+        static const Dependence fromString(const QString & str);
     };
 
     AlpmPackage();
@@ -148,7 +157,7 @@ public:
     bool isDownloaded(QString * path_pkg_file = NULL) const;
     bool isFile() const;
     //inName - search in name() otherwise - in description()
-    bool containsText(const QString & text,bool inName);
+    bool containsText(const QString & text,SearchFieldType field);
     bool ownedByGroup(const QString & group);
 
     QString toString() const;

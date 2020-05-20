@@ -14,6 +14,12 @@ template<class ForwardIt, class T, class Compare> static ForwardIt binary_search
     return it;
 }
 
+template<class ForwardIt, class T> static ForwardIt binary_search_ex(ForwardIt first, ForwardIt last, const T& value) {
+    ForwardIt it = std::lower_bound(first, last, value);
+    if ((it != last) && (value < *it)) it = last;
+    return it;
+}
+
 QMap <QString,QVector<AlpmPackage *> > AlpmDB::m_packages;
 QMap <QString,QStringList> AlpmDB::m_groups;
 QMap <QString,QMap<AlpmPackage::Dependence,QVector<qint64> > > AlpmDB::m_provides;
@@ -268,7 +274,14 @@ const QMap<AlpmPackage::Dependence,QVector<qint64> > & AlpmDB::provides() const 
 QVector<qint64> AlpmAbstractDB::findCacheIndexesByPackageNameProvides(const AlpmPackage::Dependence & provide) const {
     packages();
 
-    return provides().value(provide,QVector<qint64>());
+    QVector<qint64> ret;
+    QList<AlpmPackage::Dependence> keys = provides().keys();
+    QList<AlpmPackage::Dependence>::const_iterator it = binary_search_ex(keys.begin(),keys.end(),provide);
+    if (it == keys.end()) return ret;
+
+    for (;(*it).isAppropriate(provide) && (it != keys.constEnd());it++) ret += provides()[*it];
+
+    return ret;
 }
 
 bool AlpmAbstractDB::no_version_asc_less(AlpmPackage * item1, AlpmPackage * item2) {

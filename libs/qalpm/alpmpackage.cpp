@@ -7,23 +7,75 @@
 #include "libalpm.h"
 #include "alpmdb.h"
 #include <QByteArray>
+#include <QRectF>
+#include <QPointF>
 #include <AppStreamQt/pool.h>
 #include <AppStreamQt/image.h>
 #include <AppStreamQt/icon.h>
 #include <QDebug>
+#include <limits>
 #include "archivefilesiterator.h"
 
 AppStream::Pool * AlpmPackage::m_pool = NULL;
 QHash<QString, AppStream::Component> AlpmPackage::m_appInfo;
 
-bool operator<(const AlpmPackage::Dependence & dep1, const AlpmPackage::Dependence & dep2) {
+static const qint64 QINT64_MAX = std::numeric_limits<qint64>::max();
+static const qint64 QINT64_MIN = std::numeric_limits<qint64>::min();
+
+class Line {
+public:
+    Line(const AlpmPackage::Dependence & dep) {
+        p1 = QINT64_MIN;
+        p2 = QINT64_MAX;
+        switch (dep.operation()) {
+        case AlpmPackage::LESS:
+        case AlpmPackage::LESS_OR_EQUAL:
+            p2 = (qint64)qHash(dep.version());
+            break;
+        case AlpmPackage::MORE:
+        case AlpmPackage::MORE_OR_EQUAL:
+            p1 = (qint64)qHash(dep.version());
+            break;
+        case AlpmPackage::EQUAL:
+            p1 = p2 = (qint64)qHash(dep.version());
+            break;
+        default:
+            break;
+        }
+    }
+
+    qint64 value() {
+        return (p1 == QINT64_MIN)?p2:p1;
+    }
+
+    bool intersects(const Line &l) {
+        return (p1 < l.p2 && l.p1 < p2);
+    }
+private:
+    qint64 p1;
+    qint64 p2;
+};
+
+static int compare_deps(const AlpmPackage::Dependence & dep1,const AlpmPackage::Dependence & dep2) {
     int ret;
-    if ((ret = dep1.name().compare(dep2.name())) != 0) return (ret < 0);
-    if ((ret = ((int)dep1.operation()) - ((int)dep2.operation())) != 0) return (ret < 0);
-    return (AlpmPackage::pkg_vercmp(dep1.version(),dep2.version()) < 0);
+    if ((ret = dep1.name().compare(dep2.name())) != 0) return ret;
+
+
+    Line line1(dep1);
+    Line line2(dep2);
+
+    if (line1.intersects(line2)) return 0;
+
+    return (int)(line1.value() - line2.value());
 }
 
-AlpmPackage::Dependence::Dependence() {}
+bool operator<(const AlpmPackage::Dependence & dep1, const AlpmPackage::Dependence & dep2) {
+    return (compare_deps(dep1,dep2) < 0);
+}
+
+AlpmPackage::Dependence::Dependence() {
+    init("",UNKNOWN);
+}
 
 AlpmPackage::Dependence::Dependence(const QString & name,CompareOper operation,const QString & version,const QString & description) {
     init(name,operation,version,description);
@@ -38,6 +90,7 @@ void AlpmPackage::Dependence::init(const QString & name,CompareOper operation,co
     m_description = description;
     m_operation = operation;
     if (m_operation == UNKNOWN) m_version.clear();
+    m_installed = 'N';
 }
 
 void AlpmPackage::Dependence::init(AlpmPackage * pkg,CompareOper operation) {
@@ -139,11 +192,15 @@ bool AlpmPackage::Dependence::isAppropriate(const AlpmPackage * pkg) const {
     return isAppropriate(pkg->name(),pkg->version());
 }
 
+const AlpmPackage::Dependence AlpmPackage::Dependence::fromString(const QString & str) {
+    QString name;
+    QString ver;
+    AlpmPackage::CompareOper oper = AlpmPackage::parseNameVersion(str,name,ver);
+    return AlpmPackage::Dependence(name,oper,ver);
+}
+
 bool AlpmPackage::Dependence::isAppropriate(const Dependence & dep) const {
-    if (m_name != dep.name()) return false;
-    if (m_operation == UNKNOWN && dep.operation() != UNKNOWN) return dep.isAppropriate(m_name,m_version);
-    if (m_operation != UNKNOWN && dep.operation() == UNKNOWN) return isAppropriate(dep.name(),dep.version());
-    return ((m_operation == dep.operation()) && (AlpmPackage::pkg_vercmp(dep.version(),m_version) == 0));
+    return !compare_deps(*this,dep);
 }
 
 bool AlpmPackage::Dependence::isAppropriate(const QString & name,const QString & version) const {
@@ -168,15 +225,11 @@ bool AlpmPackage::Dependence::isAppropriate(const QString & name,const QString &
 }
 
 bool AlpmPackage::Dependence::operator==(const AlpmPackage::Dependence & dep) {
-    int ret = name().compare(dep.name());
-    if (ret != 0) return false;
-    ret = ((int)operation()) - ((int)dep.operation());
-    if (ret != 0) return false;
-    return (AlpmPackage::pkg_vercmp(version(),dep.version()) == 0);
+    return !compare_deps(*this,dep);
 }
 
 bool AlpmPackage::Dependence::operator<(const Dependence & dep) {
-    return (*this < dep);
+    return (compare_deps(*this,dep) < 0);
 }
 
 QList<AlpmPackage::Dependence> AlpmPackage::Dependence::findDepends(uint provider_id) const {
@@ -197,12 +250,16 @@ QList<AlpmPackage::Dependence> AlpmPackage::Dependence::findDepends(uint provide
 }
 
 bool AlpmPackage::Dependence::isInstalled() const {
+    if (m_installed != 'N') return (m_installed == 'I');
+
     Alpm * alpm = Alpm::instance();
     if (alpm == NULL) return false;
 
     AlpmDB db = alpm->localDB();
     if (db.findByPackageName(name()).count() > 0) return true;
-    return (db.findCacheIndexesByPackageNameProvides(*this).count() > 0);
+    bool ret = (db.findCacheIndexesByPackageNameProvides(*this).count() > 0);
+    ((AlpmPackage::Dependence *)this)->m_installed = ret?'I':'U';
+    return ret;
 }
 
 QString AlpmPackage::Dependence::urlParms() const {
@@ -735,9 +792,15 @@ QString AlpmPackage::toString() const {
     return name()+"="+version();
 }
 
-bool AlpmPackage::containsText(const QString & text,bool inName) {
+bool AlpmPackage::containsText(const QString & text,SearchFieldType field) {
     if (text.isEmpty()) return true;
-    if (inName) return name().contains(text,Qt::CaseInsensitive);
+    if (field == FILE_NAME) return name().contains(text,Qt::CaseInsensitive);
+    else if (field == PROVIDER) {
+        for (Dependence provide: m_provides) {
+            if (provide.isAppropriate(Dependence::fromString(text))) return true;
+        }
+        return false;
+    }
     return description().contains(text,Qt::CaseInsensitive);
 }
 
@@ -891,3 +954,4 @@ QUrl AlpmPackage::icon_url(const QString & name) const {
 
     return url64.isEmpty()?url:url64;
 }
+

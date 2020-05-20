@@ -160,7 +160,7 @@ QList<int> PacmanItemModel::filterRecords(const QString & text,CategoryToolButto
     for (int i=0;i<rows.size();i++) {
         bool text_is_ok = false;
         if (text.isEmpty() && packageNames.isEmpty() && cItemId == CategoryToolButton::IS_FILE_NAME) text_is_ok = true;
-        else text_is_ok = (cItemId == CategoryToolButton::IS_FILE_NAME)?(packageNames.indexOf(rows[i]) >= 0):rows[i]->containsText(text,cItemId);
+        else text_is_ok = (cItemId == CategoryToolButton::IS_FILE_NAME)?(packageNames.indexOf(rows[i]) >= 0):rows[i]->containsText(text,(AlpmPackage::SearchFieldType)cItemId);
 
         if (group.isEmpty()) {
             if (((fItemId == FilterToolButton::IS_INSTALLED) && !rows[i]->isInstalled()) || !text_is_ok || ((rows[i]->repo() != repo) && !repo.isEmpty() && (rows[i]->repo() != Static::RepoAll_Str))) list.append(i);
@@ -199,6 +199,12 @@ QModelIndex PacmanItemModel::firstFoundIndexByDep(const AlpmPackage::Dependence 
     if (indexes.count() <= 0) {
         indexes = findCacheIndexesByPackageNameProvides(pkg);
         if (indexes.count() <= 0) return QModelIndex();
+        if (pkg.isInstalled()) {
+            const QVector<AlpmPackage *> & rows = packages();
+            for (qint64 index: indexes) {
+                if (rows[index]->isInstalled()) return this->index(index,Name);
+            }
+        }
     }
 
     return index(indexes[0],Name);

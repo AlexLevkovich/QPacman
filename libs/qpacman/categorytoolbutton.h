@@ -7,6 +7,7 @@
 #define CATEGORYTOOLBUTTON_H
 
 #include "combotoolbutton.h"
+#include "alpmpackage.h"
 #include <QMenu>
 
 class CategoryToolButton : public ComboToolButton {
@@ -14,10 +15,10 @@ class CategoryToolButton : public ComboToolButton {
 public:
     enum ItemId {
         IS_UNKNOWN = -1,
-        IS_DESC = 0,
-        IS_NAME = 1,
-        IS_FILE_NAME = 2,
-        IS_PROVIDER = 3
+        IS_DESC = AlpmPackage::DESC,
+        IS_NAME = AlpmPackage::NAME,
+        IS_FILE_NAME = AlpmPackage::FILE_NAME,
+        IS_PROVIDER = AlpmPackage::PROVIDER
     };
 
     explicit CategoryToolButton(QWidget *parent = 0);
