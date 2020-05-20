@@ -794,14 +794,16 @@ QString AlpmPackage::toString() const {
 
 bool AlpmPackage::containsText(const QString & text,SearchFieldType field) {
     if (text.isEmpty()) return true;
-    if (field == FILE_NAME) return name().contains(text,Qt::CaseInsensitive);
+    if (field == NAME) return name().contains(text,Qt::CaseInsensitive);
     else if (field == PROVIDER) {
         for (Dependence provide: m_provides) {
             if (provide.isAppropriate(Dependence::fromString(text))) return true;
         }
         return false;
     }
-    return description().contains(text,Qt::CaseInsensitive);
+    else if (field == DESC) return description().contains(text,Qt::CaseInsensitive);
+
+    return false;
 }
 
 AlpmPackage & AlpmPackage::operator=(const AlpmPackage &other) {
