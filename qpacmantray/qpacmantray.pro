@@ -121,8 +121,11 @@ transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
 desktop.files = $$PWD/qpacmantray.desktop
 desktop.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/applications/
 
+xdg.files = $$PWD/qpacmantray_xdg.desktop
+xdg.path = $$INSTALL_ROOT/etc/xdg/autostart/
+
 icon.files = $$PWD/pics/qpacmantray.svg
 icon.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/pixmaps/
 
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/bin/
-INSTALLS += target transinstall desktop icon
+INSTALLS += target transinstall desktop icon xdg

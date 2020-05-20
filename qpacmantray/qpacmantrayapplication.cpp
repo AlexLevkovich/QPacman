@@ -42,6 +42,8 @@ void QPacmanTrayApplication::secondInstanceAttempted(const QStringList &) {
 }
 
 void QPacmanTrayApplication::putWindowOnTop(QMainWindow * wnd) {
+    QStringList args = QApplication::arguments();
+    if (args.count() >= 2 && args[1] == "--noguionstart") return;
     wnd->setWindowFlags(wnd->windowFlags() | Qt::WindowStaysOnTopHint);
     m_wasTopMost = true;
     wnd->setVisible(true);

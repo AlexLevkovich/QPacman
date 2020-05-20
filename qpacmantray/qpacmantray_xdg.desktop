@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=2.0
+Name[be]=Трэй для qpacman
+Name[ru]=Трей для qpacman
+Name=qpacman's tray
+Comment[be]=Запуск трэя для qpacman
+Comment[ru]=Запуск трея для qpacman
+Comment=Start qpacman's tray application
+Exec=qpacmantray --noguionstart
+Icon=qpacmantray
+Terminal=false
+Type=Application
+X-GNOME-Autostart-Phase=Applications
+X-KDE-autostart-after=panel
