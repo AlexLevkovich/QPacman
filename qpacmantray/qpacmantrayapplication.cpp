@@ -36,14 +36,13 @@ void QPacmanTrayApplication::initMainWindow() {
     connect(m_mainWindow,SIGNAL(showRequest()),this,SLOT(putMainWindowOnTop()));
 }
 
-void QPacmanTrayApplication::secondInstanceAttempted(const QStringList &) {
+void QPacmanTrayApplication::secondInstanceAttempted(const QStringList & args) {
     if (m_mainWindow == NULL) initMainWindow();
-    putWindowOnTop(m_mainWindow);
+    putWindowOnTop((args.count() >= 1 && args[0] == "--noguionstart")?NULL:m_mainWindow);
 }
 
 void QPacmanTrayApplication::putWindowOnTop(QMainWindow * wnd) {
-    QStringList args = QApplication::arguments();
-    if (args.count() >= 2 && args[1] == "--noguionstart") return;
+    if (wnd == NULL) return;
     wnd->setWindowFlags(wnd->windowFlags() | Qt::WindowStaysOnTopHint);
     m_wasTopMost = true;
     wnd->setVisible(true);
