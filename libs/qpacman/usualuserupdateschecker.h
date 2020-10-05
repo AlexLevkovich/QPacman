@@ -12,6 +12,27 @@
 class Static;
 class AlpmPackage;
 
+class NetworkConfigurationChecker : public QObject {
+    Q_OBJECT
+public:
+    NetworkConfigurationChecker(QObject * parent = NULL);
+    void start();
+    void stop();
+    bool isOnline();
+
+private slots:
+    void process();
+
+signals:
+    void onlineStateChanged(bool online);
+
+private:
+    bool status();
+
+    QTimer m_timer;
+    bool m_is_online;
+};
+
 class UsualUserUpdatesChecker : public QObject {
     Q_OBJECT
 public:
@@ -33,9 +54,10 @@ private slots:
 private:
     QString m_last_error;
     QStringList m_updates;
-    QNetworkConfigurationManager network_manager;
+    NetworkConfigurationChecker network_checker;
     QTimer m_timer;
     bool m_started;
 };
+
 
 #endif // USUALUSERUPDATESCHECKER_H

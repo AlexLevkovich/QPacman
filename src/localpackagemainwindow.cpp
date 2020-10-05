@@ -97,14 +97,13 @@ void LocalPackageMainWindow::onSelectionChanged(const QItemSelection & /*selecte
 
 void LocalPackageMainWindow::onActionInstall() {
     ui->actionInstall->setEnabled(false);
-    depsInstall->setVisible(false);
     view_group->setCurrent(ui->progressView);
 
     if (model->rowCount() > 0) {
         ui->actionCancel->setVisible(true);
         ui->actionInstall->setVisible(false);
-        depsInstall->setVisible(true);
-        forceInstall->setVisible(true);
+        depsInstall->setVisible(false);
+        forceInstall->setVisible(false);
         PackageInstaller * installer = new PackageInstaller(model->allrows(),forceInstall->isChecked()?model->allrows():QList<AlpmPackage *>(),depsInstall->isChecked(),ui->progressView,ui->actionCancel,NULL,NULL);
         connect(installer,SIGNAL(completed(ThreadRun::RC)),this,SLOT(operation_completed(ThreadRun::RC)));
         connect(installer,SIGNAL(logString(const QString &)),this,SLOT(logString(const QString &)));
@@ -112,9 +111,8 @@ void LocalPackageMainWindow::onActionInstall() {
 }
 
 void LocalPackageMainWindow::operation_completed(ThreadRun::RC) {
+    ui->actionCancel->setVisible(true);
     ui->actionCancel->setEnabled(true);
-    depsInstall->setVisible(false);
-    forceInstall->setVisible(false);
     ui->actionLog->setVisible(true);
     connect(ui->actionCancel,SIGNAL(triggered()),this,SLOT(close()));
     ui->actionCancel->setText(tr("Quit"));

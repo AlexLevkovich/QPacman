@@ -10,15 +10,51 @@
 #include "alpmdb.h"
 #include <QEventLoop>
 #include <QSettings>
+#include <QNetworkInterface>
+
+NetworkConfigurationChecker::NetworkConfigurationChecker(QObject * parent) : QObject(parent) {
+    m_is_online = status();
+    m_timer.setInterval(1000);
+    connect(&m_timer,SIGNAL(timeout()),this,SLOT(process()));
+}
+
+void NetworkConfigurationChecker::start() {
+    m_is_online = status();
+    m_timer.start();
+}
+
+void NetworkConfigurationChecker::stop() {
+    m_timer.stop();
+}
+
+bool NetworkConfigurationChecker::isOnline() {
+    return m_is_online;
+}
+
+void NetworkConfigurationChecker::process() {
+    if (status() != m_is_online) {
+        m_is_online = !m_is_online;
+        emit onlineStateChanged(m_is_online);
+    }
+}
+
+bool NetworkConfigurationChecker::status() {
+    for (QNetworkInterface ni: QNetworkInterface::allInterfaces()) {
+        if (ni.flags() & QNetworkInterface::IsLoopBack) continue;
+        if (ni.flags() & QNetworkInterface::IsRunning) return true;
+    }
+    return false;
+}
 
 UsualUserUpdatesChecker::UsualUserUpdatesChecker(QObject * parent) : QObject(parent) {
     m_started = false;
     m_timer.setSingleShot(true);
     m_timer.setInterval(AlpmConfig::downloaderTimeout());
+    network_checker.start();
 
     connect(this,SIGNAL(ok(const QStringList &)),this,SLOT(deleteLater()),Qt::QueuedConnection);
     connect(this,SIGNAL(error(const QString &,int)),this,SLOT(deleteLater()),Qt::QueuedConnection);
-    connect(&network_manager,&QNetworkConfigurationManager::onlineStateChanged,[&](bool online) { if (online && !m_started) QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection); });
+    connect(&network_checker,&NetworkConfigurationChecker::onlineStateChanged,[&](bool online) { if (online && !m_started) QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection); });
     if (m_timer.interval() > 0) {
         connect(&m_timer,&QTimer::timeout,[&]() {if (!m_started) {m_started = true;QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection);}});
         m_timer.start();
@@ -33,8 +69,9 @@ void UsualUserUpdatesChecker::process() {
         return;
     }
 
-    if (!m_started && !network_manager.isOnline()) return;
+    if (!m_started && !network_checker.isOnline()) return;
 
+    network_checker.stop();
     m_timer.stop();
     m_started = true;
 

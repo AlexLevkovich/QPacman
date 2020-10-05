@@ -248,7 +248,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Обновляем базу данных: %1...</translation>
     </message>
     <message>
-        <location filename="../multidownloader.cpp" line="+181"/>
+        <location filename="../multidownloader.cpp" line="+180"/>
         <location line="+40"/>
         <source>Nothing to write!!!</source>
         <translation type="unfinished"></translation>
@@ -581,7 +581,7 @@ Do you want to delete it?</source>
 <context>
     <name>MultiDownloader</name>
     <message>
-        <location filename="../multidownloader.cpp" line="+153"/>
+        <location filename="../multidownloader.cpp" line="+152"/>
         <location line="+336"/>
         <source>Downloading already has been started!!!</source>
         <translation type="unfinished">Загрузка уже начата!!!</translation>
@@ -633,7 +633,7 @@ Do you want to delete it?</source>
 <context>
     <name>SimpleDownloader</name>
     <message>
-        <location filename="../simpledownloader.cpp" line="+105"/>
+        <location filename="../simpledownloader.cpp" line="+103"/>
         <source>Downloading already has been started!!!</source>
         <translation type="unfinished">Загрузка уже начата!!!</translation>
     </message>

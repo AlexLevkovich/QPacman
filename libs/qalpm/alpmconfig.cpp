@@ -79,18 +79,18 @@ bool AlpmConfig::setConfPath(const QString & conf_filepath) {
     }
     usesyslog = ini_file.value("options/UseSyslog",1).toInt();
     disabledownloadtimeout = (bool)ini_file.value("options/DisableDownloadTimeout",0).toInt();
-    siglevel = ini_file.value("options/SigLevel","Never").toString().trimmed().split(" ",QString::SkipEmptyParts);
-    localfilesiglevel = ini_file.value("options/LocalFileSigLevel",siglevel.join(" ")).toString().trimmed().split(" ",QString::SkipEmptyParts);
-    remotefilesiglevel = ini_file.value("options/RemoteFileSigLevel",siglevel.join(" ")).toString().trimmed().split(" ",QString::SkipEmptyParts);
-    holdpkgs2 = ini_file.value("options/HoldPkg","").toString().split(" ",QString::SkipEmptyParts);
-    cachedirs = ini_file.value("options/CacheDir",CACHEDIR).toString().split(" ",QString::SkipEmptyParts);
-    syncfirst = ini_file.value("options/SyncFirst","").toString().split(" ",QString::SkipEmptyParts);
+    siglevel = ini_file.value("options/SigLevel","Never").toString().trimmed().split(QString::fromLatin1(" "),Qt::SkipEmptyParts);
+    localfilesiglevel = ini_file.value("options/LocalFileSigLevel",siglevel.join(" ")).toString().trimmed().split(" ",Qt::SkipEmptyParts);
+    remotefilesiglevel = ini_file.value("options/RemoteFileSigLevel",siglevel.join(" ")).toString().trimmed().split(" ",Qt::SkipEmptyParts);
+    holdpkgs2 = ini_file.value("options/HoldPkg","").toString().split(" ",Qt::SkipEmptyParts);
+    cachedirs = ini_file.value("options/CacheDir",CACHEDIR).toString().split(" ",Qt::SkipEmptyParts);
+    syncfirst = ini_file.value("options/SyncFirst","").toString().split(" ",Qt::SkipEmptyParts);
     if (getuid() != 0) cachedirs.prepend(QDir::tempPath());
-    hookdirs = ini_file.value("options/HookDir",HOOKDIR).toString().split(" ",QString::SkipEmptyParts);
-    ignoregroups = ini_file.value("options/IgnoreGroup","").toString().split(" ",QString::SkipEmptyParts);
-    ignorepkgs = ini_file.value("options/IgnorePkg","").toString().split(" ",QString::SkipEmptyParts);
-    noextract = ini_file.value("options/NoExtract","").toString().split(" ",QString::SkipEmptyParts);
-    noupgrade = ini_file.value("options/NoUpgrade","").toString().split(" ",QString::SkipEmptyParts);
+    hookdirs = ini_file.value("options/HookDir",HOOKDIR).toString().split(" ",Qt::SkipEmptyParts);
+    ignoregroups = ini_file.value("options/IgnoreGroup","").toString().split(" ",Qt::SkipEmptyParts);
+    ignorepkgs = ini_file.value("options/IgnorePkg","").toString().split(" ",Qt::SkipEmptyParts);
+    noextract = ini_file.value("options/NoExtract","").toString().split(" ",Qt::SkipEmptyParts);
+    noupgrade = ini_file.value("options/NoUpgrade","").toString().split(" ",Qt::SkipEmptyParts);
 
     for (int i=0;i<groups.count();i++) {
         if (groups[i] == "options") continue;
@@ -298,11 +298,11 @@ AlpmConfig::Repo::Repo(const QString & name,const QString & arch,QSettings * set
         return;
     }
 
-    if (!config_parse_siglevel(settings->value(QString("%1/SigLevel").arg(name),def_siglevel.join(" ")).toString().trimmed().split(" ",QString::SkipEmptyParts),m_siglevel,error)) {
+    if (!config_parse_siglevel(settings->value(QString("%1/SigLevel").arg(name),def_siglevel.join(" ")).toString().trimmed().split(" ",Qt::SkipEmptyParts),m_siglevel,error)) {
         m_valid = false;
         return;
     }
-    QStringList values = settings->value(QString("%1/Usage").arg(name),"All").toString().trimmed().split(" ",QString::SkipEmptyParts);
+    QStringList values = settings->value(QString("%1/Usage").arg(name),"All").toString().trimmed().split(" ",Qt::SkipEmptyParts);
     QString value;
     for (int i=0;i<values.count();i++) {
         value = values[i].toLower().trimmed();

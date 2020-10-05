@@ -5,6 +5,7 @@
 #include <QPaintEvent>
 #include <QApplication>
 #include <QPixmapCache>
+#include <QPainterPath>
 #include <QDebug>
 
 const double WaitIndicator::m_innerRadius = 0.8;

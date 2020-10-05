@@ -9,7 +9,7 @@
 #include <alpm.h>
 #include <QStringList>
 #include <QUrl>
-#include <QHash>
+#include <QMultiHash>
 #include <QDateTime>
 #include <QRegularExpression>
 #include "alpmlist.h"
@@ -214,7 +214,7 @@ private:
     off_t m_pkg_isize;
 
     static AppStream::Pool * m_pool;
-    static QHash<QString, AppStream::Component> m_appInfo;
+    static QMultiHash<QString, AppStream::Component> m_appInfo;
 
     friend class Alpm;
     friend class AlpmDB;

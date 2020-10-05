@@ -63,6 +63,8 @@ public:
         pid = -1;
     }
 
+    virtual ~StartEntry() {}
+
     EntryType type() {
         return START;
     }
@@ -167,6 +169,8 @@ public:
     EntryType type() {
         return END;
     }
+
+    virtual ~EndEntry() {}
 
     bool add(SharedMemory * p_shm) {
         bool ok;

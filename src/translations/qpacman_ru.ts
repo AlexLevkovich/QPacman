@@ -67,7 +67,7 @@
         <translation type="unfinished">Поверх файлов</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+73"/>
         <source>Quit</source>
         <translation type="unfinished">Выход</translation>
     </message>

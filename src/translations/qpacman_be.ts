@@ -67,7 +67,7 @@
         <translation type="unfinished">Паверх файлаў</translation>
     </message>
     <message>
-        <location line="+75"/>
+        <location line="+73"/>
         <source>Quit</source>
         <translation type="unfinished">Выйсцi</translation>
     </message>

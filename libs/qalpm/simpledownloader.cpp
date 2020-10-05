@@ -5,7 +5,6 @@
 
 #include "simpledownloader.h"
 #include <QNetworkAccessManager>
-#include <QNetworkConfigurationManager>
 #include <QFileInfo>
 #include <QDir>
 #include <QDateTime>
@@ -20,7 +19,6 @@ SimpleDownloader::SimpleDownloader(const QUrl & url,const QString & outputName) 
     m_timeout = 0;
 
     m_manager = new QNetworkAccessManager(this);
-    m_manager->setConfiguration(QNetworkConfigurationManager().defaultConfiguration());
     m_outputName = outputName;
     if (!outputName.isEmpty() && !url.fileName().isEmpty() && QFileInfo(outputName).isDir()) {
         m_outputName = QDir(m_outputName).path()+QDir::separator()+url.fileName();
@@ -136,7 +134,7 @@ void SimpleDownloader::private_start() {
     if (m_reply == NULL) return;
 
     connect(m_reply,SIGNAL(metaDataChanged()),this,SLOT(metaDataChanged()));
-    connect(m_reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(was_error(QNetworkReply::NetworkError)));
+    connect(m_reply,SIGNAL(errorOccurred(QNetworkReply::NetworkError)),this,SLOT(was_error(QNetworkReply::NetworkError)));
     connect(m_reply,SIGNAL(finished()),this,SLOT(get_finished()));
     connect(m_reply,SIGNAL(readyRead()),this,SLOT(get_readyRead()));
     connect(m_reply,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(get_downloadProgress(qint64,qint64)));

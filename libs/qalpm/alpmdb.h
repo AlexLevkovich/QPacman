@@ -50,7 +50,7 @@ private:
 class AlpmDB : public AlpmAbstractDB {
 public:
     AlpmDB(const AlpmDB & db);
-    ~AlpmDB();
+    virtual ~AlpmDB();
     bool isValid() const;
     QString name() const;
     bool update(bool force = false);

@@ -47,7 +47,7 @@ void PackageChangesDialog::on_buttonBox_accepted() {
 }
 
 void PackageChangesDialog::on_buttonBox_rejected() {
-    reject_requested();
+    reject();
 }
 
 QTreeWidgetItem * PackageChangesDialog::fill(const QStringList & packages,const QString & labelString,const QIcon & icon) {
@@ -76,8 +76,4 @@ QTreeWidgetItem * PackageChangesDialog::fill(const QStringList & packages,const 
     root_item->setExpanded(true);
 
     return root_item;
-}
-
-void PackageChangesDialog::reject_requested() {
-    reject();
 }

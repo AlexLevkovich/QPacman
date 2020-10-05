@@ -497,7 +497,7 @@ QLabel * LabelTextObject::inputLabel() {
 
 QPixmap LabelTextObject::pixmap() const {
     if (m_widget == NULL) return QPixmap();
-    return *((LabelTextObject *)this)->inputLabel()->pixmap();
+    return ((LabelTextObject *)this)->inputLabel()->pixmap(Qt::ReturnByValue);
 }
 
 void LabelTextObject::setPixmap(const QPixmap & pix) {

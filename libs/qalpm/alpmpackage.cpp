@@ -17,7 +17,7 @@
 #include "archivefilesiterator.h"
 
 AppStream::Pool * AlpmPackage::m_pool = NULL;
-QHash<QString, AppStream::Component> AlpmPackage::m_appInfo;
+QMultiHash<QString, AppStream::Component> AlpmPackage::m_appInfo;
 
 static const qint64 QINT64_MAX = std::numeric_limits<qint64>::max();
 static const qint64 QINT64_MIN = std::numeric_limits<qint64>::min();
@@ -925,7 +925,7 @@ QUrl AlpmPackage::iconUrl() const {
         for (const AppStream::Component &app : apps) {
             const QStringList pkgNames = app.packageNames();
             for (const QString &pkgName : pkgNames) {
-                m_appInfo.insertMulti(pkgName, app);
+                m_appInfo.insert(pkgName, app);
             }
         }
     }

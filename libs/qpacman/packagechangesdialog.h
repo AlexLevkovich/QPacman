@@ -24,7 +24,6 @@ public:
 protected slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
-    void reject_requested();
     void install_packages_confirmation(const QStringList & install,const QStringList & remove,qint64 dl_size,qint64 install_size,qint64 remove_size,bool * answer);
     void remove_packages_confirmation(const QStringList & remove,qint64 remove_size,bool * answer);
 

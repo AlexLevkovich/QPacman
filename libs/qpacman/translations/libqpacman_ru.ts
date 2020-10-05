@@ -446,7 +446,7 @@ Are you sure?</source>
 <context>
     <name>UsualUserUpdatesChecker</name>
     <message>
-        <location filename="../usualuserupdateschecker.cpp" line="+31"/>
+        <location filename="../usualuserupdateschecker.cpp" line="+67"/>
         <source>Alpm library is not initialized!</source>
         <translation type="unfinished">Библиотека Alpm не проинициализирована!</translation>
     </message>

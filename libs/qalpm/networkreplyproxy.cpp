@@ -93,7 +93,7 @@ void NetworkReplyProxy::applyMetaData(bool signal) {
 
 void NetworkReplyProxy::errorInternal(QNetworkReply::NetworkError _error) {
     setError(_error,m_reply->errorString());
-    emit error(_error);
+    emit errorOccurred(_error);
 }
 
 void NetworkReplyProxy::readInternal() {
@@ -130,6 +130,6 @@ void NetworkReplyProxy::setTimerInterval(int value) {
 void NetworkReplyProxy::timeout() {
     m_timer.stop();
     setError(QNetworkReply::TimeoutError,tr("Timeout interval is reached because of long device inactivity!"));
-    emit error(QNetworkReply::TimeoutError);
+    emit errorOccurred(QNetworkReply::TimeoutError);
     abort();
 }

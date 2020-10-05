@@ -10,7 +10,6 @@
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QDir>
-#include <QNetworkConfigurationManager>
 #include <QNetworkAccessManager>
 #include "networkreplyproxy.h"
 
@@ -315,7 +314,6 @@ MultiDownloader::MultiDownloader(const QUrl & url,int threads_count,const QStrin
     m_timeout = 0;
 
     m_manager = new QNetworkAccessManager(this);
-    m_manager->setConfiguration(QNetworkConfigurationManager().defaultConfiguration());
     QString m_outputName = outputName;
     if (!outputName.isEmpty() && !url.fileName().isEmpty() && QFileInfo(outputName).isDir()) {
         m_outputName = QDir(m_outputName).path()+QDir::separator()+url.fileName();
@@ -421,7 +419,7 @@ void MultiDownloader::private_start() {
 
     m_reply->setProperty("type","main");
     connect(m_reply,SIGNAL(metaDataChanged()),this,SLOT(mainMetaDataChanged()));
-    connect(m_reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(was_error(QNetworkReply::NetworkError)));
+    connect(m_reply,SIGNAL(errorOccurred(QNetworkReply::NetworkError)),this,SLOT(was_error(QNetworkReply::NetworkError)));
     connect(m_reply,&QNetworkReply::sslErrors,[=]() { m_reply->ignoreSslErrors(); });
 }
 
