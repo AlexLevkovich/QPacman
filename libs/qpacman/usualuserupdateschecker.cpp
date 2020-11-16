@@ -11,6 +11,7 @@
 #include <QEventLoop>
 #include <QSettings>
 #include <QNetworkInterface>
+#include <QCoreApplication>
 
 NetworkConfigurationChecker::NetworkConfigurationChecker(QObject * parent) : QObject(parent) {
     m_is_online = status();
@@ -48,18 +49,21 @@ bool NetworkConfigurationChecker::status() {
 
 UsualUserUpdatesChecker::UsualUserUpdatesChecker(QObject * parent) : QObject(parent) {
     m_started = false;
-    m_timer.setSingleShot(true);
-    m_timer.setInterval(AlpmConfig::downloaderTimeout());
     network_checker.start();
 
+    connect(qApp,SIGNAL(aboutToQuit()),this,SLOT(aboutToQuit()));
     connect(this,SIGNAL(ok(const QStringList &)),this,SLOT(deleteLater()),Qt::QueuedConnection);
     connect(this,SIGNAL(error(const QString &,int)),this,SLOT(deleteLater()),Qt::QueuedConnection);
     connect(&network_checker,&NetworkConfigurationChecker::onlineStateChanged,[&](bool online) { if (online && !m_started) QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection); });
-    if (m_timer.interval() > 0) {
-        connect(&m_timer,&QTimer::timeout,[&]() {if (!m_started) {m_started = true;QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection);}});
-        m_timer.start();
-    }
     QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection);
+}
+
+void UsualUserUpdatesChecker::aboutToQuit() {
+    if (!m_started) {
+        network_checker.stop();
+        emit ok(QStringList());
+        return;
+    }
 }
 
 void UsualUserUpdatesChecker::process() {
@@ -69,10 +73,13 @@ void UsualUserUpdatesChecker::process() {
         return;
     }
 
-    if (!m_started && !network_checker.isOnline()) return;
+    if (m_started) {
+        network_checker.stop();
+        return;
+    }
+    if (!network_checker.isOnline()) return;
 
     network_checker.stop();
-    m_timer.stop();
     m_started = true;
 
     emit database_updating();

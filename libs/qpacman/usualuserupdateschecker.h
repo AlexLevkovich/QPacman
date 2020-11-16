@@ -50,12 +50,12 @@ signals:
 
 private slots:
     void process();
+    void aboutToQuit();
 
 private:
     QString m_last_error;
     QStringList m_updates;
     NetworkConfigurationChecker network_checker;
-    QTimer m_timer;
     bool m_started;
 };
 

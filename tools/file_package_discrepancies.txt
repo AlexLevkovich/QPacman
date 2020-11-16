@@ -1,0 +1,29 @@
+dir=/usr/share
+count=8
+output="/root/output.txt"
+processing() {    
+   local pkg=    
+   local name="$1"
+   local output="$2"
+   local res="`pkgfile -q "$name"`"
+   [[ -z $res ]] && {        
+       echo $name: no package found >> $output
+       return 0    
+   }    
+   local inst=0
+   for pkg in $res
+   do
+      pacman -Qi $pkg >/dev/null 2>&1 && inst=1
+   done
+   [[ $inst -eq 0 ]] && echo $res >> $output
+}
+rm -f $output
+find $dir -type f | while read name
+do     
+    while true
+    do   
+       job_list=($(jobs processing 2>/dev/null))
+       [[ $(($count-${#job_list[@]})) -le 0 ]] && sleep 0.1 || break
+    done
+    processing "$name" "$output" & 
+done
