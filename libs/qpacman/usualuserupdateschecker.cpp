@@ -21,6 +21,7 @@ NetworkConfigurationChecker::NetworkConfigurationChecker(QObject * parent) : QOb
 
 void NetworkConfigurationChecker::start() {
     m_is_online = status();
+    QMetaObject::invokeMethod(this,"onlineStateChanged",Qt::QueuedConnection,Q_ARG(bool,m_is_online));
     m_timer.start();
 }
 
@@ -41,21 +42,21 @@ void NetworkConfigurationChecker::process() {
 
 bool NetworkConfigurationChecker::status() {
     for (QNetworkInterface ni: QNetworkInterface::allInterfaces()) {
-        if (ni.flags() & QNetworkInterface::IsLoopBack) continue;
-        if (ni.flags() & QNetworkInterface::IsRunning) return true;
+        if (ni.flags().testFlag(QNetworkInterface::IsLoopBack)) continue;
+        if (ni.flags().testFlag(QNetworkInterface::IsRunning)) return true;
     }
     return false;
 }
 
 UsualUserUpdatesChecker::UsualUserUpdatesChecker(QObject * parent) : QObject(parent) {
     m_started = false;
-    network_checker.start();
 
     connect(qApp,SIGNAL(aboutToQuit()),this,SLOT(aboutToQuit()));
     connect(this,SIGNAL(ok(const QStringList &)),this,SLOT(deleteLater()),Qt::QueuedConnection);
     connect(this,SIGNAL(error(const QString &,int)),this,SLOT(deleteLater()),Qt::QueuedConnection);
-    connect(&network_checker,&NetworkConfigurationChecker::onlineStateChanged,[&](bool online) { if (online && !m_started) QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection); });
-    QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection);
+    connect(&network_checker,&NetworkConfigurationChecker::onlineStateChanged,[&](bool online) {if (online) QMetaObject::invokeMethod(this,"process",Qt::QueuedConnection); });
+
+    network_checker.start();
 }
 
 void UsualUserUpdatesChecker::aboutToQuit() {
