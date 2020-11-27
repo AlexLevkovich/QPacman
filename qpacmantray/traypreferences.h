@@ -33,10 +33,10 @@ protected:
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
-    void on_actionCheck_for_updates_triggered();
-    void on_actionUpdate_now_triggered();
-    void on_actionQuit_triggered();
-    void on_actionLoad_QPacman_triggered();
+    void onCheckForUpdatesTriggered();
+    void onUpdateNowTriggered();
+    void onQuitTriggered();
+    void onLoadQPacmanTriggered();
     void checker_ok(const QStringList & packages);
     void checker_error(const QString & error,int err_id);
     void pacman_finished(int code);

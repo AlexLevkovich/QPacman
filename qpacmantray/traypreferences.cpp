@@ -46,11 +46,11 @@ TrayPreferences::TrayPreferences(QWidget *parent) : QMainWindow(parent), ui(new 
     ui->categoryList->select(ui->trayOptions);
 
     connect(actionPreferences,SIGNAL(triggered()),this,SIGNAL(showRequest()));
-    connect(actionCheck_for_updates,SIGNAL(triggered()),this,SLOT(on_actionCheck_for_updates_triggered()));
-    connect(actionUpdate_now,SIGNAL(triggered()),this,SLOT(on_actionUpdate_now_triggered()));
-    connect(actionLoad_QPacman,SIGNAL(triggered()),this,SLOT(on_actionLoad_QPacman_triggered()));
-    connect(actionQuit,SIGNAL(triggered()),this,SLOT(on_actionQuit_triggered()));
-    connect(&m_timer,SIGNAL(timeout()),this,SLOT(on_actionCheck_for_updates_triggered()));
+    connect(actionCheck_for_updates,SIGNAL(triggered()),this,SLOT(onCheckForUpdatesTriggered()));
+    connect(actionUpdate_now,SIGNAL(triggered()),this,SLOT(onUpdateNowTriggered()));
+    connect(actionLoad_QPacman,SIGNAL(triggered()),this,SLOT(onLoadQPacmanTriggered()));
+    connect(actionQuit,SIGNAL(triggered()),this,SLOT(onQuitTriggered()));
+    connect(&m_timer,SIGNAL(timeout()),this,SLOT(onCheckForUpdatesTriggered()));
     connect(qApp,SIGNAL(qpacmanStarted(const QStringList &)),this,SLOT(qpacmanStarted(const QStringList &)));
     connect(qApp,SIGNAL(qpacmanEnded(const QStringList &,qint64)),this,SLOT(qpacmanEnded(const QStringList &,qint64)));
     connect(Alpm::instance(),SIGNAL(locking_changed(const QString &,bool)),this,SLOT(updateActions(const QString &,bool)));
@@ -99,7 +99,7 @@ void TrayPreferences::updateActions(const QString &,bool locked) {
     }
 }
 
-void TrayPreferences::on_actionCheck_for_updates_triggered() {
+void TrayPreferences::onCheckForUpdatesTriggered() {
     if (m_blocking_operation) return;
 
     m_blocking_operation = true;
@@ -126,7 +126,7 @@ void TrayPreferences::checker_error(const QString & error,int err_id) {
     if (tray_visible) m_timer.start(ui->trayOptions->errInterval()*60000);
 }
 
-void TrayPreferences::on_actionUpdate_now_triggered() {
+void TrayPreferences::onUpdateNowTriggered() {
     m_blocking_operation = true;
     updateActions();
     if (!Static::startQPacman(QStringList() << "--update",this,SLOT(pacman_finished(int)))) {
@@ -142,11 +142,11 @@ void TrayPreferences::pacman_finished(int rc) {
     qpacmanEnded(QStringList(),rc);
 }
 
-void TrayPreferences::on_actionQuit_triggered() {
+void TrayPreferences::onQuitTriggered() {
     qApp->quit();
 }
 
-void TrayPreferences::on_actionLoad_QPacman_triggered() {
+void TrayPreferences::onLoadQPacmanTriggered() {
     Static::startQPacman();
 }
 
@@ -160,5 +160,5 @@ void TrayPreferences::qpacmanEnded(const QStringList & parms,qint64 rc) {
         return;
     }
     m_tray->setVisible(true);
-    on_actionCheck_for_updates_triggered();
+    onCheckForUpdatesTriggered();
 }
