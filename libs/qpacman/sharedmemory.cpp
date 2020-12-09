@@ -229,11 +229,24 @@ bool SharedMemory::_detach() {
 bool SharedMemory::_is_locked() {
     if (me_locked) return true;
 
+    off_t pos = this->pos();
+    if (pos != 0) setPos(0);
+    else pos = (off_t) -1;
     if ((::lockf(m_id,F_TEST,0) == -1) && (errno == EACCES || errno == EAGAIN)) {
         errno = 0;
+        if (pos != ((off_t) -1)) setPos(pos);
         return true;
     }
+    if (pos != ((off_t) -1)) setPos(pos);
     return false;
+}
+
+off_t SharedMemory::pos() const {
+    return ::lseek(m_id,0,SEEK_CUR);
+}
+
+bool SharedMemory::setPos(off_t pos) {
+    return (::lseek(m_id,pos,SEEK_SET) != ((off_t) -1));
 }
 
 bool SharedMemory::lock() {
@@ -243,6 +256,9 @@ bool SharedMemory::lock() {
     }
     if (me_locked) return true;
 
+    off_t pos = this->pos();
+    if (pos != 0) setPos(0);
+    else pos = (off_t) -1;
     while (errno == EINTR) {
         if (::lockf(m_id,F_LOCK,0) == -1) {
             if (errno != EINTR) {
@@ -252,6 +268,7 @@ bool SharedMemory::lock() {
                     errno = EINTR;
                     continue;
                 }
+                if (pos != ((off_t) -1)) setPos(pos);
                 return false;
             }
         }
@@ -259,6 +276,7 @@ bool SharedMemory::lock() {
     }
 
     me_locked = true;
+    if (pos != ((off_t) -1)) setPos(pos);
 
     return true;
 }
@@ -276,9 +294,16 @@ bool SharedMemory::unlock() {
         return true;
     }
 
-    if (::lockf(m_id,F_ULOCK,0) == -1) return false;
+    off_t pos = this->pos();
+    if (pos != 0) setPos(0);
+    else pos = (off_t) -1;
+    if (::lockf(m_id,F_ULOCK,0) == -1) {
+        if (pos != ((off_t) -1)) setPos(pos);
+        return false;
+    }
 
     me_locked = false;
+    if (pos != ((off_t) -1)) setPos(pos);
 
     return true;
 }

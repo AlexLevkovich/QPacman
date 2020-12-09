@@ -50,6 +50,8 @@ private:
     bool _setData(const char * data,size_t size,quint64 offset = 0);
     bool _unlink();
     bool _close(bool do_unlink = true);
+    off_t pos() const;
+    bool setPos(off_t pos);
     QList<qint64> _instancesPids(bool ignore_current = true) const;
     static bool someoneElseOpenedFile(const QString & _filename);
 
