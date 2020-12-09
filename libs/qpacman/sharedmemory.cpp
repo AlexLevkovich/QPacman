@@ -32,7 +32,7 @@ static int tokenStartIndex(const QString & str,const QChar & sep,int num) {
     return idx;
 }
 
-SharedMemory::SharedMemory(const QString & key) : QObject(NULL) {
+SharedMemory::SharedMemory(const QString & key) : QObject(NULL), m_lockSemaphore(QString(),1) {
     m_key = key;
     m_ptr = NULL;
     m_id = -1;
@@ -46,6 +46,8 @@ SharedMemory::SharedMemory(const QString & key) : QObject(NULL) {
         fprintf(stderr,"Error: you need to enable the support for shared memory in kernel!\n");
         ::exit(66);
     }
+
+    m_lockSemaphore.setKey(key, 1, QSystemSemaphore::Create);
 
     connect(&shm_watcher,SIGNAL(changed(const QString &)),SLOT(slot_changed(const QString &)));
     connect(&shm_watcher,SIGNAL(attributesChanged(const QString &)),SLOT(slot_path_attr_changed(const QString &)));
@@ -226,29 +228,6 @@ bool SharedMemory::_detach() {
     return true;
 }
 
-bool SharedMemory::_is_locked() {
-    if (me_locked) return true;
-
-    off_t pos = this->pos();
-    if (pos != 0) setPos(0);
-    else pos = (off_t) -1;
-    if ((::lockf(m_id,F_TEST,0) == -1) && (errno == EACCES || errno == EAGAIN)) {
-        errno = 0;
-        if (pos != ((off_t) -1)) setPos(pos);
-        return true;
-    }
-    if (pos != ((off_t) -1)) setPos(pos);
-    return false;
-}
-
-off_t SharedMemory::pos() const {
-    return ::lseek(m_id,0,SEEK_CUR);
-}
-
-bool SharedMemory::setPos(off_t pos) {
-    return (::lseek(m_id,pos,SEEK_SET) != ((off_t) -1));
-}
-
 bool SharedMemory::lock() {
     if (m_id == -1) {
         errno = EINVAL;
@@ -256,29 +235,11 @@ bool SharedMemory::lock() {
     }
     if (me_locked) return true;
 
-    off_t pos = this->pos();
-    if (pos != 0) setPos(0);
-    else pos = (off_t) -1;
-    while (errno == EINTR) {
-        if (::lockf(m_id,F_LOCK,0) == -1) {
-            if (errno != EINTR) {
-                if (errno == EDEADLK) {
-                    fprintf(stderr,"Error: deadlock detected!\n");
-                    ::usleep(100);
-                    errno = EINTR;
-                    continue;
-                }
-                if (pos != ((off_t) -1)) setPos(pos);
-                return false;
-            }
-        }
-        else break;
+    if (m_lockSemaphore.acquire()) {
+        me_locked = true;
+        return true;
     }
-
-    me_locked = true;
-    if (pos != ((off_t) -1)) setPos(pos);
-
-    return true;
+    return false;
 }
 
 bool SharedMemory::unlock() {
@@ -286,26 +247,11 @@ bool SharedMemory::unlock() {
         errno = EINVAL;
         return false;
     }
-    if (!me_locked) {
-        if (_is_locked()) {
-            errno = ENOLCK;
-            return false;
-        }
-        return true;
-    }
 
-    off_t pos = this->pos();
-    if (pos != 0) setPos(0);
-    else pos = (off_t) -1;
-    if (::lockf(m_id,F_ULOCK,0) == -1) {
-        if (pos != ((off_t) -1)) setPos(pos);
-        return false;
-    }
-
+    if (!me_locked) return false;
     me_locked = false;
-    if (pos != ((off_t) -1)) setPos(pos);
-
-    return true;
+    if (m_lockSemaphore.release()) return true;
+    return false;
 }
 
 const void * SharedMemory::data() {

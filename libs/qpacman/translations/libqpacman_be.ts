@@ -338,7 +338,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../sharedmemory.cpp" line="+136"/>
+        <location filename="../sharedmemory.cpp" line="+138"/>
         <source>Permission Exception.</source>
         <translation type="unfinished">Праблема з дазволам</translation>
     </message>

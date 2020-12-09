@@ -9,6 +9,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QThread>
+#include <QSystemSemaphore>
 #include "inotifier.h"
 
 class SharedMemory : public QObject {
@@ -44,14 +45,11 @@ private slots:
     void post_setting_size();
 
 private:
-    bool _is_locked();
     bool _attach();
     bool _detach();
     bool _setData(const char * data,size_t size,quint64 offset = 0);
     bool _unlink();
     bool _close(bool do_unlink = true);
-    off_t pos() const;
-    bool setPos(off_t pos);
     QList<qint64> _instancesPids(bool ignore_current = true) const;
     static bool someoneElseOpenedFile(const QString & _filename);
 
@@ -63,6 +61,7 @@ private:
     QString m_key_filename;
     QString m_username;
     bool m_myevent;
+    QSystemSemaphore m_lockSemaphore;
 };
 
 #endif // SHAREDMEMORY_H
