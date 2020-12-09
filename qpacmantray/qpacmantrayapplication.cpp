@@ -29,7 +29,9 @@ QPacmanTrayApplication::~QPacmanTrayApplication() {
 }
 
 void QPacmanTrayApplication::firstInstanceAttempted() {
-    int index = arguments().indexOf(QRegularExpression("--startchecktimeout=.+"));
+    int index = arguments().indexOf(QRegularExpression("--session=.+"));
+    if (index >= 0) return;
+    index = arguments().indexOf(QRegularExpression("--startchecktimeout=.+"));
     if (index >= 0) index = arguments().at(index).split("=").at(1).toInt();
     else index = 0;
     initMainWindow(index);
@@ -40,9 +42,9 @@ void QPacmanTrayApplication::initMainWindow(int timeout) {
     connect(m_mainWindow,SIGNAL(showRequest()),this,SLOT(putMainWindowOnTop()));
 }
 
-void QPacmanTrayApplication::secondInstanceAttempted(const QStringList & args) {
+void QPacmanTrayApplication::secondInstanceAttempted(const QStringList &) {
     if (m_mainWindow == NULL) initMainWindow();
-    putWindowOnTop(args.contains("--noguionstart")?NULL:m_mainWindow);
+    putWindowOnTop(m_mainWindow);
 }
 
 void QPacmanTrayApplication::putWindowOnTop(QMainWindow * wnd) {
