@@ -36,7 +36,7 @@ private slots:
     void otherApplicationExited(const QString & appname,const QStringList & parms,qint64 pid,qint64 rc);
 
 private:
-    void initMainWindow();
+    void initMainWindow(int timeout = 0);
     
     TrayPreferences * m_mainWindow;
     bool m_wasTopMost;

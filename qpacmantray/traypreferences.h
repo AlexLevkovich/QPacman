@@ -23,7 +23,7 @@ class QToolBar;
 class TrayPreferences : public QMainWindow {
     Q_OBJECT
 public:
-    TrayPreferences(QWidget *parent = nullptr);
+    TrayPreferences(int timeout = 0,QWidget *parent = nullptr);
     ~TrayPreferences();
 
 protected:

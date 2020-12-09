@@ -17,7 +17,7 @@
 #include "messagedialog.h"
 #include <QDebug>
 
-TrayPreferences::TrayPreferences(QWidget *parent) : QMainWindow(parent), ui(new Ui::TrayPreferences) {
+TrayPreferences::TrayPreferences(int timeout,QWidget *parent) : QMainWindow(parent), ui(new Ui::TrayPreferences) {
     ui->setupUi(this);
 
     m_use_sound = ui->trayOptions->doPlaySound();
@@ -55,7 +55,7 @@ TrayPreferences::TrayPreferences(QWidget *parent) : QMainWindow(parent), ui(new 
     connect(qApp,SIGNAL(qpacmanEnded(const QStringList &,qint64)),this,SLOT(qpacmanEnded(const QStringList &,qint64)));
     connect(Alpm::instance(),SIGNAL(locking_changed(const QString &,bool)),this,SLOT(updateActions(const QString &,bool)));
 
-    m_timer.start(0);
+    m_timer.start(timeout);
 }
 
 TrayPreferences::~TrayPreferences() {

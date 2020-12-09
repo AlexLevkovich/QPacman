@@ -6,10 +6,9 @@ Name=qpacman's tray
 Comment[be]=Запуск трэя для qpacman
 Comment[ru]=Запуск трея для qpacman
 Comment=Start qpacman's tray application
-Exec=qpacmantray --noguionstart
+Exec=qpacmantray --noguionstart --startchecktimeout=60000
 Icon=qpacmantray
 Terminal=false
 Type=Application
 X-GNOME-Autostart-Phase=Applications
-X-KDE-autostart-after=panel
-X-KDE-autostart-phase=2
+X-KDE-autostart-phase=1

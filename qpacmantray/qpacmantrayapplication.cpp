@@ -7,6 +7,7 @@
 #include "static.h"
 #include "traypreferences.h"
 #include <QFileInfo>
+#include <QRegularExpression>
 #include <QDebug>
 
 QPacmanTrayApplication::QPacmanTrayApplication(int &argc, char **argv) : SingleApplication(argc,argv) {
@@ -28,17 +29,20 @@ QPacmanTrayApplication::~QPacmanTrayApplication() {
 }
 
 void QPacmanTrayApplication::firstInstanceAttempted() {
-    initMainWindow();
+    int index = arguments().indexOf(QRegularExpression("--startchecktimeout=.+"));
+    if (index >= 0) index = arguments().at(index).split("=").at(1).toInt();
+    else index = 0;
+    initMainWindow(index);
 }
 
-void QPacmanTrayApplication::initMainWindow() {
-    m_mainWindow = new TrayPreferences();
+void QPacmanTrayApplication::initMainWindow(int timeout) {
+    m_mainWindow = new TrayPreferences(timeout);
     connect(m_mainWindow,SIGNAL(showRequest()),this,SLOT(putMainWindowOnTop()));
 }
 
 void QPacmanTrayApplication::secondInstanceAttempted(const QStringList & args) {
     if (m_mainWindow == NULL) initMainWindow();
-    putWindowOnTop((args.count() >= 1 && args[0] == "--noguionstart")?NULL:m_mainWindow);
+    putWindowOnTop(args.contains("--noguionstart")?NULL:m_mainWindow);
 }
 
 void QPacmanTrayApplication::putWindowOnTop(QMainWindow * wnd) {
