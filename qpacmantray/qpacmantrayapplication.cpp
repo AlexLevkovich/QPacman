@@ -16,6 +16,11 @@ QPacmanTrayApplication::QPacmanTrayApplication(int &argc, char **argv) : SingleA
 
     QApplication::setQuitOnLastWindowClosed(false);
 
+    if (arguments().contains("-session")) {
+        QCoreApplication::exit(127);
+        return;
+    }
+
     if (isApplicationStarted("qpacman")) QMetaObject::invokeMethod(this,"qpacmanStarted",Qt::QueuedConnection);
 
     connect(this,SIGNAL(firstInstanceAttempt()),this,SLOT(firstInstanceAttempted()));
@@ -29,10 +34,6 @@ QPacmanTrayApplication::~QPacmanTrayApplication() {
 }
 
 void QPacmanTrayApplication::firstInstanceAttempted() {
-    if (arguments().contains("-session")) {
-        QCoreApplication::exit(127);
-        return;
-    }
     int index = arguments().indexOf(QRegularExpression("--startchecktimeout=.+"));
     if (index >= 0) index = arguments().at(index).split("=").at(1).toInt();
     else index = 0;
