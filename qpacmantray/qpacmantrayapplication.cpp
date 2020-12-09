@@ -29,9 +29,8 @@ QPacmanTrayApplication::~QPacmanTrayApplication() {
 }
 
 void QPacmanTrayApplication::firstInstanceAttempted() {
-    int index = arguments().indexOf(QRegularExpression("--session=.+"));
-    if (index >= 0) return;
-    index = arguments().indexOf(QRegularExpression("--startchecktimeout=.+"));
+    if (arguments().contains("-session")) return;
+    int index = arguments().indexOf(QRegularExpression("--startchecktimeout=.+"));
     if (index >= 0) index = arguments().at(index).split("=").at(1).toInt();
     else index = 0;
     initMainWindow(index);
