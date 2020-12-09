@@ -16,22 +16,6 @@ QPacmanTrayApplication::QPacmanTrayApplication(int &argc, char **argv) : SingleA
 
     QApplication::setQuitOnLastWindowClosed(false);
 
-    QFile file(QString("/home/alex/qpacmantray_%1.txt").arg(QCoreApplication::applicationPid()));
-    file.open(QIODevice::WriteOnly);
-    for (int i=0;i<argc;i++) {
-        file.write(argv[i],strlen(argv[i]));
-        file.write("\n",1);
-    }
-    file.write("---\n",4);
-    for (QString arg: arguments()) {
-        file.write(arg.toLocal8Bit());
-        file.write("\n",1);
-    }
-    if (arguments().contains("-session")) {
-        QCoreApplication::exit(127);
-        return;
-    }
-
     if (isApplicationStarted("qpacman")) QMetaObject::invokeMethod(this,"qpacmanStarted",Qt::QueuedConnection);
 
     connect(this,SIGNAL(firstInstanceAttempt()),this,SLOT(firstInstanceAttempted()));
