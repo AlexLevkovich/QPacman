@@ -96,9 +96,8 @@ QSize MovieIcon::iconSize(const QString & iconpath) {
 
 QSize MovieIcon::iconSize(const QString & iconpath,QIcon & icon) {
     icon = QIcon(iconpath);
-    QList<QSize> sizes = icon.availableSizes();
     QSize size;
-    if (sizes.count() <= 0) {
+    if (iconpath.toLower().endsWith(".svg")) {
         QSvgRenderer svg(iconpath);
         QRect rect = svg.viewBox();
         if ((rect.width() != 0) && (rect.height() != 0)) {
@@ -107,8 +106,9 @@ QSize MovieIcon::iconSize(const QString & iconpath,QIcon & icon) {
         else return QSize();
     }
     else {
+        QList<QSize> sizes = icon.availableSizes();
         std::sort(sizes.begin(),sizes.end());
-        size = sizes.last();
+        size = sizes.isEmpty()?QSize():sizes.last();
     }
 
     return size;
@@ -119,7 +119,17 @@ bool MovieIcon::update(int index) {
         QSize size = iconSize(m_icons[index].toString());
         if (!size.isValid()) return false;
 
-        QPixmap whole_pixmap = QIcon(m_icons[index].toString()).pixmap(size.width()*(m_size.width()/(m_is_simple[index])[0].size().width()),size.height()*(m_size.height()/(m_is_simple[index])[0].size().height()));
+        QString name = m_icons[index].toString();
+        QPixmap whole_pixmap(size.width()*(m_size.width()/(m_is_simple[index])[0].size().width()),size.height()*(m_size.height()/(m_is_simple[index])[0].size().height()));
+        whole_pixmap.fill(Qt::transparent);
+        if (name.toLower().endsWith(".svg")) {
+            QSvgRenderer svg(name);
+            QPainter painter(&whole_pixmap);
+            svg.render(&painter,QRectF(0,0,whole_pixmap.width(),whole_pixmap.height()));
+        }
+        else {
+            whole_pixmap = QIcon(name).pixmap(whole_pixmap.width(),whole_pixmap.height());
+        }
 
         QPixmap pix;
         for (int i=0;i<m_is_simple[index].count();i++) {
