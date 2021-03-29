@@ -15,6 +15,7 @@
 #include <QRadioButton>
 #include <QSpacerItem>
 #include <QToolButton>
+#include <QDesktopWidget>
 #include "optionswidget.h"
 #include "themeicons.h"
 #include "static.h"
@@ -50,6 +51,25 @@ void OptionsMenu::show_event() {
     if (hasTitleCancelButton() && titleBars.count() > 0) m_child_widgets.append(titleBars[0]->cancelButton);
     if (hasTitleOkButton() && titleBars.count() > 0) m_child_widgets.append(titleBars[0]->okButton);
     if (m_child_widgets.count() > 0) m_child_widgets[0]->setFocus();
+
+    QRect screenRect = QApplication::desktop()->screenGeometry(this);
+    QRect menuRect = geometry();
+    if (screenRect.contains(menuRect)) return;
+    if (!screenRect.contains(menuRect.topLeft())) move(0,0);
+    else {
+        int x = menuRect.x();
+        int y = menuRect.y();
+        QRect intersection = screenRect & menuRect;
+        if (intersection.width() < menuRect.width()) {
+            if (x < screenRect.x()) x += menuRect.width() - intersection.width();
+            else x -= menuRect.width() - intersection.width();
+        }
+        if (intersection.height() < menuRect.height()) {
+            if (y < screenRect.y()) y += menuRect.height() - intersection.height();
+            else y -= menuRect.height() - intersection.height();
+        }
+        move(x,y);
+    }
 }
 
 bool OptionsMenu::eventFilter(QObject *obj, QEvent *e) {
