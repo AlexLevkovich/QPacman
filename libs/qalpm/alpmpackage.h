@@ -65,7 +65,8 @@ public:
         DESC = 0,
         NAME = 1,
         FILE_NAME = 2,
-        PROVIDER = 3
+        PROVIDER = 3,
+        DEPENDENCY = 4
     };
 
     class Dependence {

@@ -18,7 +18,8 @@ public:
         IS_DESC = AlpmPackage::DESC,
         IS_NAME = AlpmPackage::NAME,
         IS_FILE_NAME = AlpmPackage::FILE_NAME,
-        IS_PROVIDER = AlpmPackage::PROVIDER
+        IS_PROVIDER = AlpmPackage::PROVIDER,
+        IS_DEPENDENCY = AlpmPackage::DEPENDENCY
     };
 
     explicit CategoryToolButton(QWidget *parent = 0);
@@ -27,6 +28,7 @@ public:
 protected slots:
     void onSearchByName();
     void onSearchByProvider();
+    void onSearchByDependency();
     void onSearchByDesc();
     void onSearchByFileName();
     void onMenuItemSelected(QAction * action);

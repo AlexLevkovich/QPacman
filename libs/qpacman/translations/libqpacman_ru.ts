@@ -188,6 +188,11 @@
         <source>Search by file name</source>
         <translation type="unfinished">Искать по имени файла</translation>
     </message>
+    <message>
+        <location line="+1"/>
+        <source>Search by dependency</source>
+        <translation type="unfinished">Искать по зависимости</translation>
+    </message>
 </context>
 <context>
     <name>CustomPopupTextBrowser</name>

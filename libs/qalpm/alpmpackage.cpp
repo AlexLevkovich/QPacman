@@ -794,14 +794,25 @@ QString AlpmPackage::toString() const {
 
 bool AlpmPackage::containsText(const QString & text,SearchFieldType field) {
     if (text.isEmpty()) return true;
-    if (field == NAME) return name().contains(text,Qt::CaseInsensitive);
-    else if (field == PROVIDER) {
+
+    switch (field) {
+    case NAME:
+        return name().contains(text,Qt::CaseInsensitive);
+    case PROVIDER:
         for (Dependence provide: m_provides) {
             if (provide.isAppropriate(Dependence::fromString(text))) return true;
         }
         return false;
+    case DESC:
+        return description().contains(text,Qt::CaseInsensitive);
+    case DEPENDENCY:
+        for (Dependence dependency: m_depends) {
+            if (dependency.isAppropriate(Dependence::fromString(text))) return true;
+        }
+        return false;
+    default:
+        break;
     }
-    else if (field == DESC) return description().contains(text,Qt::CaseInsensitive);
 
     return false;
 }
