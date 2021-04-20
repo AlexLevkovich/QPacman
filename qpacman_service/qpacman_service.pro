@@ -27,6 +27,12 @@ isEmpty(PACMANCONF) {
 }
 DEFINES += PACMANCONF=\\\"$$PACMANCONF\\\"
 
+SYSTEMDCONFDIR = $$INSTALL_PREFIX/share/dbus-1/system.d
+DEFINES += SYSTEMDCONFDIR=\\\"$$SYSTEMDCONFDIR\\\"
+SYSTEMDCONFFILE = com.alexl.qt.QPacmanService.conf
+DEFINES += SYSTEMDCONFFILE=\\\"$$SYSTEMDCONFFILE\\\"
+
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

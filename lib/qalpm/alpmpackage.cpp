@@ -354,7 +354,7 @@ AlpmPackage::AlpmPackage(const QString & filename,bool do_delete) {
     m_handle = NULL;
     if (Alpm::p_alpm == NULL || Alpm::p_alpm->m_alpm_handle == NULL) return;
 
-    alpm_pkg_load(Alpm::p_alpm->m_alpm_handle,filename.toLocal8Bit().constData(),0,0,&m_handle);
+    alpm_pkg_load(Alpm::p_alpm->m_alpm_handle,filename.toLocal8Bit().constData(),1,0,&m_handle);
     m_filepath = filename;
 }
 
