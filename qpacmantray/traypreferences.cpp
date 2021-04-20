@@ -125,15 +125,11 @@ void TrayPreferences::onUpdateNowTriggered() {
 }
 
 void TrayPreferences::onInstallerCompleted(ThreadRun::RC rc) {
-    cancelAction->setEnabled(true);
     cancelAction->setText(tr("Quit"));
     logAction->setEnabled(true);
 
-    connect(cancelAction,&QAction::triggered,[&]() {
-        updateWindow->close();
-        delete updateWindow;
-        updateWindow = NULL;
-    });
+    connect(cancelAction,&QAction::triggered,updateWindow,&QWidget::close);
+    cancelAction->setEnabled(true);
 
     m_blocking_operation = false;
     if (rc != ThreadRun::OK) {
