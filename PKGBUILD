@@ -6,7 +6,7 @@ url="https://github.com/AlexLevkovich/QPacman"
 arch=('i686' 'x86_64')
 license=('GPL')
 depends=('qt5-base' 'qt5-svg' 'qt5-multimedia' 'pacman' 'pam' 'libarchive' 'binutils' 'appstream-qt' 'archlinux-appstream-data')
-makedepends=('make' 'qt5-tools' 'git' 'awk')
+makedepends=('make' 'qt5-tools' 'git' 'gawk')
 source=("$pkgname"::"git://github.com/AlexLevkovich/QPacman")
 md5sums=('SKIP')
 
