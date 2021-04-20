@@ -39,7 +39,7 @@ private slots:
     void onCheckForUpdatesTriggered();
     void onUpdateNowTriggered();
     void onQuitTriggered();
-    void updateActions(const QString & lock_path = QString(),bool locked = false);
+    void updateActions();
     void post_resize_save();
     void checker_completed(ThreadRun::RC ok,const QString & error,const QStringList & updates);
     void onInstallerCompleted(ThreadRun::RC rc);

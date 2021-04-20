@@ -50,7 +50,6 @@ TrayPreferences::TrayPreferences(int timeout,QWidget *parent) : QMainWindow(pare
     connect(actionUpdate_now,SIGNAL(triggered()),this,SLOT(onUpdateNowTriggered()));
     connect(actionQuit,SIGNAL(triggered()),this,SLOT(onQuitTriggered()));
     connect(&m_timer,SIGNAL(timeout()),this,SLOT(onCheckForUpdatesTriggered()));
-    connect(Alpm::instance(),SIGNAL(locking_changed(const QString &,bool)),this,SLOT(updateActions(const QString &,bool)));
 
     m_timer.start(timeout);
 }
@@ -84,15 +83,10 @@ void TrayPreferences::on_buttonBox_rejected() {
     setVisible(false);
 }
 
-void TrayPreferences::updateActions(const QString &,bool locked) {
+void TrayPreferences::updateActions() {
     actionUpdate_now->setEnabled(!m_blocking_operation);
     actionCheck_for_updates->setEnabled(!m_blocking_operation);
     actionQuit->setEnabled(!m_blocking_operation);
-    if (!m_blocking_operation) {
-        actionUpdate_now->setEnabled(!locked);
-        actionCheck_for_updates->setEnabled(!locked);
-        actionQuit->setEnabled(!locked);
-    }
 }
 
 void TrayPreferences::onCheckForUpdatesTriggered() {

@@ -1,6 +1,9 @@
 #include "qpacmantrayapplication.h"
 #include "libalpm.h"
 #include "traypreferences.h"
+#include <QTimer>
+
+#define SHOW_PREFS_DELAY 3000
 
 QPacmanTrayApplication::QPacmanTrayApplication(int &argc, char *argv[]) : SingleApplication(argc,argv,true) {
     m_mainWindow = NULL;
@@ -27,7 +30,9 @@ void QPacmanTrayApplication::secondary_init() {
 void QPacmanTrayApplication::primary_init() {
     m_mainWindow = new TrayPreferences(0);
     connect(m_mainWindow,SIGNAL(showRequest()),this,SLOT(putMainWindowOnTop()));
-    connect(Alpm::instance(),SIGNAL(show_tray_options()),this,SLOT(putMainWindowOnTop()));
+    QTimer::singleShot(SHOW_PREFS_DELAY,[&](){
+        connect(Alpm::instance(),SIGNAL(show_tray_options()),this,SLOT(putMainWindowOnTop()));
+    });
 }
 
 void QPacmanTrayApplication::putMainWindowOnTop() {

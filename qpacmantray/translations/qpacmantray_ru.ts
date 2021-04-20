@@ -120,7 +120,7 @@
         <translation type="obsolete">Загружает и обновляет базы данных пакетов</translation>
     </message>
     <message>
-        <location filename="../traypreferences.cpp" line="+135"/>
+        <location filename="../traypreferences.cpp" line="+129"/>
         <source>Quit</source>
         <translation type="unfinished">Выход</translation>
     </message>
@@ -141,7 +141,7 @@
         <translation type="obsolete">Показывает окно с настройками</translation>
     </message>
     <message>
-        <location line="-91"/>
+        <location line="-85"/>
         <source>Program</source>
         <translation type="unfinished">Программа</translation>
     </message>
