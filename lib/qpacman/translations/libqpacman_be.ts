@@ -294,7 +294,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+87"/>
+        <location line="+89"/>
         <location line="+7"/>
         <source>Overal download progress</source>
         <translation type="unfinished">Агульны прагрэс загрузкі</translation>

@@ -54,7 +54,7 @@ void ProgressDelegate::paint(QPainter *painter,const QStyleOptionViewItem &optio
         QPen pen = painter->pen();
         pen.setColor(index.data(Qt::ForegroundRole).value<QBrush>().color());
         painter->setPen(pen);
-        painter->drawText(textRect,Qt::AlignLeft|Qt::AlignVCenter,text);
+        painter->drawText(textRect,Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine,text);
     }
     else if (item != NULL && (item->type() & SimpleItem::Flat)) {
         QRect rect(option.rect);

@@ -251,8 +251,10 @@ void PackageProcessor::on_event_completed(int id) {
     if (eventItem != NULL) eventItem->setMax();
 }
 
-void PackageProcessor::on_error(const QString & str) {
+void PackageProcessor::on_error(const QString & err) {
+    QString str = err;
     if (progressView == NULL) return;
+    if (str.length() > 100) str = str.mid(0,100);
     progressView->appendErrorRow(str);
 }
 

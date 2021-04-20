@@ -183,6 +183,7 @@ void Alpm::emit_remove_packages_confirmation(const QStringList & _remove,qint64 
 }
 
 bool Alpm::open(const QString & confpath,const QString & dbpath) {
+    m_alpm_errno = OK_CODE;
     if (isValid() || p_alpm != this) {
         m_alpm_errno = ALPM_INSTANCE_ALREADY_CREATED;
         return false;
@@ -247,7 +248,11 @@ bool Alpm::isOpen() {
 }
 
 bool Alpm::reopen() {
-    if (!isValid(true)) return false;
+    m_alpm_errno = OK_CODE;
+    if (!isValid(true)) {
+        m_alpm_errno = ALPM_IS_NOT_OPEN;
+        return false;
+    }
     QString dbpath = m_config.dbPath();
     QString confpath = m_config.confPath();
     if (!close()) return false;
@@ -255,7 +260,12 @@ bool Alpm::reopen() {
 }
 
 bool Alpm::close() {
-    if (!isValid()) return false;
+    m_alpm_errno = OK_CODE;
+
+    if (!isValid()) {
+        m_alpm_errno = ALPM_IS_NOT_OPEN;
+        return false;
+    }
     answer(false);
 
     bool ok = false;
@@ -574,6 +584,7 @@ QList<AlpmPackage> OverwriteHandler::m_forcedpkgs;
 
 void Alpm::operation_event_fn(alpm_event_t * event) {
     m_percent = -1;
+    p_alpm->m_alpm_errno = OK_CODE;
 
     if ((prev_event_type == ALPM_EVENT_SCRIPTLET_INFO) && (event->type != ALPM_EVENT_SCRIPTLET_INFO)) p_alpm->emit_event("scriplet_executed");
 
@@ -786,6 +797,7 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
         case ALPM_EVENT_PKGDOWNLOAD_FAILED:
         {
             if (!m_download_errs.isEmpty()) {
+                p_alpm->m_alpm_errno = EXTERNAL_DOWNLOAD_ERR;
                 p_alpm->emit_information(m_download_errs.last());
                 p_alpm->emit_error(m_download_errs.last());
             }
@@ -830,57 +842,65 @@ ThreadRun::RC Alpm::lastMethodRC() const {
 }
 
 QString Alpm::lastError(int * error_id) const {
-    if (m_alpm_errno != ALPM_ERR_OK) {
-        if (m_alpm_errno < 0) {
-            bool ok = true;
-            switch (m_alpm_errno) {
-            case PKG_LIST_IS_EMPTY:
-                return tr("The input package list is empty!");
-            case ALPM_INSTANCE_ALREADY_CREATED:
-                return tr("Alpm class has been already initialized!");
-            case ALPM_IS_NOT_OPEN:
-                return tr("Alpm class is open yet!");
-            case ALPMDB_HANDLE_FAILED:
-                return tr("Alpm's DB handle is not initialized!");
-            case LOCAL_DB_UPDATE:
-                return tr("Local DB does not need in updating!");
-            case PKG_IS_NOT_INITED:
-                return tr("The package class has not been properly intialized!");
-            case REASON_WRONG_DB:
-                return tr("The reason can be changed only for local packages!");
-            case CANNOT_GET_ROOT:
-                return tr("Cannot obtain the root rights!");
-            case ALPM_CONFIG_FAILED:
-                return tr("Cannot load config file!");
-            case ALPM_LINK_LOCAL_DB_FAILED:
-                return tr("Cannot create the link for local's db!");
-            case ALPM_HANDLE_FAILED:
-                return tr("Cannot create Alpm handle from config handle!");
-            case THREAD_IS_ALREADY_RUNNING:
-                return tr("Cannot invoke the function in the thread if other one is still working!");
-            case CANNOT_LOAD_CONFIG:
-                return m_config.lastError();
-            default:
-                ok = false;
-            }
-            if (ok && error_id != NULL) *error_id = m_alpm_errno;
-        }
-        else {
-            if (error_id != NULL) *error_id = m_alpm_errno;
-            return ((m_alpm_errno == EXTERNAL_DOWNLOAD_ERR) && !m_download_errs.isEmpty())?m_download_errs.join("\n"):QString::fromLocal8Bit(alpm_strerror((alpm_errno_t)m_alpm_errno));
-        }
-    }
-
     if (!isValid()) {
         if (error_id != NULL) *error_id = ALPM_ERR_HANDLE_NULL;
         return QString::fromLocal8Bit(alpm_strerror(ALPM_ERR_HANDLE_NULL));
     }
 
-    alpm_errno_t err = alpm_errno(m_alpm_handle);
-    if (error_id != NULL) *error_id = ALPM_ERR_OK;
-    if (err == ALPM_ERR_OK) return QString();
-    if (error_id != NULL) *error_id = err;
-    return ((err == (alpm_errno_t)EXTERNAL_DOWNLOAD_ERR) && !m_download_errs.isEmpty())?m_download_errs.join("\n"):QString::fromLocal8Bit(alpm_strerror(err));
+    if (m_alpm_errno == OK_CODE_SUPPRESS_ALPMS) {
+        if (error_id != NULL) *error_id = OK_CODE;
+        return QString();
+    }
+
+    if (m_alpm_errno != ALPM_ERR_OK && m_alpm_errno < 0) {
+        if (error_id != NULL) *error_id = m_alpm_errno;
+        switch (m_alpm_errno) {
+        case PKG_LIST_IS_EMPTY:
+            return tr("The input package list is empty!");
+        case ALPM_INSTANCE_ALREADY_CREATED:
+            return tr("Alpm class has been already initialized!");
+        case ALPM_IS_NOT_OPEN:
+            return tr("Alpm class is open yet!");
+        case ALPMDB_HANDLE_FAILED:
+            return tr("Alpm's DB handle is not initialized!");
+        case LOCAL_DB_UPDATE:
+            return tr("Local DB does not need in updating!");
+        case PKG_IS_NOT_INITED:
+            return tr("The package class has not been properly intialized!");
+        case REASON_WRONG_DB:
+            return tr("The reason can be changed only for local packages!");
+        case CANNOT_GET_ROOT:
+            return tr("Cannot obtain the root rights!");
+        case ALPM_CONFIG_FAILED:
+            return tr("Cannot load config file!");
+        case ALPM_LINK_LOCAL_DB_FAILED:
+            return tr("Cannot create the link for local's db!");
+        case ALPM_HANDLE_FAILED:
+            return tr("Cannot create Alpm handle from config handle!");
+        case THREAD_IS_ALREADY_RUNNING:
+            return tr("Cannot invoke the function in the thread if other one is still working!");
+        case CANNOT_LOAD_CONFIG:
+            return m_config.lastError();
+        case NOTHING_DOWNLOAD:
+            return tr("Nothing to download!!!");
+        case USER_REFUSAL:
+            return tr("Stopped because of user refusal!!!");
+        default:
+            break;
+        }
+    }
+
+    if (alpm_errno(m_alpm_handle) == ALPM_ERR_OK) {
+        if (error_id != NULL) *error_id = OK_CODE;
+        return QString();
+    }
+
+    if (m_alpm_errno == EXTERNAL_DOWNLOAD_ERR && !m_download_errs.isEmpty()) {
+        if (error_id != NULL) *error_id = EXTERNAL_DOWNLOAD_ERR;
+        return m_download_errs.join("\n");
+    }
+
+    return QString::fromLocal8Bit(alpm_strerror(alpm_errno(m_alpm_handle)));
 }
 
 QList<AlpmDB> Alpm::allSyncDBs() const {
@@ -990,13 +1010,13 @@ ThreadRun::RC Alpm::updateDBs(bool force) {
 
 void Alpm::update_dbs(bool force) {
     m_percent = -1;
+    m_alpm_errno = OK_CODE;
 
     QList<AlpmDB> dbs = allSyncDBs();
     for (int i=0;i<dbs.count();i++) {
         emit_event("download_db_start",Q_ARG(QString,dbs[i].name()));
         emit_information(QObject::tr("Updating %1 db...").arg(dbs[i].name()));
         if (!dbs[i].update(force)) {
-            m_alpm_errno = alpm_errno(Alpm::instance()->m_alpm_handle);
             emit_information(lastError());
             emit_error(lastError());
             return;
@@ -1028,6 +1048,8 @@ QStringList Alpm::download_packages(const QList<AlpmPackage> & pkgs) {
     QStringList downloaded_paths;
     if (!isValid(true)) return downloaded_paths;
 
+    m_alpm_errno = OK_CODE;
+
     m_percent = -1;
 
     qint64 download_size = 0;
@@ -1041,7 +1063,8 @@ QStringList Alpm::download_packages(const QList<AlpmPackage> & pkgs) {
     }
 
     if (download_size <= 0) {
-        emit_error(tr("Nothing to download!!!"));
+        m_alpm_errno = NOTHING_DOWNLOAD;
+        emit_error(lastError());
         emit_event("downloads_failed");
         return downloaded_paths;
     }
@@ -1213,6 +1236,8 @@ void Alpm::sync_sysupgrade_portion(QList<AlpmPackage> & add_pkgs,int startindex,
 }
 
 int Alpm::sync_sysupgrade(int m_install_flags) {
+    m_alpm_errno = OK_CODE;
+
     QList<AlpmPackage> add_pkgs;
     QList<AlpmPackage> remove_pkgs;
     int sel_index = 0;
@@ -1334,6 +1359,7 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
 }
 
 void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flags,const QList<AlpmPackage> & forcedpkgs) {
+    m_alpm_errno = OK_CODE;
     m_percent = -1;
     prev_event_type = -1;
     QString err;
@@ -1344,7 +1370,6 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
     if (alpm_trans_init(m_alpm_handle,m_install_flags)) {
         emit_information(lastError());
         emit_error(lastError());
-        m_alpm_errno = alpm_errno(m_alpm_handle);
         return;
     }
 
@@ -1352,7 +1377,11 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
         emit_information(tr("Starting full system upgrade..."),true);
         alpm_logaction(m_alpm_handle,LOGPREFIX,"starting full system upgrade\n");
         m_alpm_errno = sync_sysupgrade(m_install_flags);
-        if(m_alpm_errno != ALPM_ERR_OK) return;
+        if(m_alpm_errno != ALPM_ERR_OK) {
+            emit_information(lastError());
+            emit_error(lastError());
+            return;
+        }
     }
     else {
         alpm_pkg_t * handle;
@@ -1446,14 +1475,13 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
             FREELIST(data);
             break;
         }
-        m_alpm_errno = alpm_errno(m_alpm_handle);
         return;
     }
 
     FREELIST(data);
     if (alpm_list_count(alpm_trans_get_add(m_alpm_handle)) <= 0) {
         emit_information(tr("No packages were upgraded because there is nothing to install."),true);
-        m_alpm_errno = ALPM_ERR_OK;
+        m_alpm_errno = OK_CODE_SUPPRESS_ALPMS;
         return;
     }
 
@@ -1518,7 +1546,6 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
             break;
         }
         emit_information(tr("Errors occurred, no packages were installed."),true);
-        m_alpm_errno = alpm_errno(m_alpm_handle);
         return;
     }
 
@@ -1537,6 +1564,7 @@ int Alpm::fnmatch_cmp(const void *pattern, const void *string) {
 void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade) {
     m_percent = -1;
     prev_event_type = -1;
+    m_alpm_errno = ALPM_ERR_OK;
     QString err;
 
     HandleReleaser handle_releaser(m_alpm_handle);
@@ -1554,6 +1582,7 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
         if (alpm_remove_pkg(m_alpm_handle,pkg.handle())) {
             if(alpm_errno(m_alpm_handle) == ALPM_ERR_TRANS_DUP_TARGET) {
                 emit_information(tr("Skipping target: %1").arg(m_pkgs[i].name()));
+                m_alpm_errno = OK_CODE_SUPPRESS_ALPMS;
                 continue;
             }
             err = QString("%1: %2").arg(m_pkgs[i].name()).arg(lastError());
@@ -1562,6 +1591,7 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
             m_alpm_errno = alpm_errno(m_alpm_handle);
             return;
         }
+        m_alpm_errno = OK_CODE;
     }
 
     alpm_list_t *data = NULL;
@@ -1590,7 +1620,6 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
             FREELIST(data);
             break;
         }
-        m_alpm_errno = alpm_errno(m_alpm_handle);
         return;
     }
 
@@ -1607,7 +1636,7 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
             if (!ok) {
                 list.detach();
                 emit_error(tr("User rejected the removal of %1 package!").arg(name));
-                m_alpm_errno = alpm_errno(m_alpm_handle);
+                m_alpm_errno = USER_REFUSAL;
                 return;
             }
         }
@@ -1627,7 +1656,6 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
         emit_information(err);
         emit_error(err);
         FREELIST(data);
-        m_alpm_errno = alpm_errno(m_alpm_handle);
         return;
     }
     FREELIST(data);

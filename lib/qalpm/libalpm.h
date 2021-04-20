@@ -46,6 +46,8 @@ public:
         THREAD_IS_ALREADY_RUNNING     = -13,
         CANNOT_LOAD_CONFIG            = -14,
         USER_REFUSAL                  = -15,
+        NOTHING_DOWNLOAD              = -16,
+        OK_CODE_SUPPRESS_ALPMS        = -17,
         OK_CODE                       = ALPM_ERR_OK,
         OUT_OF_MEMORY                 = ALPM_ERR_MEMORY,
         UNEXPECTED_ERR                = ALPM_ERR_SYSTEM,

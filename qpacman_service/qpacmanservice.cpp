@@ -570,7 +570,7 @@ ThreadRun::RC QPacmanService::installPackages(const QString & root_pw,const QByt
         QFile(QString(SYSTEMDCONFDIR)+QDir::separator()+fileName).remove();
     }
 
-    for (AlpmPackage pkg: list1) {
+    for (AlpmPackage & pkg: list1) {
         if (pkg.name() == OWNPKGNAME) {
             tempFileName = temporaryName();
             if (!tempFileName.isEmpty()) {

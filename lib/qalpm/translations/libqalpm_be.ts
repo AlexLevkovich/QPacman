@@ -74,7 +74,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+367"/>
+        <location filename="../libalpm.cpp" line="+377"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 у IgnorePkg/IgnoreGroup. Усё роўна ўсталяваць?</translation>
     </message>
@@ -128,7 +128,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Імпартаваць ключ PGP %1%2/%3, &quot;%4&quot;, створаны: %5%6?</translation>
     </message>
     <message>
-        <location line="+143"/>
+        <location line="+144"/>
         <source>Running pre-transaction hooks...</source>
         <translation type="unfinished">Запускаюцца прад-транзакцыйныя скрыпты...</translation>
     </message>
@@ -238,12 +238,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">%1 загружаны</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+13"/>
         <source>Failed the download of %1</source>
         <translation type="unfinished">Памылка пры загрузцы %1</translation>
     </message>
     <message>
-        <location line="+203"/>
+        <location line="+212"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Абнаўляем базу дадзеных: %1...</translation>
     </message>
@@ -291,7 +291,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-867"/>
+        <location filename="../libalpm.cpp" line="-888"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам трэба выбраць пастаўшчыка для пакета %1:
@@ -324,7 +324,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Вы згодны? : </translation>
     </message>
     <message>
-        <location line="+121"/>
+        <location line="+131"/>
         <source>(%1/%2) downloaded</source>
         <translation type="unfinished">(%1/%2) загружана</translation>
     </message>
@@ -381,7 +381,7 @@ Do you want to delete it?</source>
 </translation>
     </message>
     <message>
-        <location line="+318"/>
+        <location line="+329"/>
         <source>The input package list is empty!</source>
         <translation type="unfinished">Спіс пакетаў пусты!</translation>
     </message>
@@ -445,34 +445,39 @@ Do you want to delete it?</source>
         <translation type="unfinished">Немагчыма зарустить заданне ў патоку калі іншае яшчэ працуе!</translation>
     </message>
     <message>
-        <location line="+184"/>
+        <location line="+4"/>
         <source>Nothing to download!!!</source>
         <translation type="unfinished">Няма чаго загружаць!!!</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+193"/>
         <source>Starting the download of %1</source>
         <translation type="unfinished">Пачынаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+307"/>
+        <location line="+313"/>
         <location line="+6"/>
-        <location line="+188"/>
+        <location line="+187"/>
         <source>Skipping target: %1</source>
         <translation type="unfinished">Прапускаем %1</translation>
     </message>
     <message>
-        <location line="-185"/>
+        <location line="-184"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-19"/>
+        <location line="-23"/>
         <source>Starting full system upgrade...</source>
         <translation type="unfinished">Пачынаем поўнае абнаўленне сістэмы...</translation>
     </message>
     <message>
-        <location line="+37"/>
+        <location line="-490"/>
+        <source>Stopped because of user refusal!!!</source>
+        <translation type="unfinished">Спынена па жаданнi карыстальніка!!!</translation>
+    </message>
+    <message>
+        <location line="+531"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 мае няправільную архітэктуру</translation>
     </message>
@@ -502,7 +507,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">%1 і %2 канфліктуюць (%3)</translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+20"/>
         <source>No packages were upgraded because there is nothing to install.</source>
         <translation type="unfinished">Пакеты былі ня абноўленыя бо няма чаго абнаўляць.</translation>
     </message>
@@ -513,12 +518,12 @@ Do you want to delete it?</source>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+157"/>
+        <location line="+158"/>
         <source>Failed to commit transaction (%1)</source>
         <translation type="unfinished">Немагчыма выканаць транзакцыю (%1)</translation>
     </message>
     <message>
-        <location line="-147"/>
+        <location line="-148"/>
         <source>%1 exists in both &apos;%2&apos; and &apos;%3&apos;</source>
         <translation type="unfinished">%1 існуе ў двух пакетах &apos;%2&apos; and &apos;%3&apos;</translation>
     </message>
@@ -543,12 +548,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Была памылка, нічога не ўстаноўлена.</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+6"/>
         <source>No errors occurred, the packages were successfully installed.</source>
         <translation>Усе пакеты ўсталяваныя без памылак!</translation>
     </message>
     <message>
-        <location line="+43"/>
+        <location line="+46"/>
         <source>Failed to prepare transaction (%1)</source>
         <translation type="unfinished">Немагчыма падрыхтаваць транзакцыю (%1)</translation>
     </message>
@@ -558,7 +563,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">%1: выдаленне %2 ламае залежнасць &apos;%3&apos;</translation>
     </message>
     <message>
-        <location line="+26"/>
+        <location line="+25"/>
         <source>%1 is designated as a HoldPkg, Do you want to continue?</source>
         <translation type="unfinished">%1 пазначаны як HoldPkg. Жадаеце працягнуць?</translation>
     </message>
@@ -573,7 +578,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Ніякія пакеты ня выдаленыя з-за карыстальніцкага ўмяшальнiцтва.</translation>
     </message>
     <message>
-        <location line="+17"/>
+        <location line="+16"/>
         <source>No errors occurred, the packages were successfully removed.</source>
         <translation type="unfinished">Усе пакеты выдалены без памылак.</translation>
     </message>
