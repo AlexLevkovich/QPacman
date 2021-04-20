@@ -17,8 +17,8 @@
    <string>QPacman</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>pics/qpacman.svg</normaloff>pics/qpacman.svg</iconset>
+   <iconset resource="../lib/qpacman/libqpacman.qrc">
+    <normaloff>:/pics/qpacman.svg</normaloff>:/pics/qpacman.svg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="contextMenuPolicy">
@@ -473,6 +473,8 @@
    <header location="global">infoview.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../lib/qpacman/libqpacman.qrc"/>
+ </resources>
  <connections/>
 </ui>
