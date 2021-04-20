@@ -1,19 +1,18 @@
-# QPACMAN v2.0
-**qpacman** is GUI to Archlinux pacman utility.  
+# QPACMAN v3.0
+**qpacman** is GUI to Archlinux pacman's alpm lib.  
 
 It contains four subprojects:  
 
+**qpacman_service** - dbus service  
 **qpacman** - main program  
 **qpacmantray**  - tray icon - checks updates, loads qpacman  
-**qsu** - wrapper to execute qpacman under root  
-**libs** - contains two libraries: **qpacman** and **qalpm**  
+**qpacmanlocal** - program to install the local packages  
+**libs** - contains three libraries: **qpacman**, **qalpm** and **qpacmandbus**  
 
 # COMPILATION:
 
 **pkgdir** is for pkgbild (ignore it if you are going to compile manually)  
 **srcdir** is the main dir with qpacman.pro  
-If you don't want to install **qpacman** app then you have to add QPACMAN_CLIENT=OFF after qmake.  
-If you don't want to install **qpacmantray** app then you have to add QPACMAN_TRAY=OFF after qmake.  
 
 cd $srcdir  
 qmake "INSTALL_PREFIX=/usr" "INSTALL_ROOT=$pkgdir" CONFIG+=release CONFIG-=debug  
@@ -26,6 +25,6 @@ Be sure that you've added the one more dependency to PKGBUILD: **kconfigwidgets*
 
 **QT5 only**  
 
-Depends: '**Qt >= 5: core,network,gui,multimedia,widgets,svg**', '**pacman**', '**pam**', '**libarchive**' '**util-linux**' '**appstream-qt**' '**archlinux-appstream-data**'  
+Depends: '**Qt >= 5: core,network,gui,dbus,multimedia,widgets,svg**', '**pacman**', '**pam**', '**libarchive**' '**binutils**' '**appstream-qt**' '**archlinux-appstream-data**' and '**gawk**' as a makedepend. 
   
 
