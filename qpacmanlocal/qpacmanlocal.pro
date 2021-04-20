@@ -96,7 +96,7 @@ transinstall.files = $$prependAll(LANGUAGES, $$TRANS_DIR1/$$TARGET, .qm)
 transinstall.CONFIG += no_check_exist
 transinstall.path = $$INSTALL_ROOT/$$TRANS_DIR2
 
-kde.files = $$PWD/qpacmanKDEService.desktop
+kde.files = $$PWD/qpacmanlocalKDEService.desktop
 greaterThan(QT_MAJOR_VERSION, 4): kde.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/kservices5/
 lessThan(QT_MAJOR_VERSION, 5): kde.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/share/kde4/services/ServiceMenus/
 
