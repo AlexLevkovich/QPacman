@@ -9,7 +9,6 @@
 #include "multidownloader.h"
 #include "simpledownloader.h"
 #include "libalpm.h"
-#include <QTemporaryFile>
 #include <QSettings>
 #include <QDebug>
 

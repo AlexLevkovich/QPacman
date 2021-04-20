@@ -172,6 +172,7 @@ private:
     static bool m_files_executing;
     bool locked_outside;
     bool reload_is_needed;
+    QString tempFileName;
 
     friend class FilesMethodPauser;
 };

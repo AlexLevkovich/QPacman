@@ -11,6 +11,12 @@
 
 bool QPacmanService::m_files_executing = false;
 
+const QString temporaryName() {
+    QTemporaryFile tfile(QString(SYSTEMDCONFDIR)+QDir::separator()+SYSTEMDCONFFILEBASE"_XXXXXX.conf");
+    if (!tfile.open()) return QString();
+    return tfile.fileName();
+}
+
 QPacmanService::QPacmanService(QObject *parent) : QObject(parent) {
     new Alpm(this);
 
@@ -105,6 +111,11 @@ void QPacmanService::locking_changed(const QString &,bool locked) {
 }
 
 void QPacmanService::onmethod_finished(const QString & name,ThreadRun::RC rc) {
+    if (!tempFileName.isEmpty()) {
+        QFile(tempFileName).remove();
+    }
+    tempFileName.clear();
+
     emit method_finished(name,rc);
     if (reload_is_needed) {
         reload_is_needed = false;
@@ -552,6 +563,23 @@ ThreadRun::RC QPacmanService::installPackages(const QString & root_pw,const QByt
     QList<AlpmPackage> list2;
     QDataStream stream2((QByteArray *)&forcedpkgs,QIODevice::ReadOnly);
     stream2 >> list2;
+
+    QDir dir(SYSTEMDCONFDIR);
+    dir.setNameFilters(QStringList() << QString(SYSTEMDCONFFILEBASE"_*.conf"));
+    for (QString & fileName: dir.entryList()) {
+        QFile(QString(SYSTEMDCONFDIR)+QDir::separator()+fileName).remove();
+    }
+
+    for (AlpmPackage pkg: list1) {
+        if (pkg.name() == OWNPKGNAME) {
+            tempFileName = temporaryName();
+            if (!tempFileName.isEmpty()) {
+                QFile(QString(SYSTEMDCONFDIR)+QDir::separator()+SYSTEMDCONFFILEBASE".conf").copy(tempFileName);
+            }
+            break;
+        }
+    }
+
     return Alpm::instance()->installPackages(list1,asdeps,list2);
 }
 

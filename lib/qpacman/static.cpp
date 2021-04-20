@@ -3,6 +3,8 @@
 #include <QTranslator>
 #include <QLocale>
 #include <QLibraryInfo>
+#include <QTemporaryFile>
+#include <QDir>
 
 const QString fixButtonText(const QString & label) {
     QString fixedLabel;
@@ -45,4 +47,10 @@ void setupTranslations(const QString & mainName,const QString & installDir,const
 void setIniValue(const QString & key,const QVariant & value) {
     QSettings settings;
     settings.setValue("settings/"+key,value);
+}
+
+const QString temporaryName(const QString & dir,const QString & basename) {
+    QTemporaryFile tfile(dir+QDir::separator()+basename);
+    if (!tfile.open()) return QString();
+    return tfile.fileName();
 }

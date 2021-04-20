@@ -201,6 +201,7 @@ QMainWindow * PackageProcessor::createMainProcessorWindow(ProgressView ** view,Q
     QRect rect = QApplication::desktop()->screenGeometry(mainWnd);
     mainWnd->resize((rect.width()*2)/3,(rect.height()*2)/3);
     new WindowCenterer(mainWnd);
+    mainWnd->setAttribute(Qt::WA_DeleteOnClose);
     mainWnd->setVisible(true);
     return mainWnd;
 }

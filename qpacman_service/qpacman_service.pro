@@ -29,9 +29,10 @@ DEFINES += PACMANCONF=\\\"$$PACMANCONF\\\"
 
 SYSTEMDCONFDIR = $$INSTALL_PREFIX/share/dbus-1/system.d
 DEFINES += SYSTEMDCONFDIR=\\\"$$SYSTEMDCONFDIR\\\"
-SYSTEMDCONFFILE = com.alexl.qt.QPacmanService.conf
-DEFINES += SYSTEMDCONFFILE=\\\"$$SYSTEMDCONFFILE\\\"
-
+SYSTEMDCONFFILEBASE = com.alexl.qt.QPacmanService
+DEFINES += SYSTEMDCONFFILEBASE=\\\"$$SYSTEMDCONFFILEBASE\\\"
+OWNPKGNAME = qpacman
+DEFINES += OWNPKGNAME=\\\"$$OWNPKGNAME\\\"
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

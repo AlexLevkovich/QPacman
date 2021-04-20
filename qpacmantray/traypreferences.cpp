@@ -84,7 +84,7 @@ void TrayPreferences::on_buttonBox_rejected() {
 }
 
 void TrayPreferences::updateActions() {
-    actionUpdate_now->setEnabled(!m_blocking_operation);
+    actionUpdate_now->setEnabled(!m_blocking_operation && (updateWindow == NULL));
     actionCheck_for_updates->setEnabled(!m_blocking_operation);
     actionQuit->setEnabled(!m_blocking_operation);
 }
@@ -117,11 +117,11 @@ void TrayPreferences::onUpdateNowTriggered() {
     m_blocking_operation = true;
     updateActions();
 
-    if (updateWindow != NULL) delete updateWindow;
     updateWindow = PackageProcessor::createMainProcessorWindow(&progressView,&logView,&cancelAction,&logAction);
     PackageInstaller * pkg_inst = new PackageInstaller(QList<AlpmPackage>(),QList<AlpmPackage>(),false,progressView,cancelAction,NULL,NULL);
     connect(pkg_inst,&PackageInstaller::completed,this,&TrayPreferences::onInstallerCompleted);
     connect((QObject *)pkg_inst,SIGNAL(logString(const QString &)),(QObject *)logView,SLOT(appendPlainText(const QString &)));
+    connect(updateWindow,&QObject::destroyed,this,[&]() { updateWindow = NULL; updateActions(); });
 }
 
 void TrayPreferences::onInstallerCompleted(ThreadRun::RC rc) {
