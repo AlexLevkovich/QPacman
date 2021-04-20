@@ -10,10 +10,8 @@ SUBDIRS += lib \
            qpacman \
            qpacman_service \
            qpacmanlocal \
-           qpacmantray \
-           test
+           qpacmantray
 
-test.depends = lib
 qpacman_service.depends = lib
 qpacman.depends = lib
 qpacmantray.depends = lib
