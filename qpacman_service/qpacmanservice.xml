@@ -1,0 +1,573 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="com.alexl.qt.QPacmanService">
+    <signal name="question">
+      <arg direction="out" type="s" name="str"/>
+    </signal>
+    <signal name="install_packages_confirmation">
+      <arg direction="out" type="a(iiii)" name="install"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+      <arg direction="out" type="a(iiii)" name="remove"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QStringList"/>
+      <arg direction="out" type="x" name="dl_size"/>
+      <arg direction="out" type="x" name="install_size"/>
+      <arg direction="out" type="x" name="remove_size"/>
+    </signal>
+    <signal name="optdepends_event">
+      <arg direction="out" type="s" name="pkgname"/>
+      <arg direction="out" type="a(iiii)" name="installed_deps"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="StringStringMap"/>
+      <arg direction="out" type="a(iiii)" name="pending_deps"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out2" value="StringStringMap"/>
+    </signal>
+    <signal name="select_provider">
+      <arg direction="out" type="s" name="pkgname"/>
+      <arg direction="out" type="a(iiii)" name="providers"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QStringList"/>
+    </signal>
+    <signal name="remove_packages_confirmation">
+      <arg direction="out" type="a(iiii)" name="remove"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+      <arg direction="out" type="x" name="remove_size"/>
+    </signal>
+    <signal name="pkgs_installed">
+      <arg direction="out" type="a(iiii)" name="installed_pkgs"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+      <arg direction="out" type="a(iiii)" name="removed_pkgs"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QStringList"/>
+    </signal>
+    <signal name="method_finished">
+      <arg direction="out" type="s" name="name"/>
+      <arg direction="out" type="a(iiii)" name="result"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QStringList"/>
+      <arg direction="out" type="a(iii)" name="rc"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out2" value="ThreadRun::RC"/>
+    </signal>
+    <signal name="package_queried">
+      <arg direction="out" type="a(iiii)" name="result"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+    </signal>
+    <signal name="method_finished">
+      <arg direction="out" type="s" name="name"/>
+      <arg direction="out" type="a(iii)" name="rc"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="ThreadRun::RC"/>
+    </signal>
+    <signal name="pkgs_removed">
+      <arg direction="out" type="a(iiii)" name="pkgs"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </signal>
+    <signal name="install_progress">
+      <arg direction="out" type="s" name="pkg_name"/>
+      <arg direction="out" type="i" name="percent"/>
+      <arg direction="out" type="i" name="n_targets"/>
+      <arg direction="out" type="i" name="current_target"/>
+    </signal>
+    <signal name="error">
+      <arg direction="out" type="s" name="str"/>
+    </signal>
+    <signal name="all_hooks">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="all_hooks_completed">
+    </signal>
+    <signal name="file_conflicts_checked">
+    </signal>
+    <signal name="pkg_deps_checked">
+    </signal>
+    <signal name="internal_conflicts_checked">
+    </signal>
+    <signal name="transaction_completed">
+    </signal>
+    <signal name="integrity_checked">
+    </signal>
+    <signal name="diskspace_checked">
+    </signal>
+    <signal name="pkg_deps_resolved">
+    </signal>
+    <signal name="keyring_checked">
+    </signal>
+    <signal name="key_download_checked">
+    </signal>
+    <signal name="pkg_files_loaded">
+    </signal>
+    <signal name="scriplet_executed">
+    </signal>
+    <signal name="hook_completed">
+      <arg direction="out" type="s" name="name"/>
+    </signal>
+    <signal name="checking_integrity">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="checking_key_download">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="loading_pkg_files">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="starting_scriplet">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="checking_keyring">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="resolving_pkg_deps">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="checking_diskspace">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="checking_pkg_deps">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="alpm_reopen">
+    </signal>
+    <signal name="checking_internal_conflicts">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="checking_file_conflicts">
+      <arg direction="out" type="s" name="infostr"/>
+    </signal>
+    <signal name="information">
+      <arg direction="out" type="s" name="str"/>
+      <arg direction="out" type="b" name="significant"/>
+    </signal>
+    <signal name="hook">
+      <arg direction="out" type="s" name="str"/>
+      <arg direction="out" type="i" name="pos"/>
+      <arg direction="out" type="i" name="total"/>
+    </signal>
+    <signal name="remove_progress">
+      <arg direction="out" type="s" name="pkg_name"/>
+      <arg direction="out" type="i" name="percent"/>
+      <arg direction="out" type="i" name="n_targets"/>
+      <arg direction="out" type="i" name="current_target"/>
+    </signal>
+    <signal name="file_queried">
+      <arg direction="out" type="a(ii)" name="file"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg direction="out" type="i" name="index"/>
+      <arg direction="out" type="i" name="count"/>
+    </signal>
+    <signal name="conflicts_progress">
+      <arg direction="out" type="i" name="percent"/>
+    </signal>
+    <signal name="diskspace_progress">
+      <arg direction="out" type="i" name="percent"/>
+    </signal>
+    <signal name="integrity_progress">
+      <arg direction="out" type="i" name="percent"/>
+    </signal>
+    <signal name="load_progress">
+      <arg direction="out" type="i" name="percent"/>
+    </signal>
+    <signal name="keyring_progress">
+      <arg direction="out" type="i" name="percent"/>
+    </signal>
+    <signal name="downloads_starting">
+    </signal>
+    <signal name="full_download_size_found">
+      <arg direction="out" type="x" name="total"/>
+    </signal>
+    <signal name="downloads_completed">
+    </signal>
+    <signal name="show_tray_options">
+    </signal>
+    <signal name="downloads_failed">
+    </signal>
+    <signal name="download_start">
+      <arg direction="out" type="s" name="filename"/>
+    </signal>
+    <signal name="download_db_start">
+      <arg direction="out" type="s" name="dbname"/>
+    </signal>
+    <signal name="download_done">
+      <arg direction="out" type="s" name="filename"/>
+    </signal>
+    <signal name="download_failed">
+      <arg direction="out" type="s" name="filename"/>
+    </signal>
+    <signal name="download_progress">
+      <arg direction="out" type="s" name="filename"/>
+      <arg direction="out" type="x" name="xfered"/>
+      <arg direction="out" type="x" name="total"/>
+    </signal>
+    <method name="answer">
+      <arg name="flag" type="b" direction="in"/>
+    </method>
+    <method name="answer">
+      <arg name="value" type="u" direction="in"/>
+    </method>
+    <method name="queryPackages">
+      <arg type="b" direction="out"/>
+      <arg name="name" type="s" direction="in"/>
+      <arg name="fieldType" type="i" direction="in"/>
+      <arg name="filter" type="i" direction="in"/>
+      <arg name="group" type="s" direction="in"/>
+      <arg name="repo" type="s" direction="in"/>
+    </method>
+    <method name="executingMethodName">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="removeLockFile">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="cleanCacheDirs">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="repos">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="dbExtensions">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="sigLevel">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="localFileSigLevel">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="remoteFileSigLevel">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="holdPkgs">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="cacheDirs">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="syncFirstPkgs">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="hookDirs">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="ignoreGroups">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="ignorePkgs">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="noExtractPkgs">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="noUpgradePkgs">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="dbExtension">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="rootDir">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="dbPath">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="gpgDir">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="logFileName">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="arch">
+      <arg type="s" direction="out"/>
+    </method>
+    <method name="doUseSysLog">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="doDisableDownloadTimeout">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="packageUrl">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="setDBExtension">
+      <arg type="b" direction="out"/>
+      <arg name="dbext" type="s" direction="in"/>
+    </method>
+    <method name="packageFileName">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QString"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageArch">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packagePackager">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QString"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageLicenses">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageRequiredby">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageOptionalfor">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageDepends">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageOptDepends">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageConflicts">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageType">
+      <arg type="i" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageSize">
+      <arg type="x" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageReason">
+      <arg type="i" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageInstalledSize">
+      <arg type="x" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageChangeStatus">
+      <arg type="i" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageIsOrphaned">
+      <arg type="b" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageDefaultStatus">
+      <arg type="i" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageSetReason">
+      <arg type="b" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+      <arg name="reason" type="i" direction="in"/>
+    </method>
+    <method name="downloaderTimeout">
+      <arg type="u" direction="out"/>
+    </method>
+    <method name="downloaderThreadCount">
+      <arg type="u" direction="out"/>
+    </method>
+    <method name="useSystemIcons">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="packageIsDownloaded">
+      <arg type="b" direction="out"/>
+      <arg type="a(iii)" direction="in" name="pkg"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="downloaderProxy">
+      <arg type="a(iii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+    </method>
+    <method name="createLocalPackage">
+      <arg type="a(iii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkgpath" type="s" direction="in"/>
+    </method>
+    <method name="deleteLocalPackage">
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="updates">
+      <arg type="a(iii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+    </method>
+    <method name="markedPackages">
+      <arg type="a(iii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+    </method>
+    <method name="setDownloaderTimeout">
+      <arg name="value" type="u" direction="in"/>
+    </method>
+    <method name="setDownloaderThreads">
+      <arg name="value" type="u" direction="in"/>
+    </method>
+    <method name="setDownloaderProxy">
+      <arg name="proxy" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="setUsingSystemIcons">
+      <arg name="flag" type="b" direction="in"/>
+    </method>
+    <method name="packageSetChangeStatus">
+      <arg type="b" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+      <arg name="status" type="i" direction="in"/>
+    </method>
+    <method name="packageProvides">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageIconUrl">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="findByPackageName">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkgname" type="s" direction="in"/>
+    </method>
+    <method name="localPackage">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkgname" type="s" direction="in"/>
+    </method>
+    <method name="localPackage">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="name" type="s" direction="in"/>
+      <arg name="version" type="s" direction="in"/>
+    </method>
+    <method name="packagePossibleChangeStatuses">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="findByPackageNameProvides">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="provide" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="findLocalByPackageNameProvides">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="provide" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="resetPackageChangeStatuses">
+    </method>
+    <method name="packageReplaces">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageGroups">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageBuildDate">
+      <arg type="x" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageInstallDate">
+      <arg type="x" direction="out"/>
+      <arg name="pkg" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="allDBs">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="groups">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+    </method>
+    <method name="installPackages">
+      <arg type="a(iii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ThreadRun::RC"/>
+      <arg name="root_pw" type="s" direction="in"/>
+      <arg name="pkgs" type="a(ii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QByteArray"/>
+      <arg name="asdeps" type="b" direction="in"/>
+      <arg name="forcedpkgs" type="a(ii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In3" value="QByteArray"/>
+    </method>
+    <method name="askShowTrayOptions">
+    </method>
+    <method name="removePackages">
+      <arg type="a(iii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ThreadRun::RC"/>
+      <arg name="root_pw" type="s" direction="in"/>
+      <arg name="pkgs" type="a(ii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QByteArray"/>
+      <arg name="cascade" type="b" direction="in"/>
+    </method>
+    <method name="setMethodTerminateFlag">
+    </method>
+    <method name="downloadPackages">
+      <arg type="a(iii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ThreadRun::RC"/>
+      <arg name="pkgs" type="a(ii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="packageFiles">
+      <arg type="a(iii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ThreadRun::RC"/>
+      <arg name="pkgs" type="a(ii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="updateDBs">
+      <arg type="a(iii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ThreadRun::RC"/>
+      <arg name="force" type="b" direction="in"/>
+    </method>
+    <method name="lastError">
+      <arg type="s" direction="out"/>
+    </method>
+  </interface>
+</node> 

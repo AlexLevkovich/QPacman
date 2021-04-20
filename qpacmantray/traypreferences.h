@@ -10,6 +10,7 @@
 #include <QFileSystemWatcher>
 #include <QTimer>
 #include "qpacmantrayicon.h"
+#include "qalpmtypes.h"
 #include <QProcess>
 
 namespace Ui {
@@ -19,6 +20,8 @@ class TrayPreferences;
 class QShowEvent;
 class QAction;
 class QToolBar;
+class ProgressView;
+class QPlainTextEdit;
 
 class TrayPreferences : public QMainWindow {
     Q_OBJECT
@@ -36,14 +39,10 @@ private slots:
     void onCheckForUpdatesTriggered();
     void onUpdateNowTriggered();
     void onQuitTriggered();
-    void onLoadQPacmanTriggered();
-    void checker_ok(const QStringList & packages);
-    void checker_error(const QString & error,int err_id);
-    void pacman_finished(int code);
     void updateActions(const QString & lock_path = QString(),bool locked = false);
-    void qpacmanStarted(const QStringList & parms);
-    void qpacmanEnded(const QStringList & parms,qint64 rc);
     void post_resize_save();
+    void checker_completed(ThreadRun::RC ok,const QString & error,const QStringList & updates);
+    void onInstallerCompleted(ThreadRun::RC rc);
 
 signals:
     void showRequest();
@@ -58,9 +57,14 @@ private:
     QAction * actionCheck_for_updates;
     QAction * actionUpdate_now;
     QAction * actionPreferences;
-    QAction * actionLoad_QPacman;
     QAction * actionQuit;
     QToolBar * toolBar;
+
+    ProgressView * progressView;
+    QPlainTextEdit * logView;
+    QAction * cancelAction;
+    QAction * logAction;
+    QMainWindow * updateWindow;
 };
 
 #endif // TRAYPREFERENCES_H

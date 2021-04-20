@@ -20,9 +20,7 @@ public:
     QAction * checkUpdatesAction() { return m_checkUpdatesAction; }
     QAction * updateAction() { return m_updateAction; }
     QAction * preferencesAction() { return m_preferencesAction; }
-    QAction * mainWindowAction() { return m_mainWindowAction; }
     QAction * quitAction() { return m_quitAction; }
-    QAction * lockFilesAction() { return m_lockFilesAction; }
 
     void setIcon(ThemeIcons::Icon id);
     void setIcon(ThemeIcons::Icon id,int input_frame_height,int delay);
@@ -35,8 +33,6 @@ public slots:
 
 private slots:
     void clicked();
-    void lockedFile_triggered();
-    void menuAboutToShow(QMenu * menu);
 
 private:
     void initMenu(QMenu * menu);
@@ -44,13 +40,9 @@ private:
     QAction * m_checkUpdatesAction;
     QAction * m_updateAction;
     QAction * m_preferencesAction;
-    QAction * m_mainWindowAction;
     QAction * m_quitAction;
-    QAction * m_lockFilesAction;
     bool * m_use_sound;
     ThemeIcons::Icon m_id;
-    bool m_show_locking_files;
-    bool m_lock_dlg_shown;
 };
 
 #endif // QPACMANTRAYICON_H

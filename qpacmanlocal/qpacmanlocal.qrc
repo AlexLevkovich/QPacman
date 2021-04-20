@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pics/qpacman.svg</file>
+        <file>pics/package-x-generic.svg</file>
+        <file>pics/dialog-cancel.svg</file>
+        <file>pics/run-build.svg</file>
+    </qresource>
+</RCC>

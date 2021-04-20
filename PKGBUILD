@@ -1,12 +1,12 @@
 pkgname=qpacman
-pkgver=20200311.128.5cf9731
+pkgver=20210330.210.530171f
 pkgrel=1
 pkgdesc="GUI for pacman. It contains the programs: QPacman and QPacmanTray."
 url="https://github.com/AlexLevkovich/QPacman"
 arch=('i686' 'x86_64')
 license=('GPL')
-depends=('qt5-base' 'qt5-svg' 'qt5-multimedia' 'pacman' 'pam' 'libarchive' 'util-linux' 'appstream-qt' 'archlinux-appstream-data')
-makedepends=('make' 'qt5-tools' 'git')
+depends=('qt5-base' 'qt5-svg' 'qt5-multimedia' 'pacman' 'pam' 'libarchive' 'binutils' 'appstream-qt' 'archlinux-appstream-data')
+makedepends=('make' 'qt5-tools' 'git' 'awk')
 source=("$pkgname"::"git://github.com/AlexLevkovich/QPacman")
 md5sums=('SKIP')
 

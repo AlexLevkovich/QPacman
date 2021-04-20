@@ -16,7 +16,6 @@ TrayOptionsWidget::TrayOptionsWidget(QWidget *parent) : CategoryWidget(parent), 
     ui->intervalSpin->setValue(interval());
     ui->err_intervalSpin->setValue(errInterval());
     ui->playCheck->setChecked(doPlaySound());
-    ui->instQPacmanUpdtsCheck->setChecked(checkUpdatesIfQPacmanUnloaded());
 }
 
 TrayOptionsWidget::~TrayOptionsWidget() {
@@ -24,24 +23,19 @@ TrayOptionsWidget::~TrayOptionsWidget() {
 }
 
 void TrayOptionsWidget::okPressed() {
-    Static::setIniValue("interval",ui->intervalSpin->value());
-    Static::setIniValue("err_interval",ui->err_intervalSpin->value());
-    Static::setIniValue("playSound",ui->playCheck->isChecked());
-    Static::setIniValue("instQPacmanUpdtsCheck",ui->instQPacmanUpdtsCheck->isChecked());
+    setIniValue("interval",ui->intervalSpin->value());
+    setIniValue("err_interval",ui->err_intervalSpin->value());
+    setIniValue("playSound",ui->playCheck->isChecked());
 }
 
 int TrayOptionsWidget::interval() const {
-    return Static::iniValue<int>("interval",DEF_OK_SEC);
+    return iniValue<int>("interval",DEF_OK_SEC);
 }
 
 int TrayOptionsWidget::errInterval() const {
-    return Static::iniValue<int>("err_interval",DEF_FAIL_SEC);
-}
-
-bool TrayOptionsWidget::checkUpdatesIfQPacmanUnloaded() const {
-    return Static::iniValue<bool>("instQPacmanUpdtsCheck",true);
+    return iniValue<int>("err_interval",DEF_FAIL_SEC);
 }
 
 bool TrayOptionsWidget::doPlaySound() const {
-    return Static::iniValue<bool>("playSound",false);
+    return iniValue<bool>("playSound",false);
 }

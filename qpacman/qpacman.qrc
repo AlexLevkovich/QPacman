@@ -1,0 +1,24 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pics/application-exit.svg</file>
+        <file>pics/configure.svg</file>
+        <file>pics/dialog-cancel.svg</file>
+        <file>pics/dialog-messages.svg</file>
+        <file>pics/edit-delete.svg</file>
+        <file>pics/edit-find.svg</file>
+        <file>pics/edit-undo.svg</file>
+        <file>pics/go-next.svg</file>
+        <file>pics/go-previous.svg</file>
+        <file>pics/help-about.svg</file>
+        <file>pics/qpacman.svg</file>
+        <file>pics/refresh-button_shadow.png</file>
+        <file>pics/refresh-button.png</file>
+        <file>pics/repository.svg</file>
+        <file>pics/run-build.svg</file>
+        <file>pics/show-all-effects.svg</file>
+        <file>pics/view-filter.svg</file>
+        <file>pics/view-refresh.svg</file>
+        <file>pics/state-download.svg</file>
+        <file>pics/state-sync.svg</file>
+    </qresource>
+</RCC>

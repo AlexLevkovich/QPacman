@@ -6,16 +6,15 @@
 
 CONFIG += c++11
 TEMPLATE = subdirs
-SUBDIRS += libs \
-           qsu
+SUBDIRS += lib \
+           qpacman \
+           qpacman_service \
+           qpacmanlocal \
+           qpacmantray \
+           test
 
-equals(QPACMAN_CLIENT, "ON") | isEmpty(QPACMAN_CLIENT) {
-    SUBDIRS += src
-    src.depends = libs
-}
-equals(QPACMAN_TRAY, "ON") | isEmpty(QPACMAN_TRAY) {
-    SUBDIRS += qpacmantray
-    qpacmantray.depends = libs
-}
-
-qsu.depends = libs
+test.depends = lib
+qpacman_service.depends = lib
+qpacman.depends = lib
+qpacmantray.depends = lib
+qpacmanlocal.depends = lib

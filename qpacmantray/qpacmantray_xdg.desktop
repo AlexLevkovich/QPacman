@@ -6,7 +6,7 @@ Name=qpacman's tray
 Comment[be]=Запуск трэя для qpacman
 Comment[ru]=Запуск трея для qpacman
 Comment=Start qpacman's tray application
-Exec=qpacmantray --noguionstart --startchecktimeout=60000
+Exec=qpacmantray
 Icon=qpacmantray
 Terminal=false
 Type=Application

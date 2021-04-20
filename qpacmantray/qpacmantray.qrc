@@ -10,5 +10,6 @@
         <file>pics/warning.svg</file>
         <file>pics/checking.svg</file>
         <file>pics/waiting.svg</file>
+        <file>pics/Archlinux-icon-crystal-64.svg</file>
     </qresource>
 </RCC>

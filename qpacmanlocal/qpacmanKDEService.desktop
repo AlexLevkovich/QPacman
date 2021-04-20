@@ -1,0 +1,12 @@
+[Desktop Entry]
+Actions=OpenPackageFiles;
+Type=Service
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/x-xz-compressed-tar;application/x-tar;application/x-zstd-compressed-tar;
+
+[Desktop Action OpenPackageFiles]
+Name=Install with qpacman...
+Name[ru_RU]=Установить используя qpacman...
+Name[be_BY]=Усталяваць праз qpacman...
+Icon=qpacman
+Exec=qpacmanlocal %U

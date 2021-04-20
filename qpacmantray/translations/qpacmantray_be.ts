@@ -92,9 +92,8 @@
         <translation type="unfinished">Прайграць мелодыю ў выпадку знойдзеных абнаўленняў</translation>
     </message>
     <message>
-        <location/>
         <source>Check for the updates right after qpacman instance has unloaded</source>
-        <translation type="unfinished">Правяраць наяўнасць абнаўленняў адразу пасля выгрузкі асобніка qpacman</translation>
+        <translation type="obsolete">Правяраць наяўнасць абнаўленняў адразу пасля выгрузкі асобніка qpacman</translation>
     </message>
 </context>
 <context>
@@ -121,8 +120,9 @@
         <translation type="obsolete">Загружае і абнаўляе базы дадзеных пакетаў</translation>
     </message>
     <message>
+        <location filename="../traypreferences.cpp" line="+135"/>
         <source>Quit</source>
-        <translation type="obsolete">Выхад</translation>
+        <translation type="unfinished">Выхад</translation>
     </message>
     <message>
         <source>Quit from this application</source>
@@ -141,7 +141,7 @@
         <translation type="obsolete">Паказвае акно з наладамі</translation>
     </message>
     <message>
-        <location filename="../traypreferences.cpp" line="+44"/>
+        <location line="-91"/>
         <source>Program</source>
         <translation type="unfinished">Праграма</translation>
     </message>
@@ -149,7 +149,7 @@
 <context>
     <name>QPacmanTrayIcon</name>
     <message>
-        <location filename="../qpacmantrayicon.cpp" line="+40"/>
+        <location filename="../qpacmantrayicon.cpp" line="+39"/>
         <source>Check now</source>
         <translation type="unfinished">Праверыць</translation>
     </message>
@@ -179,14 +179,8 @@
         <translation type="unfinished">Паказвае акно з наладамі</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>QPacman</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
         <source>Loads QPacman application</source>
-        <translation type="unfinished">Запускае QPacman</translation>
+        <translation type="obsolete">Запускае QPacman</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -199,12 +193,11 @@
         <translation type="unfinished">Націсніце для выхаду з праграмы</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Remove lock files</source>
-        <translation type="unfinished">Выдаліць файлы блакавання</translation>
+        <translation type="obsolete">Выдаліць файлы блакавання</translation>
     </message>
     <message>
-        <location line="+59"/>
+        <location line="+38"/>
         <source>New packages are available:</source>
         <translation type="unfinished">Знойдзеныя абнаўлення:</translation>
     </message>
@@ -225,7 +218,7 @@
         <translation type="unfinished">Абнаўляюцца пакеты...</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+14"/>
         <source>There were errors diring processing!</source>
         <translation type="unfinished">Выяўленыя памылкі!</translation>
     </message>

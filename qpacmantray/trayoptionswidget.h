@@ -21,7 +21,6 @@ public:
     ~TrayOptionsWidget();
     int interval() const;
     int errInterval() const;
-    bool checkUpdatesIfQPacmanUnloaded() const;
     bool doPlaySound() const;
 
 public slots:

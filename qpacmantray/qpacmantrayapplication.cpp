@@ -1,57 +1,42 @@
-/********************************************************************************
-** Created by: Alex Levkovich (alevkovich@tut.by) 2020
-** License:    GPL
-********************************************************************************/
-
 #include "qpacmantrayapplication.h"
-#include "static.h"
+#include "libalpm.h"
 #include "traypreferences.h"
-#include <QFileInfo>
-#include <QRegularExpression>
-#include <QDebug>
 
-QPacmanTrayApplication::QPacmanTrayApplication(int &argc, char **argv) : SingleApplication(argc,argv) {
+QPacmanTrayApplication::QPacmanTrayApplication(int &argc, char *argv[]) : SingleApplication(argc,argv,true) {
     m_mainWindow = NULL;
     m_wasTopMost = false;
 
     QApplication::setQuitOnLastWindowClosed(false);
 
-    if (isApplicationStarted("qpacman")) QMetaObject::invokeMethod(this,"qpacmanStarted",Qt::QueuedConnection);
-
-    connect(this,SIGNAL(firstInstanceAttempt()),this,SLOT(firstInstanceAttempted()));
-    connect(this,SIGNAL(secondInstanceAttempt(const QStringList &)),this,SLOT(secondInstanceAttempted(const QStringList &)));
-    connect(this,SIGNAL(otherApplicationStarted(const QString &,const QStringList &,qint64)),this,SLOT(otherApplicationStarted(const QString &,const QStringList &,qint64)));
-    connect(this,SIGNAL(otherApplicationExited(const QString &,const QStringList &,qint64,qint64)),this,SLOT(otherApplicationExited(const QString &,const QStringList &,qint64,qint64)));
+    if (isSecondary()) {
+        QMetaObject::invokeMethod(this,"secondary_init",Qt::QueuedConnection);
+        return;
+    }
+    QMetaObject::invokeMethod(this,"primary_init",Qt::QueuedConnection);
 }
 
 QPacmanTrayApplication::~QPacmanTrayApplication() {
     if (m_mainWindow != NULL) delete m_mainWindow;
 }
 
-void QPacmanTrayApplication::firstInstanceAttempted() {
-    int index = arguments().indexOf(QRegularExpression("--startchecktimeout=.+"));
-    if (index >= 0) index = arguments().at(index).split("=").at(1).toInt();
-    else index = 0;
-    initMainWindow(index);
+void QPacmanTrayApplication::secondary_init() {
+    Alpm().askShowTrayOptions();
+    QMetaObject::invokeMethod(this,"quit",Qt::QueuedConnection);
 }
 
-void QPacmanTrayApplication::initMainWindow(int timeout) {
-    m_mainWindow = new TrayPreferences(timeout);
+void QPacmanTrayApplication::primary_init() {
+    m_mainWindow = new TrayPreferences(0);
     connect(m_mainWindow,SIGNAL(showRequest()),this,SLOT(putMainWindowOnTop()));
+    connect(Alpm::instance(),SIGNAL(show_tray_options()),this,SLOT(putMainWindowOnTop()));
 }
 
-void QPacmanTrayApplication::secondInstanceAttempted(const QStringList &) {
-    if (m_mainWindow == NULL) initMainWindow();
-    putWindowOnTop(m_mainWindow);
-}
-
-void QPacmanTrayApplication::putWindowOnTop(QMainWindow * wnd) {
-    if (wnd == NULL) return;
-    wnd->setWindowFlags(wnd->windowFlags() | Qt::WindowStaysOnTopHint);
+void QPacmanTrayApplication::putMainWindowOnTop() {
+    if (m_mainWindow == NULL) return;
+    m_mainWindow->setWindowFlags(m_mainWindow->windowFlags() | Qt::WindowStaysOnTopHint);
     m_wasTopMost = true;
-    wnd->setVisible(true);
-    wnd->activateWindow();
-    wnd->raise();
+    m_mainWindow->setVisible(true);
+    m_mainWindow->activateWindow();
+    m_mainWindow->raise();
 }
 
 bool QPacmanTrayApplication::notify(QObject *receiver, QEvent *event) {
@@ -63,18 +48,4 @@ bool QPacmanTrayApplication::notify(QObject *receiver, QEvent *event) {
         m_wasTopMost = false;
     }
     return ret;
-}
-
-void QPacmanTrayApplication::putMainWindowOnTop() {
-    secondInstanceAttempted(QStringList());
-}
-
-void QPacmanTrayApplication::otherApplicationStarted(const QString & appname,const QStringList & parms,qint64) {
-    if (appname != "qpacman") return;
-    emit qpacmanStarted(parms);
-}
-
-void QPacmanTrayApplication::otherApplicationExited(const QString & appname,const QStringList & parms,qint64,qint64 rc) {
-    if (appname != "qpacman") return;
-    emit qpacmanEnded(parms,rc);
 }

@@ -1,0 +1,40 @@
+<RCC>
+    <qresource prefix="/">
+        <file>pics/application-exit.svg</file>
+        <file>pics/archive-insert.svg</file>
+        <file>pics/archive-remove.svg</file>
+        <file>pics/dialog-cancel.svg</file>
+        <file>pics/dialog-error.svg</file>
+        <file>pics/dialog-messages.svg</file>
+        <file>pics/dialog-ok.svg</file>
+        <file>pics/dialog-password.svg</file>
+        <file>pics/globe.svg</file>
+        <file>pics/help-about.svg</file>
+        <file>pics/noicon.png</file>
+        <file>pics/package-available.svg</file>
+        <file>pics/package-install.svg</file>
+        <file>pics/package-installed-updated.svg</file>
+        <file>pics/package-new.svg</file>
+        <file>pics/package-reinstall.svg</file>
+        <file>pics/package-remove.svg</file>
+        <file>pics/document-edit.svg</file>
+        <file>pics/edit-copy.svg</file>
+        <file>pics/edit-delete.svg</file>
+        <file>pics/edit-download.svg</file>
+        <file>pics/edit-find.svg</file>
+        <file>pics/edit-select-all.svg</file>
+        <file>pics/edit-select.svg</file>
+        <file>pics/emblem-locked.svg</file>
+        <file>pics/folder.svg</file>
+        <file>pics/package-x-generic.svg</file>
+        <file>pics/qpacman.svg</file>
+        <file>pics/repository.svg</file>
+        <file>pics/run-build-configure.svg</file>
+        <file>pics/run-build-install.svg</file>
+        <file>pics/run-build-prune.svg</file>
+        <file>pics/run-build.svg</file>
+        <file>pics/security-low.svg</file>
+        <file>pics/show-all-effects.svg</file>
+        <file>pics/view-filter.svg</file>
+    </qresource>
+</RCC>
