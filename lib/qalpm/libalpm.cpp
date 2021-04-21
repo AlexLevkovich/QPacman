@@ -1432,7 +1432,9 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
         emit_information(tr("Starting full system upgrade..."),true);
         alpm_logaction(m_alpm_handle,LOGPREFIX,"starting full system upgrade\n");
         sync_sysupgrade(m_install_flags);
-        if(lastError() != ALPM_ERR_OK) {
+        int error_id;
+        lastError(&error_id);
+        if(error_id != ALPM_ERR_OK) {
             emit_information(lastError());
             emit_error(lastError());
             return;

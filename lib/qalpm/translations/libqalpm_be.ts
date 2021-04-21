@@ -453,7 +453,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пачынаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+309"/>
+        <location line="+311"/>
         <location line="+6"/>
         <location line="+185"/>
         <source>Skipping target: %1</source>
@@ -465,7 +465,7 @@ Do you want to delete it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="-23"/>
+        <location line="-25"/>
         <source>Starting full system upgrade...</source>
         <translation type="unfinished">Пачынаем поўнае абнаўленне сістэмы...</translation>
     </message>
@@ -475,7 +475,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Спынена па жаданнi карыстальніка!!!</translation>
     </message>
     <message>
-        <location line="+522"/>
+        <location line="+524"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 мае няправільную архітэктуру</translation>
     </message>
