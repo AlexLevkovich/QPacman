@@ -6,12 +6,13 @@
 #ifndef ALPMCONFIG_H
 #define ALPMCONFIG_H
 
-#include <alpm.h>
 #include <QStringList>
 #include <QNetworkProxy>
 #include <QVariant>
 
 class QSettings;
+typedef struct __alpm_handle_t alpm_handle_t;
+typedef struct __alpm_list_t  alpm_list_t;
 
 class AlpmConfig {
 public:

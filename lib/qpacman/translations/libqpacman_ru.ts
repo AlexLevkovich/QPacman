@@ -259,7 +259,7 @@
         <translation type="unfinished">Сервер DBUS занят, возможно, его использует другое приложение!</translation>
     </message>
     <message>
-        <location line="+38"/>
+        <location line="+37"/>
         <source>Superuser authentication failed!</source>
         <translation type="unfinished">Ошибка аутентификации суперпользователя!</translation>
     </message>

@@ -5,6 +5,7 @@
 
 #include "alpmpackage.h"
 #include "libalpm.h"
+#include "alpmlist.h"
 #include "alpmdb.h"
 #include <QByteArray>
 #include <QRectF>
@@ -125,73 +126,8 @@ QString AlpmPackage::Dependence::description() const {
     return m_description;
 }
 
-class depend_t : public alpm_depend_t {
-public:
-    depend_t(const QString & name,const QString & version,const QString & desc,AlpmPackage::CompareOper mod) {
-        this->name = strdup(name.toLatin1().constData());
-        this->version = strdup(version.toLatin1().constData());
-        this->desc = strdup(desc.toLocal8Bit().constData());
-        this->mod = compareoper_to_mod(mod);
-        this->name_hash = hash_from_name();
-    }
-
-    depend_t(const depend_t & dep) {
-        this->name = strdup(dep.name);
-        this->version = strdup(dep.version);
-        this->desc = strdup(dep.desc);
-        this->mod = dep.mod;
-        this->name_hash = dep.name_hash;
-    }
-
-    depend_t(const AlpmPackage::Dependence & dep) {
-        this->name = strdup(dep.name().toLatin1().constData());
-        this->version = strdup(dep.version().toLatin1().constData());
-        this->desc = strdup(dep.description().toLocal8Bit().constData());
-        this->mod = compareoper_to_mod(dep.operation());
-        this->name_hash = hash_from_name();
-    }
-
-private:
-    static alpm_depmod_t compareoper_to_mod(AlpmPackage::CompareOper mod) {
-        switch (mod) {
-        case AlpmPackage::UNKNOWN:
-            return ALPM_DEP_MOD_ANY;
-        case AlpmPackage::EQUAL:
-            return ALPM_DEP_MOD_EQ;
-        case AlpmPackage::MORE_OR_EQUAL:
-            return ALPM_DEP_MOD_GE;
-        case AlpmPackage::LESS_OR_EQUAL:
-            return ALPM_DEP_MOD_LE;
-        case AlpmPackage::MORE:
-            return ALPM_DEP_MOD_GT;
-        case AlpmPackage::LESS:
-            return ALPM_DEP_MOD_LT;
-        default:
-            break;
-        }
-        return ALPM_DEP_MOD_ANY;
-    }
-
-    unsigned long hash_from_name() const {
-        unsigned long hash = 0;
-        int c;
-
-        const char * str = name;
-
-        if(!str) {
-            return hash;
-        }
-        while((c = *str++)) {
-            hash = c + hash * 65599;
-        }
-
-        return hash;
-    }
-};
-
-
-AlpmPackage::CompareOper AlpmPackage::Dependence::mod_to_compareoper(alpm_depmod_t mod) {
-    switch (mod) {
+AlpmPackage::CompareOper AlpmPackage::Dependence::mod_to_compareoper(int mod) {
+    switch ((alpm_depmod_t)mod) {
     case ALPM_DEP_MOD_ANY:
         return AlpmPackage::UNKNOWN;
     case ALPM_DEP_MOD_EQ:
@@ -208,10 +144,6 @@ AlpmPackage::CompareOper AlpmPackage::Dependence::mod_to_compareoper(alpm_depmod
         break;
     }
     return AlpmPackage::UNKNOWN;
-}
-
-alpm_depend_t AlpmPackage::Dependence::to_alpm_depend() const {
-    return depend_t(*this);
 }
 
 AlpmPackage::CompareOper AlpmPackage::Dependence::operation() const {
@@ -500,12 +432,7 @@ QList<QLatin1String> AlpmPackage::remoteLocations() const {
 }
 
 bool AlpmPackage::isDownloaded(QString * path_pkg_file) const {
-    if ((Alpm::p_alpm == NULL) || (Alpm::p_alpm->m_alpm_handle == NULL)) {
-        if (Alpm::p_alpm != NULL) {
-            Alpm::p_alpm->m_alpm_errno = Alpm::ALPM_IS_NOT_OPEN;
-        }
-        return false;
-    }
+    if ((Alpm::p_alpm == NULL) || (Alpm::p_alpm->m_alpm_handle == NULL)) return false;
 
     if (!m_filepath.isEmpty()) {
         *path_pkg_file = m_filepath;
@@ -663,8 +590,8 @@ qint64 AlpmPackage::installedSize() const {
     return (qint64)alpm_pkg_get_isize(m_handle);
 }
 
-AlpmPackage::Reason AlpmPackage::intToReason(alpm_pkgreason_t reason) const {
-    switch (reason) {
+AlpmPackage::Reason AlpmPackage::intToReason(int reason) const {
+    switch ((alpm_pkgreason_t)reason) {
     case ALPM_PKG_REASON_EXPLICIT:
         return AlpmPackage::Explicit;
     case ALPM_PKG_REASON_DEPEND:
@@ -675,7 +602,7 @@ AlpmPackage::Reason AlpmPackage::intToReason(alpm_pkgreason_t reason) const {
     return AlpmPackage::Undefined;
 }
 
-alpm_pkgreason_t AlpmPackage::reasonToInt(AlpmPackage::Reason reason) const {
+int AlpmPackage::reasonToInt(AlpmPackage::Reason reason) const {
     switch (reason) {
     case AlpmPackage::Explicit:
         return ALPM_PKG_REASON_EXPLICIT;
@@ -696,19 +623,20 @@ AlpmPackage::Reason AlpmPackage::reason() const {
 
 bool AlpmPackage::setReason(Reason reason) {
     if (reason == AlpmPackage::Undefined) return false;
-    if (repo() == "local") return (alpm_pkg_set_reason(m_handle,reasonToInt(reason)) == 0);
+    if (repo() == "local") return (alpm_pkg_set_reason(m_handle,(alpm_pkgreason_t)reasonToInt(reason)) == 0);
     alpm_pkg_t * pkg = findInLocal(m_handle);
     if (pkg == NULL) return false;
 
-    return (alpm_pkg_set_reason(pkg,reasonToInt(reason)) == 0);
+    return (alpm_pkg_set_reason(pkg,(alpm_pkgreason_t)reasonToInt(reason)) == 0);
 }
 
 bool AlpmPackage::isFile() const {
     return (type() == AlpmPackage::Type::File);
 }
 
-AlpmPackage::FileInfo::FileInfo(const alpm_file_t & path) {
-    m_path = "/"+QString::fromLocal8Bit((const char *)path.name);
+AlpmPackage::FileInfo::FileInfo(const QString & path) {
+    m_path = "/"+path;
+    if (m_path.startsWith("//")) m_path = m_path.mid(1);
     QFileInfo info(m_path);
     m_mode = toMode_t(info);
     m_size = (qint64)info.size();
@@ -787,7 +715,7 @@ QList<AlpmPackage::FileInfo> AlpmPackage::files(alpm_pkg_t * pkg) const {
     if (files == NULL) return ret;
 
     for (size_t i=0;i<files->count;i++) {
-        ret.append(AlpmPackage::FileInfo(files->files[i]));
+        ret.append(AlpmPackage::FileInfo(QString::fromLocal8Bit(files->files[i].name)));
     }
     return ret;
 }
@@ -795,12 +723,7 @@ QList<AlpmPackage::FileInfo> AlpmPackage::files(alpm_pkg_t * pkg) const {
 QList<AlpmPackage::FileInfo> AlpmPackage::files() const {
     if (type() == AlpmPackage::Type::File) return files(m_filepath);
     else {
-        if ((Alpm::p_alpm == NULL) || (Alpm::p_alpm->m_alpm_handle == NULL)) {
-            if (Alpm::p_alpm != NULL) {
-                Alpm::p_alpm->m_alpm_errno = Alpm::ALPM_IS_NOT_OPEN;
-            }
-            return QList<AlpmPackage::FileInfo>();
-        }
+        if ((Alpm::p_alpm == NULL) || (Alpm::p_alpm->m_alpm_handle == NULL)) return QList<AlpmPackage::FileInfo>();
 
         alpm_pkg_t * m_pkg = handle();
         QList<AlpmPackage::FileInfo> ret = files(m_pkg);

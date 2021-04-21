@@ -8,6 +8,7 @@
 #include <QSettings>
 #include <QFile>
 #include <QDir>
+#include <alpm.h>
 #include <QStandardPaths>
 #include <QDataStream>
 #include <sys/sysinfo.h>

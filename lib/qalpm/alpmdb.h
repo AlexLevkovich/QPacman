@@ -13,6 +13,7 @@
 #include <QRegularExpression>
 #include "alpmpackage.h"
 
+typedef struct __alpm_db_t alpm_db_t;
 
 class AlpmDB {
 public:
@@ -27,7 +28,7 @@ public:
     static const QString extension();
 
     QList<AlpmPackage> packages(const QString & str = QString(),AlpmPackage::SearchFieldType fieldType = AlpmPackage::NAME,AlpmPackage::PackageFilter filter = AlpmPackage::IS_ALL,const QString & group = QString(),const QString & dbname = QString()) const;
-    const QStringList & groups() const;
+    const QStringList & groups();
 
     QList<AlpmPackage> find(const QRegularExpression & expr) const;
     AlpmPackage findByFileName(const QString & filename) const;
@@ -43,13 +44,13 @@ public:
 protected:
     AlpmDB();
     AlpmDB(alpm_db_t * db_handle);
-    const QMap<AlpmPackage::Dependence,QList<AlpmPackage> > & provides() const;
+    const QMap<AlpmPackage::Dependence,QList<AlpmPackage> > & provides();
 
 private:
     static int no_version_compare(alpm_pkg_t * item1, alpm_pkg_t * item2);
-    template<class T> T & check_error(T & t) const;
-    template<class T> T check_error(const T & t) const;
-    void check_error() const;
+    template<class T> T & check_error(T & t,const char * err = NULL) const;
+    template<class T> T check_error(const T & t,const char * err = NULL) const;
+    void check_error(const char * err = NULL) const;
     bool isAppropriateDepsForPackageName(const QString & name,const QList<AlpmPackage::Dependence> & deps) const;
 
     alpm_db_t * m_db_handle;

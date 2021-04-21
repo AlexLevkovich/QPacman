@@ -12,7 +12,6 @@
 #include <QList>
 #include <QFlags>
 #include <QDir>
-#include <alpm.h>
 #include "alpmdb.h"
 #include "inotifier.h"
 #include "alpmpackage.h"
@@ -22,90 +21,13 @@
 
 class QFlagEventLoop;
 
+typedef union _alpm_question_t alpm_question_t;
+typedef union _alpm_event_t alpm_event_t;
+typedef struct _alpm_depend_t alpm_depend_t;
+
 class Alpm : public ThreadRun {
     Q_OBJECT
 public:
-    enum Caps {
-        NLS = ALPM_CAPABILITY_NLS,
-        DOWNLOADER = ALPM_CAPABILITY_DOWNLOADER,
-        SIGNATURES = ALPM_CAPABILITY_SIGNATURES
-    };
-    
-    enum Errors {
-        PKG_LIST_IS_EMPTY             = -1,
-        ALPM_INSTANCE_ALREADY_CREATED = -2,
-        ALPM_IS_NOT_OPEN              = -3,
-        ALPMDB_HANDLE_FAILED          = -4,
-        LOCAL_DB_UPDATE               = -5,
-        PKG_IS_NOT_INITED             = -6,
-        REASON_WRONG_DB               = -7,
-        CANNOT_GET_ROOT               = -9,
-        ALPM_CONFIG_FAILED            = -10,
-        ALPM_LINK_LOCAL_DB_FAILED     = -11,
-        ALPM_HANDLE_FAILED            = -12,
-        THREAD_IS_ALREADY_RUNNING     = -13,
-        CANNOT_LOAD_CONFIG            = -14,
-        USER_REFUSAL                  = -15,
-        NOTHING_DOWNLOAD              = -16,
-        OK_CODE_SUPPRESS_ALPMS        = -17,
-        OK_CODE                       = ALPM_ERR_OK,
-        OUT_OF_MEMORY                 = ALPM_ERR_MEMORY,
-        UNEXPECTED_ERR                = ALPM_ERR_SYSTEM,
-        BAD_PERMS                     = ALPM_ERR_BADPERMS,
-        NOT_A_FILE                    = ALPM_ERR_NOT_A_FILE,
-        NOT_A_DIR                     = ALPM_ERR_NOT_A_DIR,
-        WRONG_ARGS                    = ALPM_ERR_WRONG_ARGS,
-        NO_FREE_DISK_SPACE            = ALPM_ERR_DISK_SPACE,
-        LIB_IS_NOT_INITIALIZED        = ALPM_ERR_HANDLE_NULL,
-        LIB_IS_OPEN_ALREADY           = ALPM_ERR_HANDLE_NOT_NULL,
-        UNABLE_TO_LOCK_DB             = ALPM_ERR_HANDLE_LOCK,
-        CANNOT_OPEN_DB                = ALPM_ERR_DB_OPEN,
-        CANNOT_CREATE_DB              = ALPM_ERR_DB_CREATE,
-        DB_IS_NOT_INITIALIZED         = ALPM_ERR_DB_NULL,
-        DB_IS_OPEN_ALREADY            = ALPM_ERR_DB_NOT_NULL,
-        DB_NOT_FOUND                  = ALPM_ERR_DB_NOT_FOUND,
-        DB_INVALID                    = ALPM_ERR_DB_INVALID,
-        DB_INVALID_SIG                = ALPM_ERR_DB_INVALID_SIG,
-        DB_INCORRECT_VERSION          = ALPM_ERR_DB_VERSION,
-        CANNOT_UPDATE_DB              = ALPM_ERR_DB_WRITE,
-        CANNOT_REMOVE_DB              = ALPM_ERR_DB_REMOVE,
-        SERVER_BAD_URL                = ALPM_ERR_SERVER_BAD_URL,
-        NO_CONFIGURED_SERVERS         = ALPM_ERR_SERVER_NONE,
-        TRANS_IS_INITIALIZED_ALREADY  = ALPM_ERR_TRANS_NOT_NULL,
-        TRANS_IS_NOT_INITIALIZED      = ALPM_ERR_TRANS_NOT_INITIALIZED,
-        TRANS_IS_NOT_INITIALIZED_NULL = ALPM_ERR_TRANS_NULL,
-        TRANS_DUP_TARGET              = ALPM_ERR_TRANS_DUP_TARGET,
-        TRANS_IS_NOT_PREPARED         = ALPM_ERR_TRANS_NOT_PREPARED,
-        TRANS_IS_ABORTED              = ALPM_ERR_TRANS_ABORT,
-        TRANS_TYPE_UNCOMPATIBLE_OPER  = ALPM_ERR_TRANS_TYPE,
-        TRANS_IS_NOT_LOCKED           = ALPM_ERR_TRANS_NOT_LOCKED,
-        TRANS_HOOK_IS_FAILED          = ALPM_ERR_TRANS_HOOK_FAILED,
-        PKG_IS_NOT_FOUND              = ALPM_ERR_PKG_NOT_FOUND,
-        PKG_IS_IGNORED                = ALPM_ERR_PKG_IGNORED,
-        PKG_IS_INVALID                = ALPM_ERR_PKG_INVALID,
-        PKG_HAS_INVALID_CHECKSUM      = ALPM_ERR_PKG_INVALID_CHECKSUM,
-        PKG_HAS_INVALID_SIG           = ALPM_ERR_PKG_INVALID_SIG,
-        PKG_HAS_MISSING_SIG           = ALPM_ERR_PKG_MISSING_SIG,
-        CANNOT_OPEN_PKG               = ALPM_ERR_PKG_OPEN,
-        CANNOT_REMOVE_PKG             = ALPM_ERR_PKG_CANT_REMOVE,
-        PKG_HAS_INVALID_NAME          = ALPM_ERR_PKG_INVALID_NAME,
-        PKG_HAS_INVALID_ARCH          = ALPM_ERR_PKG_INVALID_ARCH,
-        PKG_REPO_IS_NOT_FOUND         = ALPM_ERR_PKG_REPO_NOT_FOUND,
-        SIG_IS_MISSING                = ALPM_ERR_SIG_MISSING,
-        SIG_IS_INVALID                = ALPM_ERR_SIG_INVALID,
-        UNSATISFIED_DEPS              = ALPM_ERR_UNSATISFIED_DEPS,
-        CONFLICTING_DEPS              = ALPM_ERR_CONFLICTING_DEPS,
-        FILE_CONFLICTS_ARE_FOUND      = ALPM_ERR_FILE_CONFLICTS,
-        FAILED_RETRIEVE_FILES         = ALPM_ERR_RETRIEVE,
-        INVALID_REGEX                 = ALPM_ERR_INVALID_REGEX,
-        LIBARCHIVE_ERR                = ALPM_ERR_LIBARCHIVE,
-        EXTERNAL_DOWNLOAD_ERR         = ALPM_ERR_EXTERNAL_DOWNLOAD,
-        GPGME_ERR                     = ALPM_ERR_GPGME,
-        MISSING_CAPABILITY_SIGNATURES = ALPM_ERR_MISSING_CAPABILITY_SIGNATURES
-    };
-
-    Q_DECLARE_FLAGS(CapsFlags,Caps)
-
     Alpm(QObject *parent = NULL);
     ~Alpm();
     bool open(const QString & confpath,const QString & dbpath = QString());
@@ -118,7 +40,6 @@ public:
     QString dbDirPath() const;
     QString lockFilePath() const;
     static const QString version();
-    static CapsFlags capabilities();
     bool isLocked() const;
     bool removeLockFile();
     QStringList cacheDirs() const;
@@ -228,7 +149,7 @@ private:
     int wait_for_answer();
     void query_packages_portion(QList<AlpmPackage> & pkgs,int startindex,int lastindex) const;
     void sync_sysupgrade_portion(QList<AlpmPackage> & add_pkgs,int startindex,int lastindex);
-    int sync_sysupgrade(int m_install_flags);
+    void sync_sysupgrade(int m_install_flags);
     void install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flags,const QList<AlpmPackage> & forcedpkgs);
     void remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade);
     void update_dbs(bool force);
@@ -241,7 +162,7 @@ private:
     static const QStringList dirContents(const QDir & dir,const QString & nameFilter);
     static int operation_fetch_fn(const QString & url,const QString & localpath,bool force);
     static int operation_fetch_fn(const char *url, const char *localpath,int force);
-    static void operation_progress_fn(alpm_progress_t progress, const char * pkg_name, int percent, size_t n_targets, size_t current_target);
+    static void operation_progress_fn(int progress, const char * pkg_name, int percent, size_t n_targets, size_t current_target);
     static void operation_question_fn(alpm_question_t * question);
     static void operation_event_fn(alpm_event_t * event);
     static const QString alpm_item_string_fn(alpm_pkg_t * value);
@@ -297,8 +218,5 @@ private:
 };
 
 Q_DECLARE_METATYPE(StringStringMap)
-Q_DECLARE_METATYPE(alpm_list_t *)
-Q_DECLARE_METATYPE(size_t)
-Q_DECLARE_OPERATORS_FOR_FLAGS(Alpm::CapsFlags)
 
 #endif // LIBALPM_H

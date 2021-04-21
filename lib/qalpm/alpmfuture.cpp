@@ -10,6 +10,7 @@
 #include <QDBusMetaType>
 #endif
 #include "libalpm.h"
+#include <alpm.h>
 
 bool ThreadRun::m_terminate = false;
 bool ThreadRun::m_paused = false;

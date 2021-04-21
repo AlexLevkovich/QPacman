@@ -123,8 +123,7 @@ void PackageProcessor::exec_process() {
         return;
     }
     m_start_timer.stop();
-    ThreadRun::RC rc;
-    switch (rc = process(m_pw)) {
+    switch (process(m_pw)) {
     case ThreadRun::BAD:
     case ThreadRun::TERMINATED:
     case ThreadRun::FORBIDDEN:
@@ -327,7 +326,7 @@ void PackageProcessor::install_progress(const QString & pkg_name,int percent,int
         progressView->moveRowAtEnd(overalInstallItem);
         blockSignals(false);
     }
-    overalInstallItem->setValue(((current_target-1)*100)+percent);
+    if (overalInstallItem != NULL) overalInstallItem->setValue(((current_target-1)*100)+percent);
     installItem->setValue(percent);
 }
 
@@ -341,7 +340,7 @@ void PackageProcessor::remove_progress(const QString & pkg_name,int percent,int 
         progressView->moveRowAtEnd(overalRemoveItem);
         blockSignals(false);
     }
-    overalRemoveItem->setValue(((current_target-1)*100)+percent);
+    if (overalRemoveItem != NULL) overalRemoveItem->setValue(((current_target-1)*100)+percent);
     removeItem->setValue(percent);
 }
 

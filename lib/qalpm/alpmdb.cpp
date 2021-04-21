@@ -8,6 +8,8 @@
 #include <QThread>
 #include "searchpackage.h"
 #include "libalpm.h"
+#include "alpmlist.h"
+#include <alpm.h>
 #include <QDebug>
 
 template<class ForwardIt, class T, class Compare> static ForwardIt binary_search_ex(ForwardIt first, ForwardIt last, const T& value, Compare comp) {
@@ -22,18 +24,20 @@ template<class ForwardIt, class T> static ForwardIt binary_search_ex(ForwardIt f
     return it;
 }
 
-void AlpmDB::check_error() const {
-    if (Alpm::p_alpm != NULL && Alpm::p_alpm->m_alpm_handle == NULL) Alpm::p_alpm->m_alpm_errno = Alpm::ALPM_HANDLE_FAILED;
-    if (m_db_handle == NULL) Alpm::p_alpm->m_alpm_errno = Alpm::ALPMDB_HANDLE_FAILED;
+void AlpmDB::check_error(const char * err) const {
+    if (m_db_handle == NULL || (Alpm::instance() != NULL || Alpm::instance()->m_alpm_handle == NULL)) {
+        Alpm::instance()->m_alpm_errno = ALPM_ERR_HANDLE_NULL;
+        if (err != NULL) qCritical() << err;
+    }
 }
 
-template<class T> T & AlpmDB::check_error(T & t) const {
-    check_error();
+template<class T> T & AlpmDB::check_error(T & t,const char * err) const {
+    check_error(err);
     return t;
 }
 
-template<class T> T AlpmDB::check_error(const T & t) const {
-    check_error();
+template<class T> T AlpmDB::check_error(const T & t,const char * err) const {
+    check_error(err);
     return t;
 }
 
@@ -47,7 +51,10 @@ AlpmDB::AlpmDB(alpm_db_t * db_handle) {
 
 AlpmDB::AlpmDB(const QString & name) {
     m_db_handle = NULL;
-    if (Alpm::p_alpm == NULL || Alpm::instance()->m_alpm_handle == NULL) return;
+    if (Alpm::instance() != NULL && Alpm::instance()->m_alpm_handle == NULL) {
+        Alpm::instance()->m_alpm_errno = ALPM_ERR_HANDLE_NULL;
+        return;
+    }
     if (name == "local") {
         m_db_handle = alpm_get_localdb(Alpm::instance()->m_alpm_handle);
     }
@@ -80,11 +87,9 @@ bool AlpmDB::isAppropriateDepsForPackageName(const QString & name,const QList<Al
 QList<AlpmPackage> AlpmDB::packages(const QString & str,AlpmPackage::SearchFieldType fieldType,AlpmPackage::PackageFilter filter,const QString & group,const QString & dbname) const {
     QList<AlpmPackage> m_packages;
 
-    if (m_db_handle == NULL) {
-        qCritical() << "Wrong db handle!!!";
-        return m_packages;
-    }
+    if (!isValid()) return check_error(m_packages);
 
+    Alpm::instance()->m_alpm_errno = ALPM_ERR_OK;
     if (!dbname.isEmpty() && dbname != this->name()) return m_packages;
 
     AlpmPackage pkg;
@@ -116,13 +121,11 @@ QList<AlpmPackage> AlpmDB::packages(const QString & str,AlpmPackage::SearchField
     return m_packages;
 }
 
-const QMap<AlpmPackage::Dependence,QList<AlpmPackage> > & AlpmDB::provides() const {
+const QMap<AlpmPackage::Dependence,QList<AlpmPackage> > & AlpmDB::provides() {
     if (!m_provides.isEmpty()) return m_provides;
 
-    if (m_db_handle == NULL) {
-        qCritical() << "Wrong db handle!!!";
-        return m_provides;
-    }
+    if (!isValid()) return check_error(m_provides,"Wrong db handle!!!");
+    Alpm::instance()->m_alpm_errno = ALPM_ERR_OK;
 
     AlpmPackage pkg;
     AlpmList<alpm_pkg_t> pkgs(alpm_db_get_pkgcache(m_db_handle),AlpmList<alpm_pkg_t>::ignorefree);
@@ -138,13 +141,11 @@ const QMap<AlpmPackage::Dependence,QList<AlpmPackage> > & AlpmDB::provides() con
     return m_provides;
 }
 
-const QStringList & AlpmDB::groups() const {
+const QStringList & AlpmDB::groups() {
     if (!m_groups.isEmpty()) return m_groups;
 
-    if (m_db_handle == NULL) {
-        qCritical() << "Wrong db handle!!!";
-        return m_groups;
-    }
+    if (!isValid()) return check_error(m_groups,"Wrong db handle!!!");
+    Alpm::instance()->m_alpm_errno = ALPM_ERR_OK;
 
     AlpmDB * p_this = (AlpmDB *)this;
     AlpmList<alpm_pkg_t> pkgs(alpm_db_get_pkgcache(m_db_handle),AlpmList<alpm_pkg_t>::ignorefree);
@@ -160,10 +161,12 @@ const QStringList & AlpmDB::groups() const {
 }
 
 bool AlpmDB::isValid() const {
-    return (m_db_handle != NULL && Alpm::p_alpm != NULL && Alpm::p_alpm->m_alpm_handle != NULL && !alpm_db_get_valid(m_db_handle));
+    return (m_db_handle != NULL && Alpm::instance() != NULL && Alpm::instance()->m_alpm_handle != NULL && !alpm_db_get_valid(m_db_handle));
 }
 
 QLatin1String AlpmDB::name() const {
+    if (!isValid()) return QLatin1String();
+
     const char * name = alpm_db_get_name(m_db_handle);
     return QLatin1String((name == NULL)?"":name);
 }
@@ -173,12 +176,8 @@ const QString AlpmDB::extension() {
 }
 
 bool AlpmDB::update(bool force) {
-    if (!isValid()) return check_error(false);
-
-    if (name() == "local") {
-        Alpm::p_alpm->m_alpm_errno=Alpm::LOCAL_DB_UPDATE;
-        return false;
-    }
+    if (!isValid()) return check_error(false,"Wrong db handle!!!");
+    Alpm::instance()->m_alpm_errno = ALPM_ERR_OK;
 
     Alpm::p_alpm->m_download_errs.clear();
     m_groups.clear();
@@ -189,10 +188,8 @@ bool AlpmDB::update(bool force) {
 QList<AlpmPackage> AlpmDB::find(const QRegularExpression & expr) const {
     QList<AlpmPackage> ret;
 
-    if (m_db_handle == NULL) {
-        qCritical() << "Wrong db handle!!!";
-        return ret;
-    }
+    if (!isValid()) return check_error(ret,"Wrong db handle!!!");
+    Alpm::instance()->m_alpm_errno = ALPM_ERR_OK;
 
     AlpmPackage pkg;
     QList<AlpmPackage::Dependence> provides;
@@ -222,10 +219,8 @@ QList<AlpmPackage> AlpmDB::find(const QRegularExpression & expr) const {
 QList<AlpmPackage> AlpmDB::findByGroup(const QString & group) const {
     QList<AlpmPackage> ret;
 
-    if (m_db_handle == NULL) {
-        qCritical() << "Wrong db handle!!!";
-        return ret;
-    }
+    if (!isValid()) return check_error(ret,"Wrong db handle!!!");
+    Alpm::instance()->m_alpm_errno = ALPM_ERR_OK;
 
     AlpmPackage pkg;
     AlpmList<alpm_pkg_t> pkgs(alpm_db_get_pkgcache(m_db_handle),AlpmList<alpm_pkg_t>::ignorefree);
@@ -255,10 +250,8 @@ AlpmPackage AlpmDB::findByFileName(const QString & filename) const {
 AlpmPackage AlpmDB::findByFileName(const char * filename) const {
     AlpmPackage ret;
 
-    if (m_db_handle == NULL) {
-        qCritical() << "Wrong db handle!!!";
-        return ret;
-    }
+    if (!isValid()) return check_error(ret,"Wrong db handle!!!");
+    Alpm::instance()->m_alpm_errno = ALPM_ERR_OK;
 
     alpm_pkg_t * pkg;
     AlpmList<alpm_pkg_t> pkgs(alpm_db_get_pkgcache(m_db_handle),AlpmList<alpm_pkg_t>::ignorefree);
@@ -281,8 +274,7 @@ AlpmPackage AlpmDB::findByFileName(const char * filename) const {
 QList<AlpmPackage> AlpmDB::findByPackageNameProvides(const AlpmPackage::Dependence & provide) const {
     QList<AlpmPackage> ret;
 
-    provides();
-    QList<AlpmPackage::Dependence> keys = provides().keys();
+    QList<AlpmPackage::Dependence> keys = ((AlpmDB *)this)->provides().keys();
     QList<AlpmPackage::Dependence>::const_iterator it = binary_search_ex(keys.begin(),keys.end(),provide);
     if (it == keys.end()) return ret;
 

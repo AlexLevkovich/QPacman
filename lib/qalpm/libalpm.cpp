@@ -14,12 +14,78 @@
 #include <QDBusMetaType>
 #endif
 #include <QDebug>
+#include <alpm.h>
 
 Alpm * Alpm::p_alpm = NULL;
 int Alpm::m_percent = -1;
 int Alpm::prev_event_type = -1;
 AlpmConfig * Alpm::p_config = NULL;
 QStringList Alpm::m_download_errs;
+
+enum Errors {
+    PKG_LIST_IS_EMPTY             = (ALPM_ERR_OK - 14),
+    ALPM_INSTANCE_ALREADY_CREATED = (ALPM_ERR_OK - 13),
+    ALPM_IS_NOT_OPEN              = (ALPM_ERR_OK - 12),
+    PKG_IS_NOT_INITED             = (ALPM_ERR_OK - 11),
+    REASON_WRONG_DB               = (ALPM_ERR_OK - 10),
+    CANNOT_GET_ROOT               = (ALPM_ERR_OK - 9),
+    ALPM_CONFIG_FAILED            = (ALPM_ERR_OK - 8),
+    ALPM_LINK_LOCAL_DB_FAILED     = (ALPM_ERR_OK - 7),
+    ALPM_HANDLE_FAILED            = (ALPM_ERR_OK - 6),
+    THREAD_IS_ALREADY_RUNNING     = (ALPM_ERR_OK - 5),
+    CANNOT_LOAD_CONFIG            = (ALPM_ERR_OK - 4),
+    USER_REFUSAL                  = (ALPM_ERR_OK - 3),
+    NOTHING_DOWNLOAD              = (ALPM_ERR_OK - 2),
+    OK_CODE_SUPPRESS_ALPMS        = (ALPM_ERR_OK - 1)
+};
+
+class depend_t : public alpm_depend_t {
+public:
+    depend_t(const AlpmPackage::Dependence & dep) {
+        this->name = strdup(dep.name().toLatin1().constData());
+        this->version = strdup(dep.version().toLatin1().constData());
+        this->desc = strdup(dep.description().toLocal8Bit().constData());
+        this->mod = compareoper_to_mod(dep.operation());
+        this->name_hash = hash_from_name();
+    }
+
+private:
+    static alpm_depmod_t compareoper_to_mod(AlpmPackage::CompareOper mod) {
+        switch (mod) {
+        case AlpmPackage::UNKNOWN:
+            return ALPM_DEP_MOD_ANY;
+        case AlpmPackage::EQUAL:
+            return ALPM_DEP_MOD_EQ;
+        case AlpmPackage::MORE_OR_EQUAL:
+            return ALPM_DEP_MOD_GE;
+        case AlpmPackage::LESS_OR_EQUAL:
+            return ALPM_DEP_MOD_LE;
+        case AlpmPackage::MORE:
+            return ALPM_DEP_MOD_GT;
+        case AlpmPackage::LESS:
+            return ALPM_DEP_MOD_LT;
+        default:
+            break;
+        }
+        return ALPM_DEP_MOD_ANY;
+    }
+
+    unsigned long hash_from_name() const {
+        unsigned long hash = 0;
+        int c;
+
+        const char * str = name;
+
+        if(!str) {
+            return hash;
+        }
+        while((c = *str++)) {
+            hash = c + hash * 65599;
+        }
+
+        return hash;
+    }
+};
 
 template<class ForwardIt, class T, class Compare> static ForwardIt binary_search_ex(ForwardIt first, ForwardIt last, const T& value, Compare comp) {
     ForwardIt it = std::lower_bound(first, last, value, comp);
@@ -183,7 +249,7 @@ void Alpm::emit_remove_packages_confirmation(const QStringList & _remove,qint64 
 }
 
 bool Alpm::open(const QString & confpath,const QString & dbpath) {
-    m_alpm_errno = OK_CODE;
+    m_alpm_errno = ALPM_ERR_OK;
     if (isValid() || p_alpm != this) {
         m_alpm_errno = ALPM_INSTANCE_ALREADY_CREATED;
         return false;
@@ -201,7 +267,7 @@ bool Alpm::open(const QString & confpath,const QString & dbpath) {
         return false;
     }
 
-    alpm_option_set_progresscb(m_alpm_handle,operation_progress_fn);
+    alpm_option_set_progresscb(m_alpm_handle,(void (*)(alpm_progress_t, const char *, int, size_t, size_t))operation_progress_fn);
     alpm_option_set_questioncb(m_alpm_handle,operation_question_fn);
     alpm_option_set_eventcb(m_alpm_handle,operation_event_fn);
     alpm_option_set_fetchcb(m_alpm_handle,operation_fetch_fn);
@@ -248,7 +314,7 @@ bool Alpm::isOpen() {
 }
 
 bool Alpm::reopen() {
-    m_alpm_errno = OK_CODE;
+    m_alpm_errno = ALPM_ERR_OK;
     if (!isValid(true)) {
         m_alpm_errno = ALPM_IS_NOT_OPEN;
         return false;
@@ -260,7 +326,7 @@ bool Alpm::reopen() {
 }
 
 bool Alpm::close() {
-    m_alpm_errno = OK_CODE;
+    m_alpm_errno = ALPM_ERR_OK;
 
     if (!isValid()) {
         m_alpm_errno = ALPM_IS_NOT_OPEN;
@@ -317,12 +383,12 @@ int Alpm::operation_fetch_fn(const char *url, const char *localpath,int force) {
     return (int)Alpm::operation_fetch_fn(QString::fromLocal8Bit(url),QString::fromLocal8Bit(localpath),(int)force);
 }
 
-void Alpm::operation_progress_fn(alpm_progress_t progress, const char * pkg_name, int percent, size_t n_targets, size_t current_target) {
+void Alpm::operation_progress_fn(int progress, const char * pkg_name, int percent, size_t n_targets, size_t current_target) {
     if (m_percent != -1 && m_percent == percent) return;
 
     m_percent = percent;
     QString pkgname = QString::fromLocal8Bit((pkg_name == NULL)?"":pkg_name);
-    switch (progress) {
+    switch ((alpm_progress_t)progress) {
     case ALPM_PROGRESS_ADD_START:
         p_alpm->emit_information(tr("(%1/%2) Installing %3 (%4%)").arg(current_target).arg(n_targets).arg(pkgname).arg(percent));
         p_alpm->emit_progress("install_progress",pkgname,percent,(int)n_targets,(int)current_target);
@@ -584,7 +650,7 @@ QList<AlpmPackage> OverwriteHandler::m_forcedpkgs;
 
 void Alpm::operation_event_fn(alpm_event_t * event) {
     m_percent = -1;
-    p_alpm->m_alpm_errno = OK_CODE;
+    p_alpm->m_alpm_errno = ALPM_ERR_OK;
 
     if ((prev_event_type == ALPM_EVENT_SCRIPTLET_INFO) && (event->type != ALPM_EVENT_SCRIPTLET_INFO)) p_alpm->emit_event("scriplet_executed");
 
@@ -797,7 +863,7 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
         case ALPM_EVENT_PKGDOWNLOAD_FAILED:
         {
             if (!m_download_errs.isEmpty()) {
-                p_alpm->m_alpm_errno = EXTERNAL_DOWNLOAD_ERR;
+                p_alpm->m_alpm_errno = ALPM_ERR_EXTERNAL_DOWNLOAD;
                 p_alpm->emit_information(m_download_errs.last());
                 p_alpm->emit_error(m_download_errs.last());
             }
@@ -823,10 +889,6 @@ const QString Alpm::version() {
     return QString::fromLocal8Bit(ver);
 }
 
-Alpm::CapsFlags Alpm::capabilities() {
-    return (Alpm::CapsFlags)alpm_capabilities();
-}
-
 QString Alpm::arch() const {
     if (!isValid(true)) return QString();
 
@@ -848,11 +910,16 @@ QString Alpm::lastError(int * error_id) const {
     }
 
     if (m_alpm_errno == OK_CODE_SUPPRESS_ALPMS) {
-        if (error_id != NULL) *error_id = OK_CODE;
+        if (error_id != NULL) *error_id = ALPM_ERR_OK;
         return QString();
     }
 
-    if (m_alpm_errno != ALPM_ERR_OK && m_alpm_errno < 0) {
+    if (m_alpm_errno == ALPM_ERR_EXTERNAL_DOWNLOAD && !m_download_errs.isEmpty()) {
+        if (error_id != NULL) *error_id = ALPM_ERR_EXTERNAL_DOWNLOAD;
+        return m_download_errs.join("\n");
+    }
+
+    if (m_alpm_errno < ALPM_ERR_OK) {
         if (error_id != NULL) *error_id = m_alpm_errno;
         switch (m_alpm_errno) {
         case PKG_LIST_IS_EMPTY:
@@ -861,10 +928,6 @@ QString Alpm::lastError(int * error_id) const {
             return tr("Alpm class has been already initialized!");
         case ALPM_IS_NOT_OPEN:
             return tr("Alpm class is open yet!");
-        case ALPMDB_HANDLE_FAILED:
-            return tr("Alpm's DB handle is not initialized!");
-        case LOCAL_DB_UPDATE:
-            return tr("Local DB does not need in updating!");
         case PKG_IS_NOT_INITED:
             return tr("The package class has not been properly intialized!");
         case REASON_WRONG_DB:
@@ -889,15 +952,11 @@ QString Alpm::lastError(int * error_id) const {
             break;
         }
     }
+    else if (m_alpm_errno > ALPM_ERR_OK) return QString::fromLocal8Bit(alpm_strerror((alpm_errno_t)m_alpm_errno));
 
     if (alpm_errno(m_alpm_handle) == ALPM_ERR_OK) {
-        if (error_id != NULL) *error_id = OK_CODE;
+        if (error_id != NULL) *error_id = ALPM_ERR_OK;
         return QString();
-    }
-
-    if (m_alpm_errno == EXTERNAL_DOWNLOAD_ERR && !m_download_errs.isEmpty()) {
-        if (error_id != NULL) *error_id = EXTERNAL_DOWNLOAD_ERR;
-        return m_download_errs.join("\n");
     }
 
     return QString::fromLocal8Bit(alpm_strerror(alpm_errno(m_alpm_handle)));
@@ -1010,7 +1069,7 @@ ThreadRun::RC Alpm::updateDBs(bool force) {
 
 void Alpm::update_dbs(bool force) {
     m_percent = -1;
-    m_alpm_errno = OK_CODE;
+    m_alpm_errno = ALPM_ERR_OK;
 
     QList<AlpmDB> dbs = allSyncDBs();
     for (int i=0;i<dbs.count();i++) {
@@ -1048,7 +1107,7 @@ QStringList Alpm::download_packages(const QList<AlpmPackage> & pkgs) {
     QStringList downloaded_paths;
     if (!isValid(true)) return downloaded_paths;
 
-    m_alpm_errno = OK_CODE;
+    m_alpm_errno = ALPM_ERR_OK;
 
     m_percent = -1;
 
@@ -1220,7 +1279,7 @@ void Alpm::sync_sysupgrade_portion(QList<AlpmPackage> & add_pkgs,int startindex,
         providers = alpm_list_add(providers,add_pkgs[i].handle());
     }
     provider_question.providers = providers;
-    alpm_depend_t alpm_dep = AlpmPackage::Dependence(add_pkgs[_startindex]).to_alpm_depend();
+    alpm_depend_t alpm_dep = depend_t(AlpmPackage::Dependence(add_pkgs[_startindex]));
     provider_question.depend = &alpm_dep;
     operation_question_fn((alpm_question_t *)&provider_question);
     sel_index = _startindex + provider_question.use_index;
@@ -1235,8 +1294,8 @@ void Alpm::sync_sysupgrade_portion(QList<AlpmPackage> & add_pkgs,int startindex,
     }
 }
 
-int Alpm::sync_sysupgrade(int m_install_flags) {
-    m_alpm_errno = OK_CODE;
+void Alpm::sync_sysupgrade(int m_install_flags) {
+    m_alpm_errno = ALPM_ERR_OK;
 
     QList<AlpmPackage> add_pkgs;
     QList<AlpmPackage> remove_pkgs;
@@ -1263,7 +1322,7 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
             }
             provider_question.providers = providers;
             AlpmPackage::Dependence dep(i.key());
-            alpm_depend_t alpm_dep = dep.to_alpm_depend();
+            alpm_depend_t alpm_dep = depend_t(dep);
             provider_question.depend = &alpm_dep;
             operation_question_fn((alpm_question_t *)&provider_question);
             sel_index = provider_question.use_index;
@@ -1327,13 +1386,11 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
         if (!syncfirst_pkgs.isEmpty()) {
             ::alpm_trans_release(m_alpm_handle);
             install_packages(syncfirst_pkgs,0,QList<AlpmPackage>());
-            int ret = m_alpm_errno;
             if (alpm_trans_init(m_alpm_handle,m_install_flags)) {
                 emit_information(lastError());
                 emit_error(lastError());
-                return alpm_errno(m_alpm_handle);
+                return;
             }
-            if (ret != ALPM_ERR_OK) return ret;
         }
     }
 
@@ -1342,7 +1399,7 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
             QString err = QString("%1: %2").arg(remove_pkgs[j].name()).arg(lastError());
             emit_information(err);
             emit_error(err);
-            return alpm_errno(m_alpm_handle);
+            return;
         }
     }
 
@@ -1351,15 +1408,13 @@ int Alpm::sync_sysupgrade(int m_install_flags) {
             QString err = QString("%1: %2").arg(add_pkgs[j].name()).arg(lastError());
             emit_information(err);
             emit_error(err);
-            return alpm_errno(m_alpm_handle);
+            return;
         }
     }
-
-    return ALPM_ERR_OK;
 }
 
 void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flags,const QList<AlpmPackage> & forcedpkgs) {
-    m_alpm_errno = OK_CODE;
+    m_alpm_errno = ALPM_ERR_OK;
     m_percent = -1;
     prev_event_type = -1;
     QString err;
@@ -1376,8 +1431,8 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
     if (m_pkgs.count() <= 0) {
         emit_information(tr("Starting full system upgrade..."),true);
         alpm_logaction(m_alpm_handle,LOGPREFIX,"starting full system upgrade\n");
-        m_alpm_errno = sync_sysupgrade(m_install_flags);
-        if(m_alpm_errno != ALPM_ERR_OK) {
+        sync_sysupgrade(m_install_flags);
+        if(lastError() != ALPM_ERR_OK) {
             emit_information(lastError());
             emit_error(lastError());
             return;
@@ -1400,7 +1455,6 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
                 err = tr("%1: %2").arg(m_pkgs[i].name()).arg(lastError());
                 emit_information(err);
                 emit_error(err);
-                m_alpm_errno = alpm_errno(m_alpm_handle);
                 return;
             }
         }
@@ -1572,7 +1626,6 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
     if (alpm_trans_init(m_alpm_handle,remove_cascade?ALPM_TRANS_FLAG_RECURSE|ALPM_TRANS_FLAG_CASCADE:0)) {
         emit_information(lastError());
         emit_error(lastError());
-        m_alpm_errno = alpm_errno(m_alpm_handle);
         return;
     }
 
@@ -1582,16 +1635,13 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
         if (alpm_remove_pkg(m_alpm_handle,pkg.handle())) {
             if(alpm_errno(m_alpm_handle) == ALPM_ERR_TRANS_DUP_TARGET) {
                 emit_information(tr("Skipping target: %1").arg(m_pkgs[i].name()));
-                m_alpm_errno = OK_CODE_SUPPRESS_ALPMS;
                 continue;
             }
             err = QString("%1: %2").arg(m_pkgs[i].name()).arg(lastError());
             emit_information(err);
             emit_error(err);
-            m_alpm_errno = alpm_errno(m_alpm_handle);
             return;
         }
-        m_alpm_errno = OK_CODE;
     }
 
     alpm_list_t *data = NULL;

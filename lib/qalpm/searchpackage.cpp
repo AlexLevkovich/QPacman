@@ -5,6 +5,7 @@
 #include <QByteArray>
 #include <QBuffer>
 #include <QTemporaryFile>
+#include <alpm.h>
 
 #define PKG_DIR "/dev/shm"
 #define PKGINFO_NAME ".PKGINFO"

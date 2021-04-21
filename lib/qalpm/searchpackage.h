@@ -1,11 +1,12 @@
 #ifndef SEARCHPACKAGE_H
 #define SEARCHPACKAGE_H
 
-#include <alpm.h>
 #include <archive.h>
 #include <archive_entry.h>
 #include <QLatin1String>
 #include <QString>
+
+typedef struct __alpm_pkg_t alpm_pkg_t;
 
 class SearchPackage {
 public:

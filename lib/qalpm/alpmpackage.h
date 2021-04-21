@@ -6,13 +6,11 @@
 #ifndef PACMANPACKAGE_H
 #define PACMANPACKAGE_H
 
-#include <alpm.h>
 #include <QStringList>
 #include <QUrl>
 #include <QMap>
 #include <QDateTime>
 #include <QRegularExpression>
-#include "alpmlist.h"
 #include <AppStreamQt/component.h>
 #include <QDataStream>
 #include <QFileInfo>
@@ -22,6 +20,9 @@ class AlpmDB;
 namespace AppStream {
 class Pool;
 }
+
+typedef struct __alpm_list_t alpm_list_t;
+typedef struct __alpm_pkg_t alpm_pkg_t;
 
 class AlpmPackage {
 public:
@@ -86,7 +87,7 @@ public:
         mode_t m_mode;
         QDateTime m_date;
 
-        FileInfo(const alpm_file_t & path);
+        FileInfo(const QString & path);
         FileInfo(const QString & path,qint64 size,mode_t mode,const QDateTime & date);
         mode_t toMode_t(const QFileInfo & info);
     public:
@@ -109,7 +110,7 @@ public:
         QString m_description;
         CompareOper m_operation;
 
-        static CompareOper mod_to_compareoper(alpm_depmod_t mod);
+        static CompareOper mod_to_compareoper(int mod);
         void init(const QString & name,CompareOper operation = UNKNOWN,const QString & version = QString(),const QString & description = QString());
         void init(const AlpmPackage & pkg,CompareOper operation = EQUAL);
 
@@ -132,7 +133,6 @@ public:
         Dependence & operator=(const Dependence &dep);
         QList<Dependence> findDepends(uint provider_id = 0) const;
         bool isInstalled() const;
-        alpm_depend_t to_alpm_depend() const;
         static const Dependence fromString(const QString & str);
         friend QDataStream & operator<<(QDataStream &argument,const AlpmPackage::Dependence & dep);
         friend const QDataStream & operator>>(const QDataStream &argument,AlpmPackage::Dependence & dep);
@@ -230,8 +230,8 @@ protected:
 private:
     QList<FileInfo> files(const QString & archive_path) const;
     QList<FileInfo> files(alpm_pkg_t * pkg) const;
-    Reason intToReason(alpm_pkgreason_t reason) const;
-    alpm_pkgreason_t reasonToInt(Reason reason) const;
+    Reason intToReason(int reason) const;
+    int reasonToInt(Reason reason) const;
     static int pkg_version_compare(alpm_pkg_t * item1, alpm_pkg_t * item2);
     static const QList<Dependence> alpm_pkg_list_processing(alpm_pkg_deplist_fn alpm_pkg_deplist,alpm_pkg_t *m_pkg);
     static bool splitname_ver(const QString & target,QString & name,QString & version);

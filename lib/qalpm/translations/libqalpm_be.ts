@@ -4,7 +4,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../alpmconfig.cpp" line="+63"/>
+        <location filename="../alpmconfig.cpp" line="+64"/>
         <source>Can&apos;t find [options] section!</source>
         <translation type="unfinished">Секцыя [options] не знойдзена!</translation>
     </message>
@@ -74,7 +74,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+377"/>
+        <location filename="../libalpm.cpp" line="+443"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 у IgnorePkg/IgnoreGroup. Усё роўна ўсталяваць?</translation>
     </message>
@@ -243,7 +243,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Памылка пры загрузцы %1</translation>
     </message>
     <message>
-        <location line="+212"/>
+        <location line="+205"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Абнаўляем базу дадзеных: %1...</translation>
     </message>
@@ -291,7 +291,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-888"/>
+        <location filename="../libalpm.cpp" line="-881"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам трэба выбраць пастаўшчыка для пакета %1:
@@ -381,7 +381,7 @@ Do you want to delete it?</source>
 </translation>
     </message>
     <message>
-        <location line="+329"/>
+        <location line="+330"/>
         <source>The input package list is empty!</source>
         <translation type="unfinished">Спіс пакетаў пусты!</translation>
     </message>
@@ -396,14 +396,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Alpm клас павінен быць адкрыты!</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Alpm&apos;s DB handle is not initialized!</source>
-        <translation type="unfinished">DB handle для Alpm не праiнiцiалiзаваны!</translation>
+        <translation type="obsolete">DB handle для Alpm не праiнiцiалiзаваны!</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Local DB does not need in updating!</source>
-        <translation type="unfinished">Лакальная база дадзеных не мае патрэбу ў абнаўленні!</translation>
+        <translation type="obsolete">Лакальная база дадзеных не мае патрэбу ў абнаўленні!</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -450,19 +448,19 @@ Do you want to delete it?</source>
         <translation type="unfinished">Няма чаго загружаць!!!</translation>
     </message>
     <message>
-        <location line="+193"/>
+        <location line="+189"/>
         <source>Starting the download of %1</source>
         <translation type="unfinished">Пачынаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+313"/>
+        <location line="+309"/>
         <location line="+6"/>
-        <location line="+187"/>
+        <location line="+185"/>
         <source>Skipping target: %1</source>
         <translation type="unfinished">Прапускаем %1</translation>
     </message>
     <message>
-        <location line="-184"/>
+        <location line="-182"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -472,12 +470,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пачынаем поўнае абнаўленне сістэмы...</translation>
     </message>
     <message>
-        <location line="-490"/>
+        <location line="-482"/>
         <source>Stopped because of user refusal!!!</source>
         <translation type="unfinished">Спынена па жаданнi карыстальніка!!!</translation>
     </message>
     <message>
-        <location line="+531"/>
+        <location line="+522"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 мае няправільную архітэктуру</translation>
     </message>
@@ -518,12 +516,12 @@ Do you want to delete it?</source>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+158"/>
+        <location line="+154"/>
         <source>Failed to commit transaction (%1)</source>
         <translation type="unfinished">Немагчыма выканаць транзакцыю (%1)</translation>
     </message>
     <message>
-        <location line="-148"/>
+        <location line="-144"/>
         <source>%1 exists in both &apos;%2&apos; and &apos;%3&apos;</source>
         <translation type="unfinished">%1 існуе ў двух пакетах &apos;%2&apos; and &apos;%3&apos;</translation>
     </message>
@@ -553,7 +551,7 @@ Do you want to delete it?</source>
         <translation>Усе пакеты ўсталяваныя без памылак!</translation>
     </message>
     <message>
-        <location line="+46"/>
+        <location line="+42"/>
         <source>Failed to prepare transaction (%1)</source>
         <translation type="unfinished">Немагчыма падрыхтаваць транзакцыю (%1)</translation>
     </message>
