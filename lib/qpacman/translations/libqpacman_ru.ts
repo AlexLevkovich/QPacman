@@ -474,7 +474,7 @@ Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../pacmaninfobrowser.cpp" line="+184"/>
+        <location filename="../pacmaninfobrowser.cpp" line="+40"/>
         <source>Name</source>
         <translation type="unfinished">Название</translation>
     </message>
@@ -842,7 +842,7 @@ Are you sure?</source>
 <context>
     <name>PacmanInfoBrowser</name>
     <message>
-        <location filename="../pacmaninfobrowser.cpp" line="-65"/>
+        <location filename="../pacmaninfobrowser.cpp" line="+87"/>
         <source>Explicitly installed</source>
         <translation type="unfinished">Явно установлен</translation>
     </message>

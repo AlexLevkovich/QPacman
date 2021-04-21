@@ -33,12 +33,12 @@ signals:
 
 private:
     void runProgram(const QString & name,const QStringList & args);
-    static int calculateFirstFolumnFidth(int count);
+    int calculateFirstFolumnFidth(int count) const;
     static const QString modifyMailAddress(const QString & str);
     static bool isMailAddress(const QString & str);
 
     AlpmPackage m_pkg;
-    static const QString fieldNames[20];
+    QList<QString> fieldNames;
     friend class PacmanInfoBrowserDocument;
 };
 

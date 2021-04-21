@@ -36,6 +36,14 @@ PacmanInfoBrowser::PacmanInfoBrowser(QWidget *parent) : CustomPopupTextBrowser(p
     QDesktopServices::setUrlHandler("mailto",this,"openMailUrl");
     QDesktopServices::setUrlHandler("http",this,"openUrl");
     QDesktopServices::setUrlHandler("https",this,"openUrl");
+
+    fieldNames = {QObject::tr("Name"),QObject::tr("Version"),QObject::tr("Description"),
+                  QObject::tr("Architecture"),QObject::tr("URL"),QObject::tr("Licenses"),
+                  QObject::tr("Groups"),QObject::tr("Provides"),QObject::tr("Depends On"),
+                  QObject::tr("Optional Deps"),QObject::tr("Required By"),QObject::tr("Optional For"),
+                  QObject::tr("Conflicts With"),QObject::tr("Replaces"),QObject::tr("Installed Size"),
+                  QObject::tr("Packager"),QObject::tr("Build Date"),QObject::tr("Install Date"),
+                  QObject::tr("Install Reason"),QObject::tr("Repository")};
 }
 
 void PacmanInfoBrowser::runProgram(const QString & name,const QStringList & args) {
@@ -181,15 +189,7 @@ void PacmanInfoBrowser::fillByInfo(const AlpmPackage & pkg,bool readonly) {
     ensureCursorVisible();
 }
 
-const QString PacmanInfoBrowser::fieldNames[20] = {QObject::tr("Name"),QObject::tr("Version"),QObject::tr("Description"),
-                                                   QObject::tr("Architecture"),QObject::tr("URL"),QObject::tr("Licenses"),
-                                                   QObject::tr("Groups"),QObject::tr("Provides"),QObject::tr("Depends On"),
-                                                   QObject::tr("Optional Deps"),QObject::tr("Required By"),QObject::tr("Optional For"),
-                                                   QObject::tr("Conflicts With"),QObject::tr("Replaces"),QObject::tr("Installed Size"),
-                                                   QObject::tr("Packager"),QObject::tr("Build Date"),QObject::tr("Install Date"),
-                                                   QObject::tr("Install Reason"),QObject::tr("Repository")};
-
-int PacmanInfoBrowser::calculateFirstFolumnFidth(int count) {
+int PacmanInfoBrowser::calculateFirstFolumnFidth(int count) const {
     QFontMetrics fm = QApplication::fontMetrics();
     int width = 0;
     for (int i=0;i<count;i++) {
