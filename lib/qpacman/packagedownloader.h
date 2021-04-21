@@ -7,6 +7,7 @@
 #define PACKAGEDOWNLOADER_H
 
 #include "packageprocessor.h"
+#include "alpmpackage.h"
 
 class PackageDownloader : public PackageProcessor {
     Q_OBJECT

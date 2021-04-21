@@ -4,6 +4,8 @@
 ********************************************************************************/
 
 #include "actionapplier.h"
+#include "optionaldepsdlg.h"
+#include "libalpm.h"
 #include "static.h"
 
 ActionApplier::ActionApplier(const QList<AlpmPackage> & remove_all_pkgs,const QList<AlpmPackage> & remove_pkgs,const QList<AlpmPackage> & install_pkgs,const QList<AlpmPackage> & installdeps_pkgs,const QList<AlpmPackage> & installforced_pkgs,ProgressView * view,QAction * cancelAction,OptionalDepsDlg * optdlg,QObject *parent) : PackageProcessorBase(parent) {

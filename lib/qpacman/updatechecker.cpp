@@ -1,5 +1,7 @@
 #include "updatechecker.h"
 #include "dbrefresher.h"
+#include "libalpm.h"
+#include "alpmpackage.h"
 #include <QNetworkInterface>
 
 NetworkConfigurationChecker::NetworkConfigurationChecker(QObject * parent) : QObject(parent) {

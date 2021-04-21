@@ -6,6 +6,7 @@
 #include "packageinstaller.h"
 #include "progressview.h"
 #include "messagedialog.h"
+#include "libalpm.h"
 #include <QTimer>
 #include <QDebug>
 

@@ -254,7 +254,7 @@
 <context>
     <name>PackageProcessor</name>
     <message>
-        <location filename="../packageprocessor.cpp" line="+103"/>
+        <location filename="../packageprocessor.cpp" line="+120"/>
         <source>DBUS server is busy, may be another application is using it!</source>
         <translation type="unfinished">Сервер DBUS занят, возможно, его использует другое приложение!</translation>
     </message>
@@ -269,7 +269,7 @@
         <translation type="unfinished">Ошибка аутентификации суперпользователя: слишком много попыток!</translation>
     </message>
     <message>
-        <location line="+29"/>
+        <location line="+42"/>
         <source>Log</source>
         <translation type="unfinished">Сообщения</translation>
     </message>
@@ -279,7 +279,7 @@
         <translation type="unfinished">Показывает окончательные сообщения</translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="-9"/>
         <source>Cancel</source>
         <translation type="unfinished">Прервать</translation>
     </message>
@@ -294,7 +294,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+89"/>
+        <location line="+90"/>
         <location line="+7"/>
         <source>Overal download progress</source>
         <translation type="unfinished">Общий прогресс загрузки</translation>
@@ -653,7 +653,7 @@ Are you sure?</source>
 <context>
     <name>ActionApplier</name>
     <message>
-        <location filename="../actionapplier.cpp" line="+52"/>
+        <location filename="../actionapplier.cpp" line="+54"/>
         <source>Nothing to process!!!</source>
         <translation type="unfinished">Нечего не обрабатывать!!!</translation>
     </message>

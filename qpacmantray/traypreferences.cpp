@@ -121,14 +121,16 @@ void TrayPreferences::onUpdateNowTriggered() {
     PackageInstaller * pkg_inst = new PackageInstaller(QList<AlpmPackage>(),QList<AlpmPackage>(),false,progressView,cancelAction,NULL,NULL);
     connect(pkg_inst,&PackageInstaller::completed,this,&TrayPreferences::onInstallerCompleted);
     connect((QObject *)pkg_inst,SIGNAL(logString(const QString &)),(QObject *)logView,SLOT(appendPlainText(const QString &)));
-    connect(updateWindow,&QObject::destroyed,this,[&]() { updateWindow = NULL; updateActions(); });
+    connect(updateWindow,&QObject::destroyed,[&]() { updateWindow = NULL; updateActions(); });
 }
 
 void TrayPreferences::onInstallerCompleted(ThreadRun::RC rc) {
     cancelAction->setText(tr("Quit"));
     logAction->setEnabled(true);
+    cancelAction->setEnabled(false);
 
-    connect(cancelAction,&QAction::triggered,updateWindow,&QWidget::close);
+    connect(sender(),&QObject::destroyed,[&]() { cancelAction->setEnabled(true); });
+    connect(cancelAction,SIGNAL(triggered()),updateWindow,SLOT(close()));
     cancelAction->setEnabled(true);
 
     m_blocking_operation = false;

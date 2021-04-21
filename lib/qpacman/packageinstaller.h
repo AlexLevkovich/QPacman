@@ -7,6 +7,7 @@
 #define PACKAGEINSTALLER_H
 
 #include "packageprocessor.h"
+#include "alpmpackage.h"
 
 class OptionalDepsDlg;
 

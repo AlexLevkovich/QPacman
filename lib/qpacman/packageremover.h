@@ -7,6 +7,7 @@
 #define PACKAGEREMOVER_H
 
 #include "packageprocessor.h"
+#include "alpmpackage.h"
 
 class PackageRemover : public PackageProcessor {
     Q_OBJECT

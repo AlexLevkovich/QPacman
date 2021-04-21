@@ -5,6 +5,7 @@
 
 #include "packageremover.h"
 #include "messagedialog.h"
+#include "libalpm.h"
 #include "static.h"
 #include <QTimer>
 

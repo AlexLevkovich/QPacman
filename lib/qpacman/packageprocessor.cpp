@@ -15,6 +15,10 @@
 #include "libalpm.h"
 #include "themeicons.h"
 #include "windowcenterer.h"
+#include "packagechangesdialog.h"
+#include "packageprovidersdialog.h"
+#include "questiondialog.h"
+#include "optionaldepsdlg.h"
 #include "rootdialog.h"
 #include <QMainWindow>
 #include <QSettings>
@@ -38,6 +42,10 @@ PackageProcessor::PackageProcessor(ProgressView * view,QAction * cancelAction,Op
     m_downloaded_size = 0;
     m_xfered = 0;
 
+    pkgChangeDlg = new PackageChangesDialog();
+    pkgProviderDlg = new PackageProvidersDialog();
+    questionDlg = new QuestionDialog();
+
     qApp->installEventFilter(this);
     if (!Alpm::instance()->executingMethodName().isEmpty()) Alpm::instance()->setMethodTerminateFlag();
 
@@ -48,6 +56,9 @@ PackageProcessor::PackageProcessor(ProgressView * view,QAction * cancelAction,Op
     if (cancelAction != NULL) connect(cancelAction,SIGNAL(triggered()),this,SLOT(cancelTriggered()));
     m_cancelAction = cancelAction;
 
+    connect(pkgChangeDlg,&QObject::destroyed,[&]() { pkgChangeDlg = NULL; });
+    connect(pkgProviderDlg,&QObject::destroyed,[&]() { pkgProviderDlg = NULL; });
+    connect(questionDlg,&QObject::destroyed,[&]() { questionDlg = NULL; });
     connect(Alpm::instance(),SIGNAL(information(const QString &,bool)),this,SIGNAL(logString(const QString &)));
     connect(Alpm::instance(),SIGNAL(optdepends_event(const QString &,const StringStringMap &,const StringStringMap &)),this,SLOT(on_optdepends_event(const QString &,const StringStringMap &,const StringStringMap &)));
     connect(Alpm::instance(),&Alpm::all_hooks,this,[&](const QString & message) { on_event(1,message); });
@@ -96,6 +107,12 @@ PackageProcessor::PackageProcessor(ProgressView * view,QAction * cancelAction,Op
     if (m_cancelAction != NULL) m_cancelAction->setEnabled(false);
     QMetaObject::invokeMethod(this,"exec_process",Qt::QueuedConnection);
     m_start_timer.start(3000);
+}
+
+PackageProcessor::~PackageProcessor() {
+    if (pkgChangeDlg != NULL) delete pkgChangeDlg;
+    if (pkgProviderDlg != NULL) delete pkgProviderDlg;
+    if (questionDlg != NULL) delete questionDlg;
 }
 
 void PackageProcessor::on_timeout() {
@@ -163,27 +180,13 @@ void PackageProcessor::exec_process() {
 QMainWindow * PackageProcessor::createMainProcessorWindow(ProgressView ** view,QPlainTextEdit ** logView,QAction ** cancelAction,QAction ** logAction) {
     QMainWindow * mainWnd = new QMainWindow(NULL);
     mainWnd->setWindowIcon(QIcon("://pics/qpacman.svg"));
-    QStackedWidget * mainWidget = new QStackedWidget(NULL);
+    QStackedWidget * mainWidget = new QStackedWidget(mainWnd);
     *view = new ProgressView(mainWidget,false);
     mainWidget->addWidget(*view);
     *logView = new QPlainTextEdit(mainWidget);
     mainWidget->addWidget(*logView);
     mainWnd->setCentralWidget(mainWidget);
     mainWidget->setCurrentIndex(0);
-    *logAction = new QAction(mainWnd);
-    (*logAction)->setEnabled(false);
-    (*logAction)->setCheckable(true);
-    (*logAction)->setChecked(false);
-    (*logAction)->setIcon(ThemeIcons::get(ThemeIcons::LOG_VIEW));
-    (*logAction)->setText(tr("Log"));
-    (*logAction)->setToolTip(tr("Show the resulting log"));
-    connect(*logAction,&QAction::triggered,[=](bool checked) { mainWidget->setCurrentIndex(checked?1:0); });
-    *cancelAction = new QAction(mainWnd);
-    (*cancelAction)->setEnabled(false);
-    (*cancelAction)->setIcon(ThemeIcons::get(ThemeIcons::CANCEL));
-    (*cancelAction)->setText(tr("Cancel"));
-    (*cancelAction)->setToolTip(tr("Cancel the current operation"));
-    (*cancelAction)->setShortcut(tr("Esc"));
     QToolBar * actionsToolBar = new QToolBar(mainWnd);
     actionsToolBar->setObjectName(QString::fromUtf8("actionsToolBar"));
     actionsToolBar->setMovable(false);
@@ -191,15 +194,28 @@ QMainWindow * PackageProcessor::createMainProcessorWindow(ProgressView ** view,Q
     actionsToolBar->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     actionsToolBar->setFloatable(false);
     mainWnd->addToolBar(Qt::BottomToolBarArea, actionsToolBar);
+    *cancelAction = new QAction(actionsToolBar);
+    (*cancelAction)->setEnabled(false);
+    (*cancelAction)->setIcon(ThemeIcons::get(ThemeIcons::CANCEL));
+    (*cancelAction)->setText(tr("Cancel"));
+    (*cancelAction)->setToolTip(tr("Cancel the current operation"));
+    (*cancelAction)->setShortcut(tr("Esc"));
+    *logAction = new QAction(actionsToolBar);
+    (*logAction)->setEnabled(false);
+    (*logAction)->setCheckable(true);
+    (*logAction)->setChecked(false);
+    (*logAction)->setIcon(ThemeIcons::get(ThemeIcons::LOG_VIEW));
+    (*logAction)->setText(tr("Log"));
+    (*logAction)->setToolTip(tr("Show the resulting log"));
+    connect(*logAction,&QAction::triggered,[&](bool checked) { mainWidget->setCurrentIndex(checked?1:0); });
     actionsToolBar->addAction(*logAction);
     actionsToolBar->addAction(*cancelAction);
-    QWidget* empty = new QWidget();
+    QWidget* empty = new QWidget(actionsToolBar);
     empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
     actionsToolBar->insertWidget(*cancelAction,empty);
     mainWnd->installEventFilter(new SaveStateFilter(mainWnd));
     QRect rect = QApplication::desktop()->screenGeometry(mainWnd);
     mainWnd->resize((rect.width()*2)/3,(rect.height()*2)/3);
-    new WindowCenterer(mainWnd);
     mainWnd->setAttribute(Qt::WA_DeleteOnClose);
     mainWnd->setVisible(true);
     return mainWnd;
@@ -214,6 +230,7 @@ bool PackageProcessor::SaveStateFilter::eventFilter(QObject *obj,QEvent *event) 
     if ((m_wnd != NULL) && (obj == m_wnd) && (event->type() == QEvent::Show) && !is_shown) {
         is_shown = true;
         m_wnd->restoreGeometry(QSettings().value("geometry/processingwindow").toByteArray());
+        new WindowCenterer(m_wnd);
     }
     if ((m_wnd != NULL) && (obj == m_wnd) && (event->type() == QEvent::Close)) {
         QSettings().setValue("geometry/processingwindow",m_wnd->saveGeometry());

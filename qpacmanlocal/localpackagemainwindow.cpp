@@ -15,6 +15,7 @@
 #include "pacmanlocalpackageslistdelegate.h"
 #include "packageinstaller.h"
 #include "widgetgroup.h"
+#include "libalpm.h"
 #include <QCheckBox>
 #include <QDebug>
 

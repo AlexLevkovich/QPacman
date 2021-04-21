@@ -9,10 +9,7 @@
 #include <QObject>
 #include <QMap>
 #include <QTimer>
-#include "packagechangesdialog.h"
-#include "packageprovidersdialog.h"
-#include "questiondialog.h"
-#include "optionaldepsdlg.h"
+#include "qalpmtypes.h"
 
 class ProgressView;
 class QMainWindow;
@@ -21,6 +18,10 @@ class SimpleProgressItem;
 class QStandardItem;
 class QPlainTextEdit;
 class QStackedWidget;
+class PackageChangesDialog;
+class PackageProvidersDialog;
+class OptionalDepsDlg;
+class QuestionDialog;
 
 class PackageProcessorBase : public QObject {
     Q_OBJECT
@@ -35,6 +36,7 @@ class PackageProcessor : public PackageProcessorBase {
     Q_OBJECT
 public:
     PackageProcessor(ProgressView * view = NULL,QAction * cancelAction = NULL,OptionalDepsDlg * optdlg = NULL,QObject *parent = nullptr);
+    ~PackageProcessor();
     static QMainWindow * createMainProcessorWindow(ProgressView ** view,QPlainTextEdit ** logView,QAction ** cancelAction,QAction ** logAction);
 
 protected:
@@ -85,10 +87,10 @@ private:
     qint64 m_downloaded_size;
     qint64 m_xfered;
     QAction * m_cancelAction;
-    PackageChangesDialog   pkgChangeDlg;
-    PackageProvidersDialog pkgProviderDlg;
+    PackageChangesDialog *  pkgChangeDlg;
+    PackageProvidersDialog * pkgProviderDlg;
     OptionalDepsDlg      * m_optionalDepsDlg;
-    QuestionDialog         questionDlg;
+    QuestionDialog       *  questionDlg;
     SimpleProgressItem * eventItem;
     SimpleProgressItem * overalHookItem;
     SimpleProgressItem * downloadItem;
