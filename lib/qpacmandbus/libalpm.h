@@ -30,7 +30,6 @@ public:
     QList<AlpmPackage> findByPackageName(const QString & pkgname) const;
     QList<AlpmPackage> findByPackageNameProvides(const AlpmPackage::Dependence & provide) const;
     QList<AlpmPackage> findLocalByPackageNameProvides(const AlpmPackage::Dependence & provide) const;
-    bool answer(bool flag);
     bool answer(uint flag);
     QString executingMethodName() const;
     void setMethodTerminateFlag();

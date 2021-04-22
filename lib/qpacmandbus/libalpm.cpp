@@ -501,14 +501,6 @@ ThreadRun::RC Alpm::updateDBs(bool force) {
     return ThreadRun::BAD;
 }
 
-bool Alpm::answer(bool flag) {
-    if (!isValid()) return false;
-
-    replyToVoid(m_interface->answer(flag));
-
-    return true;
-}
-
 bool Alpm::answer(uint flag) {
     if (!isValid()) return false;
 

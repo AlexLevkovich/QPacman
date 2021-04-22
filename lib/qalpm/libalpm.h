@@ -66,7 +66,6 @@ public:
     ThreadRun::RC downloadPackages(const QList<AlpmPackage> & pkgs);
     QList<AlpmPackage> updates() const;
 
-    void answer(bool flag);
     void answer(uint value);
 
     static Alpm * instance();

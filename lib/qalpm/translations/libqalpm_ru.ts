@@ -74,7 +74,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+443"/>
+        <location filename="../libalpm.cpp" line="+439"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 в IgnorePkg/IgnoreGroup. Все равно устанавливать?</translation>
     </message>

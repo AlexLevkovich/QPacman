@@ -16,7 +16,6 @@ public:
     Q_INVOKABLE ThreadRun::RC downloadPackages(const QByteArray & pkgs);
     Q_INVOKABLE ThreadRun::RC updateDBs(bool force = false);
     Q_INVOKABLE QByteArray updates();
-    Q_INVOKABLE void answer(bool flag);
     Q_INVOKABLE void answer(uint value);
     Q_INVOKABLE QByteArray localPackage(const QString & pkgname);
     Q_INVOKABLE QByteArray localPackage(const QString & name,const QString & version);

@@ -435,10 +435,6 @@ QString QPacmanService::executingMethodName() {
     return Alpm::instance()->executingMethodName();
 }
 
-void QPacmanService::answer(bool flag) {
-    Alpm::instance()->answer(flag);
-}
-
 void QPacmanService::answer(uint value) {
     Alpm::instance()->answer(value);
 }

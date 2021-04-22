@@ -192,9 +192,6 @@
       <arg direction="out" type="x" name="total"/>
     </signal>
     <method name="answer">
-      <arg name="flag" type="b" direction="in"/>
-    </method>
-    <method name="answer">
       <arg name="value" type="u" direction="in"/>
     </method>
     <method name="queryPackages">

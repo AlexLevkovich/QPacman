@@ -161,10 +161,6 @@ int Alpm::wait_for_answer() {
     return loop.value();
 }
 
-void Alpm::answer(bool flag) {
-    QMetaObject::invokeMethod(this,"stop_waiting",Qt::QueuedConnection,Q_ARG(int,flag?1:0));
-}
-
 void Alpm::answer(uint value) {
     QMetaObject::invokeMethod(this,"stop_waiting",Qt::QueuedConnection,Q_ARG(int,(int)value));
 }
@@ -332,7 +328,7 @@ bool Alpm::close() {
         m_alpm_errno = ALPM_IS_NOT_OPEN;
         return false;
     }
-    answer(false);
+    answer(0);
 
     bool ok = false;
     for (int i=0;i<30;i++) {
