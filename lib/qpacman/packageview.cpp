@@ -291,11 +291,11 @@ PackageView::PackageView(QWidget *parent) : QTreeView(parent) {
     history_disabled = false;
     history_index = -1;
     history_count = 0;
+    m_is_refreshing = false;
 
     connect(delegate,SIGNAL(rowChoosingStateChanged(const QModelIndex &)),this,SIGNAL(rowChoosingStateChanged(const QModelIndex &)));
     connect(&selectTimer,SIGNAL(timeout()),this,SLOT(selectTimeout()));
     connect(Alpm::instance(),&Alpm::package_queried,this,&PackageView::package_queried);
-    connect(Alpm::instance(),SIGNAL(alpm_reopen()),this,SLOT(refreshRows()));
     connect(Alpm::instance(),SIGNAL(method_finished(const QString &,ThreadRun::RC)),this,SLOT(packages_queried(const QString &,ThreadRun::RC)));
     connect(Alpm::instance(),&Alpm::alpm_reopen,this,&PackageView::refresh_needed);
 }
@@ -330,9 +330,12 @@ void PackageView::clear() {
 }
 
 void PackageView::refreshRows(const QString & name,AlpmPackage::SearchFieldType fieldType,AlpmPackage::PackageFilter filter,const QString & group,const QString & repo) {
-    if (!Alpm::instance()->queryPackages(name,fieldType,filter,group,repo)) return;
+    if (m_is_refreshing) return;
+
     clear();
     emit refreshBeginning();
+    m_is_refreshing = true;
+    if (!Alpm::instance()->queryPackages(name,fieldType,filter,group,repo)) return;
     currentSelectionState = PackageView::SelectionState(name,fieldType,filter,group,repo);
     emit search_changed(name,fieldType,filter,group,repo);
 }
@@ -346,12 +349,14 @@ void PackageView::package_queried(const AlpmPackage & pkg) {
 }
 
 void PackageView::packages_queried(const QString &,ThreadRun::RC rc) {
-    if (rc != ThreadRun::OK) return;
-    if (currentSelectionState.package().isValid()) {
-        selectPackageByState(currentSelectionState);
-        currentSelectionState.setPackage(AlpmPackage());
+    if (rc == ThreadRun::OK) {
+        if (currentSelectionState.package().isValid()) {
+            selectPackageByState(currentSelectionState);
+            currentSelectionState.setPackage(AlpmPackage());
+        }
     }
     emit refreshCompleted();
+    m_is_refreshing = false;
     history_disabled = false;
 }
 

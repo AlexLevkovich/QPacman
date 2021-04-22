@@ -147,6 +147,7 @@ private:
     PackageItemModel * m_model;
     InstallButtonDelegate * delegate;
     QTimer selectTimer;
+    bool m_is_refreshing;
 
     QList<SelectionState> history_items;
     bool history_disabled;

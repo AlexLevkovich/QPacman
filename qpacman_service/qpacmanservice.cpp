@@ -111,6 +111,8 @@ void QPacmanService::locking_changed(const QString &,bool locked) {
 }
 
 void QPacmanService::onmethod_finished(const QString & name,ThreadRun::RC rc) {
+    if (name == "Alpm::update_dbs") QMetaObject::invokeMethod(this,"alpm_reopen",Qt::QueuedConnection);
+
     if (!tempFileName.isEmpty()) {
         QFile(tempFileName).remove();
     }

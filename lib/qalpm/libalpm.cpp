@@ -146,7 +146,7 @@ public:
         m_value = value;
     }
 
-    bool value() const {
+    int value() const {
         return m_value;
     }
 private:
