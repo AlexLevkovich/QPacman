@@ -269,7 +269,7 @@ InfoView::InfoView(QWidget *parent) : CustomPopupTextBrowser(parent) {
     insertText(table->cellAt(0,0).firstCursorPosition(),tr("Variables"),QFont::Bold);
     useSysIconsBox = new CheckBoxTextObject(this,tr("Use the system icons"),Alpm::instance()->useSystemIcons());
     useSysIconsBox->insert(table->cellAt(1,0).firstCursorPosition());
-    extObj = new DBExtObject(this,tr("Database files' suffix (restart of qpacman_service is needed)"));
+    extObj = new DBExtObject(this,tr("Database files' suffix"));
     extObj->insert(table->cellAt(2,0).firstCursorPosition());
     threadsObj = new LabelSpinTextObject(this,tr("Count of the threads for each download"),1,20,Alpm::instance()->downloaderThreadCount());
     threadsObj->insert(table->cellAt(3,0).firstCursorPosition());

@@ -548,8 +548,12 @@ Are you sure to continue?</source>
     </message>
     <message>
         <location line="+2"/>
+        <source>Database files&apos; suffix</source>
+        <translation type="unfinished">Суфікс файлаў базы дадзеных</translation>
+    </message>
+    <message>
         <source>Database files&apos; suffix (restart of qpacman_service is needed)</source>
-        <translation type="unfinished">Суфікс файлаў базы дадзеных (неабходны перазапуск qpacman_service)</translation>
+        <translation type="obsolete">Суфікс файлаў базы дадзеных (неабходны перазапуск qpacman_service)</translation>
     </message>
     <message>
         <source>Database files&apos; suffix (restart needed)</source>
