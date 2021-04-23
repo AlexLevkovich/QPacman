@@ -74,7 +74,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+439"/>
+        <location filename="../libalpm.cpp" line="+440"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 у IgnorePkg/IgnoreGroup. Усё роўна ўсталяваць?</translation>
     </message>
@@ -291,7 +291,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-881"/>
+        <location filename="../libalpm.cpp" line="-882"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам трэба выбраць пастаўшчыка для пакета %1:
@@ -324,7 +324,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Вы згодны? : </translation>
     </message>
     <message>
-        <location line="+131"/>
+        <location line="+132"/>
         <source>(%1/%2) downloaded</source>
         <translation type="unfinished">(%1/%2) загружана</translation>
     </message>

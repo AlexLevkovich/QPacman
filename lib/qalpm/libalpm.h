@@ -56,7 +56,8 @@ public:
     QList<AlpmPackage> findByPackageNameProvides(const AlpmPackage::Dependence & provide) const;
     //queryPackages: gets QList<AlpmPackage> result from methodFinished(func_name,QList<AlpmPackage> result,rc) signal
     bool queryPackages(const QString & name = QString(),AlpmPackage::SearchFieldType fieldType = AlpmPackage::NAME,AlpmPackage::PackageFilter filter = AlpmPackage::IS_ALL,const QString & group = QString(),const QString & repo = QString());
-    //updateDBs: start updating sync dbs. It ends at methodFinished(func_name,rc) signal execution.
+    //updateDBs: start updating sync dbs. It ends at methodFinished(func_name,rc) signal execution. It reopens Alpm,
+    //so be careful if you save AlpmPackage instances.
     ThreadRun::RC updateDBs(bool force = false);
     //installPackages: start installing packages. It ends at methodFinished(func_name,rc) signal execution.
     ThreadRun::RC installPackages(const QList<AlpmPackage> & pkgs,bool asdeps = false,const QList<AlpmPackage> & forcedpkgs = QList<AlpmPackage>());

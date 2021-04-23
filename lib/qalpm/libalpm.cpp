@@ -336,6 +336,7 @@ bool Alpm::close() {
             ok = true;
             break;
         }
+        answer(0);
         qApp->processEvents(QEventLoop::AllEvents,100);
     }
     if (!ok && ThreadRun::isMethodExecuting()) {
