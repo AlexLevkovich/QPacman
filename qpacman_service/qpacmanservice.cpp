@@ -1,3 +1,7 @@
+/********************************************************************************
+** Created by: Alex Levkovich (alevkovich@tut.by) 2021
+** License:    GPL
+********************************************************************************/
 #include "qpacmanservice.h"
 #include "qpacmanservice_adaptor.h"
 #include <QThread>

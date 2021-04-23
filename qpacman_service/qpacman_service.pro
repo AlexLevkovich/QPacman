@@ -20,7 +20,8 @@ SOURCES += \
         qpacmanservice.cpp \
         sigwatch.cpp \
         singleapplication.cpp \
-        singleapplication_p.cpp
+        singleapplication_p.cpp \
+        stacktracer.cpp
 
 isEmpty(PACMANCONF) {
     PACMANCONF = /etc/pacman.conf
@@ -34,6 +35,9 @@ DEFINES += SYSTEMDCONFFILEBASE=\\\"$$SYSTEMDCONFFILEBASE\\\"
 OWNPKGNAME = qpacman
 DEFINES += OWNPKGNAME=\\\"$$OWNPKGNAME\\\"
 
+LOGDIR = /var/log
+DEFINES += LOGDIR=\\\"$$LOGDIR\\\"
+
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
@@ -43,14 +47,16 @@ HEADERS += \
     qpacmanservice.h \
     sigwatch.h \
     singleapplication.h \
-    singleapplication_p.h
+    singleapplication_p.h \
+    stacktracer.h
 
 
 !exists("$$INSTALL_PREFIX/lib/libpam.so"): error("pam package needs to be installed!")
 AWK_BIN = $$system(which awk)
 isEmpty(AWK_BIN): error("awk package needs to be installed!")
+!exists("$$INSTALL_PREFIX/lib/libbfd.so"): error("binutils package needs to be installed!")
 
-LIBS += -lpam
+LIBS += -lpam -lbfd
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib/qalpm/release/ -lqalpm
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib/qalpm/debug/ -lqalpm

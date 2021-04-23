@@ -738,7 +738,7 @@ Are you sure?</source>
 <context>
     <name>PackageItemModel</name>
     <message>
-        <location filename="../packageview.cpp" line="+28"/>
+        <location filename="../packageview.cpp" line="+32"/>
         <source>Install</source>
         <translation type="unfinished">Усталяваць</translation>
     </message>

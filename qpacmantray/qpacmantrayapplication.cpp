@@ -1,3 +1,7 @@
+/********************************************************************************
+** Created by: Alex Levkovich (alevkovich@tut.by) 2021
+** License:    GPL
+********************************************************************************/
 #include "qpacmantrayapplication.h"
 #include "libalpm.h"
 #include "traypreferences.h"

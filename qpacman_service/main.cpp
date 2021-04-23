@@ -1,7 +1,13 @@
+/********************************************************************************
+** Created by: Alex Levkovich (alevkovich@tut.by) 2021
+** License:    GPL
+********************************************************************************/
 #include <singleapplication.h>
 #include <QDBusConnection>
+#include <QDir>
 #include "qpacmanservice.h"
 #include "sigwatch.h"
+#include "stacktracer.h"
 
 int main(int argc, char *argv[]) {
     QCoreApplication::setOrganizationName("AlexL");
@@ -20,6 +26,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    StackTracer tracer(QString(LOGDIR)+QDir::separator()+"qpacman_service.log");
     QPacmanService service;
 
     UnixSignalWatcher sigwatch;

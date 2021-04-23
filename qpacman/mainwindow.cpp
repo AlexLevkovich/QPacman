@@ -1,3 +1,7 @@
+/********************************************************************************
+** Created by: Alex Levkovich (alevkovich@tut.by) 2021
+** License:    GPL
+********************************************************************************/
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "widgetgroup.h"

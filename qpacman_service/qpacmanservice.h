@@ -1,3 +1,7 @@
+/********************************************************************************
+** Created by: Alex Levkovich (alevkovich@tut.by) 2021
+** License:    GPL
+********************************************************************************/
 #ifndef QPACMANSERVICE_H
 #define QPACMANSERVICE_H
 
