@@ -207,7 +207,7 @@ QMainWindow * PackageProcessor::createMainProcessorWindow(ProgressView ** view,Q
     (*logAction)->setIcon(ThemeIcons::get(ThemeIcons::LOG_VIEW));
     (*logAction)->setText(tr("Log"));
     (*logAction)->setToolTip(tr("Show the resulting log"));
-    connect(*logAction,&QAction::triggered,mainWidget,&QStackedWidget::setCurrentIndex);
+    connect(*logAction,&QAction::triggered,mainWidget,[=](bool flag) {mainWidget->setCurrentIndex(flag?1:0);});
     actionsToolBar->addAction(*logAction);
     actionsToolBar->addAction(*cancelAction);
     QWidget* empty = new QWidget(actionsToolBar);
