@@ -20,7 +20,7 @@
 
 template<class ForwardIt, class T> static ForwardIt binary_search_ex(ForwardIt first, ForwardIt last, const T& value) {
     ForwardIt it = std::lower_bound(first, last, value);
-    if ((it != last) && (value < *it)) it = last;
+    if ((it == last) || (value < *it)) it = last;
     return it;
 }
 

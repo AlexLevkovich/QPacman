@@ -89,7 +89,7 @@ private:
 
 template<class ForwardIt, class T, class Compare> static ForwardIt binary_search_ex(ForwardIt first, ForwardIt last, const T& value, Compare comp) {
     ForwardIt it = std::lower_bound(first, last, value, comp);
-    if ((it != last) && comp(value,*it)) it = last;
+    if ((it == last) || comp(value,*it)) it = last;
     return it;
 }
 
