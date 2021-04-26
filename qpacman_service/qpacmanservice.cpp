@@ -545,6 +545,8 @@ int QPacmanService::pam_auth(int num_msg, const struct pam_message **,struct pam
 }
 
 bool QPacmanService::check_root_password(const QString & root_pw) {
+    if (root_pw.isNull()) return false;
+
     pam_handle_t * pamh = NULL;
     pam_conv conv = {QPacmanService::pam_auth,(void *)&root_pw};
     int ret = pam_start("sudo","root",&conv,&pamh);
