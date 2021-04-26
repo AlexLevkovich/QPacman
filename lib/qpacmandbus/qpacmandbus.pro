@@ -23,13 +23,15 @@ isEmpty(INSTALL_PREFIX) {
 #QMAKE_EXTRA_TARGETS += qdbusxmltocpp
 
 DBUS_INTERFACES = $$PWD/../../qpacman_service/qpacmanservice.xml
-QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i alpmpackage.h -i qalpmtypes.h
+QDBUSXML2CPP_INTERFACE_HEADER_FLAGS = -i alpmpackage.h -i qalpmtypes.h -i dbusstring.h
 
 SOURCES += \
+    dbusstring.cpp \
     alpmpackage.cpp \
     libalpm.cpp
 
 HEADERS += \
+    dbusstring.h \
     alpmpackage.h \
     libalpm.h \
     qalpmtypes.h

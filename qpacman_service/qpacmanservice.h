@@ -7,6 +7,7 @@
 
 #include <QObject>
 #include "libalpm.h"
+#include "dbusstring.h"
 
 class QPacmanService : public QObject {
     Q_OBJECT
@@ -15,8 +16,8 @@ public:
 
     Q_INVOKABLE bool queryPackages(const QString & name,int fieldType,int filter,const QString & group,const QString & repo);
     Q_INVOKABLE QString lastError();
-    Q_INVOKABLE ThreadRun::RC installPackages(const QString & root_pw,const QByteArray & pkgs,bool asdeps = false,const QByteArray & forcedpkgs = QByteArray());
-    Q_INVOKABLE ThreadRun::RC removePackages(const QString & root_pw,const QByteArray & pkgs,bool cascade = true);
+    Q_INVOKABLE ThreadRun::RC installPackages(const String & root_pw,const QByteArray & pkgs,bool asdeps = false,const QByteArray & forcedpkgs = QByteArray());
+    Q_INVOKABLE ThreadRun::RC removePackages(const String & root_pw,const QByteArray & pkgs,bool cascade = true);
     Q_INVOKABLE ThreadRun::RC downloadPackages(const QByteArray & pkgs);
     Q_INVOKABLE ThreadRun::RC updateDBs(bool force = false);
     Q_INVOKABLE QByteArray updates();

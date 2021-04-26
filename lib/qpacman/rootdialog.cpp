@@ -26,7 +26,6 @@ RootDialog::RootDialog() : UnableToCloseDialog(NULL), ui(new Ui::RootDialog) {
             break;
         }
     }
-    on_passEdit_textChanged("");
 
     new WindowCenterer(this);
 }
@@ -44,19 +43,11 @@ void RootDialog::on_buttonBox_rejected() {
 }
 
 QString RootDialog::password() const {
-    return ui->passEdit->text();
+    QString ret = ui->passEdit->text();
+    return ret.isNull()?QString(""):ret;
 }
 
 void RootDialog::reject_requested() {
     reject();
 }
 
-void RootDialog::on_passEdit_textChanged(const QString & text) {
-    QList<QAbstractButton *> buttons = ui->buttonBox->buttons();
-    for (int i=0;i<buttons.count();i++) {
-        if (ui->buttonBox->standardButton(buttons[i]) == QDialogButtonBox::Ok) {
-            buttons[i]->setEnabled(!text.isEmpty());
-            break;
-        }
-    }
-}

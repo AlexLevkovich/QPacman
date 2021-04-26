@@ -527,7 +527,8 @@
     <method name="installPackages">
       <arg type="a(iii)" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ThreadRun::RC"/>
-      <arg name="root_pw" type="s" direction="in"/>
+      <arg name="root_pw" type="a(ii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="String"/>
       <arg name="pkgs" type="a(ii)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QByteArray"/>
       <arg name="asdeps" type="b" direction="in"/>
@@ -539,7 +540,8 @@
     <method name="removePackages">
       <arg type="a(iii)" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ThreadRun::RC"/>
-      <arg name="root_pw" type="s" direction="in"/>
+      <arg name="root_pw" type="a(ii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="String"/>
       <arg name="pkgs" type="a(ii)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QByteArray"/>
       <arg name="cascade" type="b" direction="in"/>

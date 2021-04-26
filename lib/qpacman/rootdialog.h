@@ -28,7 +28,6 @@ protected slots:
 private slots:
     void on_buttonBox_accepted();
     void on_buttonBox_rejected();
-    void on_passEdit_textChanged(const QString &arg1);
 
 private:
     Ui::RootDialog *ui;

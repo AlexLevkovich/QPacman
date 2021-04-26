@@ -13,9 +13,10 @@ DEFINES += QAPPLICATION_CLASS=QCoreApplication
 DEFINES += QT_DEPRECATED_WARNINGS
 
 DBUS_ADAPTORS = qpacmanservice.xml
-QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i alpmpackage.h -i alpmfuture.h -i qalpmtypes.h
+QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i alpmpackage.h -i alpmfuture.h -i qalpmtypes.h -i dbusstring.h
 
 SOURCES += \
+        dbusstring.cpp \
         main.cpp \
         qpacmanservice.cpp \
         sigwatch.cpp \
@@ -44,6 +45,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    dbusstring.h \
     qpacmanservice.h \
     sigwatch.h \
     singleapplication.h \

@@ -6,6 +6,7 @@
 #include "qalpmtypes.h"
 #include <QEventLoop>
 #include "qpacmanservice_interface.h"
+#include "dbusstring.h"
 
 Alpm * m_alpm_instance = NULL;
 
@@ -30,6 +31,8 @@ Alpm::Alpm(QObject * parent) : QObject(parent) {
     qRegisterMetaType<ThreadRun::RC>("ThreadRun::RC");
     qDBusRegisterMetaType<ThreadRun::RC>();
     qDBusRegisterMetaType<StringStringMap>();
+    qRegisterMetaType<String>("String");
+    qDBusRegisterMetaType<String>();
     m_interface = new ComAlexlQtQPacmanServiceInterface(ComAlexlQtQPacmanServiceInterface::staticInterfaceName(),"/",QDBusConnection::systemBus(),this);
     if (!m_interface->isValid()) {
         m_error = m_interface->lastError();

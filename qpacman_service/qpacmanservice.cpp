@@ -24,6 +24,9 @@ const QString temporaryName() {
 QPacmanService::QPacmanService(QObject *parent) : QObject(parent) {
     new Alpm(this);
 
+    qRegisterMetaType<String>("String");
+    qDBusRegisterMetaType<String>();
+
     if (!Alpm::instance()->open(PACMANCONF)) {
         qCritical() << "Alpm Instance was not open!!!" << lastError();
         qApp->quit();
@@ -559,7 +562,7 @@ bool QPacmanService::check_root_password(const QString & root_pw) {
     return (ret == PAM_SUCCESS);
 }
 
-ThreadRun::RC QPacmanService::installPackages(const QString & root_pw,const QByteArray & pkgs,bool asdeps,const QByteArray & forcedpkgs) {
+ThreadRun::RC QPacmanService::installPackages(const String & root_pw,const QByteArray & pkgs,bool asdeps,const QByteArray & forcedpkgs) {
     if (!check_root_password(root_pw)) return ThreadRun::ROOTPW;
     QList<AlpmPackage> list1;
     QDataStream stream((QByteArray *)&pkgs,QIODevice::ReadOnly);
@@ -587,7 +590,7 @@ ThreadRun::RC QPacmanService::installPackages(const QString & root_pw,const QByt
     return Alpm::instance()->installPackages(list1,asdeps,list2);
 }
 
-ThreadRun::RC QPacmanService::removePackages(const QString & root_pw,const QByteArray & pkgs,bool cascade) {
+ThreadRun::RC QPacmanService::removePackages(const String & root_pw,const QByteArray & pkgs,bool cascade) {
     if (!check_root_password(root_pw)) return ThreadRun::ROOTPW;
     QList<AlpmPackage> list1;
     QDataStream stream((QByteArray *)&pkgs,QIODevice::ReadOnly);
