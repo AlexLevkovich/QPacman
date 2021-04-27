@@ -6,6 +6,7 @@
 #include "alpmpackage.h"
 #include "libalpm.h"
 #include "alpmlist.h"
+#include "alpm.h"
 #include "alpmdb.h"
 #include <QByteArray>
 #include <QRectF>
@@ -14,7 +15,6 @@
 #include <AppStreamQt/pool.h>
 #include <AppStreamQt/image.h>
 #include <AppStreamQt/icon.h>
-#include <searchpackage.h>
 #include <QDebug>
 #include <limits>
 #include "archivefilesiterator.h"
@@ -256,15 +256,6 @@ AlpmPackage::AlpmPackage() {
 AlpmPackage::AlpmPackage(alpm_pkg_t *pkg) {
     m_handle = pkg;
     m_delete = true;
-}
-
-const AlpmPackage AlpmPackage::newPackage(const QString & name,const QString & version) {
-    AlpmPackage pkg;
-    SearchPackage key(name,version);
-    key.setAutoFree(false);
-    pkg.m_handle = key.packageHandle();
-    pkg.m_delete = true;
-    return pkg;
 }
 
 AlpmPackage::AlpmPackage(const QString & name,const QString & version,const QString & dbname) {

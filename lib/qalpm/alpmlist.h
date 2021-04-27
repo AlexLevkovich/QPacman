@@ -6,7 +6,7 @@
 #ifndef ALPMLIST_H
 #define ALPMLIST_H
 
-#include <alpm.h>
+#include <alpm_list.h>
 #include <QList>
 
 template <class T> class AlpmList {

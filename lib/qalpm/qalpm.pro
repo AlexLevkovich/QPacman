@@ -79,7 +79,6 @@ SOURCES += \
     libalpm.cpp \
     multidownloader.cpp \
     networkreplyproxy.cpp \
-    searchpackage.cpp \
     simpledownloader.cpp
 
 HEADERS += \
@@ -97,7 +96,6 @@ HEADERS += \
     alpmpackage.h \
     byteshumanizer.h \
     qalpmtypes.h \
-    searchpackage.h \
     simpledownloader.h
 
 LANGUAGES = ru be

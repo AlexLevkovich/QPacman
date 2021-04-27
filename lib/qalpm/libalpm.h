@@ -36,7 +36,6 @@ public:
     bool isValid(bool change_errno = false) const;
     QString arch() const;
     QString lastError(int * error_id = NULL) const;
-    ThreadRun::RC lastMethodRC() const;
     QString dbDirPath() const;
     QString lockFilePath() const;
     static const QString version();
@@ -73,6 +72,9 @@ public:
     static AlpmConfig * config();
 
     static bool isOpen();
+
+protected:
+    ThreadRun::RC lastMethodRC() const;
 
 signals:
     void method_finished(const QString & name,const QList<AlpmPackage> & result,ThreadRun::RC rc);
@@ -214,7 +216,6 @@ private:
     friend class AlpmDB;
     friend class ThreadRun;
     friend class OverwriteHandler;
-    friend class SearchPackage;
 };
 
 Q_DECLARE_METATYPE(StringStringMap)

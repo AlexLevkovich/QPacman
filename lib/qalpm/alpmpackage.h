@@ -225,7 +225,6 @@ public:
 
 protected:
     AlpmPackage(alpm_pkg_t *pkg);
-    static const AlpmPackage newPackage(const QString & name,const QString & version);
 
 private:
     QList<FileInfo> files(const QString & archive_path) const;

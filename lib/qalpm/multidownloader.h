@@ -91,11 +91,6 @@ private:
     friend class MultiDownloader;
 };
 
-QDataStream & operator<<(QDataStream &stream, const PartManager::Part & part);
-QDataStream & operator>>(QDataStream &stream, PartManager::Part & part);
-QDataStream & operator<<(QDataStream &stream, const PartManager & part_manager);
-QDataStream & operator>>(QDataStream &stream, PartManager & part_manager);
-
 class MultiDownloader : public DownloaderInterface {
     Q_OBJECT
 public:

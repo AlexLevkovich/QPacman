@@ -6,7 +6,6 @@
 #include "alpmdb.h"
 #include <dlfcn.h>
 #include <QThread>
-#include "searchpackage.h"
 #include "libalpm.h"
 #include "alpmlist.h"
 #include <alpm.h>
