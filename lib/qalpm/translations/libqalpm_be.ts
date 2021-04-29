@@ -453,14 +453,14 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пачынаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+311"/>
+        <location line="+306"/>
         <location line="+6"/>
-        <location line="+185"/>
+        <location line="+181"/>
         <source>Skipping target: %1</source>
         <translation type="unfinished">Прапускаем %1</translation>
     </message>
     <message>
-        <location line="-182"/>
+        <location line="-178"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -470,12 +470,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пачынаем поўнае абнаўленне сістэмы...</translation>
     </message>
     <message>
-        <location line="-482"/>
+        <location line="-477"/>
         <source>Stopped because of user refusal!!!</source>
         <translation type="unfinished">Спынена па жаданнi карыстальніка!!!</translation>
     </message>
     <message>
-        <location line="+524"/>
+        <location line="+519"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 мае няправільную архітэктуру</translation>
     </message>
@@ -510,18 +510,18 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пакеты былі ня абноўленыя бо няма чаго абнаўляць.</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+6"/>
         <source>No packages were upgraded because of user&apos;s refusal.</source>
         <translation type="unfinished">Нічога не абноўлена з-за карыстальніцкага ўмяшальніцтва.</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+154"/>
+        <location line="+150"/>
         <source>Failed to commit transaction (%1)</source>
         <translation type="unfinished">Немагчыма выканаць транзакцыю (%1)</translation>
     </message>
     <message>
-        <location line="-144"/>
+        <location line="-140"/>
         <source>%1 exists in both &apos;%2&apos; and &apos;%3&apos;</source>
         <translation type="unfinished">%1 існуе ў двух пакетах &apos;%2&apos; and &apos;%3&apos;</translation>
     </message>
@@ -546,7 +546,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Была памылка, нічога не ўстаноўлена.</translation>
     </message>
     <message>
-        <location line="+6"/>
+        <location line="+4"/>
         <source>No errors occurred, the packages were successfully installed.</source>
         <translation>Усе пакеты ўсталяваныя без памылак!</translation>
     </message>
@@ -571,12 +571,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Карыстальнік адмяніў выдаленне пакета %1!</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="+9"/>
         <source>No packages were removed because of user&apos;s refusal.</source>
         <translation type="unfinished">Ніякія пакеты ня выдаленыя з-за карыстальніцкага ўмяшальнiцтва.</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+14"/>
         <source>No errors occurred, the packages were successfully removed.</source>
         <translation type="unfinished">Усе пакеты выдалены без памылак.</translation>
     </message>

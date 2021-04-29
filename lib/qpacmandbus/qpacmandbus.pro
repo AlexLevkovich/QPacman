@@ -36,6 +36,8 @@ HEADERS += \
     libalpm.h \
     qalpmtypes.h
 
+INCLUDEPATH += $$OUT_PWD
+
 target.path = $$INSTALL_ROOT/$$INSTALL_PREFIX/lib/
 INSTALLS += target
 

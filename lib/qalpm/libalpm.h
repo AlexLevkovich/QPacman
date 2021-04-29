@@ -53,16 +53,16 @@ public:
     QList<AlpmPackage> findByPackageName(const QString & pkgname) const;
     QList<AlpmPackage> findByPackageNameVersion(const QString & pkgname,const QString & version) const;
     QList<AlpmPackage> findByPackageNameProvides(const AlpmPackage::Dependence & provide) const;
-    //queryPackages: gets QList<AlpmPackage> result from methodFinished(func_name,QList<AlpmPackage> result,rc) signal
+    //queryPackages: gets QList<AlpmPackage> result from method_finished(func_name,QList<AlpmPackage> result,rc) signal
     bool queryPackages(const QString & name = QString(),AlpmPackage::SearchFieldType fieldType = AlpmPackage::NAME,AlpmPackage::PackageFilter filter = AlpmPackage::IS_ALL,const QString & group = QString(),const QString & repo = QString());
-    //updateDBs: start updating sync dbs. It ends at methodFinished(func_name,rc) signal execution. It reopens Alpm,
+    //updateDBs: start updating sync dbs. It ends at method_finished(func_name,rc) signal execution. It reopens Alpm,
     //so be careful if you save AlpmPackage instances.
     ThreadRun::RC updateDBs(bool force = false);
-    //installPackages: start installing packages. It ends at methodFinished(func_name,rc) signal execution.
+    //installPackages: start installing packages. It ends at method_finished(func_name,rc) signal execution.
     ThreadRun::RC installPackages(const QList<AlpmPackage> & pkgs,bool asdeps = false,const QList<AlpmPackage> & forcedpkgs = QList<AlpmPackage>());
-    //removePackages: start removing packages. It ends at methodFinished(func_name,rc) signal execution.
+    //removePackages: start removing packages. It ends at method_finished(func_name,rc) signal execution.
     ThreadRun::RC removePackages(const QList<AlpmPackage> & pkgs,bool cascade = true);
-    //downloadPackages: gets QStringList result from methodFinished(func_name,QStringList result,rc) signal
+    //downloadPackages: gets QStringList result from method_finished(func_name,QStringList result,rc) signal
     ThreadRun::RC downloadPackages(const QList<AlpmPackage> & pkgs);
     QList<AlpmPackage> updates() const;
 
@@ -138,8 +138,6 @@ signals:
 
     // events for possible database changes
     void locking_changed(const QString & path,bool locked);
-    void pkgs_installed(const QStringList & installed_pkgs,const QStringList & removed_pkgs);
-    void pkgs_removed(const QStringList & pkgs);
 
 private slots:
     void operation_download_fn(const QString & filename,qint64 bytes_downloaded,qint64 length,int percents,qint64 speed);
@@ -193,7 +191,7 @@ private:
     void emit_optdepends_event(const QString & pkgname,const StringStringMap & installed_deps,const StringStringMap & pending_deps);
     bool emit_event(const char *member,QGenericArgument val0 = QGenericArgument(),QGenericArgument val1 = QGenericArgument(),QGenericArgument val2 = QGenericArgument(),QGenericArgument val3 = QGenericArgument(),QGenericArgument val4 = QGenericArgument(),QGenericArgument val5 = QGenericArgument(),QGenericArgument val6 = QGenericArgument(),QGenericArgument val7 = QGenericArgument(),QGenericArgument val8 = QGenericArgument(),QGenericArgument val9 = QGenericArgument());
 
-    bool do_process_targets(bool remove,QStringList & install_targets,QStringList & remove_targets);
+    bool do_process_targets(bool remove);
     void recreatedbs();
 
     alpm_handle_t * m_alpm_handle;

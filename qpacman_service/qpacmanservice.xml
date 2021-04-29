@@ -30,12 +30,6 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
       <arg direction="out" type="x" name="remove_size"/>
     </signal>
-    <signal name="pkgs_installed">
-      <arg direction="out" type="a(iiii)" name="installed_pkgs"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
-      <arg direction="out" type="a(iiii)" name="removed_pkgs"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QStringList"/>
-    </signal>
     <signal name="method_finished">
       <arg direction="out" type="s" name="name"/>
       <arg direction="out" type="a(iiii)" name="result"/>
@@ -51,10 +45,6 @@
       <arg direction="out" type="s" name="name"/>
       <arg direction="out" type="a(iii)" name="rc"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="ThreadRun::RC"/>
-    </signal>
-    <signal name="pkgs_removed">
-      <arg direction="out" type="a(iiii)" name="pkgs"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
     </signal>
     <signal name="install_progress">
       <arg direction="out" type="s" name="pkg_name"/>
@@ -423,9 +413,8 @@
       <arg type="a(iii)" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
     </method>
-    <method name="markedPackages">
-      <arg type="a(iii)" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
+    <method name="areMarkedPackages">
+      <arg type="b" direction="out"/>
     </method>
     <method name="setDownloaderTimeout">
       <arg name="value" type="u" direction="in"/>
@@ -463,12 +452,12 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
       <arg name="pkgname" type="s" direction="in"/>
     </method>
-    <method name="localPackage">
+    <method name="findLocalPackage">
       <arg type="a(ii)" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
       <arg name="pkgname" type="s" direction="in"/>
     </method>
-    <method name="localPackage">
+    <method name="findLocalPackage">
       <arg type="a(ii)" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
       <arg name="name" type="s" direction="in"/>
@@ -537,14 +526,11 @@
     </method>
     <method name="askShowTrayOptions">
     </method>
-    <method name="removePackages">
+    <method name="processPackages">
       <arg type="a(iii)" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ThreadRun::RC"/>
       <arg name="root_pw" type="a(ii)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="String"/>
-      <arg name="pkgs" type="a(ii)" direction="in"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QByteArray"/>
-      <arg name="cascade" type="b" direction="in"/>
     </method>
     <method name="setMethodTerminateFlag">
     </method>

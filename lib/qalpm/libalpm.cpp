@@ -830,7 +830,7 @@ void Alpm::operation_event_fn(alpm_event_t * event) {
         case ALPM_EVENT_RETRIEVE_FAILED:
             m_download_errs.removeDuplicates();
             p_alpm->emit_information(QObject::tr("Packages have not been retrieved :("));
-            p_alpm->emit_event("download_failed");
+            p_alpm->emit_event("downloads_failed");
             break;
         case ALPM_EVENT_HOOK_DONE:
             p_alpm->emit_event("all_hooks_completed");
@@ -1092,7 +1092,7 @@ QString Alpm::download_package(const QString & download_url) const {
 
 QString Alpm::download_package(const AlpmPackage & pkg) const {
     QString ret;
-    for (const QString & remote_loc: pkg.remoteLocations()) {
+    for (const QLatin1String & remote_loc: pkg.remoteLocations()) {
         if (remote_loc.isEmpty()) continue;
         ret = download_package(remote_loc+QDir::separator()+pkg.fileName());
         if (!ret.isEmpty()) break;
@@ -1181,7 +1181,10 @@ QList<AlpmPackage> Alpm::updates() const {
     return ret;
 }
 
-bool Alpm::do_process_targets(bool remove,QStringList & install_targets,QStringList & remove_targets) {
+bool Alpm::do_process_targets(bool remove) {
+    QStringList install_targets;
+    QStringList remove_targets;
+
     AlpmList<alpm_pkg_t> list(alpm_trans_get_add(m_alpm_handle),AlpmList<alpm_pkg_t>::ignorefree);
     AlpmList<alpm_pkg_t> rlist(alpm_trans_get_remove(m_alpm_handle),AlpmList<alpm_pkg_t>::ignorefree);
 
@@ -1225,17 +1228,9 @@ public:
     }
     ~HandleReleaser() {
         ::alpm_trans_release(m_handle);
-        if (install_targets.count() > 0) QMetaObject::invokeMethod(Alpm::instance(),"pkgs_installed",Qt::QueuedConnection,Q_ARG(QStringList,install_targets),Q_ARG(QStringList,remove_targets));
-        else if (remove_targets.count() > 0) QMetaObject::invokeMethod(Alpm::instance(),"pkgs_removed",Qt::QueuedConnection,Q_ARG(QStringList,remove_targets));
-    }
-    void setPkgs(const QStringList & install_targets,const QStringList & remove_targets) {
-        this->install_targets = install_targets;
-        this->remove_targets = remove_targets;
     }
 private:
     alpm_handle_t * m_handle;
-    QStringList install_targets;
-    QStringList remove_targets;
 };
 
 bool Alpm::only_pkg_name_cmp(const AlpmPackage & item1, const AlpmPackage & item2) {
@@ -1538,9 +1533,7 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
         return;
     }
 
-    QStringList install_targets;
-    QStringList remove_targets;
-    if (!do_process_targets(false,install_targets,remove_targets)) {
+    if (!do_process_targets(false)) {
         emit_information(tr("No packages were upgraded because of user's refusal."),true);
         m_alpm_errno = USER_REFUSAL;
         return;
@@ -1601,8 +1594,6 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
         emit_information(tr("Errors occurred, no packages were installed."),true);
         return;
     }
-
-    handle_releaser.setPkgs(install_targets,remove_targets);
 
     emit_information(tr("No errors occurred, the packages were successfully installed."),true);
     FREELIST(data);
@@ -1692,9 +1683,7 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
     } while(list.next());
     list.detach();
 
-    QStringList install_targets;
-    QStringList remove_targets;
-    if (!do_process_targets(true,install_targets,remove_targets)) {
+    if (!do_process_targets(true)) {
         emit_information(tr("No packages were removed because of user's refusal."),true);
         m_alpm_errno = USER_REFUSAL;
         return;
@@ -1708,8 +1697,6 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
         return;
     }
     FREELIST(data);
-
-    handle_releaser.setPkgs(install_targets,remove_targets);
 
     emit_information(tr("No errors occurred, the packages were successfully removed."),true);
     m_alpm_errno = ALPM_ERR_OK;

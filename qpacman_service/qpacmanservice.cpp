@@ -8,6 +8,7 @@
 #include <QStringList>
 #include <QNetworkProxy>
 #include "alpmconfig.h"
+#include "actionapplier.h"
 #include <unistd.h>
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
@@ -90,8 +91,6 @@ QPacmanService::QPacmanService(QObject *parent) : QObject(parent) {
     connect(Alpm::instance(),&Alpm::pkg_files_loaded,this,&QPacmanService::pkg_files_loaded);
     connect(Alpm::instance(),&Alpm::starting_scriplet,this,&QPacmanService::starting_scriplet);
     connect(Alpm::instance(),&Alpm::scriplet_executed,this,&QPacmanService::scriplet_executed);
-    connect(Alpm::instance(),&Alpm::pkgs_installed,this,&QPacmanService::pkgs_installed);
-    connect(Alpm::instance(),&Alpm::pkgs_removed,this,&QPacmanService::pkgs_removed);
     connect(Alpm::instance(),SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)),this,SLOT(onmethod_finished(const QString&,const QStringList&,ThreadRun::RC)));
     connect(Alpm::instance(),SIGNAL(method_finished(const QString&,ThreadRun::RC)),this,SLOT(onmethod_finished(const QString&,ThreadRun::RC)));
     connect(Alpm::instance(),SIGNAL(method_finished(const QString&,const QList<AlpmPackage>&,ThreadRun::RC)),this,SLOT(onmethod_finished(const QString&,const QList<AlpmPackage>&,ThreadRun::RC)));
@@ -120,16 +119,20 @@ void QPacmanService::locking_changed(const QString &,bool locked) {
 void QPacmanService::onmethod_finished(const QString & name,ThreadRun::RC rc) {
     if (name == "Alpm::update_dbs") QMetaObject::invokeMethod(this,"alpm_reopen",Qt::QueuedConnection);
 
-    if (!tempFileName.isEmpty()) {
-        QFile(tempFileName).remove();
-    }
-    tempFileName.clear();
+    remove_temp_file();
 
     emit method_finished(name,rc);
     if (reload_is_needed) {
         reload_is_needed = false;
         do_alpm_reopen();
     }
+}
+
+void QPacmanService::remove_temp_file() {
+    if (!tempFileName.isEmpty()) {
+        QFile(tempFileName).remove();
+    }
+    tempFileName.clear();
 }
 
 void QPacmanService::onmethod_finished(const QString & name,const QStringList & result,ThreadRun::RC rc) {
@@ -571,13 +574,17 @@ ThreadRun::RC QPacmanService::installPackages(const String & root_pw,const QByte
     QDataStream stream2((QByteArray *)&forcedpkgs,QIODevice::ReadOnly);
     stream2 >> list2;
 
+    return install_packages(list1,asdeps,list2);
+}
+
+ThreadRun::RC QPacmanService::install_packages(const QList<AlpmPackage> & pkgs,bool asdeps,const QList<AlpmPackage> & forcedpkgs) {
     QDir dir(SYSTEMDCONFDIR);
     dir.setNameFilters(QStringList() << QString(SYSTEMDCONFFILEBASE"_*.conf"));
     for (QString & fileName: dir.entryList()) {
         QFile(QString(SYSTEMDCONFDIR)+QDir::separator()+fileName).remove();
     }
 
-    for (AlpmPackage & pkg: list1) {
+    for (const AlpmPackage & pkg: pkgs) {
         if (pkg.name() == OWNPKGNAME) {
             tempFileName = temporaryName();
             if (!tempFileName.isEmpty()) {
@@ -587,15 +594,14 @@ ThreadRun::RC QPacmanService::installPackages(const String & root_pw,const QByte
         }
     }
 
-    return Alpm::instance()->installPackages(list1,asdeps,list2);
+    return Alpm::instance()->installPackages(pkgs,asdeps,forcedpkgs);
 }
 
-ThreadRun::RC QPacmanService::removePackages(const String & root_pw,const QByteArray & pkgs,bool cascade) {
+ThreadRun::RC QPacmanService::processPackages(const String & root_pw) {
     if (!check_root_password(root_pw)) return ThreadRun::ROOTPW;
-    QList<AlpmPackage> list1;
-    QDataStream stream((QByteArray *)&pkgs,QIODevice::ReadOnly);
-    stream >> list1;
-    return Alpm::instance()->removePackages(list1,cascade);
+
+    new ActionApplier(this);
+    return ThreadRun::OK;
 }
 
 ThreadRun::RC QPacmanService::downloadPackages(const QByteArray & pkgs) {
@@ -691,11 +697,8 @@ QByteArray QPacmanService::updates() {
     return ret;
 }
 
-QByteArray QPacmanService::markedPackages() {
-    QByteArray ret;
-    QDataStream stream((QByteArray *)&ret,QIODevice::WriteOnly);
-    stream << AlpmPackage::changedStatusPackages();
-    return ret;
+bool QPacmanService::areMarkedPackages() {
+    return (AlpmPackage::changedStatusPackages().count() > 0);
 }
 
 QString QPacmanService::dbExtension() {
@@ -791,7 +794,7 @@ QByteArray QPacmanService::findByPackageName(const QString & pkgname) {
     return ret;
 }
 
-QByteArray QPacmanService::localPackage(const QString & pkgname) {
+QByteArray QPacmanService::findLocalPackage(const QString & pkgname) {
     MethodPauser pauser;
 
     QByteArray ret;
@@ -800,7 +803,7 @@ QByteArray QPacmanService::localPackage(const QString & pkgname) {
     return ret;
 }
 
-QByteArray QPacmanService::localPackage(const QString & name,const QString & version) {
+QByteArray QPacmanService::findLocalPackage(const QString & name,const QString & version) {
     MethodPauser pauser;
 
     QByteArray ret;

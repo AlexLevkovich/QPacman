@@ -11,6 +11,7 @@
 #include "messagedialog.h"
 #include "dbrefresher.h"
 #include "optionaldepsdlg.h"
+#include "packageinstaller.h"
 #include "actionapplier.h"
 #include "packagedownloader.h"
 #include <QMessageBox>
@@ -127,13 +128,7 @@ void MainWindow::enableActions(bool flag) {
 }
 
 bool MainWindow::actionApplyState() {
-    QList<AlpmPackage> to_remove;
-    QList<AlpmPackage> to_removeall;
-    QList<AlpmPackage> to_install;
-    QList<AlpmPackage> to_installdeps;
-    QList<AlpmPackage> to_installforced;
-    ui->packetView->markedPackages(to_install,to_installdeps,to_installforced,to_removeall,to_remove);
-    return ((to_removeall.count() > 0) || (to_remove.count() > 0) || (to_install.count() > 0) || (to_installdeps.count() > 0));
+    return Alpm::instance()->areMarkedPackages();
 }
 
 void MainWindow::onViewSelectionChanged(const AlpmPackage & pkg) {
@@ -294,13 +289,6 @@ void MainWindow::closeEvent(QCloseEvent * event) {
 void MainWindow::onActionApply() {
     enableActions(false);
 
-    QList<AlpmPackage> to_remove;
-    QList<AlpmPackage> to_removeall;
-    QList<AlpmPackage> to_install;
-    QList<AlpmPackage> to_installdeps;
-    QList<AlpmPackage> to_installforced;
-    ui->packetView->markedPackages(to_install,to_installdeps,to_installforced,to_removeall,to_remove);
-
     if (optdep != NULL) delete optdep;
     view_group->setCurrent(ui->progressView);
     ui->actionCancel->setVisible(true);
@@ -308,7 +296,7 @@ void MainWindow::onActionApply() {
     ui->packetView->clear();
     ui->progressView->clear();
     optdep = new OptionalDepsDlg();
-    ActionApplier * applier = new ActionApplier(to_removeall,to_remove,to_install,to_installdeps,to_installforced,ui->progressView,ui->actionCancel,optdep);
+    ActionApplier * applier = new ActionApplier(ui->progressView,ui->actionCancel,optdep);
     connect(optdep,SIGNAL(selected(const QStringList &)),this,SLOT(onselect_packages(const QStringList &)));
     connect(optdep,&QObject::destroyed,this,[&]() { optdep = NULL; });
     connect(applier,SIGNAL(completed(ThreadRun::RC,const QString &)),this,SLOT(onApplierCompleted(ThreadRun::RC,const QString &)),Qt::QueuedConnection);

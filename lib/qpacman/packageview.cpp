@@ -481,27 +481,6 @@ bool PackageView::isSelectNextPossible() {
     return ((history_index+1) < history_count);
 }
 
-void PackageView::markedPackages(QList<AlpmPackage> & install,QList<AlpmPackage> & install_asdeps,QList<AlpmPackage> & install_forced,QList<AlpmPackage> & removeall,QList<AlpmPackage> & remove) {
-    install.clear();
-    install_asdeps.clear();
-    install_forced.clear();
-    removeall.clear();
-    remove.clear();
-    if (m_model == NULL) return;
-    for (AlpmPackage & row: Alpm::instance()->markedPackages()) {
-        if (row.changeStatus() == AlpmPackage::DO_INSTALL ||
-            row.changeStatus() == AlpmPackage::DO_REINSTALL ||
-            row.changeStatus() == AlpmPackage::DO_INSTALL_FORCE) install.append(row);
-        if (row.changeStatus() == AlpmPackage::DO_INSTALL_ASDEPS ||
-            row.changeStatus() == AlpmPackage::DO_REINSTALL_ASDEPS ||
-            row.changeStatus() == AlpmPackage::DO_INSTALL_ASDEPS_FORCE) install_asdeps.append(row);
-        if (row.changeStatus() == AlpmPackage::DO_INSTALL_FORCE ||
-            row.changeStatus() == AlpmPackage::DO_INSTALL_ASDEPS_FORCE) install_forced.append(row);
-        if (row.changeStatus() == AlpmPackage::DO_UNINSTALL_ALL) removeall.append(row);
-        if (row.changeStatus() == AlpmPackage::DO_UNINSTALL) remove.append(row);
-    }
-}
-
 PackageView::SelectionState::SelectionState(const PackageView::SelectionState & state) {
     *this = state;
 }

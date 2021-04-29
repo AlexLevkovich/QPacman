@@ -101,8 +101,6 @@ Alpm::Alpm(QObject * parent) : QObject(parent) {
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::pkg_files_loaded,this,&Alpm::pkg_files_loaded);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::starting_scriplet,this,&Alpm::starting_scriplet);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::scriplet_executed,this,&Alpm::scriplet_executed);
-    connect(m_interface,&ComAlexlQtQPacmanServiceInterface::pkgs_installed,this,&Alpm::pkgs_installed);
-    connect(m_interface,&ComAlexlQtQPacmanServiceInterface::pkgs_removed,this,&Alpm::pkgs_removed);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::alpm_reopen,this,&Alpm::alpm_reopen);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::show_tray_options,this,&Alpm::show_tray_options);
     connect(m_interface,SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)),this,SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)));
@@ -478,14 +476,11 @@ ThreadRun::RC Alpm::installPackages(const QString & root_pw,const QList<AlpmPack
     return ThreadRun::BAD;
 }
 
-ThreadRun::RC Alpm::removePackages(const QString & root_pw,const QList<AlpmPackage> & pkgs,bool cascade) {
+ThreadRun::RC Alpm::processPackages(const QString & root_pw) {
     if (!isValid()) return ThreadRun::BAD;
 
-    QByteArray arr;
-    QDataStream stream(&arr,QIODevice::WriteOnly);
-    stream << pkgs;
     ThreadRun::RC ret;
-    if (replyToValue<ThreadRun::RC>(m_interface->removePackages(root_pw,arr,cascade),ret)) return ret;
+    if (replyToValue<ThreadRun::RC>(m_interface->processPackages(root_pw),ret)) return ret;
     return ThreadRun::BAD;
 }
 
@@ -679,15 +674,12 @@ QList<AlpmPackage> Alpm::updates() const {
     return list;
 }
 
-QList<AlpmPackage> Alpm::markedPackages() const {
-    if (!isValid()) return QList<AlpmPackage>();
+bool Alpm::areMarkedPackages() const {
+    if (!isValid()) return false;
 
-    QByteArray ret;
-    if (!replyToValue<QByteArray>(m_interface->markedPackages(),ret)) return QList<AlpmPackage>();
-    QDataStream stream(&ret,QIODevice::ReadOnly);
-    QList<AlpmPackage> list;
-    stream >> list;
-    return list;
+    bool ret;
+    if (!replyToValue<bool>(m_interface->areMarkedPackages(),ret)) return false;
+    return ret;
 }
 
 QString Alpm::dbExtension() const {
@@ -907,11 +899,11 @@ QList<AlpmPackage> Alpm::findByPackageName(const QString & pkgname) const {
     return list;
 }
 
-AlpmPackage Alpm::localPackage(const QString & pkgname) const {
+AlpmPackage Alpm::findLocalPackage(const QString & pkgname) const {
     if (!isValid()) return AlpmPackage();
 
     QByteArray ret;
-    if (!replyToValue<QByteArray>(m_interface->localPackage(pkgname),ret)) return AlpmPackage();
+    if (!replyToValue<QByteArray>(m_interface->findLocalPackage(pkgname),ret)) return AlpmPackage();
 
     AlpmPackage pkg;
     QDataStream stream(&ret,QIODevice::ReadOnly);
@@ -920,11 +912,11 @@ AlpmPackage Alpm::localPackage(const QString & pkgname) const {
     return pkg;
 }
 
-AlpmPackage Alpm::localPackage(const QString & name,const QString & version) const {
+AlpmPackage Alpm::findLocalPackage(const QString & name,const QString & version) const {
     if (!isValid()) return AlpmPackage();
 
     QByteArray ret;
-    if (!replyToValue<QByteArray>(m_interface->localPackage(name,version),ret)) return AlpmPackage();
+    if (!replyToValue<QByteArray>(m_interface->findLocalPackage(name,version),ret)) return AlpmPackage();
 
     AlpmPackage pkg;
     QDataStream stream(&ret,QIODevice::ReadOnly);

@@ -653,9 +653,8 @@ Are you sure?</source>
 <context>
     <name>ActionApplier</name>
     <message>
-        <location filename="../actionapplier.cpp" line="+54"/>
         <source>Nothing to process!!!</source>
-        <translation type="unfinished">Няма чаго апрацоўваць!!!</translation>
+        <translation type="obsolete">Няма чаго апрацоўваць!!!</translation>
     </message>
 </context>
 <context>

@@ -111,7 +111,6 @@ public:
     PackageView(QWidget *parent = NULL);
     bool isSelectPrevPossible();
     bool isSelectNextPossible();
-    void markedPackages(QList<AlpmPackage> & install,QList<AlpmPackage> & install_asdeps,QList<AlpmPackage> & install_forced,QList<AlpmPackage> & removeall,QList<AlpmPackage> & remove);
     void refreshRows(const QString & name,AlpmPackage::SearchFieldType fieldType,AlpmPackage::PackageFilter filter,const QString & group,const QString & repo);
     void revertPackageReason(const QString & pkgname);
     void selectPackageByDep(const AlpmPackage::Dependence & dep);

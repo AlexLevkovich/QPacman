@@ -405,7 +405,7 @@ QString AlpmPackage::Dependence::toString() const {
 }
 
 bool AlpmPackage::Dependence::isInstalled() const {
-    AlpmPackage pkg = Alpm::instance()->localPackage(name());
+    AlpmPackage pkg = Alpm::instance()->findLocalPackage(name());
     if (pkg.isValid()) return isAppropriate(pkg.name(),pkg.version());
 
     for (AlpmPackage & pkg: Alpm::instance()->findLocalByPackageNameProvides(*this)) {

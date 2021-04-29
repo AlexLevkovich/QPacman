@@ -17,13 +17,13 @@ public:
     Q_INVOKABLE bool queryPackages(const QString & name,int fieldType,int filter,const QString & group,const QString & repo);
     Q_INVOKABLE QString lastError();
     Q_INVOKABLE ThreadRun::RC installPackages(const String & root_pw,const QByteArray & pkgs,bool asdeps = false,const QByteArray & forcedpkgs = QByteArray());
-    Q_INVOKABLE ThreadRun::RC removePackages(const String & root_pw,const QByteArray & pkgs,bool cascade = true);
+    Q_INVOKABLE ThreadRun::RC processPackages(const String & root_pw);
     Q_INVOKABLE ThreadRun::RC downloadPackages(const QByteArray & pkgs);
     Q_INVOKABLE ThreadRun::RC updateDBs(bool force = false);
     Q_INVOKABLE QByteArray updates();
     Q_INVOKABLE void answer(uint value);
-    Q_INVOKABLE QByteArray localPackage(const QString & pkgname);
-    Q_INVOKABLE QByteArray localPackage(const QString & name,const QString & version);
+    Q_INVOKABLE QByteArray findLocalPackage(const QString & pkgname);
+    Q_INVOKABLE QByteArray findLocalPackage(const QString & name,const QString & version);
     Q_INVOKABLE QByteArray findByPackageName(const QString & pkgname);
     Q_INVOKABLE QByteArray findByPackageNameProvides(const QByteArray & provide);
     Q_INVOKABLE QByteArray findLocalByPackageNameProvides(const QByteArray & provide);
@@ -68,7 +68,7 @@ public:
     Q_INVOKABLE void setDownloaderThreads(uint value);
     Q_INVOKABLE void setDownloaderProxy(const QByteArray & proxy);
     Q_INVOKABLE void setUsingSystemIcons(bool flag);
-    Q_INVOKABLE QByteArray markedPackages();
+    Q_INVOKABLE bool areMarkedPackages();
     Q_INVOKABLE QString dbExtension();
     Q_INVOKABLE QStringList dbExtensions();
     Q_INVOKABLE bool setDBExtension(const QString & dbext);
@@ -153,9 +153,6 @@ signals:
     void starting_scriplet(const QString & infostr);
     void scriplet_executed();
 
-    void pkgs_installed(const QStringList & installed_pkgs,const QStringList & removed_pkgs);
-    void pkgs_removed(const QStringList & pkgs);
-
     void method_finished(const QString & name,ThreadRun::RC rc);
     void package_queried(const QByteArray & result);
     void method_finished(const QString & name,const QStringList & result,ThreadRun::RC rc);
@@ -169,6 +166,8 @@ private slots:
     void locking_changed(const QString & path,bool locked);
 
 private:
+    ThreadRun::RC install_packages(const QList<AlpmPackage> & pkgs,bool asdeps = false,const QList<AlpmPackage> & forcedpkgs = QList<AlpmPackage>());
+    void remove_temp_file();
     void do_alpm_reopen();
     bool check_root_password(const QString & root_pw);
     static int pam_auth(int num_msg, const struct pam_message **msg,struct pam_response **resp, void *appdata_ptr);
@@ -179,6 +178,7 @@ private:
     QString tempFileName;
 
     friend class FilesMethodPauser;
+    friend class ActionApplier;
 };
 
 #endif // QPACMANSERVICE_H

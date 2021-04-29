@@ -25,12 +25,12 @@ public:
     bool isValid() const;
     bool queryPackages(const QString & name = QString(),AlpmPackage::SearchFieldType fieldType = AlpmPackage::NAME,AlpmPackage::PackageFilter filter = AlpmPackage::IS_ALL,const QString & group = QString(),const QString & repo = QString());
     ThreadRun::RC installPackages(const QString & root_pw,const QList<AlpmPackage> & pkgs,bool asdeps = false,const QList<AlpmPackage> & forcedpkgs = QList<AlpmPackage>());
-    ThreadRun::RC removePackages(const QString & root_pw,const QList<AlpmPackage> & pkgs,bool cascade = true);
+    ThreadRun::RC processPackages(const QString & root_pw);
     ThreadRun::RC downloadPackages(const QList<AlpmPackage> & pkgs);
     ThreadRun::RC updateDBs(bool force = false);
     QList<AlpmPackage> updates() const;
-    AlpmPackage localPackage(const QString & pkgname) const;
-    AlpmPackage localPackage(const QString & name,const QString & version) const;
+    AlpmPackage findLocalPackage(const QString & pkgname) const;
+    AlpmPackage findLocalPackage(const QString & name,const QString & version) const;
     QList<AlpmPackage> findByPackageName(const QString & pkgname) const;
     QList<AlpmPackage> findByPackageNameProvides(const AlpmPackage::Dependence & provide) const;
     QList<AlpmPackage> findLocalByPackageNameProvides(const AlpmPackage::Dependence & provide) const;
@@ -43,7 +43,7 @@ public:
     QStringList repos() const;
     QStringList groups() const;
     QStringList allDBs() const;
-    QList<AlpmPackage> markedPackages() const;
+    bool areMarkedPackages() const;
 
     uint downloaderTimeout() const;
     uint downloaderThreadCount() const;
@@ -122,8 +122,6 @@ signals:
     void pkg_deps_checked();
     void pkg_deps_resolved();
     void pkg_files_loaded();
-    void pkgs_installed(const QStringList &installed_pkgs, const QStringList &removed_pkgs);
-    void pkgs_removed(const QStringList &pkgs);
     void question(const QString &str);
     void remove_packages_confirmation(const QStringList &remove, qlonglong remove_size);
     void remove_progress(const QString &pkg_name, int percent, int n_targets, int current_target);

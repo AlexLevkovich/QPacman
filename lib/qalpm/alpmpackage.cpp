@@ -953,6 +953,10 @@ AlpmPackage::UserChangeStatus AlpmPackage::changeStatus() const {
     return m_change_statuses.contains(handle())?m_change_statuses[handle()]:AlpmPackage::DO_NOTHING;
 }
 
+bool AlpmPackage::setChangeStatus(UserChangeStatus status) {
+    return setChangeStatus(*this,status);
+}
+
 bool AlpmPackage::setChangeStatus(const AlpmPackage & pkg,UserChangeStatus status) {
     if (status == DO_NOTHING) m_change_statuses.remove(pkg.handle());
     else {

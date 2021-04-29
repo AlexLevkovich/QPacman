@@ -45,7 +45,6 @@ SOURCES += \
     packageinstaller.cpp \
     packageprocessor.cpp \
     packageprovidersdialog.cpp \
-    packageremover.cpp \
     packageview.cpp \
     pacmaninfobrowser.cpp \
     pacmanwaitview.cpp \
@@ -93,7 +92,6 @@ HEADERS += \
     packageinstaller.h \
     packageprocessor.h \
     packageprovidersdialog.h \
-    packageremover.h \
     packageview.h \
     pacmaninfobrowser.h \
     pacmanwaitview.h \

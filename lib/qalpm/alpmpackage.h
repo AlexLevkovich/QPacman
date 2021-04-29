@@ -186,10 +186,12 @@ public:
     AlpmPackage & operator=(const AlpmPackage &other);
     bool operator==(const AlpmPackage &other);
 
-    UserChangeStatus changeStatus() const;
     static const QList<UserChangeStatus> possibleChangeStatuses(const AlpmPackage & pkg);
     static void resetAllChangeStatuses();
+    static const QList<AlpmPackage> changedStatusPackages();
     static bool setChangeStatus(const AlpmPackage & pkg,UserChangeStatus status);
+    UserChangeStatus changeStatus() const;
+    bool setChangeStatus(UserChangeStatus status);
     UserChangeStatus defaultStatus() const;
     QList<UserChangeStatus> possibleChangeStatuses() const;
 
@@ -218,7 +220,6 @@ public:
     void setLocalDeleteFlag(bool flag) { m_delete = flag; }
     bool localDeleteFlag() { return m_delete; }
 
-    static const QList<AlpmPackage> changedStatusPackages();
     static CompareOper parseNameVersion(const QString & str,QString & name,QString & ver);
     static CompareOper parseNameVersion(const QString & str,QString & repo,QString & name,QString & ver);
     static int pkg_vercmp(const QString & ver1, const QString & ver2);
