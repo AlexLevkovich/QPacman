@@ -10,7 +10,7 @@
 ActionApplier::ActionApplier(QPacmanService *parent) : QObject(parent) {
     m_phase = BEGIN;
 
-    markedPackages(m_install_pkgs,m_installdeps_pkgs,m_installforced_pkgs,m_installdepsforced_pkgs,m_remove_all_pkgs,m_remove_pkgs);
+    init();
 
     disconnect(Alpm::instance(),SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)),parent,SLOT(onmethod_finished(const QString&,const QStringList&,ThreadRun::RC)));
     disconnect(Alpm::instance(),SIGNAL(method_finished(const QString&,ThreadRun::RC)),parent,SLOT(onmethod_finished(const QString&,ThreadRun::RC)));
@@ -70,84 +70,67 @@ void ActionApplier::processing_completed(const QString & funcname,ThreadRun::RC 
 }
 
 void ActionApplier::install_completed(const QString & funcname,ThreadRun::RC ok) {
-    if (ok !=ThreadRun::OK) {
-        m_phase = INSTALLDEPS;
-        processing_completed(funcname,ok);
-        return;
+    if (ok == ThreadRun::OK) {
+        if (m_installdeps_pkgs.count() > 0) {
+            m_phase = INSTALLDEPS;
+            ((QPacmanService *)parent())->install_packages(m_installdeps_pkgs,true,m_installdepsforced_pkgs);
+            return;
+        }
     }
-
-    if (m_installdeps_pkgs.count() > 0) {
-        m_phase = INSTALLDEPS;
-        ((QPacmanService *)parent())->install_packages(m_installdeps_pkgs,true,m_installdepsforced_pkgs);
-    }
-    else {
-        m_phase = INSTALLDEPS;
-        processing_completed(funcname,ok);
-    }
+    m_phase = INSTALLDEPS;
+    processing_completed(funcname,ok);
 }
 
 void ActionApplier::remove_all_completed(const QString & funcname,ThreadRun::RC ok) {
-    if (ok !=ThreadRun::OK) {
-        m_phase = INSTALLDEPS;
-        processing_completed(funcname,ok);
-        return;
+    if (ok == ThreadRun::OK) {
+        if (m_remove_pkgs.count() > 0) {
+            m_phase = REMOVE;
+            Alpm::instance()->removePackages(m_remove_pkgs,false);
+            return;
+        }
+        else if (m_install_pkgs.count() > 0) {
+            m_phase = INSTALL;
+            ((QPacmanService *)parent())->install_packages(m_install_pkgs,false,m_installforced_pkgs);
+            return;
+        }
+        else if (m_installdeps_pkgs.count() > 0) {
+            m_phase = INSTALLDEPS;
+            ((QPacmanService *)parent())->install_packages(m_installdeps_pkgs,true,m_installdepsforced_pkgs);
+            return;
+        }
     }
-
-    if (m_remove_pkgs.count() > 0) {
-        m_phase = REMOVE;
-        Alpm::instance()->removePackages(m_remove_pkgs,false);
-    }
-    else if (m_install_pkgs.count() > 0) {
-        m_phase = INSTALL;
-        ((QPacmanService *)parent())->install_packages(m_install_pkgs,false,m_installforced_pkgs);
-    }
-    else if (m_installdeps_pkgs.count() > 0) {
-        m_phase = INSTALLDEPS;
-        ((QPacmanService *)parent())->install_packages(m_installdeps_pkgs,true,m_installdepsforced_pkgs);
-    }
-    else {
-        m_phase = INSTALLDEPS;
-        processing_completed(funcname,ok);
-    }
+    m_phase = INSTALLDEPS;
+    processing_completed(funcname,ok);
 }
 
 void ActionApplier::remove_completed(const QString & funcname,ThreadRun::RC ok) {
-    if (ok !=ThreadRun::OK) {
-        m_phase = INSTALLDEPS;
-        processing_completed(funcname,ok);
-        return;
+    if (ok == ThreadRun::OK) {
+        if (m_install_pkgs.count() > 0) {
+            m_phase = INSTALL;
+            ((QPacmanService *)parent())->install_packages(m_install_pkgs,false,m_installforced_pkgs);
+            return;
+        }
+        else if (m_installdeps_pkgs.count() > 0) {
+            m_phase = INSTALLDEPS;
+            ((QPacmanService *)parent())->install_packages(m_installdeps_pkgs,true,m_installdepsforced_pkgs);
+            return;
+        }
     }
-
-    if (m_install_pkgs.count() > 0) {
-        m_phase = INSTALL;
-        ((QPacmanService *)parent())->install_packages(m_install_pkgs,false,m_installforced_pkgs);
-    }
-    else if (m_installdeps_pkgs.count() > 0) {
-        m_phase = INSTALLDEPS;
-        ((QPacmanService *)parent())->install_packages(m_installdeps_pkgs,true,m_installdepsforced_pkgs);
-    }
-    else {
-        m_phase = INSTALLDEPS;
-        processing_completed(funcname,ok);
-    }
+    m_phase = INSTALLDEPS;
+    processing_completed(funcname,ok);
 }
 
-void ActionApplier::markedPackages(QList<AlpmPackage> & install,QList<AlpmPackage> & install_asdeps,QList<AlpmPackage> & install_forced,QList<AlpmPackage> & install_asdeps_forced,QList<AlpmPackage> & removeall,QList<AlpmPackage> & remove) {
-    install.clear();
-    install_asdeps.clear();
-    install_forced.clear();
-    removeall.clear();
-    remove.clear();
+void ActionApplier::init() {
     for (const AlpmPackage & row: AlpmPackage::changedStatusPackages()) {
         if (row.changeStatus() == AlpmPackage::DO_INSTALL ||
             row.changeStatus() == AlpmPackage::DO_REINSTALL ||
-            row.changeStatus() == AlpmPackage::DO_INSTALL_FORCE) install.append(row);
+            row.changeStatus() == AlpmPackage::DO_INSTALL_FORCE) m_install_pkgs.append(row);
         if (row.changeStatus() == AlpmPackage::DO_INSTALL_ASDEPS ||
             row.changeStatus() == AlpmPackage::DO_REINSTALL_ASDEPS ||
-            row.changeStatus() == AlpmPackage::DO_INSTALL_ASDEPS_FORCE) install_asdeps.append(row);
-        if (row.changeStatus() == AlpmPackage::DO_INSTALL_FORCE) install_forced.append(row);
-        if (row.changeStatus() == AlpmPackage::DO_INSTALL_ASDEPS_FORCE) install_asdeps_forced.append(row);
-        if (row.changeStatus() == AlpmPackage::DO_UNINSTALL_ALL) removeall.append(row);
-        if (row.changeStatus() == AlpmPackage::DO_UNINSTALL) remove.append(row);
+            row.changeStatus() == AlpmPackage::DO_INSTALL_ASDEPS_FORCE) m_installdeps_pkgs.append(row);
+        if (row.changeStatus() == AlpmPackage::DO_INSTALL_FORCE) m_installforced_pkgs.append(row);
+        if (row.changeStatus() == AlpmPackage::DO_INSTALL_ASDEPS_FORCE) m_installdepsforced_pkgs.append(row);
+        if (row.changeStatus() == AlpmPackage::DO_UNINSTALL_ALL) m_remove_all_pkgs.append(row);
+        if (row.changeStatus() == AlpmPackage::DO_UNINSTALL) m_remove_pkgs.append(row);
     }
 }

@@ -38,7 +38,7 @@ private:
     void remove_all_completed(const QString & funcname,ThreadRun::RC rc);
     void remove_completed(const QString & funcname,ThreadRun::RC rc);
     void install_completed(const QString & funcname,ThreadRun::RC rc);
-    void markedPackages(QList<AlpmPackage> & install,QList<AlpmPackage> & install_asdeps,QList<AlpmPackage> & install_forced,QList<AlpmPackage> & install_asdeps_forced,QList<AlpmPackage> & removeall,QList<AlpmPackage> & remove);
+    void init();
 
     QList<AlpmPackage> m_remove_all_pkgs;
     QList<AlpmPackage> m_remove_pkgs;
