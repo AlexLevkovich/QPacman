@@ -172,7 +172,7 @@ public:
     qint64               installedSize() const;
     Reason               reason() const;
     bool                 setReason(Reason reason);
-    QString              download();
+    QString              download() const;
 
     friend QDataStream & operator<<(QDataStream &argument,const AlpmPackage & pkg);
     friend const QDataStream & operator>>(const QDataStream &argument,AlpmPackage & pkg);

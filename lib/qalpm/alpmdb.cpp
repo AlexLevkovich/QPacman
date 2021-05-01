@@ -8,6 +8,7 @@
 #include <QThread>
 #include "libalpm.h"
 #include "alpmlist.h"
+#include "malloc.h"
 #include <alpm.h>
 #include <QDebug>
 
@@ -160,7 +161,7 @@ const QStringList & AlpmDB::groups() {
 }
 
 bool AlpmDB::isValid() const {
-    return (m_db_handle != NULL && Alpm::instance() != NULL && Alpm::instance()->m_alpm_handle != NULL && !alpm_db_get_valid(m_db_handle));
+    return (m_db_handle != NULL && Alpm::instance() != NULL && Alpm::instance()->m_alpm_handle != NULL && (malloc_usable_size(m_db_handle) > 0));
 }
 
 QLatin1String AlpmDB::name() const {
