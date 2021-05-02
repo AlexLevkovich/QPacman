@@ -379,7 +379,7 @@ bool AlpmPackage::isIgnorable() const {
 }
 
 bool AlpmPackage::isValid() const {
-    return ((Alpm::p_alpm != NULL) && (Alpm::p_alpm->m_alpm_handle != NULL) && (m_handle != NULL) && (malloc_usable_size(m_handle) > 0));
+    return ((Alpm::instance() != NULL) && (Alpm::instance()->m_alpm_handle != NULL) && (m_handle != NULL) && (malloc_usable_size(m_handle) > 0));
 }
 
 QLatin1String AlpmPackage::name() const {
@@ -636,7 +636,7 @@ AlpmPackage::FileInfo::FileInfo(const QString & path) {
     if (m_path.startsWith("//")) m_path = m_path.mid(1);
     QFileInfo info(m_path);
     m_mode = toMode_t(info);
-    m_size = (qint64)info.size();
+    m_size = (qint64)(info.isSymLink()?0:info.size());
     m_date = info.lastModified();
 }
 
