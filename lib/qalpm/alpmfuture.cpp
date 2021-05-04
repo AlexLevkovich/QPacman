@@ -13,7 +13,6 @@
 #include <alpm.h>
 
 bool ThreadRun::m_terminate = false;
-bool ThreadRun::m_paused = false;
 QObject * ThreadRun::m_instance = NULL;
 QString ThreadRun::m_method_name;
 

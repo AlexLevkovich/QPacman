@@ -29,7 +29,6 @@ public:
         AlpmFuture(ThreadRun * parent,const QFuture<T> &other) : QFuture<T>(other), QObject(NULL) {
             ThreadRun::m_instance = this;
             ThreadRun::m_terminate = false;
-            ThreadRun::m_paused = false;
             QObject::connect(&watcher,SIGNAL(finished()),&loop,SLOT(quit()));
             QObject::connect(&watcher,&QFutureWatcher<T>::finished,parent,[=](){parent->alpmFutureFinished(QFuture<T>::result());deleteLater();},Qt::QueuedConnection);
             watcher.setFuture(*this);
@@ -39,25 +38,6 @@ public:
             if (!QFuture<T>::isFinished()) loop.exec();
             return QFuture<T>::result();
         }
-
-    protected:
-
-        void customEvent(QEvent *event) {
-            QObject::customEvent(event);
-            switch(event->type()) {
-            case QEvent::User:
-                QFuture<T>::pause();
-                ThreadRun::m_paused = true;
-                break;
-            case QEvent::MaxUser:
-                QFuture<T>::resume();
-                ThreadRun::m_paused = false;
-                break;
-            default:
-                break;
-            }
-        }
-
     private:
 
         QFutureWatcher<T> watcher;
@@ -71,7 +51,6 @@ public:
         AlpmFutureVoid(ThreadRun * parent,const QFuture<void> &other) : QFuture<void>(other), QObject(NULL) {
             ThreadRun::m_instance = this;
             ThreadRun::m_terminate = false;
-            ThreadRun::m_paused = false;
             QObject::connect(&watcher,SIGNAL(finished()),&loop,SLOT(quit()));
             QObject::connect(&watcher,&QFutureWatcher<void>::finished,parent,[=](){parent->alpmFutureFinished();deleteLater();},Qt::QueuedConnection);
             watcher.setFuture(*this);
@@ -80,25 +59,6 @@ public:
         void exec() {
             if (!QFuture<void>::isFinished()) loop.exec();
         }
-
-    protected:
-
-        void customEvent(QEvent *event) {
-            QObject::customEvent(event);
-            switch(event->type()) {
-            case QEvent::User:
-                QFuture<void>::pause();
-                ThreadRun::m_paused = true;
-                break;
-            case QEvent::MaxUser:
-                QFuture<void>::resume();
-                ThreadRun::m_paused = false;
-                break;
-            default:
-                break;
-            }
-        }
-
 
     private:
         QFutureWatcher<void> watcher;
@@ -125,19 +85,6 @@ public:
     static void setTerminateFlag();
     static bool isTerminateFlagSet() { return m_terminate; }
     static bool isMethodExecuting() { return (m_instance != NULL); }
-    static void pauseMethodExecuting() {
-        if (m_instance != NULL) {
-            QEvent event(QEvent::User);
-            qApp->sendEvent(m_instance,&event);
-        }
-    }
-    static void resumeMethodExecuting() {
-        if (m_instance != NULL) {
-            QEvent event(QEvent::MaxUser);
-            qApp->sendEvent(m_instance,&event);
-        }
-    }
-    static bool isMethodPaused() { return m_paused; }
     static const QString executingMethodName() {
         return m_method_name;
     }
@@ -360,7 +307,6 @@ private:
     static bool m_terminate;
     static QObject * m_instance;
     static QString m_method_name;
-    static bool m_paused;
 };
 Q_DECLARE_METATYPE(ThreadRun::RC)
 

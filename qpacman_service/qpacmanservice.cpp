@@ -159,19 +159,7 @@ void QPacmanService::onmethod_finished(const QString & name,const QList<AlpmPack
     onmethod_finished(name,rc);
 }
 
-class MethodPauser {
-public:
-    MethodPauser() {
-        if (Alpm::instance()->isMethodExecuting() && !Alpm::instance()->isMethodPaused()) Alpm::instance()->pauseMethodExecuting();
-    }
-    ~MethodPauser() {
-        if (Alpm::instance()->isMethodExecuting() && Alpm::instance()->isMethodPaused()) Alpm::instance()->resumeMethodExecuting();
-    }
-};
-
 QByteArray QPacmanService::packageUrl(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -179,8 +167,6 @@ QByteArray QPacmanService::packageUrl(const QByteArray & arr) {
 }
 
 QString QPacmanService::packageFileName(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -188,8 +174,6 @@ QString QPacmanService::packageFileName(const QByteArray & arr) {
 }
 
 QString QPacmanService::packagePackager(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -197,8 +181,6 @@ QString QPacmanService::packagePackager(const QByteArray & arr) {
 }
 
 QByteArray QPacmanService::packageArch(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -206,8 +188,6 @@ QByteArray QPacmanService::packageArch(const QByteArray & arr) {
 }
 
 QStringList QPacmanService::packageLicenses(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -215,8 +195,6 @@ QStringList QPacmanService::packageLicenses(const QByteArray & arr) {
 }
 
 QByteArray QPacmanService::createLocalPackage(const QString & pkgpath) {
-    MethodPauser pauser;
-
     AlpmPackage pkg(pkgpath,false);
     QByteArray ret;
     QDataStream stream((QByteArray *)&ret,QIODevice::WriteOnly);
@@ -225,8 +203,6 @@ QByteArray QPacmanService::createLocalPackage(const QString & pkgpath) {
 }
 
 void QPacmanService::deleteLocalPackage(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -235,8 +211,6 @@ void QPacmanService::deleteLocalPackage(const QByteArray & arr) {
 }
 
 QStringList QPacmanService::packageRequiredby(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -244,8 +218,6 @@ QStringList QPacmanService::packageRequiredby(const QByteArray & arr) {
 }
 
 QStringList QPacmanService::packageOptionalfor(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -253,8 +225,6 @@ QStringList QPacmanService::packageOptionalfor(const QByteArray & arr) {
 }
 
 QByteArray QPacmanService::packageDepends(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -265,8 +235,6 @@ QByteArray QPacmanService::packageDepends(const QByteArray & arr) {
 }
 
 QByteArray QPacmanService::packageOptDepends(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -277,8 +245,6 @@ QByteArray QPacmanService::packageOptDepends(const QByteArray & arr) {
 }
 
 QByteArray QPacmanService::packageConflicts(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -289,8 +255,6 @@ QByteArray QPacmanService::packageConflicts(const QByteArray & arr) {
 }
 
 QByteArray QPacmanService::packageProvides(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -301,8 +265,6 @@ QByteArray QPacmanService::packageProvides(const QByteArray & arr) {
 }
 
 QByteArray QPacmanService::packageReplaces(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -313,8 +275,6 @@ QByteArray QPacmanService::packageReplaces(const QByteArray & arr) {
 }
 
 QStringList QPacmanService::packageGroups(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -322,8 +282,6 @@ QStringList QPacmanService::packageGroups(const QByteArray & arr) {
 }
 
 int QPacmanService::packageType(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -331,8 +289,6 @@ int QPacmanService::packageType(const QByteArray & arr) {
 }
 
 int QPacmanService::packageChangeStatus(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -340,8 +296,6 @@ int QPacmanService::packageChangeStatus(const QByteArray & arr) {
 }
 
 qlonglong QPacmanService::packageSize(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -349,8 +303,6 @@ qlonglong QPacmanService::packageSize(const QByteArray & arr) {
 }
 
 qlonglong QPacmanService::packageInstalledSize(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -358,8 +310,6 @@ qlonglong QPacmanService::packageInstalledSize(const QByteArray & arr) {
 }
 
 int QPacmanService::packageReason(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -367,8 +317,6 @@ int QPacmanService::packageReason(const QByteArray & arr) {
 }
 
 int QPacmanService::packageDefaultStatus(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -376,8 +324,6 @@ int QPacmanService::packageDefaultStatus(const QByteArray & arr) {
 }
 
 bool QPacmanService::packageSetReason(const QByteArray & arr,int reason) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -385,8 +331,6 @@ bool QPacmanService::packageSetReason(const QByteArray & arr,int reason) {
 }
 
 QByteArray QPacmanService::packageIconUrl(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -394,8 +338,6 @@ QByteArray QPacmanService::packageIconUrl(const QByteArray & arr) {
 }
 
 bool QPacmanService::packageSetChangeStatus(const QByteArray & arr,int status) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -403,8 +345,6 @@ bool QPacmanService::packageSetChangeStatus(const QByteArray & arr,int status) {
 }
 
 QByteArray QPacmanService::packagePossibleChangeStatuses(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -415,8 +355,6 @@ QByteArray QPacmanService::packagePossibleChangeStatuses(const QByteArray & arr)
 }
 
 bool QPacmanService::packageIsOrphaned(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -424,8 +362,6 @@ bool QPacmanService::packageIsOrphaned(const QByteArray & arr) {
 }
 
 qlonglong QPacmanService::packageBuildDate(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -433,8 +369,6 @@ qlonglong QPacmanService::packageBuildDate(const QByteArray & arr) {
 }
 
 qlonglong QPacmanService::packageInstallDate(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -442,8 +376,6 @@ qlonglong QPacmanService::packageInstallDate(const QByteArray & arr) {
 }
 
 QString QPacmanService::executingMethodName() {
-    MethodPauser pauser;
-
     return Alpm::instance()->executingMethodName();
 }
 
@@ -468,20 +400,14 @@ bool QPacmanService::cleanCacheDirs() {
 }
 
 QStringList QPacmanService::repos() {
-    MethodPauser pauser;
-
     return Alpm::instance()->repos();
 }
 
 QStringList QPacmanService::groups() {
-    MethodPauser pauser;
-
     return Alpm::instance()->groups();
 }
 
 QStringList QPacmanService::allDBs() {
-    MethodPauser pauser;
-
     QStringList ret;
     ret << "local";
     for(AlpmDB & db: Alpm::instance()->allSyncDBs()) {
@@ -495,14 +421,12 @@ bool QPacmanService::queryPackages(const QString & name,int fieldType,int filter
 }
 
 QString QPacmanService::lastError() {
-    MethodPauser pauser;
-
     return Alpm::instance()->lastError();
 }
 
-class FilesMethodPauser: public MethodPauser {
+class FilesMethodPauser {
 public:
-    FilesMethodPauser() : MethodPauser() {
+    FilesMethodPauser() {
         QPacmanService::m_files_executing = true;
     }
     ~FilesMethodPauser() {
@@ -612,8 +536,6 @@ ThreadRun::RC QPacmanService::downloadPackages(const QByteArray & pkgs) {
 }
 
 bool QPacmanService:: packageIsDownloaded(const QByteArray & arr) {
-    MethodPauser pauser;
-
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
@@ -786,8 +708,6 @@ QStringList QPacmanService::noUpgradePkgs() {
 }
 
 QByteArray QPacmanService::findByPackageName(const QString & pkgname) {
-    MethodPauser pauser;
-
     QByteArray ret;
     QDataStream stream((QByteArray *)&ret,QIODevice::WriteOnly);
     stream << Alpm::instance()->findByPackageName(pkgname);
@@ -795,8 +715,6 @@ QByteArray QPacmanService::findByPackageName(const QString & pkgname) {
 }
 
 QByteArray QPacmanService::findLocalPackage(const QString & pkgname) {
-    MethodPauser pauser;
-
     QByteArray ret;
     QDataStream stream((QByteArray *)&ret,QIODevice::WriteOnly);
     stream << Alpm::instance()->localDB().findByPackageName(pkgname);
@@ -804,8 +722,6 @@ QByteArray QPacmanService::findLocalPackage(const QString & pkgname) {
 }
 
 QByteArray QPacmanService::findLocalPackage(const QString & name,const QString & version) {
-    MethodPauser pauser;
-
     QByteArray ret;
     QDataStream stream((QByteArray *)&ret,QIODevice::WriteOnly);
     stream << Alpm::instance()->localDB().findByPackageNameVersion(name,version);
@@ -813,8 +729,6 @@ QByteArray QPacmanService::findLocalPackage(const QString & name,const QString &
 }
 
 QByteArray QPacmanService::findByPackageNameProvides(const QByteArray & provide) {
-    MethodPauser pauser;
-
     AlpmPackage::Dependence dep;
     QDataStream stream2((QByteArray *)&provide,QIODevice::ReadOnly);
     stream2 >> dep;
@@ -826,8 +740,6 @@ QByteArray QPacmanService::findByPackageNameProvides(const QByteArray & provide)
 }
 
 QByteArray QPacmanService::findLocalByPackageNameProvides(const QByteArray & provide) {
-    MethodPauser pauser;
-
     AlpmPackage::Dependence dep;
     QDataStream stream2((QByteArray *)&provide,QIODevice::ReadOnly);
     stream2 >> dep;
@@ -839,7 +751,5 @@ QByteArray QPacmanService::findLocalByPackageNameProvides(const QByteArray & pro
 }
 
 void QPacmanService::resetPackageChangeStatuses() {
-    MethodPauser pauser;
-
     AlpmPackage::resetAllChangeStatuses();
 }
