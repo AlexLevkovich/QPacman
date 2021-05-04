@@ -28,14 +28,18 @@ SOURCES += \
     qpacmantrayapplication.cpp \
     qpacmantrayicon.cpp \
     trayoptionswidget.cpp \
-    traypreferences.cpp
+    traypreferences.cpp \
+    updatechecker.cpp \
+    updater.cpp
 
 HEADERS += \
     alpmoptionswidget.h \
     qpacmantrayapplication.h \
     qpacmantrayicon.h \
     trayoptionswidget.h \
-    traypreferences.h
+    traypreferences.h \
+    updatechecker.h \
+    updater.h
 
 FORMS += \
     alpmoptionswidget.ui \

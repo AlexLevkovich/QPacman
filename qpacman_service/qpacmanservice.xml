@@ -114,6 +114,10 @@
     <signal name="checking_internal_conflicts">
       <arg direction="out" type="s" name="infostr"/>
     </signal>
+    <signal name="do_start_dbrefresher">
+    </signal>
+    <signal name="dbs_update_started">
+    </signal>
     <signal name="checking_file_conflicts">
       <arg direction="out" type="s" name="infostr"/>
     </signal>
@@ -152,6 +156,10 @@
     </signal>
     <signal name="keyring_progress">
       <arg direction="out" type="i" name="percent"/>
+    </signal>
+    <signal name="do_start_package_updater">
+    </signal>
+    <signal name="package_updater_started">
     </signal>
     <signal name="downloads_starting">
     </signal>
@@ -194,6 +202,8 @@
     </method>
     <method name="executingMethodName">
       <arg type="s" direction="out"/>
+    </method>
+    <method name="updaterAboutToStart">
     </method>
     <method name="removeLockFile">
       <arg type="b" direction="out"/>
@@ -456,6 +466,8 @@
       <arg type="a(ii)" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
       <arg name="pkgname" type="s" direction="in"/>
+    </method>
+    <method name="dbRefresherIsAboutToStart">
     </method>
     <method name="findLocalPackage">
       <arg type="a(ii)" direction="out"/>

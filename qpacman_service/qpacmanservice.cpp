@@ -490,13 +490,16 @@ bool QPacmanService::check_root_password(const QString & root_pw) {
 }
 
 ThreadRun::RC QPacmanService::installPackages(const String & root_pw,const QByteArray & pkgs,bool asdeps,const QByteArray & forcedpkgs) {
-    if (!check_root_password(root_pw)) return ThreadRun::ROOTPW;
     QList<AlpmPackage> list1;
     QDataStream stream((QByteArray *)&pkgs,QIODevice::ReadOnly);
     stream >> list1;
     QList<AlpmPackage> list2;
     QDataStream stream2((QByteArray *)&forcedpkgs,QIODevice::ReadOnly);
     stream2 >> list2;
+
+    if (root_pw.isNull() && list1.isEmpty() && list2.isEmpty()) emit package_updater_started();
+
+    if (!check_root_password(root_pw)) return ThreadRun::ROOTPW;
 
     return install_packages(list1,asdeps,list2);
 }
@@ -543,6 +546,7 @@ bool QPacmanService:: packageIsDownloaded(const QByteArray & arr) {
 }
 
 ThreadRun::RC QPacmanService::updateDBs(bool force) {
+    emit dbs_update_started();
     return Alpm::instance()->updateDBs(force);
 }
 
@@ -752,4 +756,12 @@ QByteArray QPacmanService::findLocalByPackageNameProvides(const QByteArray & pro
 
 void QPacmanService::resetPackageChangeStatuses() {
     AlpmPackage::resetAllChangeStatuses();
+}
+
+void QPacmanService::dbRefresherIsAboutToStart() {
+    emit do_start_dbrefresher();
+}
+
+void QPacmanService::updaterAboutToStart() {
+    emit do_start_package_updater();
 }

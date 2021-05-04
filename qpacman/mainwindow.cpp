@@ -10,6 +10,7 @@
 #include "searchwidget.h"
 #include "messagedialog.h"
 #include "dbrefresher.h"
+#include "libalpm.h"
 #include "optionaldepsdlg.h"
 #include "packageinstaller.h"
 #include "actionapplier.h"
@@ -66,6 +67,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) , ui(new Ui::MainWi
 
     initCombos();
 
+    connect(Alpm::instance(),&Alpm::do_start_dbrefresher,this,&MainWindow::onTrayRefresherStart);
+    connect(Alpm::instance(),&Alpm::do_start_package_updater,this,&MainWindow::onTrayUpdaterStart);
     connect(ui->actionApply,SIGNAL(triggered()),this,SLOT(onActionApply()));
     connect(ui->filesTree,SIGNAL(downloadRequested(AlpmPackage)),this,SLOT(onDownloadRequested(AlpmPackage)));
     connect(ui->packetView,&PackageView::refreshBeginning,this,&MainWindow::onRefreshBeginning);
@@ -248,7 +251,7 @@ void MainWindow::dbRefreshCompleted(ThreadRun::RC rc,const QString &) {
         ui->actionCancel->setVisible(false);
         ui->actionApply->setVisible(true);
         enableActions(true);
-        ui->packetView->refreshRows();
+        QMetaObject::invokeMethod(this,"refreshRows",Qt::QueuedConnection);
     }
     else {
         ui->actionCancel->setEnabled(true);
@@ -369,4 +372,12 @@ void MainWindow::onDownloadingCompleted(ThreadRun::RC rc,const QString &) {
         ui->actionCancel->setEnabled(true);
         connect(ui->actionCancel,&QAction::triggered,[&]() {error_cancel_triggered(false);});
     }
+}
+
+void MainWindow::onTrayRefresherStart() {
+    on_actionRefresh_triggered();
+}
+
+void MainWindow::onTrayUpdaterStart() {
+    on_actionFullUpdate_triggered();
 }

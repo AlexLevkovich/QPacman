@@ -21,6 +21,7 @@ namespace AppStream {
 class Pool;
 }
 
+typedef struct __alpm_handle_t alpm_handle_t;
 typedef struct __alpm_list_t alpm_list_t;
 typedef struct __alpm_pkg_t alpm_pkg_t;
 
@@ -241,6 +242,7 @@ private:
     QUrl icon_url(const QString & name) const;
 
     alpm_pkg_t * m_handle;
+    alpm_handle_t * m_alpm_handle;
     QString m_filepath;
     bool m_delete;
 

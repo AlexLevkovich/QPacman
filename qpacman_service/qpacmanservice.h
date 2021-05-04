@@ -97,6 +97,9 @@ public:
     Q_INVOKABLE QByteArray createLocalPackage(const QString & pkgpath);
     Q_INVOKABLE void deleteLocalPackage(const QByteArray & pkg);
 
+    Q_INVOKABLE void dbRefresherIsAboutToStart();
+    Q_INVOKABLE void updaterAboutToStart();
+
 signals:
     void show_tray_options();
     void file_queried(const QByteArray & file,int index,int count);
@@ -158,6 +161,10 @@ signals:
     void method_finished(const QString & name,const QStringList & result,ThreadRun::RC rc);
 
     void alpm_reopen();
+    void do_start_dbrefresher();
+    void dbs_update_started();
+    void do_start_package_updater();
+    void package_updater_started();
 
 private slots:
     void onmethod_finished(const QString & name,const QList<AlpmPackage> & result,ThreadRun::RC rc);

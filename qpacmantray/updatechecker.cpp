@@ -46,10 +46,26 @@ bool NetworkConfigurationChecker::status() {
 UpdateChecker::UpdateChecker(QObject * parent) : PackageProcessorBase(parent) {
     connect(&network_checker,&NetworkConfigurationChecker::onlineStateChanged,[&](bool online) {
         if (!online) return;
-        connect(new DBRefresher(),&DBRefresher::completed,this,&UpdateChecker::oncompleted);
+        connect(&m_timer,&QTimer::timeout,this,[&]() {
+            m_timer.stop();
+            QObject::disconnect(conn1);
+            QObject::disconnect(conn2);
+            connect(new DBRefresher(),&DBRefresher::completed,this,&UpdateChecker::oncompleted);
+        });
+        conn1 = connect(Alpm::instance(),&Alpm::dbs_update_started,&m_timer,&QTimer::stop);
+        conn2 = connect(Alpm::instance(),SIGNAL(method_finished(const QString &,ThreadRun::RC)),this,SLOT(onupdate_method_finished(const QString &,ThreadRun::RC)));
+        if (Alpm::instance()->executingMethodName().isEmpty()) {
+            Alpm::instance()->dbRefresherIsAboutToStart();
+            m_timer.start(5000);
+        }
+        else QMetaObject::invokeMethod(this,"oncompleted",Qt::QueuedConnection,Q_ARG(ThreadRun::RC,ThreadRun::FORBIDDEN),Q_ARG(QString,QString()));
     });
     connect(this,&UpdateChecker::completed,this,&QObject::deleteLater,Qt::QueuedConnection);
     network_checker.start();
+}
+
+void UpdateChecker::onupdate_method_finished(const QString &,ThreadRun::RC rc) {
+    oncompleted(rc,Alpm::instance()->lastError());
 }
 
 void UpdateChecker::oncompleted(ThreadRun::RC ok,const QString & error) {

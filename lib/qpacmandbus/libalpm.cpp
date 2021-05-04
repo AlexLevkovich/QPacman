@@ -102,7 +102,11 @@ Alpm::Alpm(QObject * parent) : QObject(parent) {
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::starting_scriplet,this,&Alpm::starting_scriplet);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::scriplet_executed,this,&Alpm::scriplet_executed);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::alpm_reopen,this,&Alpm::alpm_reopen);
+    connect(m_interface,&ComAlexlQtQPacmanServiceInterface::do_start_dbrefresher,this,&Alpm::do_start_dbrefresher);
+    connect(m_interface,&ComAlexlQtQPacmanServiceInterface::dbs_update_started,this,&Alpm::dbs_update_started);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::show_tray_options,this,&Alpm::show_tray_options);
+    connect(m_interface,&ComAlexlQtQPacmanServiceInterface::package_updater_started,this,&Alpm::package_updater_started);
+    connect(m_interface,&ComAlexlQtQPacmanServiceInterface::do_start_package_updater,this,&Alpm::do_start_package_updater);
     connect(m_interface,SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)),this,SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)));
     connect(m_interface,SIGNAL(method_finished(const QString&,ThreadRun::RC)),this,SIGNAL(method_finished(const QString&,ThreadRun::RC)));
     connect(m_interface,SIGNAL(package_queried(const QByteArray&)),this,SLOT(onpackage_queried(const QByteArray&)));
@@ -984,4 +988,12 @@ void Alpm::deleteLocalPackage(const AlpmPackage & pkg) {
     stream << pkg;
 
     replyToVoid(m_interface->deleteLocalPackage(arr));
+}
+
+void Alpm::dbRefresherIsAboutToStart() {
+    replyToVoid(m_interface->dbRefresherIsAboutToStart());
+}
+
+void Alpm::updaterAboutToStart() {
+    replyToVoid(m_interface->updaterAboutToStart());
 }

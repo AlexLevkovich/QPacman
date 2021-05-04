@@ -453,7 +453,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Начинаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+306"/>
+        <location line="+297"/>
         <location line="+6"/>
         <location line="+181"/>
         <source>Skipping target: %1</source>
@@ -470,12 +470,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Начинаем полное обновление системы...</translation>
     </message>
     <message>
-        <location line="-477"/>
+        <location line="-468"/>
         <source>Stopped because of user refusal!!!</source>
         <translation type="unfinished">Остановлено по желанию пользователя!!!</translation>
     </message>
     <message>
-        <location line="+519"/>
+        <location line="+510"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 имеет неправильную архитектуру</translation>
     </message>

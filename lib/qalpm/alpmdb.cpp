@@ -8,7 +8,6 @@
 #include <QThread>
 #include "libalpm.h"
 #include "alpmlist.h"
-#include "malloc.h"
 #include <alpm.h>
 #include <QDebug>
 
@@ -25,7 +24,7 @@ template<class ForwardIt, class T> static ForwardIt binary_search_ex(ForwardIt f
 }
 
 void AlpmDB::check_error(const char * err) const {
-    if (m_db_handle == NULL || (Alpm::instance() != NULL || Alpm::instance()->m_alpm_handle == NULL)) {
+    if (!isValid()) {
         Alpm::instance()->m_alpm_errno = ALPM_ERR_HANDLE_NULL;
         if (err != NULL) qCritical() << err;
     }
@@ -43,15 +42,18 @@ template<class T> T AlpmDB::check_error(const T & t,const char * err) const {
 
 AlpmDB::AlpmDB() {
     m_db_handle = NULL;
+    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
 }
 
 AlpmDB::AlpmDB(alpm_db_t * db_handle) {
     m_db_handle = db_handle;
+    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
 }
 
 AlpmDB::AlpmDB(const QString & name) {
     m_db_handle = NULL;
-    if (Alpm::instance() != NULL && Alpm::instance()->m_alpm_handle == NULL) {
+    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
+    if (!isValid()) {
         Alpm::instance()->m_alpm_errno = ALPM_ERR_HANDLE_NULL;
         return;
     }
@@ -72,6 +74,7 @@ AlpmDB::AlpmDB(const QString & name) {
 
 AlpmDB::AlpmDB(const AlpmDB & db) {
     m_db_handle = db.m_db_handle;
+    m_alpm_handle = db.m_alpm_handle;
 }
 
 AlpmDB::~AlpmDB() {}
@@ -161,7 +164,7 @@ const QStringList & AlpmDB::groups() {
 }
 
 bool AlpmDB::isValid() const {
-    return (m_db_handle != NULL && Alpm::instance() != NULL && Alpm::instance()->m_alpm_handle != NULL && (malloc_usable_size(m_db_handle) > 0));
+    return (m_db_handle != NULL && Alpm::instance() != NULL && Alpm::instance()->m_alpm_handle != NULL && (Alpm::instance()->m_alpm_handle == m_alpm_handle));
 }
 
 QLatin1String AlpmDB::name() const {
@@ -240,6 +243,7 @@ QList<AlpmPackage> AlpmDB::findByGroup(const char * group) const {
 
 AlpmDB & AlpmDB::operator=(const AlpmDB & other) {
     m_db_handle = other.m_db_handle;
+    m_alpm_handle = other.m_alpm_handle;
     return *this;
 }
 

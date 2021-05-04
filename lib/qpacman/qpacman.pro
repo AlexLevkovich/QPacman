@@ -65,7 +65,6 @@ SOURCES += \
     treemenuwidget.cpp \
     unabletoclosedialog.cpp \
     byteshumanizer.cpp \
-    updatechecker.cpp \
     waitindicator.cpp \
     widgetgroup.cpp \
     widgettextobject.cpp \
@@ -112,7 +111,6 @@ HEADERS += \
     treemenuwidget.h \
     unabletoclosedialog.h \
     byteshumanizer.h \
-    updatechecker.h \
     waitindicator.h \
     widgetgroup.h \
     widgettextobject.h \

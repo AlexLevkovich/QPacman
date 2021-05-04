@@ -157,7 +157,6 @@ private:
     QStringList download_packages(const QList<AlpmPackage> & pkgs);
     QString download_package(const QString & download_url) const;
     QString download_package(const AlpmPackage & pkg) const;
-    QList<AlpmPackage> check_updates() const;
 
     static const QStringList dirContents(const QDir & dir,const QString & nameFilter);
     static int operation_fetch_fn(const QString & url,const QString & localpath,bool force);

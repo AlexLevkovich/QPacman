@@ -78,6 +78,9 @@ public:
     AlpmPackage createLocalPackage(const QString & pkgpath) const;
     void deleteLocalPackage(const AlpmPackage & pkg);
 
+    void dbRefresherIsAboutToStart();
+    void updaterAboutToStart();
+
 signals:
     void all_hooks(const QString &infostr);
     void all_hooks_completed();
@@ -132,6 +135,10 @@ signals:
     void starting_scriplet(const QString &infostr);
     void transaction_completed();
     void alpm_reopen();
+    void do_start_dbrefresher();
+    void dbs_update_started();
+    void do_start_package_updater();
+    void package_updater_started();
 
 private slots:
     void onpackage_queried(const QByteArray &result);

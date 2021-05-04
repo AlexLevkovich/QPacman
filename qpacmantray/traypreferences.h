@@ -7,7 +7,6 @@
 #define TRAYPREFERENCES_H
 
 #include <QMainWindow>
-#include <QFileSystemWatcher>
 #include <QTimer>
 #include "qpacmantrayicon.h"
 #include "qalpmtypes.h"
@@ -18,10 +17,7 @@ class TrayPreferences;
 }
 
 class QShowEvent;
-class QAction;
-class QToolBar;
-class ProgressView;
-class QPlainTextEdit;
+class Updater;
 
 class TrayPreferences : public QMainWindow {
     Q_OBJECT
@@ -42,7 +38,7 @@ private slots:
     void updateActions();
     void post_resize_save();
     void checker_completed(ThreadRun::RC ok,const QString & error,const QStringList & updates);
-    void onInstallerCompleted(ThreadRun::RC rc);
+    void onUpdaterCompleted(ThreadRun::RC rc);
 
 signals:
     void showRequest();
@@ -60,11 +56,7 @@ private:
     QAction * actionQuit;
     QToolBar * toolBar;
 
-    ProgressView * progressView;
-    QPlainTextEdit * logView;
-    QAction * cancelAction;
-    QAction * logAction;
-    QMainWindow * updateWindow;
+    Updater * updater;
 };
 
 #endif // TRAYPREFERENCES_H

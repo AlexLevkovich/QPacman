@@ -54,6 +54,7 @@ private:
     bool isAppropriateDepsForPackageName(const QString & name,const QList<AlpmPackage::Dependence> & deps) const;
 
     alpm_db_t * m_db_handle;
+    alpm_handle_t * m_alpm_handle;
     QStringList m_groups;
     QMap<AlpmPackage::Dependence,QList<AlpmPackage> > m_provides;
 

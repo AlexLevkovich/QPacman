@@ -7,6 +7,7 @@
 
 #include "packageprocessor.h"
 #include <QTimer>
+#include <QMetaObject>
 
 class NetworkConfigurationChecker : public QObject {
     Q_OBJECT
@@ -36,12 +37,16 @@ public:
 
 private slots:
     void oncompleted(ThreadRun::RC ok,const QString & error);
+    void onupdate_method_finished(const QString & fname,ThreadRun::RC rc);
 
 signals:
     void completed(ThreadRun::RC ok,const QString & error,const QStringList & updates);
 
 private:
     NetworkConfigurationChecker network_checker;
+    QTimer m_timer;
+    QMetaObject::Connection conn1;
+    QMetaObject::Connection conn2;
 };
 
 #endif // UPDATECHECKER_H

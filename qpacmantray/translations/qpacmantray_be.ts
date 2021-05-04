@@ -120,9 +120,8 @@
         <translation type="obsolete">Загружае і абнаўляе базы дадзеных пакетаў</translation>
     </message>
     <message>
-        <location filename="../traypreferences.cpp" line="+128"/>
         <source>Quit</source>
-        <translation type="unfinished">Выхад</translation>
+        <translation type="obsolete">Выхад</translation>
     </message>
     <message>
         <source>Quit from this application</source>
@@ -141,7 +140,7 @@
         <translation type="obsolete">Паказвае акно з наладамі</translation>
     </message>
     <message>
-        <location line="-84"/>
+        <location filename="../traypreferences.cpp" line="+44"/>
         <source>Program</source>
         <translation type="unfinished">Праграма</translation>
     </message>
@@ -221,6 +220,14 @@
         <location line="+14"/>
         <source>There were errors diring processing!</source>
         <translation type="unfinished">Выяўленыя памылкі!</translation>
+    </message>
+</context>
+<context>
+    <name>Updater</name>
+    <message>
+        <location filename="../updater.cpp" line="+31"/>
+        <source>Quit</source>
+        <translation type="unfinished">Выхад</translation>
     </message>
 </context>
 </TS>

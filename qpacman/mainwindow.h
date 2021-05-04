@@ -54,6 +54,8 @@ private slots:
     void on_actionFullUpdate_triggered();
     void onDownloadRequested(const AlpmPackage & pkg);
     void onDownloadingCompleted(ThreadRun::RC rc,const QString & error);
+    void onTrayRefresherStart();
+    void onTrayUpdaterStart();
 
 protected:
     void closeEvent(QCloseEvent * event);

@@ -1159,7 +1159,7 @@ bool Alpm::updates_cmp(const AlpmPackage & item1,const AlpmPackage & item2) {
             item1.name().compare(item2.name()) == 0);
 }
 
-QList<AlpmPackage> Alpm::check_updates() const {
+QList<AlpmPackage> Alpm::updates() const {
     QList<AlpmPackage> ret;
 
     for (AlpmPackage & pkg: query_packages()) {
@@ -1169,15 +1169,6 @@ QList<AlpmPackage> Alpm::check_updates() const {
     std::sort(ret.begin(),ret.end(),sort_cmp);
     ret.erase(std::unique(ret.begin(),ret.end(),sort_equal_cmp),ret.end());
 
-    return ret;
-}
-
-QList<AlpmPackage> Alpm::updates() const {
-    QList<AlpmPackage> ret;
-    if (!isValid(true)) return ret;
-
-    Alpm * p_this = (Alpm *)this;
-    p_this->exec<QList<AlpmPackage> >(ret,p_this,&Alpm::check_updates);
     return ret;
 }
 
@@ -1335,7 +1326,7 @@ void Alpm::sync_sysupgrade(int m_install_flags) {
         }
     }
 
-    add_pkgs = check_updates();
+    add_pkgs = updates();
     std::sort(remove_pkgs.begin(),remove_pkgs.end(),sort_cmp);
     std::sort(add_pkgs.begin(),add_pkgs.end(),sort_cmp);
 

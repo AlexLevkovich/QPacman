@@ -280,7 +280,7 @@
         <translation type="obsolete">режим просмотра</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+182"/>
+        <location filename="../mainwindow.cpp" line="+185"/>
         <source>The contents of cache directory will be removed.
 Are you sure to continue?</source>
         <translation type="unfinished">Содержимое кэша будет удалено.

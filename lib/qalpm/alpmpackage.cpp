@@ -7,7 +7,6 @@
 #include "libalpm.h"
 #include "alpmlist.h"
 #include "alpm.h"
-#include "malloc.h"
 #include "alpmdb.h"
 #include <QByteArray>
 #include <QRectF>
@@ -252,17 +251,20 @@ bool AlpmPackage::Dependence::isInstalled() const {
 AlpmPackage::AlpmPackage() {
     m_handle = NULL;
     m_delete = false;
+    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
 }
 
 AlpmPackage::AlpmPackage(alpm_pkg_t *pkg) {
     m_handle = pkg;
     m_delete = false;
+    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
 }
 
 AlpmPackage::AlpmPackage(const QString & name,const QString & version,const QString & dbname) {
     m_handle = NULL;
     m_delete = false;
-    if (Alpm::p_alpm == NULL || Alpm::p_alpm->m_alpm_handle == NULL) return;
+    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
+    if (!isValid()) return;
     AlpmDB db(dbname);
     if (!db.isValid()) return;
     m_handle = alpm_db_get_pkg(db.m_db_handle,name.toLocal8Bit().constData());
@@ -276,7 +278,8 @@ AlpmPackage::AlpmPackage(const QString & name,const QString & version,const QStr
 AlpmPackage::AlpmPackage(const QString & filename,bool do_delete) {
     m_delete = do_delete;
     m_handle = NULL;
-    if (Alpm::p_alpm == NULL || Alpm::p_alpm->m_alpm_handle == NULL) return;
+    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
+    if (!isValid()) return;
 
     alpm_pkg_load(Alpm::p_alpm->m_alpm_handle,filename.toLocal8Bit().constData(),1,0,&m_handle);
     m_filepath = filename;
@@ -345,6 +348,7 @@ const QDataStream & operator>>(const QDataStream &argument,AlpmPackage::FileInfo
 
 QDataStream & operator<<(QDataStream &argument,const AlpmPackage & pkg) {
     argument << (qulonglong)pkg.handle();
+    argument << (qulonglong)pkg.m_alpm_handle;
     argument << QByteArray::fromRawData(pkg.name().latin1(),pkg.name().size());
     argument << QByteArray::fromRawData(pkg.version().latin1(),pkg.version().size());
     argument << QByteArray::fromRawData(pkg.description().latin1(),pkg.description().size());
@@ -359,6 +363,8 @@ const QDataStream & operator>>(const QDataStream &argument,AlpmPackage & pkg) {
     qulonglong val;
     (QDataStream &)argument >> val;
     pkg.m_handle = (alpm_pkg_t *)val;
+    (QDataStream &)argument >> val;
+    pkg.m_alpm_handle = (alpm_handle_t *)val;
     (QDataStream &)argument >> pkg.m_filepath;
     (QDataStream &)argument >> pkg.m_delete;
 
@@ -375,11 +381,11 @@ bool AlpmPackage::isUpdate() const {
 }
 
 bool AlpmPackage::isIgnorable() const {
-    return (m_handle == NULL) || (Alpm::instance() == NULL) || (Alpm::instance()->m_alpm_handle == NULL) || alpm_pkg_should_ignore(Alpm::p_alpm->m_alpm_handle,m_handle);
+    return !isValid() || alpm_pkg_should_ignore(Alpm::p_alpm->m_alpm_handle,m_handle);
 }
 
 bool AlpmPackage::isValid() const {
-    return ((Alpm::instance() != NULL) && (Alpm::instance()->m_alpm_handle != NULL) && (m_handle != NULL) && (malloc_usable_size(m_handle) > 0));
+    return ((Alpm::instance() != NULL) && (Alpm::instance()->m_alpm_handle != NULL) && (m_handle != NULL) && (m_alpm_handle == Alpm::instance()->m_alpm_handle));
 }
 
 QLatin1String AlpmPackage::name() const {
@@ -705,7 +711,7 @@ QList<AlpmPackage::FileInfo> AlpmPackage::files(const QString & archive_path) co
 
 QList<AlpmPackage::FileInfo> AlpmPackage::files(alpm_pkg_t * pkg) const {
     QList<AlpmPackage::FileInfo> ret;
-    if (pkg == NULL || (malloc_usable_size(pkg) <= 0)) return ret;
+    if (pkg == NULL) return ret;
 
     alpm_filelist_t * files = alpm_pkg_get_files(pkg);
     if (files == NULL) return ret;
@@ -910,12 +916,14 @@ bool AlpmPackage::containsText(const QString & text,SearchFieldType field) {
 AlpmPackage & AlpmPackage::operator=(const AlpmPackage &other) {
     if (other.type() == AlpmPackage::Type::File && other.m_delete) {
         m_handle = NULL;
-        alpm_pkg_load(Alpm::p_alpm->m_alpm_handle,other.filePath().toLocal8Bit().constData(),1,0,&m_handle);
+        m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
+        alpm_pkg_load(m_alpm_handle,other.filePath().toLocal8Bit().constData(),1,0,&m_handle);
         m_filepath = other.filePath();
         m_delete = true;
     }
     else {
         m_handle = other.m_handle;
+        m_alpm_handle = other.m_alpm_handle;
         m_filepath = other.filePath();
         m_delete = other.m_delete;
     }

@@ -266,6 +266,7 @@ const QDataStream & operator>>(const QDataStream &argument,AlpmPackage::Dependen
 
 const QDataStream & operator>>(const QDataStream &argument,AlpmPackage & pkg) {
     (QDataStream &)argument >> pkg.m_handle;
+    (QDataStream &)argument >> pkg.m_alpm_handle;
     (QDataStream &)argument >> pkg.m_name;
     (QDataStream &)argument >> pkg.m_version;
     (QDataStream &)argument >> pkg.m_desc;
@@ -278,6 +279,7 @@ const QDataStream & operator>>(const QDataStream &argument,AlpmPackage & pkg) {
 
 QDataStream & operator<<(QDataStream &argument,const AlpmPackage & pkg) {
     argument << pkg.m_handle;
+    argument << pkg.m_alpm_handle;
     argument << pkg.m_filepath;
     argument << (bool)false;
 

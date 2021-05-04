@@ -8,7 +8,7 @@ class String {
 public:
     String();
     String(const QString & str);
-
+    bool isNull() const { return is_null; }
     operator QString() const;
 private:
     QString str;

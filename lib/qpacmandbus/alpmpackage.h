@@ -179,6 +179,7 @@ public:
 
 private:
     qulonglong m_handle;
+    qulonglong m_alpm_handle;
     QByteArray m_name;
     QByteArray m_version;
     QByteArray m_desc;

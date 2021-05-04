@@ -7,7 +7,7 @@
 #include "static.h"
 #include "libalpm.h"
 #include "updatechecker.h"
-#include "packageinstaller.h"
+#include "updater.h"
 #include <QShowEvent>
 #include <QApplication>
 #include <QFileInfo>
@@ -21,7 +21,7 @@
 TrayPreferences::TrayPreferences(int timeout,QWidget *parent) : QMainWindow(parent), ui(new Ui::TrayPreferences) {
     ui->setupUi(this);
 
-    updateWindow = NULL;
+    updater = NULL;
     m_use_sound = ui->trayOptions->doPlaySound();
     m_tray = new QPacmanTrayIcon(&m_use_sound,this);
 
@@ -84,7 +84,7 @@ void TrayPreferences::on_buttonBox_rejected() {
 }
 
 void TrayPreferences::updateActions() {
-    actionUpdate_now->setEnabled(!m_blocking_operation && (updateWindow == NULL));
+    actionUpdate_now->setEnabled(!m_blocking_operation && (updater == NULL));
     actionCheck_for_updates->setEnabled(!m_blocking_operation);
     actionQuit->setEnabled(!m_blocking_operation);
 }
@@ -117,22 +117,12 @@ void TrayPreferences::onUpdateNowTriggered() {
     m_blocking_operation = true;
     updateActions();
 
-    updateWindow = PackageProcessor::createMainProcessorWindow(&progressView,&logView,&cancelAction,&logAction);
-    PackageInstaller * pkg_inst = new PackageInstaller(QList<AlpmPackage>(),QList<AlpmPackage>(),false,progressView,cancelAction,NULL,NULL);
-    connect(pkg_inst,&PackageInstaller::completed,this,&TrayPreferences::onInstallerCompleted);
-    connect((QObject *)pkg_inst,SIGNAL(logString(const QString &)),(QObject *)logView,SLOT(appendPlainText(const QString &)));
-    connect(updateWindow,&QObject::destroyed,[&]() { updateWindow = NULL; updateActions(); });
+    updater = new Updater(this);
+    connect(updater,&QObject::destroyed,[&]() { updater = NULL; updateActions(); });
+    connect(updater,&Updater::completed,this,&TrayPreferences::onUpdaterCompleted);
 }
 
-void TrayPreferences::onInstallerCompleted(ThreadRun::RC rc) {
-    cancelAction->setText(tr("Quit"));
-    logAction->setEnabled(true);
-    cancelAction->setEnabled(false);
-
-    connect(sender(),&QObject::destroyed,[&]() { cancelAction->setEnabled(true); });
-    connect(cancelAction,SIGNAL(triggered()),updateWindow,SLOT(close()));
-    cancelAction->setEnabled(true);
-
+void TrayPreferences::onUpdaterCompleted(ThreadRun::RC rc) {
     m_blocking_operation = false;
     if (rc != ThreadRun::OK) {
         updateActions();
