@@ -14,6 +14,7 @@
 #include "qalpmtypes.h"
 
 class ComAlexlQtQPacmanServiceInterface;
+class QDBusServiceWatcher;
 
 class Alpm : public QObject {
     Q_OBJECT
@@ -142,6 +143,7 @@ signals:
 
 private slots:
     void onpackage_queried(const QByteArray &result);
+    void init();
 
 private:
     QUrl packageUrl(const AlpmPackage & pkg) const;
@@ -201,6 +203,7 @@ private:
         return true;
     }
 
+    QDBusServiceWatcher * m_watcher;
     ComAlexlQtQPacmanServiceInterface * m_interface;
     QString m_error;
     bool m_valid;

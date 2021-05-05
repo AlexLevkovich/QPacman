@@ -20,17 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <QtCore/QElapsedTimer>
-#include <QtCore/QThread>
-#include <QtCore/QByteArray>
-#include <QtCore/QSharedMemory>
+#include <QElapsedTimer>
+#include <QThread>
+#include <QByteArray>
+#include <QSharedMemory>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-#include <QtCore/QRandomGenerator>
+#include <QRandomGenerator>
 #else
-#include <QtCore/QDateTime>
+#include <QDateTime>
 #endif
 #include <QMainWindow>
 #include <QEvent>
+#include <QDir>
 
 #include "singleapplication.h"
 #include "singleapplication_p.h"
@@ -207,4 +208,14 @@ bool SingleApplication::notify(QObject *receiver,QEvent *e) {
         activeMainWinds.append((QMainWindow*)receiver);
     }
     return ret;
+}
+
+bool SingleApplication::isStarted(SingleApplication::Options options,const QString & appName,const QString & appVer,
+                                  const QString & appPath,const QString & orgName,const QString & orgDomain) {
+    QSharedMemory memory(SingleApplicationPrivate::createBlockServerName(options,appName,appVer,appPath,orgName,orgDomain));
+    if (!memory.attach(QSharedMemory::ReadOnly)) return false;
+    InstancesInfo* inst = static_cast<InstancesInfo*>(memory.data());
+    if (inst == NULL) return false;
+    if (inst->primaryPid <= 0) return false;
+    return QDir(QString("/proc/%1").arg(inst->primaryPid)).exists();
 }

@@ -13,6 +13,7 @@ const QString fixButtonText(const QString & label);
 const QSize quadroSize(int dimension);
 void setupTranslations(const QString & mainName,const QString & installDir,const QString & mainLocalDir,const QString & alpmLocalDir,const QString & libLocalDir);
 const QString temporaryName(const QString & dir,const QString & basename);
+bool isQPacmanStarted();
 
 template<class ForwardIt, class T, class Compare> static ForwardIt binary_search_ex(ForwardIt first, ForwardIt last, const T& value, Compare comp) {
     ForwardIt it = std::lower_bound(first, last, value, comp);

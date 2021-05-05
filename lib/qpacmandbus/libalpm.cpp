@@ -5,6 +5,8 @@
 #include "libalpm.h"
 #include "qalpmtypes.h"
 #include <QEventLoop>
+#include <QTimer>
+#include <QDBusServiceWatcher>
 #include "qpacmanservice_interface.h"
 #include "dbusstring.h"
 
@@ -28,6 +30,17 @@ const QDBusArgument & operator>>(const QDBusArgument &argument,ThreadRun::RC & r
 }
 
 Alpm::Alpm(QObject * parent) : QObject(parent) {
+    m_valid = false;
+    m_interface = NULL;
+    m_watcher = NULL;
+
+    if (m_alpm_instance == NULL) m_alpm_instance = this;
+    else {
+        m_error = tr("The only one instance of Alpm is allowed!!!");
+        QMetaObject::invokeMethod(this,"error",Qt::QueuedConnection,Q_ARG(QString,m_error));
+        return;
+    }
+
     qRegisterMetaType<ThreadRun::RC>("ThreadRun::RC");
     qDBusRegisterMetaType<ThreadRun::RC>();
     qDBusRegisterMetaType<StringStringMap>();
@@ -35,24 +48,23 @@ Alpm::Alpm(QObject * parent) : QObject(parent) {
     qDBusRegisterMetaType<String>();
     m_interface = new ComAlexlQtQPacmanServiceInterface(ComAlexlQtQPacmanServiceInterface::staticInterfaceName(),"/",QDBusConnection::systemBus(),this);
     if (!m_interface->isValid()) {
-        m_error = m_interface->lastError();
-        emit error(m_error);
-        delete m_interface;
-        m_interface = NULL;
+        QTimer::singleShot(5000,[&]() {
+            if (m_watcher == NULL) return;
+            qApp->quit();
+        });
+        m_watcher = new QDBusServiceWatcher(ComAlexlQtQPacmanServiceInterface::staticInterfaceName(),QDBusConnection::systemBus(),QDBusServiceWatcher::WatchForRegistration,this);
+        connect(m_watcher,&QDBusServiceWatcher::serviceRegistered,[&]() {m_watcher->deleteLater();m_watcher=NULL;init();});
         return;
     }
+    init();
+}
 
+Alpm::~Alpm() {
+    m_alpm_instance = NULL;
+}
+
+void Alpm::init() {
     m_valid = true;
-
-
-    if (m_alpm_instance == NULL) m_alpm_instance = this;
-    else {
-        m_valid = false;
-        m_error = tr("The only one instance of Alpm is allowed!!!");
-        emit error(m_error);
-        return;
-    }
-
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::install_progress,this,&Alpm::install_progress);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::remove_progress,this,&Alpm::remove_progress);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::conflicts_progress,this,&Alpm::conflicts_progress);
@@ -110,10 +122,6 @@ Alpm::Alpm(QObject * parent) : QObject(parent) {
     connect(m_interface,SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)),this,SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)));
     connect(m_interface,SIGNAL(method_finished(const QString&,ThreadRun::RC)),this,SIGNAL(method_finished(const QString&,ThreadRun::RC)));
     connect(m_interface,SIGNAL(package_queried(const QByteArray&)),this,SLOT(onpackage_queried(const QByteArray&)));
-}
-
-Alpm::~Alpm() {
-    m_alpm_instance = NULL;
 }
 
 Alpm * Alpm::instance() {

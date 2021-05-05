@@ -6,6 +6,7 @@
 #include "dbrefresher.h"
 #include "libalpm.h"
 #include "alpmpackage.h"
+#include "static.h"
 #include <QNetworkInterface>
 
 NetworkConfigurationChecker::NetworkConfigurationChecker(QObject * parent) : QObject(parent) {
@@ -46,17 +47,12 @@ bool NetworkConfigurationChecker::status() {
 UpdateChecker::UpdateChecker(QObject * parent) : PackageProcessorBase(parent) {
     connect(&network_checker,&NetworkConfigurationChecker::onlineStateChanged,[&](bool online) {
         if (!online) return;
-        connect(&m_timer,&QTimer::timeout,this,[&]() {
-            m_timer.stop();
-            QObject::disconnect(conn1);
-            QObject::disconnect(conn2);
-            connect(new DBRefresher(),&DBRefresher::completed,this,&UpdateChecker::oncompleted);
-        });
-        conn1 = connect(Alpm::instance(),&Alpm::dbs_update_started,&m_timer,&QTimer::stop);
-        conn2 = connect(Alpm::instance(),SIGNAL(method_finished(const QString &,ThreadRun::RC)),this,SLOT(onupdate_method_finished(const QString &,ThreadRun::RC)));
         if (Alpm::instance()->executingMethodName().isEmpty()) {
-            Alpm::instance()->dbRefresherIsAboutToStart();
-            m_timer.start(5000);
+            if (isQPacmanStarted()) {
+                connect(Alpm::instance(),SIGNAL(method_finished(const QString &,ThreadRun::RC)),this,SLOT(onupdate_method_finished(const QString &,ThreadRun::RC)));
+                Alpm::instance()->dbRefresherIsAboutToStart();
+            }
+            else connect(new DBRefresher(),&DBRefresher::completed,this,&UpdateChecker::oncompleted);
         }
         else QMetaObject::invokeMethod(this,"oncompleted",Qt::QueuedConnection,Q_ARG(ThreadRun::RC,ThreadRun::FORBIDDEN),Q_ARG(QString,QString()));
     });

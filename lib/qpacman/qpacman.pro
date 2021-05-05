@@ -23,6 +23,7 @@ TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
 isEmpty(INSTALL_PREFIX) {
     INSTALL_PREFIX = /usr
 }
+DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 
 SOURCES += \
     actionapplier.cpp \

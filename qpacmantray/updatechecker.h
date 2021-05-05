@@ -44,9 +44,6 @@ signals:
 
 private:
     NetworkConfigurationChecker network_checker;
-    QTimer m_timer;
-    QMetaObject::Connection conn1;
-    QMetaObject::Connection conn2;
 };
 
 #endif // UPDATECHECKER_H

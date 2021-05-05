@@ -225,7 +225,7 @@
 <context>
     <name>Updater</name>
     <message>
-        <location filename="../updater.cpp" line="+31"/>
+        <location filename="../updater.cpp" line="+28"/>
         <source>Quit</source>
         <translation type="unfinished">Выход</translation>
     </message>

@@ -3,7 +3,7 @@
 ** License:    GPL
 ********************************************************************************/
 #include "static.h"
-#include <QCoreApplication>
+#include "singleapplication.h"
 #include <QTranslator>
 #include <QLocale>
 #include <QLibraryInfo>
@@ -57,4 +57,11 @@ const QString temporaryName(const QString & dir,const QString & basename) {
     QTemporaryFile tfile(dir+QDir::separator()+basename);
     if (!tfile.open()) return QString();
     return tfile.fileName();
+}
+
+bool isQPacmanStarted() {
+    if (QCoreApplication::applicationName() == "QPacman") return true;
+    QString path = QDir(QCoreApplication::applicationDirPath() + "/../qpacman/qpacman").canonicalPath();
+    if (QDir(QCoreApplication::applicationDirPath()).canonicalPath() == QDir(INSTALL_PREFIX"/bin").canonicalPath()) path = INSTALL_PREFIX"/bin/qpacman";
+    return SingleApplication::isStarted(SingleApplication::System,"QPacman",QCoreApplication::applicationVersion(),path,QCoreApplication::organizationName(),QCoreApplication::organizationDomain());
 }

@@ -83,28 +83,28 @@ SingleApplicationPrivate::~SingleApplicationPrivate()
     delete memory;
 }
 
-void SingleApplicationPrivate::genBlockServerName()
-{
+const QString SingleApplicationPrivate::createBlockServerName(SingleApplication::Options options,const QString & appName,const QString & appVer,
+                                                              const QString & appPath,const QString & orgName,const QString & orgDomain) {
     QCryptographicHash appData( QCryptographicHash::Sha256 );
-    appData.addData( "SingleApplication", 17 );
-    appData.addData( SingleApplication::app_t::applicationName().toUtf8() );
-    appData.addData( SingleApplication::app_t::organizationName().toUtf8() );
-    appData.addData( SingleApplication::app_t::organizationDomain().toUtf8() );
+    appData.addData("SingleApplication",17);
+    appData.addData(appName.toUtf8());
+    appData.addData(orgName.toUtf8());
+    appData.addData(orgDomain.toUtf8());
 
-    if( ! (options & SingleApplication::Mode::ExcludeAppVersion) ) {
-        appData.addData( SingleApplication::app_t::applicationVersion().toUtf8() );
+    if( ! (options & SingleApplication::Mode::ExcludeAppVersion)) {
+        appData.addData(appVer.toUtf8() );
     }
 
-    if( ! (options & SingleApplication::Mode::ExcludeAppPath) ) {
+    if(!(options & SingleApplication::Mode::ExcludeAppPath)) {
 #ifdef Q_OS_WIN
-        appData.addData( SingleApplication::app_t::applicationFilePath().toLower().toUtf8() );
+        appData.addData(appPath.toLower().toUtf8());
 #else
-        appData.addData( SingleApplication::app_t::applicationFilePath().toUtf8() );
+        appData.addData(appPath.toUtf8());
 #endif
     }
 
     // User level block requires a user specific data in the hash
-    if( options & SingleApplication::Mode::User ) {
+    if(options & SingleApplication::Mode::User) {
 #ifdef Q_OS_WIN
         wchar_t username [ UNLEN + 1 ];
         // Specifies size of the buffer on input
@@ -131,7 +131,15 @@ void SingleApplicationPrivate::genBlockServerName()
 
     // Replace the backslash in RFC 2045 Base64 [a-zA-Z0-9+/=] to comply with
     // server naming requirements.
-    blockServerName = appData.result().toBase64().replace("/", "_");
+    return appData.result().toBase64().replace("/", "_");
+}
+
+void SingleApplicationPrivate::genBlockServerName() {
+    blockServerName = createBlockServerName(options,SingleApplication::app_t::applicationName(),
+                                            SingleApplication::app_t::applicationVersion(),
+                                            SingleApplication::app_t::applicationFilePath(),
+                                            SingleApplication::app_t::organizationName(),
+                                            SingleApplication::app_t::organizationDomain());
 }
 
 void SingleApplicationPrivate::initializeMemoryBlock()

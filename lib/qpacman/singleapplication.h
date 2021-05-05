@@ -90,6 +90,9 @@ public:
     explicit SingleApplication( int &argc, char *argv[], bool allowSecondary = false, Options options = Mode::User, int timeout = 1000 );
     ~SingleApplication();
 
+    static bool isStarted(SingleApplication::Options options,const QString & appName,const QString & appVer,
+                          const QString & appPath,const QString & orgName,const QString & orgDomain);
+
     /**
      * @brief Returns if the instance is the primary instance
      * @returns {bool}

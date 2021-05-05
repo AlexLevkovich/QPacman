@@ -71,6 +71,8 @@ public:
     SingleApplicationPrivate( SingleApplication *q_ptr );
      ~SingleApplicationPrivate();
 
+    static const QString createBlockServerName(SingleApplication::Options options,const QString & appName,const QString & appVer,
+                                               const QString & appPath,const QString & orgName,const QString & orgDomain);
     void genBlockServerName();
     void initializeMemoryBlock();
     void startPrimary();
