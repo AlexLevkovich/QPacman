@@ -264,7 +264,7 @@ AlpmPackage::AlpmPackage(const QString & name,const QString & version,const QStr
     m_handle = NULL;
     m_delete = false;
     m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
-    if (!isValid()) return;
+    if ((Alpm::instance() == NULL) || (Alpm::instance()->m_alpm_handle == NULL)) return;
     AlpmDB db(dbname);
     if (!db.isValid()) return;
     m_handle = alpm_db_get_pkg(db.m_db_handle,name.toLocal8Bit().constData());
@@ -279,7 +279,7 @@ AlpmPackage::AlpmPackage(const QString & filename,bool do_delete) {
     m_delete = do_delete;
     m_handle = NULL;
     m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
-    if (!isValid()) return;
+    if ((Alpm::instance() == NULL) || (Alpm::instance()->m_alpm_handle == NULL)) return;
 
     alpm_pkg_load(Alpm::p_alpm->m_alpm_handle,filename.toLocal8Bit().constData(),1,0,&m_handle);
     m_filepath = filename;
