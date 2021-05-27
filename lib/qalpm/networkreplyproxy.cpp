@@ -28,11 +28,15 @@ NetworkReplyProxy::NetworkReplyProxy(QNetworkReply* reply, int timeout, QObject*
     if (!isFinished()) {
         connect(m_reply,SIGNAL(metaDataChanged()),SLOT(applyMetaData()));
         connect(m_reply,SIGNAL(readyRead()),SLOT(handleReadyRead()));
-        connect(m_reply,SIGNAL(error(QNetworkReply::NetworkError)),SLOT(errorInternal(QNetworkReply::NetworkError)));
+        connect(m_reply,SIGNAL(errorOccurred(QNetworkReply::NetworkError)),SLOT(errorInternal(QNetworkReply::NetworkError)));
         connect(m_reply,SIGNAL(finished()),SLOT(handleFinished()));
         connect(m_reply,SIGNAL(uploadProgress(qint64,qint64)),SIGNAL(uploadProgress(qint64,qint64)));
         connect(m_reply,SIGNAL(downloadProgress(qint64,qint64)),SIGNAL(downloadProgress(qint64,qint64)));
         connect(m_reply,SIGNAL(sslErrors(const QList<QSslError> &)),SIGNAL(sslErrors(const QList<QSslError> &)));
+        connect(m_reply,SIGNAL(redirectAllowed()),SIGNAL(redirectAllowed()));
+        connect(m_reply,SIGNAL(aboutToClose()),SIGNAL(aboutToClose()));
+        connect(m_reply,SIGNAL(redirected(const QUrl &)),SIGNAL(redirected(const QUrl &)));
+        connect(m_reply,SIGNAL(preSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator *)),SIGNAL(preSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator *)));
         connect(&m_timer,SIGNAL(timeout()),SLOT(timeout()));
 
         m_timer.setInterval(timeout);
@@ -80,14 +84,14 @@ void NetworkReplyProxy::applyMetaData(bool signal) {
                                                    QNetworkRequest::HttpPipeliningWasUsedAttribute,
                                                    QNetworkRequest::BackgroundRequestAttribute,
                                                    QNetworkRequest::SpdyWasUsedAttribute,
-                                                   QNetworkRequest::HTTP2WasUsedAttribute,
+                                                   QNetworkRequest::Http2WasUsedAttribute,
                                                    QNetworkRequest::EmitAllUploadProgressSignalsAttribute,
                                                    QNetworkRequest::OriginalContentLengthAttribute})
         setAttribute(attr, m_reply->attribute(attr));
 
     if (signal)  {
-       if (m_timer.interval() > 0) m_timer.start();
        emit metaDataChanged();
+       if (m_timer.interval() > 0) m_timer.start();
     }
 }
 
@@ -96,15 +100,9 @@ void NetworkReplyProxy::errorInternal(QNetworkReply::NetworkError _error) {
     emit errorOccurred(_error);
 }
 
-void NetworkReplyProxy::readInternal() {
-    if (m_timer.interval() > 0) m_timer.start();
-    m_buffer += m_reply->readAll();
-    m_timer.stop();
-}
-
 void NetworkReplyProxy::handleReadyRead(bool is_finished) {
     m_timer.stop();
-    readInternal();
+    m_buffer += m_reply->readAll();
     if (is_finished) {
         if (bytesAvailable() > 0) emit readyRead();
         QMetaObject::invokeMethod(this,"handleFinished",Qt::QueuedConnection);

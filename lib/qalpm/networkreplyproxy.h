@@ -35,8 +35,6 @@ class NetworkReplyProxy : public QNetworkReply {
     void timeout();
 
   private:
-    void readInternal();
-
     QTimer m_timer;
     QNetworkReply* m_reply;
     QByteArray m_buffer;

@@ -453,7 +453,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Начинаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+297"/>
+        <location line="+292"/>
         <location line="+6"/>
         <location line="+181"/>
         <source>Skipping target: %1</source>
@@ -470,12 +470,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Начинаем полное обновление системы...</translation>
     </message>
     <message>
-        <location line="-468"/>
+        <location line="-463"/>
         <source>Stopped because of user refusal!!!</source>
         <translation type="unfinished">Остановлено по желанию пользователя!!!</translation>
     </message>
     <message>
-        <location line="+510"/>
+        <location line="+505"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 имеет неправильную архитектуру</translation>
     </message>
@@ -628,7 +628,7 @@ Do you want to delete it?</source>
 <context>
     <name>NetworkReplyProxy</name>
     <message>
-        <location filename="../networkreplyproxy.cpp" line="+132"/>
+        <location filename="../networkreplyproxy.cpp" line="+130"/>
         <source>Timeout interval is reached because of long device inactivity!</source>
         <translation type="unfinished">Превышен интервал задержки из-за долгого сетевого простоя!</translation>
     </message>
