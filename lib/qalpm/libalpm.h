@@ -171,7 +171,6 @@ private:
     static int depend_cmp(const void *d1, const void *d2);
     static bool pkg_equal_cmp(const AlpmPackage & pkg1, const AlpmPackage & pkg2);
     static bool pkg_less_cmp(const AlpmPackage & pkg1, const AlpmPackage & pkg2);
-    static bool updates_cmp(const AlpmPackage & item1, const AlpmPackage & item2);
     static bool sort_cmp(const AlpmPackage & item1, const AlpmPackage & item2);
     static bool string_name_cmp(const QString & item1,const QString & item2);
     static bool sort_equal_cmp(const AlpmPackage & item1, const AlpmPackage & item2);
