@@ -1154,11 +1154,6 @@ ThreadRun::RC Alpm::downloadPackages(const QList<AlpmPackage> & pkgs) {
     return run<QStringList>(this,&Alpm::download_packages,pkgs);
 }
 
-bool Alpm::updates_cmp(const AlpmPackage & item1,const AlpmPackage & item2) {
-    return (AlpmPackage::pkg_vercmp(item1.version(),item2.version()) > 0 &&
-            item1.name().compare(item2.name()) == 0);
-}
-
 QList<AlpmPackage> Alpm::updates() const {
     QList<AlpmPackage> ret;
 
