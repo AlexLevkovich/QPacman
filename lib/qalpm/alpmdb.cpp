@@ -185,7 +185,10 @@ bool AlpmDB::update(bool force) {
     Alpm::p_alpm->m_download_errs.clear();
     m_groups.clear();
     m_provides.clear();
-    return (alpm_db_update(force?1:0,m_db_handle) >= 0);
+
+    AlpmList<alpm_db_t> pkgs(AlpmList<alpm_db_t>::ignorefree);
+    pkgs.append(m_db_handle);
+    return (alpm_db_update(Alpm::instance()->m_alpm_handle,pkgs.alpm_list(),force?1:0) >= 0);
 }
 
 QList<AlpmPackage> AlpmDB::find(const QRegularExpression & expr) const {

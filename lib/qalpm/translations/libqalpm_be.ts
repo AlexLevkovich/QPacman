@@ -4,7 +4,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../alpmconfig.cpp" line="+64"/>
+        <location filename="../alpmconfig.cpp" line="+65"/>
         <source>Can&apos;t find [options] section!</source>
         <translation type="unfinished">Секцыя [options] не знойдзена!</translation>
     </message>
@@ -74,7 +74,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+440"/>
+        <location filename="../libalpm.cpp" line="+456"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 у IgnorePkg/IgnoreGroup. Усё роўна ўсталяваць?</translation>
     </message>
@@ -128,7 +128,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Імпартаваць ключ PGP %1%2/%3, &quot;%4&quot;, створаны: %5%6?</translation>
     </message>
     <message>
-        <location line="+144"/>
+        <location line="+148"/>
         <source>Running pre-transaction hooks...</source>
         <translation type="unfinished">Запускаюцца прад-транзакцыйныя скрыпты...</translation>
     </message>
@@ -228,7 +228,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Не ўсе пакеты загружаныя :(</translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="-487"/>
         <source>Starting the download of %1</source>
         <translation type="unfinished">Пачынаем загрузку %1</translation>
     </message>
@@ -238,12 +238,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">%1 загружаны</translation>
     </message>
     <message>
-        <location line="+13"/>
+        <location line="+9"/>
         <source>Failed the download of %1</source>
         <translation type="unfinished">Памылка пры загрузцы %1</translation>
     </message>
     <message>
-        <location line="+205"/>
+        <location line="+683"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Абнаўляем базу дадзеных: %1...</translation>
     </message>
@@ -291,7 +291,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-882"/>
+        <location filename="../libalpm.cpp" line="-873"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам трэба выбраць пастаўшчыка для пакета %1:
@@ -324,7 +324,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Вы згодны? : </translation>
     </message>
     <message>
-        <location line="+132"/>
+        <location line="+148"/>
         <source>(%1/%2) downloaded</source>
         <translation type="unfinished">(%1/%2) загружана</translation>
     </message>
@@ -381,7 +381,7 @@ Do you want to delete it?</source>
 </translation>
     </message>
     <message>
-        <location line="+330"/>
+        <location line="+305"/>
         <source>The input package list is empty!</source>
         <translation type="unfinished">Спіс пакетаў пусты!</translation>
     </message>

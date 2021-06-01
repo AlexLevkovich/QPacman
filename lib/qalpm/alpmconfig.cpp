@@ -13,6 +13,7 @@
 #include <QDataStream>
 #include <sys/sysinfo.h>
 
+
 AlpmConfig::AlpmConfig(const QString & conf_filepath) {
     holdpkgs = NULL;
     setConfPath(conf_filepath);
@@ -247,7 +248,7 @@ alpm_handle_t * AlpmConfig::translate(const QString & _dbpath) {
 
     alpm_option_set_logfile(m_handle,logfile.toLocal8Bit().constData());
     alpm_option_set_gpgdir(m_handle,gpgdir.toLocal8Bit().constData());
-    alpm_option_set_arch(m_handle,architecture.toLocal8Bit().constData());
+    alpm_option_add_architecture(m_handle,architecture.toLocal8Bit().constData());
     alpm_option_set_usesyslog(m_handle,usesyslog?1:0);
     alpm_option_set_disable_dl_timeout(m_handle,disabledownloadtimeout?1:0);
 

@@ -159,11 +159,11 @@ private:
     QString download_package(const AlpmPackage & pkg) const;
 
     static const QStringList dirContents(const QDir & dir,const QString & nameFilter);
-    static int operation_fetch_fn(const QString & url,const QString & localpath,bool force);
-    static int operation_fetch_fn(const char *url, const char *localpath,int force);
-    static void operation_progress_fn(int progress, const char * pkg_name, int percent, size_t n_targets, size_t current_target);
-    static void operation_question_fn(alpm_question_t * question);
-    static void operation_event_fn(alpm_event_t * event);
+    static int operation_fetch_fn(void *,const QString & url,const QString & localpath,bool force);
+    static int operation_fetch_fn(void *,const char *url, const char *localpath,int force);
+    static void operation_progress_fn(void *,int progress, const char * pkg_name, int percent, size_t n_targets, size_t current_target);
+    static void operation_question_fn(void *,alpm_question_t * question);
+    static void operation_event_fn(void *,alpm_event_t * event);
     static const QString alpm_item_string_fn(alpm_pkg_t * value);
     static const QString dep_item_add(alpm_depend_t * value,StringStringMap & installed_deps,StringStringMap & pending_deps);
     static void display_optdepends(alpm_pkg_t * pkg);

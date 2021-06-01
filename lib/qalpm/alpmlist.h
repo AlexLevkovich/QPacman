@@ -395,6 +395,10 @@ public:
         return list;
     }
 
+    alpm_list_t * alpm_list() {
+        return m_list_first;
+    }
+
 private:
     static T * dup(T * value) {
         T * new_val = (T *)malloc(sizeof(T));
