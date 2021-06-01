@@ -74,7 +74,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+456"/>
+        <location filename="../libalpm.cpp" line="+461"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 у IgnorePkg/IgnoreGroup. Усё роўна ўсталяваць?</translation>
     </message>
@@ -228,12 +228,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Не ўсе пакеты загружаныя :(</translation>
     </message>
     <message>
-        <location line="-487"/>
+        <location line="-490"/>
         <source>Starting the download of %1</source>
         <translation type="unfinished">Пачынаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+10"/>
         <source>Done the download of %1</source>
         <translation type="unfinished">%1 загружаны</translation>
     </message>
@@ -243,7 +243,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Памылка пры загрузцы %1</translation>
     </message>
     <message>
-        <location line="+683"/>
+        <location line="+684"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Абнаўляем базу дадзеных: %1...</translation>
     </message>
@@ -291,7 +291,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-873"/>
+        <location filename="../libalpm.cpp" line="-878"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам трэба выбраць пастаўшчыка для пакета %1:
@@ -324,7 +324,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Вы згодны? : </translation>
     </message>
     <message>
-        <location line="+148"/>
+        <location line="+153"/>
         <source>(%1/%2) downloaded</source>
         <translation type="unfinished">(%1/%2) загружана</translation>
     </message>

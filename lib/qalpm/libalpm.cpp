@@ -362,25 +362,30 @@ AlpmConfig * Alpm::config() {
 
 int Alpm::operation_fetch_fn(void *,const QString & url,const QString & localpath,bool) {
     QUrl _url(url);
-    p_alpm->emit_information(QObject::tr("Starting the download of %1").arg(_url.fileName()));
-    p_alpm->emit_event("download_start",Q_ARG(QString,_url.fileName()));
+    bool is_notdb = (QFileInfo(_url.fileName()).suffix().toLower() != "db");
+    if (is_notdb) {
+        p_alpm->emit_information(QObject::tr("Starting the download of %1").arg(_url.fileName()));
+        p_alpm->emit_event("download_start",Q_ARG(QString,_url.fileName()));
+    }
     AlpmDownloader * downloader = new AlpmDownloader(_url,localpath,AlpmConfig::downloaderThreadCount(),p_config->doDisableDownloadTimeout()?0:AlpmConfig::downloaderTimeout(),AlpmConfig::downloaderProxy());
     QObject::connect(downloader,SIGNAL(progress(const QString &,qint64,qint64,int,qint64)),p_alpm,SLOT(operation_download_fn(const QString &,qint64,qint64,int,qint64)));
     QObject::connect(downloader,&AlpmDownloader::error,p_alpm,[&](const QString & err) {m_download_errs.append(err);});
     int ret = downloader->exec();
     delete downloader;
-    if (ret == 0) {
-        p_alpm->emit_information(QObject::tr("Done the download of %1").arg(_url.fileName()));
-        p_alpm->emit_event("download_done",Q_ARG(QString,_url.fileName()));
-    }
-    else {
-        if (!m_download_errs.isEmpty()) {
-            p_alpm->m_alpm_errno = ALPM_ERR_EXTERNAL_DOWNLOAD;
-            p_alpm->emit_information(m_download_errs.last());
-            p_alpm->emit_error(m_download_errs.last());
+    if (is_notdb) {
+        if (ret == 0) {
+            p_alpm->emit_information(QObject::tr("Done the download of %1").arg(_url.fileName()));
+            p_alpm->emit_event("download_done",Q_ARG(QString,_url.fileName()));
         }
-        p_alpm->emit_information(QObject::tr("Failed the download of %1").arg(_url.fileName()));
-        p_alpm->emit_event("download_failed",Q_ARG(QString,_url.fileName()));
+        else {
+            if (!m_download_errs.isEmpty()) {
+                p_alpm->m_alpm_errno = ALPM_ERR_EXTERNAL_DOWNLOAD;
+                p_alpm->emit_information(m_download_errs.last());
+                p_alpm->emit_error(m_download_errs.last());
+            }
+            p_alpm->emit_information(QObject::tr("Failed the download of %1").arg(_url.fileName()));
+            p_alpm->emit_event("download_failed",Q_ARG(QString,_url.fileName()));
+        }
     }
     return (ret == 2)?-1:ret;
 }
