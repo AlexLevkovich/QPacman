@@ -248,7 +248,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Абнаўляем базу дадзеных: %1...</translation>
     </message>
     <message>
-        <location filename="../multidownloader.cpp" line="+180"/>
+        <location filename="../multidownloader.cpp" line="+151"/>
         <location line="+40"/>
         <source>Nothing to write!!!</source>
         <translation type="unfinished">Няма чаго пісаць!!!</translation>

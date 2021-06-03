@@ -132,42 +132,13 @@ int PartManager::findPartByPos(qint64 pos) {
     return i - m_parts.begin();
 }
 
-bool PartManager::reservePartsForPos(qint64 pos,qint64 maxSize) {
-    if (pos < m_parts.last().next_part_begin_pos()) {
-        int part_id = findPartByPos(pos);
-        if (part_id < 0) return false;
-        m_last_added_part_id = (part_id == 0)?part_id:part_id - 1;
-        return true;
-    }
-
-    for (int i=m_parts.count()-1;!hasLastPart(maxSize);i++) {
-        m_last_added_part_id = i;
-        if (createOrFindEmptyPart(maxSize) < 0) return false;
-        if (m_parts.last().contains(pos)) {
-            int part_id = m_parts.count() - 1;
-            m_last_added_part_id = (part_id == 0)?part_id:part_id - 1;
-            return true;
-        }
-    }
-
-    return false;
-}
-
 int PartManager::part_zero_fill(int id) {
     if (!isOpen()) return -1;
 
     Part part = m_parts.at(id);
-    int part_rest = part.rest;
-    m_file.seek(part.curr_pos);
-
-    int ret;
-    while (part_rest > 0) {
-        ret = m_file.write(QByteArray(part_rest,(char)0));
-        if (ret < 0) {
-            m_error = m_file.errorString();
-            return -1;
-        }
-        part_rest -= ret;
+    if (!m_file.resize(part.curr_pos+part.rest)) {
+        m_error = m_file.errorString();
+        return -1;
     }
 
     return id;
@@ -483,7 +454,7 @@ void MultiDownloader::mainMetaDataChanged() {
     }
     else {
         m_threads_count = qMin((qint64)m_threads_count,length/m_part_manager->partLenght());
-        m_part_manager->setPartLength(length/m_threads_count);
+        m_part_manager->setPartLength(length/(qint64)m_threads_count);
     }
     if (!correctOutputFilePath(m_reply)) return;
 

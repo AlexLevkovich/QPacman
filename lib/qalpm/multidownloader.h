@@ -34,7 +34,6 @@ protected:
     inline bool isValid() { return m_file.isOpen() && m_error.isEmpty(); }
     // rc==-1 was error; rc>0 is part_id
     int createOrFindEmptyPart(qint64 maxSize,const QList<int> & ignore_indexes = QList<int>());
-    bool reservePartsForPos(qint64 pos,qint64 maxSize);
     inline qint64 partCurrPos(int part_id) { return m_parts.at(part_id).curr_pos; }
     inline qint64 partRest(int part_id) { return m_parts.at(part_id).rest; }
     inline bool hasLastPart(qint64 maxSize) { return (m_parts.last().next_part_begin_pos() >= maxSize); }
