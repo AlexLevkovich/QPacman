@@ -283,7 +283,7 @@ Do you want to delete it?</source>
 <context>
     <name>AlpmDownloader</name>
     <message>
-        <location filename="../alpmdownloader.cpp" line="+78"/>
+        <location filename="../alpmdownloader.cpp" line="+76"/>
         <source>Cannot delete the following file: %1</source>
         <translation type="unfinished">Не магу выдаліць файл: %1</translation>
     </message>

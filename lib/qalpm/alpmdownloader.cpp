@@ -66,9 +66,7 @@ void AlpmDownloader::download_progress(qint64 downloaded,int percents,qint64 spe
 
     m_downloaded = downloaded;
 
-    if (Alpm::instance() != NULL && Alpm::instance()->isTerminateFlagSet()) {
-        terminate();
-    }
+    if (ThreadRun::isTerminateFlagSet()) terminate();
     else emit progress(m_out_file_name,downloaded,downloader->dataLength(),percents,speed);
 }
 

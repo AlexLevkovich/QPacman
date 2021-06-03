@@ -9,8 +9,6 @@
 #ifdef USE_QDBUS
 #include <QDBusMetaType>
 #endif
-#include "libalpm.h"
-#include <alpm.h>
 
 bool ThreadRun::m_terminate = false;
 QObject * ThreadRun::m_instance = NULL;
@@ -45,5 +43,4 @@ ThreadRun::ThreadRun(QObject * parent) : QObject(parent) {
 void ThreadRun::setTerminateFlag() {
     if (!isMethodExecuting()) return;
     m_terminate = true;
-    alpm_trans_interrupt(Alpm::instance()->m_alpm_handle);
 }

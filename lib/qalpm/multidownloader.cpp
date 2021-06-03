@@ -664,8 +664,8 @@ void MultiDownloader::private_terminate() {
     m_save_size = dataLength();
     setDataLength(0);
     QList<QNetworkReply *> list = findChildren<QNetworkReply *>();
-    for (int i=0;i<list.count();i++) {
-        list[i]->abort();
+    for (QNetworkReply * reply: list) {
+        reply->abort();
     }
     m_timer->stop();
 }
