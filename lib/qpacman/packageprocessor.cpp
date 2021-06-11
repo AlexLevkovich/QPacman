@@ -168,6 +168,7 @@ void PackageProcessor::exec_process() {
             if (progressView != NULL) progressView->appendErrorRow(err);
             QMetaObject::invokeMethod(this,"completed",Qt::QueuedConnection,Q_ARG(ThreadRun::RC,ThreadRun::BAD),Q_ARG(QString,err));
             deleteLater();
+            root_counter = 0;
         }
         break;
     }

@@ -269,7 +269,7 @@
         <translation type="unfinished">Памылка аўтэнтыфікацыі суперпользователя: занадта шмат спроб!</translation>
     </message>
     <message>
-        <location line="+42"/>
+        <location line="+43"/>
         <source>Log</source>
         <translation type="unfinished">Паведамлення</translation>
     </message>
