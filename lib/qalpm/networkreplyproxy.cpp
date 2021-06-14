@@ -102,12 +102,15 @@ void NetworkReplyProxy::errorInternal(QNetworkReply::NetworkError _error) {
 
 void NetworkReplyProxy::handleReadyRead(bool is_finished) {
     m_timer.stop();
-    m_buffer += m_reply->readAll();
     if (is_finished) {
-        if (bytesAvailable() > 0) emit readyRead();
+        if (m_reply->bytesAvailable() > 0) {
+            m_buffer += m_reply->readAll();
+            emit readyRead();
+        }
         QMetaObject::invokeMethod(this,"handleFinished",Qt::QueuedConnection);
     }
     else {
+        m_buffer += m_reply->readAll();
         emit readyRead();
         if (m_timer.interval() > 0) m_timer.start();
     }

@@ -628,7 +628,7 @@ Do you want to delete it?</source>
 <context>
     <name>NetworkReplyProxy</name>
     <message>
-        <location filename="../networkreplyproxy.cpp" line="+130"/>
+        <location filename="../networkreplyproxy.cpp" line="+133"/>
         <source>Timeout interval is reached because of long device inactivity!</source>
         <translation type="unfinished">Превышен интервал задержки из-за долгого сетевого простоя!</translation>
     </message>
