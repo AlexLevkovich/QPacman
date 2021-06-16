@@ -147,6 +147,7 @@ void MainWindow::onViewSelectionChanged(const AlpmPackage & pkg) {
 void MainWindow::onReasonUrlSelected(const QString & pkgname) {
     ui->packetView->revertPackageReason(pkgname);
     ui->pacInfoView->refill();
+    if (ui->mainToolBar->findSearchWidget()->filter() == FilterToolButton::IS_ORPHANED) ui->packetView->refreshRows();
 }
 
 void MainWindow::onGroupUrlSelected(const QString & group) {
