@@ -16,7 +16,7 @@ NetworkReplyProxy::NetworkReplyProxy(QNetworkReply* reply, int timeout, QObject*
     setSslConfiguration(m_reply->sslConfiguration());
     applyMetaData(false);
 
-    m_timer.setInterval(0);
+    setTimerInterval(timeout);
     setFinished(m_reply->isFinished());
     setOpenMode(ReadOnly);
 
@@ -39,7 +39,6 @@ NetworkReplyProxy::NetworkReplyProxy(QNetworkReply* reply, int timeout, QObject*
         connect(m_reply,SIGNAL(preSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator *)),SIGNAL(preSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator *)));
         connect(&m_timer,SIGNAL(timeout()),SLOT(timeout()));
 
-        m_timer.setInterval(timeout);
         if (m_timer.interval() > 0) m_timer.start();
     }
     else QMetaObject::invokeMethod(this,"handleReadyRead",Qt::QueuedConnection,Q_ARG(bool,true));
@@ -60,6 +59,9 @@ qint64 NetworkReplyProxy::bytesAvailable() const {
 }
 
 qint64 NetworkReplyProxy::readData(char* data, qint64 maxlen) {
+    if (!isOpen()) return -1;
+    if (m_buffer.size() <= 0) return 0;
+
     qint64 size = qMin(maxlen, qint64(m_buffer.size()));
     memcpy(data, m_buffer.constData(), size);
     m_buffer.remove(0, size);
@@ -102,15 +104,12 @@ void NetworkReplyProxy::errorInternal(QNetworkReply::NetworkError _error) {
 
 void NetworkReplyProxy::handleReadyRead(bool is_finished) {
     m_timer.stop();
+    m_buffer += m_reply->readAll();
     if (is_finished) {
-        if (m_reply->bytesAvailable() > 0) {
-            m_buffer += m_reply->readAll();
-            emit readyRead();
-        }
+        if (m_buffer.size() > 0) emit readyRead();
         QMetaObject::invokeMethod(this,"handleFinished",Qt::QueuedConnection);
     }
     else {
-        m_buffer += m_reply->readAll();
         emit readyRead();
         if (m_timer.interval() > 0) m_timer.start();
     }
