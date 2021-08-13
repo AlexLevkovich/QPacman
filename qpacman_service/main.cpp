@@ -10,6 +10,12 @@
 #include "stacktracer.h"
 #include "malloc.h"
 
+void setupTranslations(const QString & installDir,const QString & alpmLocalDir) {
+    QTranslator * m_translator = new QTranslator(QCoreApplication::instance());
+    if(!m_translator->load(QLocale::system(),"libqalpm","_",alpmLocalDir)) m_translator->load(QLocale::system(),"libqalpm","_",installDir);
+    QCoreApplication::installTranslator(m_translator);
+}
+
 int main(int argc, char *argv[]) {
     mallopt(M_MXFAST,0);
     mallopt(M_ARENA_MAX,2);
@@ -19,6 +25,7 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("qpacman_service");
 
     SingleApplication app(argc, argv,false,SingleApplication::System);
+    setupTranslations(TRANS_DIR2,TRANS_DIR4);
 
     if (getuid() != 0) {
         qCritical() << "You must be root!!!";

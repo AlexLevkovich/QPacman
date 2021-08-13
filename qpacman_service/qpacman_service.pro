@@ -15,6 +15,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 DBUS_ADAPTORS = qpacmanservice.xml
 QDBUSXML2CPP_ADAPTOR_HEADER_FLAGS = -i alpmpackage.h -i alpmfuture.h -i qalpmtypes.h -i dbusstring.h
 
+TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
+TRANS_DIR4 = $$OUT_PWD/../lib/qalpm/translations
+
+DEFINES += TRANS_DIR2=\\\"$$TRANS_DIR2\\\"
+DEFINES += TRANS_DIR4=\\\"$$TRANS_DIR4\\\"
+
 SOURCES += \
         actionapplier.cpp \
         dbusstring.cpp \
