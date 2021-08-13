@@ -2,7 +2,6 @@
 Description=QPacman DBus service
 
 [Service]
-Environment="LANG=en_US.utf8"
 Type=dbus
 BusName=com.alexl.qt.QPacmanService
 ExecStart=/usr/bin/qpacman_service
