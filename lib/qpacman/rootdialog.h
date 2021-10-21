@@ -6,6 +6,8 @@
 #ifndef ROOTDIALOG_H
 #define ROOTDIALOG_H
 
+class QEvent;
+
 #include "unabletoclosedialog.h"
 
 namespace Ui {
@@ -22,6 +24,9 @@ public:
     ~RootDialog();
     QString password() const;
 
+protected:
+    bool event(QEvent *e);
+
 protected slots:
     void reject_requested();
 
@@ -31,6 +36,7 @@ private slots:
 
 private:
     Ui::RootDialog *ui;
+    bool firstTime;
 };
 
 #endif // ROOTDIALOG_H

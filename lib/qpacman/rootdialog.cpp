@@ -10,10 +10,12 @@
 #include "static.h"
 #include <QAbstractButton>
 #include <QFontMetrics>
+#include <QEvent>
 #include <QDebug>
 
 RootDialog::RootDialog() : UnableToCloseDialog(NULL), ui(new Ui::RootDialog) {
     ui->setupUi(this);
+    firstTime = true;
 
     setWindowIcon(ThemeIcons::get(ThemeIcons::ROOT_DLG));
     int len = ui->label_3->fontMetrics().horizontalAdvance(ui->label_3->text());
@@ -32,6 +34,15 @@ RootDialog::RootDialog() : UnableToCloseDialog(NULL), ui(new Ui::RootDialog) {
 
 RootDialog::~RootDialog() {
     delete ui;
+}
+
+bool RootDialog::event(QEvent *e) {
+    bool res = UnableToCloseDialog::event(e);
+    if (e->type() == QEvent::Show && firstTime) {
+        firstTime = false;
+        updateGeometry();
+    }
+    return res;
 }
 
 void RootDialog::on_buttonBox_accepted() {

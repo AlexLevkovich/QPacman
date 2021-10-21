@@ -9,6 +9,7 @@
 int main(int argc, char *argv[]) {
     QCoreApplication::setOrganizationName("AlexL");
     QCoreApplication::setApplicationName("QPacmanTray");
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QPacmanTrayApplication a(argc, argv);
     if (a.isSecondary()) return a.exec();

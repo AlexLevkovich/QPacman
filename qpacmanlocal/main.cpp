@@ -10,6 +10,7 @@
 int main(int argc, char *argv[]) {
     QCoreApplication::setOrganizationName("AlexL");
     QCoreApplication::setApplicationName("QPacmanLocal");
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     SingleApplication a(argc, argv);
 
