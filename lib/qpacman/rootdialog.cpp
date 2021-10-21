@@ -40,6 +40,11 @@ bool RootDialog::event(QEvent *e) {
     bool res = UnableToCloseDialog::event(e);
     if (e->type() == QEvent::Show && firstTime) {
         firstTime = false;
+        ui->infoLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+        QSizePolicy policy(QSizePolicy::Minimum, QSizePolicy::Preferred);
+        policy.setHeightForWidth(true);
+        policy.setHeightForWidth(ui->infoLabel->wordWrap());
+        ui->infoLabel->setSizePolicy(policy);
         updateGeometry();
     }
     return res;
