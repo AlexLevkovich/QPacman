@@ -24,7 +24,7 @@
 LocalPackageMainWindow::LocalPackageMainWindow(const QStringList & packages,QWidget *parent) : QMainWindow(parent), ui(new Ui::LocalPackageMainWindow) {
     ui->setupUi(this);
 
-    wasInit = true;
+    wasInit = false;
     ui->progressView->setClearOnHide(false);
 
     view_group = new WidgetGroup(this);
