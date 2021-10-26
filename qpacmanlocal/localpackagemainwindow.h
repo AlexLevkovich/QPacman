@@ -10,6 +10,9 @@
 #include <QItemSelection>
 #include "qalpmtypes.h"
 
+class QShowEvent;
+class QCloseEvent;
+
 namespace Ui {
 class LocalPackageMainWindow;
 }
@@ -35,6 +38,10 @@ private slots:
     void logString(const QString & str);
     void on_actionLog_triggered(bool checked);
 
+protected:
+    void showEvent(QShowEvent * event);
+    void closeEvent(QCloseEvent * event);
+
 private:
     Ui::LocalPackageMainWindow *ui;
     PacmanSimpleItemModel * model;
@@ -43,6 +50,7 @@ private:
     WidgetGroup * view_group;
     QCheckBox * depsInstall;
     QCheckBox * forceInstall;
+    bool wasInit;
 };
 
 #endif // LOCALPACKAGEMAINWINDOW_H

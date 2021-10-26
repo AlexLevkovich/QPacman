@@ -17,11 +17,14 @@
 #include "widgetgroup.h"
 #include "libalpm.h"
 #include <QCheckBox>
+#include <QShowEvent>
+#include <QCloseEvent>
 #include <QDebug>
 
 LocalPackageMainWindow::LocalPackageMainWindow(const QStringList & packages,QWidget *parent) : QMainWindow(parent), ui(new Ui::LocalPackageMainWindow) {
     ui->setupUi(this);
 
+    wasInit = true;
     ui->progressView->setClearOnHide(false);
 
     view_group = new WidgetGroup(this);
@@ -108,6 +111,26 @@ void LocalPackageMainWindow::onActionInstall() {
         connect(installer,SIGNAL(completed(ThreadRun::RC,const QString &)),this,SLOT(operation_completed(ThreadRun::RC,const QString &)));
         connect(installer,SIGNAL(logString(const QString &)),this,SLOT(logString(const QString &)));
     }
+}
+
+void LocalPackageMainWindow::showEvent(QShowEvent * event) {
+    QMainWindow::showEvent(event);
+    if (!wasInit) {
+        wasInit = true;
+        QSettings settings;
+        restoreGeometry(settings.value("geometry/mainwindow").toByteArray());
+        restoreState(settings.value("state/mainwindow").toByteArray());
+        ui->splitter->restoreState(settings.value("state/splitter").toByteArray());
+    }
+}
+
+void LocalPackageMainWindow::closeEvent(QCloseEvent * event) {
+    QSettings settings;
+    settings.setValue("geometry/mainwindow",saveGeometry());
+    settings.setValue("state/mainwindow",saveState());
+    settings.setValue("state/splitter",ui->splitter->saveState());
+
+    QMainWindow::closeEvent(event);
 }
 
 void LocalPackageMainWindow::operation_completed(ThreadRun::RC rc,const QString &) {

@@ -59,7 +59,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../localpackagemainwindow.cpp" line="+44"/>
+        <location filename="../localpackagemainwindow.cpp" line="+47"/>
         <source>Install all as dependencies</source>
         <translation type="unfinished">Усталяваць усё як залежнасці</translation>
     </message>
@@ -69,7 +69,7 @@
         <translation type="unfinished">Перазапісваць файлы</translation>
     </message>
     <message>
-        <location line="+74"/>
+        <location line="+94"/>
         <source>Quit</source>
         <translation type="unfinished">Выйсцi</translation>
     </message>
