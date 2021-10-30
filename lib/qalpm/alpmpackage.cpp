@@ -730,7 +730,11 @@ QList<AlpmPackage::FileInfo> AlpmPackage::files() const {
         alpm_pkg_t * m_pkg = handle();
         QList<AlpmPackage::FileInfo> ret = files(m_pkg);
         if (!ret.isEmpty()) return ret;
-        if (repo() != "local") m_pkg = findInLocal(m_pkg);
+        if (repo() != "local") {
+            alpm_pkg_t * pkg = findInLocal(m_pkg);
+            if (pkg != NULL && !strcmp(alpm_pkg_get_version(pkg),alpm_pkg_get_version(m_pkg))) m_pkg = pkg;
+            else m_pkg = NULL;
+        }
         if (m_pkg != NULL) return files(m_pkg);
         else {
             for (QString & dir: Alpm::instance()->cacheDirs()) {
