@@ -369,7 +369,7 @@ int Alpm::operation_fetch_fn(void *,const QString & url,const QString & localpat
     }
     AlpmDownloader * downloader = new AlpmDownloader(_url,localpath,AlpmConfig::downloaderThreadCount(),p_config->doDisableDownloadTimeout()?0:AlpmConfig::downloaderTimeout(),AlpmConfig::downloaderProxy());
     QObject::connect(downloader,SIGNAL(progress(const QString &,qint64,qint64,int,qint64)),p_alpm,SLOT(operation_download_fn(const QString &,qint64,qint64,int,qint64)));
-    QObject::connect(downloader,&AlpmDownloader::error,p_alpm,[&](const QString & err) {m_download_errs.append(err);});
+    QObject::connect(downloader,&AlpmDownloader::error,p_alpm,[&](const QString & err) {m_download_errs.append(err);p_alpm->emit_information(err);p_alpm->emit_error(err);});
     int ret = downloader->exec();
     delete downloader;
     if (is_notdb) {
@@ -378,11 +378,7 @@ int Alpm::operation_fetch_fn(void *,const QString & url,const QString & localpat
             p_alpm->emit_event("download_done",Q_ARG(QString,_url.fileName()));
         }
         else {
-            if (!m_download_errs.isEmpty()) {
-                p_alpm->m_alpm_errno = ALPM_ERR_EXTERNAL_DOWNLOAD;
-                p_alpm->emit_information(m_download_errs.last());
-                p_alpm->emit_error(m_download_errs.last());
-            }
+            p_alpm->m_alpm_errno = ALPM_ERR_EXTERNAL_DOWNLOAD;
             p_alpm->emit_information(QObject::tr("Failed the download of %1").arg(_url.fileName()));
             p_alpm->emit_event("download_failed",Q_ARG(QString,_url.fileName()));
         }
@@ -995,7 +991,7 @@ void Alpm::query_packages_portion(QList<AlpmPackage> & pkgs,int startindex,int l
         for (int i=startindex+1;i<=lastindex;i++) {
             if (sort_equal_cmp(pkgs[i],pkgs[startindex])) count++;
         }
-        if (count == 1) pkgs[startindex] = AlpmPackage();
+        if (count >= 1) pkgs[startindex] = AlpmPackage();
     }
 }
 
@@ -1003,10 +999,11 @@ QList<AlpmPackage> Alpm::query_packages(const QString & name,AlpmPackage::Search
     QList<AlpmPackage> m_packages;
 
     for (AlpmDB & db: allSyncDBs()) {
-        m_packages += db.packages(name,fieldType,filter,group,repo);
+        if (!repo.isEmpty() && repo != db.name() && repo != "local") continue;
+        m_packages += db.packages(name,fieldType,filter,group);
     }
 
-    m_packages += localDB().packages(name,fieldType,filter,group,repo);
+    if (repo.isEmpty() || repo == "local") m_packages += localDB().packages(name,fieldType,filter,group);
 
     std::sort(m_packages.begin(),m_packages.end(),pkgLessThan);
 
@@ -1027,6 +1024,7 @@ QList<AlpmPackage> Alpm::query_packages(const QString & name,AlpmPackage::Search
     if (startindex >= 0 && lastindex >= 0) query_packages_portion(m_packages,startindex,lastindex);
 
     m_packages.erase(std::remove_if(m_packages.begin(),m_packages.end(),[](const AlpmPackage & pkg){return !pkg.isValid();}),m_packages.end());
+    if (repo == "local") m_packages.erase(std::remove_if(m_packages.begin(),m_packages.end(),[](const AlpmPackage & pkg){return (pkg.repo() != "local");}),m_packages.end());
 
     return m_packages;
 }
@@ -1056,6 +1054,8 @@ ThreadRun::RC Alpm::updateDBs(bool force) {
         emit_error(lastError());
         return ThreadRun::BAD;
     }
+
+    m_download_errs.clear();
 
     return run_void(this,&Alpm::update_dbs,force);
 }

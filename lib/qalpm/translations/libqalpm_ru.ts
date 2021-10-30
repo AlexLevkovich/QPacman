@@ -74,7 +74,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+461"/>
+        <location filename="../libalpm.cpp" line="+457"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 в IgnorePkg/IgnoreGroup. Все равно устанавливать?</translation>
     </message>
@@ -228,7 +228,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Не все пакеты загружены :(</translation>
     </message>
     <message>
-        <location line="-490"/>
+        <location line="-486"/>
         <source>Starting the download of %1</source>
         <translation type="unfinished">Начинаем загрузку %1</translation>
     </message>
@@ -238,12 +238,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">%1 загружен</translation>
     </message>
     <message>
-        <location line="+9"/>
+        <location line="+5"/>
         <source>Failed the download of %1</source>
         <translation type="unfinished">Ошибка при загрузке %1</translation>
     </message>
     <message>
-        <location line="+684"/>
+        <location line="+688"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Обновляем базу данных: %1...</translation>
     </message>
@@ -324,7 +324,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Вы согласны? : </translation>
     </message>
     <message>
-        <location line="+153"/>
+        <location line="+149"/>
         <source>(%1/%2) downloaded</source>
         <translation type="unfinished">(%1/%2) загружено</translation>
     </message>
@@ -448,7 +448,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Нечего загружать!!!</translation>
     </message>
     <message>
-        <location line="+189"/>
+        <location line="+193"/>
         <source>Starting the download of %1</source>
         <translation type="unfinished">Начинаем загрузку %1</translation>
     </message>
@@ -470,12 +470,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Начинаем полное обновление системы...</translation>
     </message>
     <message>
-        <location line="-463"/>
+        <location line="-467"/>
         <source>Stopped because of user refusal!!!</source>
         <translation type="unfinished">Остановлено по желанию пользователя!!!</translation>
     </message>
     <message>
-        <location line="+505"/>
+        <location line="+509"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 имеет неправильную архитектуру</translation>
     </message>

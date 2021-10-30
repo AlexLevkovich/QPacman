@@ -87,13 +87,12 @@ bool AlpmDB::isAppropriateDepsForPackageName(const QString & name,const QList<Al
     return false;
 }
 
-QList<AlpmPackage> AlpmDB::packages(const QString & str,AlpmPackage::SearchFieldType fieldType,AlpmPackage::PackageFilter filter,const QString & group,const QString & dbname) const {
+QList<AlpmPackage> AlpmDB::packages(const QString & str,AlpmPackage::SearchFieldType fieldType,AlpmPackage::PackageFilter filter,const QString & group) const {
     QList<AlpmPackage> m_packages;
 
     if (!isValid()) return check_error(m_packages);
 
     Alpm::instance()->m_alpm_errno = ALPM_ERR_OK;
-    if (!dbname.isEmpty() && dbname != this->name()) return m_packages;
 
     AlpmPackage pkg;
     AlpmList<alpm_pkg_t> pkgs(alpm_db_get_pkgcache(m_db_handle),AlpmList<alpm_pkg_t>::ignorefree);

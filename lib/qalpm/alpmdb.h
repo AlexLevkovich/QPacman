@@ -27,7 +27,7 @@ public:
     AlpmDB & operator=(const AlpmDB &other);
     static const QString extension();
 
-    QList<AlpmPackage> packages(const QString & str = QString(),AlpmPackage::SearchFieldType fieldType = AlpmPackage::NAME,AlpmPackage::PackageFilter filter = AlpmPackage::IS_ALL,const QString & group = QString(),const QString & dbname = QString()) const;
+    QList<AlpmPackage> packages(const QString & str = QString(),AlpmPackage::SearchFieldType fieldType = AlpmPackage::NAME,AlpmPackage::PackageFilter filter = AlpmPackage::IS_ALL,const QString & group = QString()) const;
     const QStringList & groups();
 
     QList<AlpmPackage> find(const QRegularExpression & expr) const;
