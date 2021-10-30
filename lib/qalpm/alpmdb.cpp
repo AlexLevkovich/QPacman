@@ -244,6 +244,8 @@ QList<AlpmPackage> AlpmDB::findByGroup(const char * group) const {
 }
 
 AlpmDB & AlpmDB::operator=(const AlpmDB & other) {
+    m_groups.clear();
+    m_provides.clear();
     m_db_handle = other.m_db_handle;
     m_alpm_handle = other.m_alpm_handle;
     return *this;
