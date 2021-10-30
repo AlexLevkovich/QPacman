@@ -448,12 +448,11 @@ Do you want to delete it?</source>
         <translation type="unfinished">Няма чаго загружаць!!!</translation>
     </message>
     <message>
-        <location line="+193"/>
         <source>Starting the download of %1</source>
-        <translation type="unfinished">Пачынаем загрузку %1</translation>
+        <translation type="obsolete">Пачынаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+292"/>
+        <location line="+484"/>
         <location line="+6"/>
         <location line="+181"/>
         <source>Skipping target: %1</source>
@@ -470,12 +469,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пачынаем поўнае абнаўленне сістэмы...</translation>
     </message>
     <message>
-        <location line="-467"/>
+        <location line="-466"/>
         <source>Stopped because of user refusal!!!</source>
         <translation type="unfinished">Спынена па жаданнi карыстальніка!!!</translation>
     </message>
     <message>
-        <location line="+509"/>
+        <location line="+508"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 мае няправільную архітэктуру</translation>
     </message>

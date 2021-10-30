@@ -1127,7 +1127,6 @@ QStringList Alpm::download_packages(const QList<AlpmPackage> & pkgs) {
     QString out_path;
     for (i=0;i<pkgs.count();i++) {
         filename = pkgs.at(i).fileName();
-        emit_information(tr("Starting the download of %1").arg(filename));
         emit_event("download_start",Q_ARG(QString,filename));
         out_path = download_package(pkgs.at(i));
         if (!out_path.isEmpty()) downloaded_paths.append(out_path);
