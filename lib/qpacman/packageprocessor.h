@@ -37,7 +37,7 @@ class PackageProcessor : public PackageProcessorBase {
 public:
     PackageProcessor(ProgressView * view = NULL,QAction * cancelAction = NULL,OptionalDepsDlg * optdlg = NULL,QObject *parent = nullptr);
     ~PackageProcessor();
-    static QMainWindow * createMainProcessorWindow(ProgressView ** view,QPlainTextEdit ** logView,QAction ** cancelAction,QAction ** logAction);
+    static QMainWindow * createMainProcessorWindow(ProgressView ** view,QPlainTextEdit ** logView,QAction ** cancelAction,QAction ** logAction,const QString & tittle);
 
 protected:
     class SaveStateFilter : public QObject {

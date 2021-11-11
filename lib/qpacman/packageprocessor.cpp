@@ -178,7 +178,7 @@ void PackageProcessor::exec_process() {
     }
 }
 
-QMainWindow * PackageProcessor::createMainProcessorWindow(ProgressView ** view,QPlainTextEdit ** logView,QAction ** cancelAction,QAction ** logAction) {
+QMainWindow * PackageProcessor::createMainProcessorWindow(ProgressView ** view,QPlainTextEdit ** logView,QAction ** cancelAction,QAction ** logAction,const QString & tittle) {
     QMainWindow * mainWnd = new QMainWindow(NULL);
     mainWnd->setWindowIcon(QIcon("://pics/qpacman.svg"));
     QStackedWidget * mainWidget = new QStackedWidget(mainWnd);
@@ -218,6 +218,7 @@ QMainWindow * PackageProcessor::createMainProcessorWindow(ProgressView ** view,Q
     QRect rect = QApplication::desktop()->screenGeometry(mainWnd);
     mainWnd->resize((rect.width()*2)/3,(rect.height()*2)/3);
     mainWnd->setAttribute(Qt::WA_DeleteOnClose);
+    mainWnd->setWindowTitle(tittle);
     mainWnd->setVisible(true);
     return mainWnd;
 }

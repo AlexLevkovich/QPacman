@@ -294,7 +294,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+90"/>
+        <source>Package Updater...</source>
+        <translation type="obsolete">Обновление пакетов...</translation>
+    </message>
+    <message>
+        <location line="+91"/>
         <location line="+7"/>
         <source>Overal download progress</source>
         <translation type="unfinished">Общий прогресс загрузки</translation>

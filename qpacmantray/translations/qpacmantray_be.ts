@@ -225,7 +225,12 @@
 <context>
     <name>Updater</name>
     <message>
-        <location filename="../updater.cpp" line="+28"/>
+        <location filename="../updater.cpp" line="+17"/>
+        <source>Package Updater...</source>
+        <translation type="unfinished">Абнаўленне пакетаў...</translation>
+    </message>
+    <message>
+        <location line="+11"/>
         <source>Quit</source>
         <translation type="unfinished">Выхад</translation>
     </message>
