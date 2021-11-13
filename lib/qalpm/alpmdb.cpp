@@ -109,10 +109,10 @@ QList<AlpmPackage> AlpmDB::packages(const QString & str,AlpmPackage::SearchField
             else if (filter == AlpmPackage::IS_GROUP) { if (!group.isEmpty() && !pkg.groups().contains(group)) continue; }
         }
         if (!str.isEmpty()) {
-            if (fieldType == AlpmPackage::NAME) { if (!pkg.name().contains(str)) continue; }
-            else if (fieldType == AlpmPackage::DESC) { if (!pkg.description().contains(str)) continue; }
-            else if (fieldType == AlpmPackage::PROVIDER) { if (!isAppropriateDepsForPackageName(str,pkg.depends())) continue; }
-            else if (fieldType == AlpmPackage::DEPENDENCY) { if (!isAppropriateDepsForPackageName(str,pkg.depends())) continue; }
+            if (fieldType == AlpmPackage::NAME) { if (!pkg.name().contains(str,Qt::CaseInsensitive)) continue; }
+            else if (fieldType == AlpmPackage::DESC) { if (!pkg.description().contains(str,Qt::CaseInsensitive)) continue; }
+            else if (fieldType == AlpmPackage::PROVIDER) { if (!isAppropriateDepsForPackageName(str.toLower(),pkg.provides())) continue; }
+            else if (fieldType == AlpmPackage::DEPENDENCY) { if (!isAppropriateDepsForPackageName(str.toLower(),pkg.depends())) continue; }
             else if (fieldType == AlpmPackage::FILE_NAME) { if (!pkg.hasFile(str)) continue; }
         }
 
