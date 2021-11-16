@@ -299,7 +299,7 @@ void Alpm::recreatedbs() {
                 if (dep.isAppropriate(res)) m_replaces[res] << pkg;
             }
         }
-    } while (dbs.next());
+    } while (dbs.goNext());
     dbs.detach();
 
     m_groups.removeDuplicates();
@@ -504,7 +504,7 @@ void Alpm::operation_question_fn(void *,alpm_question_t * question) {
                     if (db != NULL) db_name = QString::fromLocal8Bit((const char *)alpm_db_get_name(db));
                     QString pkg_name = QString::fromLocal8Bit((const char *)alpm_pkg_get_name(pkg));
                     list.append((db_name.isEmpty()?pkg_name:db_name+"/"+pkg_name)+"-"+QString::fromLatin1((const char *)alpm_pkg_get_version(pkg)));
-                } while (namelist.next());
+                } while (namelist.goNext());
                 namelist.detach();
 
                 p_alpm->emit_select_provider(QString::fromLocal8Bit(question->select_provider.depend->name),list,&question->select_provider.use_index);
@@ -563,7 +563,7 @@ void Alpm::display_optdepends(alpm_pkg_t * pkg) {
     do {
         if (depends.count() <= 0) return;
         info += dep_item_add(depends.valuePtr(),installed_deps,pending_deps) + "\n";
-    } while(depends.next());
+    } while(depends.goNext());
     depends.detach();
 
     p_alpm->emit_information(info);
@@ -614,7 +614,7 @@ void Alpm::display_new_optdepends(alpm_pkg_t *oldpkg, alpm_pkg_t *newpkg) {
     do {
         if (depends.count() <= 0) return;
         info += dep_item_add(depends.valuePtr(),installed_deps,pending_deps) + "\n";
-    } while(depends.next());
+    } while(depends.goNext());
 
     p_alpm->emit_information(info);
     p_alpm->emit_optdepends_event(pkgname,installed_deps,pending_deps);
@@ -633,7 +633,7 @@ private:
         do {
             if (overwrite_files.isEmpty()) break;
             alpm_option_remove_overwrite_file(Alpm::instance()->m_alpm_handle,(const char *)overwrite_files.valuePtr());
-        } while(overwrite_files.next());
+        } while(overwrite_files.goNext());
         m_forcedpkgs.clear();
     }
 
@@ -1180,7 +1180,7 @@ bool Alpm::do_process_targets(bool remove) {
             dl_size += alpm_pkg_download_size(pkg);
             install_size += alpm_pkg_get_isize(pkg);
             install_targets.append(QString("%3/%1=%2").arg(QString::fromLocal8Bit(alpm_pkg_get_name(pkg))).arg(QString::fromLocal8Bit(alpm_pkg_get_version(pkg))).arg(QString::fromLocal8Bit((db_name = (char *)alpm_db_get_name(alpm_pkg_get_db(pkg)))?db_name:"local")));
-        } while(list.next());
+        } while(list.goNext());
     }
     list.detach();
 
@@ -1189,7 +1189,7 @@ bool Alpm::do_process_targets(bool remove) {
             alpm_pkg_t *pkg = rlist.valuePtr();
             remove_size += alpm_pkg_get_isize(pkg);
             remove_targets.append(QString("%3/%1=%2").arg(QString::fromLocal8Bit(alpm_pkg_get_name(pkg))).arg(QString::fromLocal8Bit(alpm_pkg_get_version(pkg))).arg(QString::fromLocal8Bit((db_name = (char *)alpm_db_get_name(alpm_pkg_get_db(pkg)))?db_name:"local")));
-        } while(rlist.next());
+        } while(rlist.goNext());
     }
     rlist.detach();
 
@@ -1447,7 +1447,7 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
                 err = tr("Package %1 does not have a valid architecture").arg(QString::fromLocal8Bit(list.valuePtr()));
                 emit_information(err);
                 emit_error(err);
-            } while(list.next());
+            } while(list.goNext());
             data = NULL;
             break;
         }
@@ -1474,7 +1474,7 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
                     emit_information(err);
                     emit_error(err);
                 }
-            } while(list.next());
+            } while(list.goNext());
             data = NULL;
             break;
         }
@@ -1494,7 +1494,7 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
                     emit_error(err);
                     free(reason);
                 }
-            } while(list.next());
+            } while(list.goNext());
             data = NULL;
             break;
         }
@@ -1548,7 +1548,7 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
                         }
                         break;
                 }
-            } while(list.next());
+            } while(list.goNext());
             data = NULL;
             break;
         }
@@ -1562,7 +1562,7 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
                 err = tr("%1 is invalid or corrupted").arg(QString::fromLocal8Bit(list.valuePtr()));
                 emit_information(err);
                 emit_error(err);
-            } while(list.next());
+            } while(list.goNext());
             data = NULL;
             break;
         }
@@ -1631,7 +1631,7 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
                 err = tr("%1: removing %2 breaks dependency '%3'").arg(QString::fromLocal8Bit(list.valuePtr()->target)).arg(QString::fromLocal8Bit(list.valuePtr()->causingpkg)).arg(depstring);
                 emit_information(err);
                 emit_error(err);
-            } while(list.next());
+            } while(list.goNext());
             data = NULL;
             break;
         }
@@ -1661,7 +1661,7 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
                 return;
             }
         }
-    } while(list.next());
+    } while(list.goNext());
     list.detach();
 
     if (!do_process_targets(true)) {
@@ -1726,7 +1726,7 @@ QStringList Alpm::cacheDirs() const {
 
     do {
         ret.append(QString::fromLocal8Bit(dirs.valuePtr()));
-    } while (dirs.next());
+    } while (dirs.goNext());
     dirs.detach();
 
     return ret;

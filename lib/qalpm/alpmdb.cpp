@@ -67,7 +67,7 @@ AlpmDB::AlpmDB(const QString & name) {
                 m_db_handle = dbs.valuePtr();
                 break;
             }
-        } while(dbs.next());
+        } while(dbs.goNext());
         dbs.detach();
     }
 }
@@ -117,7 +117,7 @@ QList<AlpmPackage> AlpmDB::packages(const QString & str,AlpmPackage::SearchField
         }
 
         m_packages.append(pkg);
-    } while (pkgs.next());
+    } while (pkgs.goNext());
     pkgs.detach();
 
     return m_packages;
@@ -137,7 +137,7 @@ const QMap<AlpmPackage::Dependence,QList<AlpmPackage> > & AlpmDB::provides() {
         for (AlpmPackage::Dependence & dep: pkg.provides()) {
             ((AlpmDB *)this)->m_provides[dep].append(pkg);
         }
-    } while (pkgs.next());
+    } while (pkgs.goNext());
     pkgs.detach();
 
     return m_provides;
@@ -154,7 +154,7 @@ const QStringList & AlpmDB::groups() {
     do {
         if (pkgs.isEmpty()) break;
         p_this->m_groups += AlpmPackage(pkgs.valuePtr()).groups();
-    } while (pkgs.next());
+    } while (pkgs.goNext());
     pkgs.detach();
 
     p_this->m_groups.removeDuplicates();
@@ -215,7 +215,7 @@ QList<AlpmPackage> AlpmDB::find(const QRegularExpression & expr) const {
             }
         }
 
-    } while (pkgs.next());
+    } while (pkgs.goNext());
     pkgs.detach();
 
     return ret;
@@ -233,7 +233,7 @@ QList<AlpmPackage> AlpmDB::findByGroup(const QString & group) const {
         if (pkgs.isEmpty()) break;
         pkg = AlpmPackage(pkgs.valuePtr());
         if (pkg.groups().contains(group)) ret.append(pkg);
-    } while (pkgs.next());
+    } while (pkgs.goNext());
     pkgs.detach();
 
     return ret;
@@ -273,7 +273,7 @@ AlpmPackage AlpmDB::findByFileName(const char * filename) const {
             ret = AlpmPackage(pkg);
             break;
         }
-    } while (pkgs.next());
+    } while (pkgs.goNext());
     pkgs.detach();
 
     return ret;

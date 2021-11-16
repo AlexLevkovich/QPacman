@@ -424,7 +424,7 @@ QList<QLatin1String> AlpmPackage::remoteLocations() const {
     do {
          if (locs.isEmpty()) break;
          m_remotelocs.append(QLatin1String((const char *)locs.valuePtr()));
-    } while(locs.next());
+    } while(locs.goNext());
     locs.detach();
 
     return m_remotelocs;
@@ -478,7 +478,7 @@ QStringList AlpmPackage::licenses() const {
     do {
          if (licenses.isEmpty()) break;
          m_licenses.append(QString::fromLocal8Bit((const char *)licenses.valuePtr()));
-    } while(licenses.next());
+    } while(licenses.goNext());
     licenses.detach();
     return m_licenses;
 }
@@ -490,7 +490,7 @@ QStringList AlpmPackage::groups() const {
     do {
          if (groups.isEmpty()) break;
          m_groups.append(QString::fromLocal8Bit((const char *)groups.valuePtr()));
-    } while(groups.next());
+    } while(groups.goNext());
     groups.detach();
     return m_groups;
 }
@@ -525,7 +525,7 @@ QStringList AlpmPackage::requiredby() const {
     do {
         if (list.isEmpty()) break;
         m_requiredby.append(QString::fromLocal8Bit((const char *)list.valuePtr()));
-    } while(list.next());
+    } while(list.goNext());
 
     return m_requiredby;
 }
@@ -540,7 +540,7 @@ QStringList AlpmPackage::optionalfor() const {
     do {
         if (list.isEmpty()) break;
         m_optionalfor.append(QString::fromLocal8Bit((const char *)list.valuePtr()));
-    } while(list.next());
+    } while(list.goNext());
 
     return m_optionalfor;
 }
@@ -553,7 +553,7 @@ const QList<AlpmPackage::Dependence> AlpmPackage::alpm_pkg_list_processing(alpm_
         if (list.isEmpty()) break;
         dep.init(QString::fromLocal8Bit((const char *)list.valuePtr()->name),Dependence::mod_to_compareoper(list.valuePtr()->mod),QString::fromLocal8Bit((const char *)list.valuePtr()->version),QString::fromLocal8Bit((const char *)list.valuePtr()->desc));
         ret.append(dep);
-    } while(list.next());
+    } while(list.goNext());
     list.detach();
 
     return ret;

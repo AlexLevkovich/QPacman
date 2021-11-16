@@ -79,7 +79,7 @@ public:
 
     //moves the current item to the first one
     //returns false if the list is empty
-    bool first() const {
+    bool goFirst() const {
         if (m_list_first == NULL) return false;
         ((AlpmList *)this)->m_list = m_list_first;
         return true;
@@ -87,25 +87,23 @@ public:
 
     //moves the current item to the next one
     //returns false if next item does not exist or the list is empty
-    bool next() const {
-        if (m_list == NULL) return false;
+    bool goNext() const {
+        if (m_list == NULL || m_list->next == NULL) return false;
         ((AlpmList *)this)->m_list = m_list->next;
-        if (m_list == NULL) return false;
         return true;
     }
 
     //moves the current item to the previous one
     //returns false if previous item does not exist or the list is empty
-    bool prev() const {
-        if (m_list == NULL) return false;
+    bool goPrev() const {
+        if (m_list == NULL || m_list->prev == NULL) return false;
         ((AlpmList *)this)->m_list = m_list->prev;
-        if (m_list == NULL) return false;
         return true;
     }
 
     //moves the current item to the last one
     //returns false if the list is empty
-    bool last() const {
+    bool goLast() const {
         if (m_list_last == NULL) return false;
         ((AlpmList *)this)->m_list = m_list_last;
         return true;
@@ -238,12 +236,12 @@ public:
         alpm_list_t * m_list_save = m_list;
         if (m_list_first == NULL) return QList<T*>();
         QList<T*> ret;
-        if (!first()) return ret;
+        if (!goFirst()) return ret;
         ret.append(user_dup(valuePtr()));
-        while (next()) {
+        while (goNext()) {
             ret.append(user_dup(valuePtr()));
         }
-        m_list = m_list_save;
+        ((AlpmList *)this)->m_list = m_list_save;
         return ret;
     }
 
@@ -251,21 +249,21 @@ public:
         alpm_list_t * m_list_save = m_list;
         QString ret;
         if (m_list_first == NULL) return ret;
-        if (!first()) return ret;
+        if (!goFirst()) return ret;
         ret += begin_str + to_string(valuePtr())+"\n";
-        while (next()) {
+        while (goNext()) {
             ret += begin_str + to_string(valuePtr())+"\n";
         }
         ((AlpmList *)this)->m_list = m_list_save;
         return ret;
     }
 
-    bool atEnd() const {
+    bool isLast() const {
         if (m_list_first == NULL) return false;
         return (m_list == m_list_last);
     }
 
-    bool atBegin() const {
+    bool isFirst() const {
         if (m_list_first == NULL) return false;
         return (m_list == m_list_first);
     }
@@ -283,7 +281,7 @@ public:
 
         const alpm_list_t *lp = _find(value,compare_fn);
         if (lp == NULL) return false;
-        else m_list = lp;
+        else ((AlpmList *)this)->m_list = lp;
 
         return true;
     }
