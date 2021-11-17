@@ -6,10 +6,11 @@
 #define QPACMANSERVICE_H
 
 #include <QObject>
+#include <QDBusContext>
 #include "libalpm.h"
 #include "dbusstring.h"
 
-class QPacmanService : public QObject {
+class QPacmanService : public QObject, public QDBusContext {
     Q_OBJECT
 public:
     explicit QPacmanService(QObject *parent = nullptr);
@@ -176,8 +177,10 @@ private:
     ThreadRun::RC install_packages(const QList<AlpmPackage> & pkgs,bool asdeps = false,const QList<AlpmPackage> & forcedpkgs = QList<AlpmPackage>());
     void remove_temp_file();
     void do_alpm_reopen();
-    bool check_root_password(const QString & root_pw);
+    QString dbus_client_username() const;
+    bool check_password(const QString & pw);
     static int pam_auth(int num_msg, const struct pam_message **msg,struct pam_response **resp, void *appdata_ptr);
+    static const QString username_of_pid(pid_t pid);
 
     static bool m_files_executing;
     bool locked_outside;

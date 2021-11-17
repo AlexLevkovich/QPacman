@@ -21,6 +21,7 @@ make install
 
 You can use **CONFIG+=USE_KDE** in qmake arguments if you need to use the extended KDE color scheme  
 Be sure that you've added the one more dependency to PKGBUILD: **kconfigwidgets**  
+You can use **CONFIG+=USER_AUTH=0** in qmake arguments if you need to use root authorization for the operations that modify the system
 
 
 **QT5 only**  

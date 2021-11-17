@@ -5,6 +5,7 @@
 #include "qpacmanservice.h"
 #include "qpacmanservice_adaptor.h"
 #include <QThread>
+#include <QFileInfo>
 #include <QStringList>
 #include <QNetworkProxy>
 #include "alpmconfig.h"
@@ -12,6 +13,7 @@
 #include <unistd.h>
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
+#include <shadow.h>
 #include <QDebug>
 
 bool QPacmanService::m_files_executing = false;
@@ -22,7 +24,7 @@ const QString temporaryName() {
     return tfile.fileName();
 }
 
-QPacmanService::QPacmanService(QObject *parent) : QObject(parent) {
+QPacmanService::QPacmanService(QObject *parent) : QObject(parent), QDBusContext() {
     new Alpm(this);
 
     qRegisterMetaType<String>("String");
@@ -460,6 +462,17 @@ ThreadRun::RC QPacmanService::packageFiles(const QByteArray & arr) {
     return ThreadRun::OK;
 }
 
+const QString QPacmanService::username_of_pid(pid_t pid) {
+    QFileInfo info(QString("/proc/%1").arg(pid));
+    if (!info.exists()) return QString();
+
+    return info.owner();
+}
+
+QString QPacmanService::dbus_client_username() const {
+    return username_of_pid(connection().interface()->servicePid(message().service()));
+}
+
 int QPacmanService::pam_auth(int num_msg, const struct pam_message **,struct pam_response **resp, void *appdata_ptr) {
     struct pam_response *array_resp = (struct pam_response*) malloc(num_msg * sizeof(struct pam_response));
     QString pass = *(QString *)appdata_ptr;
@@ -474,12 +487,18 @@ int QPacmanService::pam_auth(int num_msg, const struct pam_message **,struct pam
     return PAM_SUCCESS;
 }
 
-bool QPacmanService::check_root_password(const QString & root_pw) {
-    if (root_pw.isNull()) return false;
+bool QPacmanService::check_password(const QString & pw) {
+    if (pw.isNull()) return false;
 
     pam_handle_t * pamh = NULL;
-    pam_conv conv = {QPacmanService::pam_auth,(void *)&root_pw};
-    int ret = pam_start("sudo","root",&conv,&pamh);
+    pam_conv conv = {QPacmanService::pam_auth,(void *)&pw};
+    int ret = pam_start("sudo",
+#if USER_AUTH > 0
+                        dbus_client_username().toLocal8Bit().constData(),
+#else
+                        "root",
+#endif
+                        &conv,&pamh);
     if (ret != PAM_SUCCESS) return false;
     ret = pam_authenticate(pamh, 0);
     if (ret != PAM_SUCCESS) return false;
@@ -499,7 +518,7 @@ ThreadRun::RC QPacmanService::installPackages(const String & root_pw,const QByte
 
     if (root_pw.isNull() && list1.isEmpty() && list2.isEmpty()) emit package_updater_started();
 
-    if (!check_root_password(root_pw)) return ThreadRun::ROOTPW;
+    if (!check_password(root_pw)) return ThreadRun::ROOTPW;
 
     return install_packages(list1,asdeps,list2);
 }
@@ -525,7 +544,7 @@ ThreadRun::RC QPacmanService::install_packages(const QList<AlpmPackage> & pkgs,b
 }
 
 ThreadRun::RC QPacmanService::processPackages(const String & root_pw) {
-    if (!check_root_password(root_pw)) return ThreadRun::ROOTPW;
+    if (!check_password(root_pw)) return ThreadRun::ROOTPW;
 
     new ActionApplier(this);
     return ThreadRun::OK;

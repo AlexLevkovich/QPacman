@@ -17,6 +17,12 @@ RootDialog::RootDialog() : UnableToCloseDialog(NULL), ui(new Ui::RootDialog) {
     ui->setupUi(this);
     firstTime = true;
 
+#if USER_AUTH > 0
+    ui->infoLabel->setText(tr("<html><head/><body><p>You need <span style=\" font-weight:600;\">an additional privileges</span> for the operations that can modify the system. Please enter <span style=\" font-weight:600;\">your</span> password below or click %1 if you prefer not to continue.</p></body></html>"));
+#else
+    ui->infoLabel->setText(tr("<html><head/><body><p>You need <span style=\" font-weight:600;\">root privileges</span> for the operations that can modify the system. Please enter <span style=\" font-weight:600;\">root's</span> password below or click %1 if you prefer not to continue.</p></body></html>"));
+#endif
+
     setWindowIcon(ThemeIcons::get(ThemeIcons::ROOT_DLG));
     int len = ui->label_3->fontMetrics().horizontalAdvance(ui->label_3->text());
     ui->label->setPixmap(ThemeIcons::get(ThemeIcons::DLG_PASSWORD).pixmap(len,len));

@@ -13,6 +13,11 @@ USE_KDE {
     DEFINES += USE_KDE=\\\"$$USE_KDE\\\"
 }
 
+isEmpty(USER_AUTH) {
+    USER_AUTH = 1
+}
+DEFINES += USER_AUTH=$$USER_AUTH
+
 TRANS_DIR1 = $$OUT_PWD/translations
 TRANS_DIR2 = $$INSTALL_PREFIX/share/qpacman
 

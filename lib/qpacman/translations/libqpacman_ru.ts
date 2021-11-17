@@ -103,9 +103,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location/>
+        <location filename="../rootdialog.cpp" line="+21"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You need &lt;span style=&quot; font-weight:600;&quot;&gt;an additional privileges&lt;/span&gt; for the operations that can modify the system. Please enter &lt;span style=&quot; font-weight:600;&quot;&gt;your&lt;/span&gt; password below or click %1 if you prefer not to continue.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вам нужны &lt;span style=&quot; font-weight:600;&quot;&gt;дополнительные привилегии&lt;/span&gt; для операций модифицирующих систему. Введите &lt;span style=&quot; font-weight:600;&quot;&gt;ваш&lt;/span&gt; пароль или нажмите %1 если не хотите продолжать.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location line="+2"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You need &lt;span style=&quot; font-weight:600;&quot;&gt;root privileges&lt;/span&gt; for the operations that can modify the system. Please enter &lt;span style=&quot; font-weight:600;&quot;&gt;root&apos;s&lt;/span&gt; password below or click %1 if you prefer not to continue.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вам нужны &lt;span style=&quot; font-weight:600;&quot;&gt;привилегии администратора (root)&lt;/span&gt; для операций модифицирующих систему. Введите пароль для &lt;span style=&quot; font-weight:600;&quot;&gt;root&lt;/span&gt; или нажмите %1 если не хотите продолжать.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location filename="../rootdialog.ui"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
