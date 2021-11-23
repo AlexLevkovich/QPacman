@@ -11,6 +11,7 @@
 #include "filtertoolbutton.h"
 #include "qalpmtypes.h"
 
+class ExclusiveActionGroup;
 class WidgetGroup;
 class SearchWidget;
 class OptionalDepsDlg;
@@ -68,6 +69,7 @@ private:
 
     Ui::MainWindow *ui;
     WidgetGroup * view_group;
+    ExclusiveActionGroup * acgroup;
     SearchWidget * searchWidget;
     bool wasInit;
     OptionalDepsDlg * optdep;

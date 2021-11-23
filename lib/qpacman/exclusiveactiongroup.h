@@ -12,6 +12,8 @@ class ExclusiveActionGroup : public QActionGroup {
     Q_OBJECT
 public:
     ExclusiveActionGroup(QObject *parent);
+    QAction *checkedAction() const;
+    void uncheckAllActions();
 
 private slots:
     void ontriggered(QAction * action);

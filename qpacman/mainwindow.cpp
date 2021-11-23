@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) , ui(new Ui::MainWi
     view_group->add(ui->logWindow);
     view_group->add(ui->infoBrowser);
 
-    QActionGroup * acgroup = new ExclusiveActionGroup(this);
+    acgroup = new ExclusiveActionGroup(this);
     acgroup->addAction(ui->actionLog);
     acgroup->addAction(ui->actionInfo);
 
@@ -105,6 +105,7 @@ void MainWindow::onRefreshCompleted() {
     ui->pacInfoView->clear();
     enableActions(true);
     view_group->setCurrent(ui->splitter);
+    acgroup->uncheckAllActions();
 }
 
 static const QList<QAction *> childrenActions(QObject * main_object) {
@@ -252,7 +253,7 @@ void MainWindow::dbRefreshCompleted(ThreadRun::RC rc,const QString &) {
         ui->actionCancel->setVisible(false);
         ui->actionApply->setVisible(true);
         enableActions(true);
-        QMetaObject::invokeMethod(this,"refreshRows",Qt::QueuedConnection);
+        QMetaObject::invokeMethod(ui->packetView,"refreshRows",Qt::QueuedConnection);
     }
     else {
         ui->actionCancel->setEnabled(true);

@@ -11,8 +11,20 @@ ExclusiveActionGroup::ExclusiveActionGroup(QObject *parent) : QActionGroup(paren
 }
 
 void ExclusiveActionGroup::ontriggered(QAction * action) {
-    QList<QAction *> actions = this->actions();
-    for (int i=0;i<actions.count();i++) {
-        if (actions[i] != action) actions[i]->setChecked(false);
+    for (QAction * & act: this->actions()) {
+        if (act != action) act->setChecked(false);
+    }
+}
+
+QAction * ExclusiveActionGroup::checkedAction() const {
+    for (QAction * & action: this->actions()) {
+        if (action->isChecked()) return action;
+    }
+    return NULL;
+}
+
+void ExclusiveActionGroup::uncheckAllActions() {
+    for (QAction * & action: this->actions()) {
+        action->setChecked(false);
     }
 }

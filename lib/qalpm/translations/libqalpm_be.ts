@@ -14,7 +14,7 @@
         <translation type="unfinished">Немагчыма вызначыць архітэктуру сістэмы!</translation>
     </message>
     <message>
-        <location line="+134"/>
+        <location line="+136"/>
         <source>Pacman&apos;s conf file is unknown!</source>
         <translation type="unfinished">Невядомы канфігурацыйны файл для pacman!</translation>
     </message>
