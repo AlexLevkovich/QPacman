@@ -173,27 +173,32 @@ bool AlpmConfig::setDBExtension(const QString & dbext) {
     QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
     if (!dbExtensions().contains(dbext)) return false;
     qalpm_ini_file.setValue("DBExt",dbext);
+    qalpm_ini_file.sync();
     return true;
 }
 
 void AlpmConfig::setDownloaderProxy(const QNetworkProxy & proxy) {
     QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
     qalpm_ini_file.setValue("DownloaderProxy",toByteArray(proxy));
+    qalpm_ini_file.sync();
 }
 
 void AlpmConfig::setDownloaderTimeout(uint value) {
     QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
     qalpm_ini_file.setValue("DownloaderTimeout",value);
+    qalpm_ini_file.sync();
 }
 
 void AlpmConfig::setUsingSystemIcons(bool flag) {
     QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
     qalpm_ini_file.setValue("UseSystemIcons",flag);
+    qalpm_ini_file.sync();
 }
 
 void AlpmConfig::setDownloaderThreads(uint value) {
     QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
     qalpm_ini_file.setValue("DownloaderThreads",value);
+    qalpm_ini_file.sync();
 }
 
 QString AlpmConfig::confPath() const {
