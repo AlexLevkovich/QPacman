@@ -9,9 +9,10 @@
 #include <QFile>
 #include <QDir>
 #include <alpm.h>
-#include <QStandardPaths>
 #include <QDataStream>
 #include <sys/sysinfo.h>
+#include <sys/types.h>
+#include <pwd.h>
 
 
 AlpmConfig::AlpmConfig(const QString & conf_filepath) {
@@ -104,12 +105,30 @@ bool AlpmConfig::setConfPath(const QString & conf_filepath) {
     return true;
 }
 
+const QString AlpmConfig::userName() {
+    uid_t uid = geteuid();
+    struct passwd * pw = (uid == (uid_t)-1 && errno ? NULL : getpwuid(uid));
+    if (pw == NULL) return QString();
+
+    return QString::fromLocal8Bit(pw->pw_name);
+}
+
+const QString AlpmConfig::userDir() {
+    uid_t uid = geteuid();
+    struct passwd * pw = (uid == (uid_t)-1 && errno ? NULL : getpwuid(uid));
+    if (pw == NULL) return QString();
+
+    return QString::fromLocal8Bit(pw->pw_dir);
+}
+
 const QString AlpmConfig::userConfFile() {
-    QStringList list = QStandardPaths::standardLocations(QStandardPaths::ConfigLocation);
-    if (list.isEmpty()) list << QDir::homePath()+QDir::separator()+QString::fromLatin1(".config");
-    else if (list[0] == "/.config") list[0] = QDir::homePath()+list[0];
-    else if (list[0] == ".config") list[0] = QDir::homePath()+QDir::separator()+list[0];
-    return list[0]+QDir::separator()+ORG+QDir::separator()+CONF;
+    QString configdir;
+    QString username = userName();
+    QString userdir = userDir();
+    if (username.isEmpty() || userdir.isEmpty()) configdir = QDir::separator() + QLatin1String(".config");
+    else configdir = userdir + QDir::separator() +".config";
+
+    return configdir+QDir::separator()+ORG+QDir::separator()+CONF;
 }
 
 const QByteArray toByteArray(const QNetworkProxy & proxy) {

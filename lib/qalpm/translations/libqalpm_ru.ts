@@ -4,7 +4,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../alpmconfig.cpp" line="+65"/>
+        <location filename="../alpmconfig.cpp" line="+66"/>
         <source>Can&apos;t find [options] section!</source>
         <translation type="unfinished">Секция [options] не найдена!</translation>
     </message>
@@ -14,7 +14,7 @@
         <translation type="unfinished">Невозможно определить архитектуру системы!</translation>
     </message>
     <message>
-        <location line="+136"/>
+        <location line="+154"/>
         <source>Pacman&apos;s conf file is unknown!</source>
         <translation type="unfinished">Конфигурационный файл для pacman неизвестен!</translation>
     </message>

@@ -79,6 +79,8 @@ public:
     static void setDownloaderProxy(const QNetworkProxy & proxy);
     static void setUsingSystemIcons(bool flag);
 private:
+    static const QString userName();
+    static const QString userDir();
     static const QString userConfFile();
     bool config_parse_siglevel(const QStringList & val,int & level);
     alpm_list_t * convert_list(const QStringList & list);
