@@ -107,6 +107,8 @@ bool AlpmConfig::setConfPath(const QString & conf_filepath) {
 const QString AlpmConfig::userConfFile() {
     QStringList list = QStandardPaths::standardLocations(QStandardPaths::ConfigLocation);
     if (list.isEmpty()) list << QDir::homePath()+QDir::separator()+QString::fromLatin1(".config");
+    else if (list[0] == "/.config") list[0] = QDir::homePath()+list[0];
+    else if (list[0] == ".config") list[0] = QDir::homePath()+QDir::separator()+list[0];
     return list[0]+QDir::separator()+ORG+QDir::separator()+CONF;
 }
 
