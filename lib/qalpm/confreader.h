@@ -57,6 +57,7 @@ private:
         bool isUnusable() const { return index == -1; }
         void setUnusable() { index = -1; }
         bool isComment() { return (section.isEmpty() && item.isEmpty()); }
+        bool isOrphan() { return (section.isEmpty() && !item.isEmpty()); }
     };
 
     static bool only_key_cmp(const KeyValue & item1, const KeyValue & item2);

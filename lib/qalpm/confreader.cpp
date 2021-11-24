@@ -139,7 +139,7 @@ bool ConfReader::setValue(const QString &key, const QString &value) {
     }
 
     QString key2 = key;
-    if (section.isEmpty()) key2 = "/" + key2;
+    if (section.isEmpty() && !key2.startsWith("/")) key2 = "/" + key2;
 
     int sorted_index;
     int index = index_of_key(key2,sorted_index);
@@ -214,13 +214,28 @@ bool ConfReader::sync() {
     }
     QString section = "";
     QByteArray line;
+
     for (KeyValue & key_value: m_key_values) {
         if (key_value.isUnusable()) continue;
+        if (!key_value.isOrphan()) continue;
+
+        line = (key_value.item + " = " + key_value.value).toLocal8Bit()+"\n";
+
+        if (file.write(line) != line.length()) {
+            m_error = "ConfReader::sync: " + file.errorString();
+            return false;
+        }
+    }
+
+    section = "";
+    for (KeyValue & key_value: m_key_values) {
+        if (key_value.isUnusable()) continue;
+        if (key_value.isOrphan()) continue;
 
         if (key_value.isComment()) {
             line = key_value.value.toLocal8Bit()+"\n";
         }
-        else if (key_value.section.isEmpty() || section == key_value.section) {
+        else if (section == key_value.section) {
             line = (key_value.item + " = " + key_value.value).toLocal8Bit()+"\n";
         }
         else {
