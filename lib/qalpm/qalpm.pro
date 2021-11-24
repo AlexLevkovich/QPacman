@@ -75,6 +75,7 @@ SOURCES += \
     alpmpackage.cpp \
     archivefilesiterator.cpp \
     byteshumanizer.cpp \
+    confreader.cpp \
     inotifier.cpp \
     libalpm.cpp \
     multidownloader.cpp \
@@ -87,6 +88,7 @@ HEADERS += \
     alpmfuture.h \
     alpmlist.h \
     archivefilesiterator.h \
+    confreader.h \
     downloaderinterface.h \
     inotifier.h \
     libalpm.h \

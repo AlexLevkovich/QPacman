@@ -4,7 +4,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../alpmconfig.cpp" line="+66"/>
+        <location filename="../alpmconfig.cpp" line="+67"/>
         <source>Can&apos;t find [options] section!</source>
         <translation type="unfinished">Секция [options] не найдена!</translation>
     </message>
@@ -14,12 +14,37 @@
         <translation type="unfinished">Невозможно определить архитектуру системы!</translation>
     </message>
     <message>
-        <location line="+154"/>
+        <location line="+41"/>
+        <source>invalid url input!</source>
+        <translation type="unfinished">подан неверный url!</translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>cannot init repo object!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>repo with such a name already exists!</source>
+        <translation type="unfinished">repo с таким именем уже есть!</translation>
+    </message>
+    <message>
+        <location line="+14"/>
+        <source>must stay at least one repo!</source>
+        <translation type="unfinished">хотя бы один repo должен остаться!</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>repo with such a name does not exist!</source>
+        <translation type="unfinished">нет repo с таким именем!</translation>
+    </message>
+    <message>
+        <location line="+130"/>
         <source>Pacman&apos;s conf file is unknown!</source>
         <translation type="unfinished">Конфигурационный файл для pacman неизвестен!</translation>
     </message>
     <message>
-        <location line="+155"/>
+        <location line="+189"/>
         <source>Siglevel has wrong value!</source>
         <translation type="unfinished">Некорректное значение Siglevel!</translation>
     </message>
@@ -277,6 +302,11 @@ Do you want to delete it?</source>
     <message>
         <location line="+21"/>
         <source>Invalid entry name for stat()!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../confreader.cpp" line="+137"/>
+        <source>wrong input key!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

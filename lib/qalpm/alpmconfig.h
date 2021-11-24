@@ -10,7 +10,7 @@
 #include <QNetworkProxy>
 #include <QVariant>
 
-class QSettings;
+class ConfReader;
 typedef struct __alpm_handle_t alpm_handle_t;
 typedef struct __alpm_list_t  alpm_list_t;
 
@@ -26,10 +26,12 @@ public:
       int usage() const { return m_usage; }
 
     private:
-      Repo(const QString & name,const QString & arch,QSettings * settings,const QStringList & def_siglevel);
+      Repo(const QString & name,const QString & arch,ConfReader * settings,const QStringList & def_siglevel);
+      Repo(const QString & name,const QStringList & urls,const QString & arch,const QStringList & siglevels = QStringList(),const QStringList & usages = QStringList());
       bool setServersFromFile(const QString & filepath,QString & error);
       static bool config_parse_siglevel(const QStringList & values,int & level,QString & error);
 
+      QString m_orig_name;
       bool m_valid;
       friend class AlpmConfig;
 
@@ -40,7 +42,7 @@ public:
       int m_siglevel;
     };
 
-    AlpmConfig(const QString & conf_filepath = QString());
+    AlpmConfig();
     ~AlpmConfig();
     bool setConfPath(const QString & conf_filepath);
     QString confPath() const;
@@ -67,6 +69,9 @@ public:
     QStringList noUpgradePkgs() const { return noupgrade; }
     QList<Repo> repositories() const { return repos; }
 
+    bool addNewRepo(const QString & name,const QString & url,const QStringList & siglevels = QStringList(),const QStringList & usages = QStringList());
+    bool deleteRepo(const QString & name);
+
     static const QString dbExtension();
     static const QStringList dbExtensions();
     static uint downloaderTimeout();
@@ -79,11 +84,12 @@ public:
     static void setDownloaderProxy(const QNetworkProxy & proxy);
     static void setUsingSystemIcons(bool flag);
 private:
-    static const QString userName();
-    static const QString userDir();
-    static const QString userConfFile();
+    static const QString user_name();
+    static const QString user_dir();
+    static const QString user_conf_file();
     bool config_parse_siglevel(const QStringList & val,int & level);
     alpm_list_t * convert_list(const QStringList & list);
+    int index_of_repo(const QString & name);
 
     QString m_error;
     QString conf_filepath;

@@ -4,9 +4,11 @@
 ********************************************************************************/
 
 #include "alpmconfig.h"
+#include "confreader.h"
 #include <sys/utsname.h>
 #include <QSettings>
 #include <QFile>
+#include <QTextCodec>
 #include <QDir>
 #include <alpm.h>
 #include <QDataStream>
@@ -15,9 +17,8 @@
 #include <pwd.h>
 
 
-AlpmConfig::AlpmConfig(const QString & conf_filepath) {
+AlpmConfig::AlpmConfig() {
     holdpkgs = NULL;
-    setConfPath(conf_filepath);
 }
 
 AlpmConfig::~AlpmConfig() {
@@ -60,18 +61,18 @@ bool AlpmConfig::setConfPath(const QString & conf_filepath) {
     repos.clear();
 
     m_error.clear();
-    QSettings ini_file(conf_filepath.isEmpty()?PACMANCONF:conf_filepath,QSettings::IniFormat);
-    QStringList groups = ini_file.childGroups();
+    ConfReader ini_file(conf_filepath.isEmpty()?PACMANCONF:conf_filepath);
+    QStringList groups = ini_file.sections();
     if (!groups.contains("options")) {
         m_error = QObject::tr("Can't find [options] section!");
         return false;
     }
 
-    rootdir = ini_file.value("options/RootDir","/").toString();
-    dbpath = ini_file.value("options/DBPath",DBPATH).toString();
-    gpgdir = ini_file.value("options/GPGDir",GPGDIR).toString();
-    logfile = ini_file.value("options/LogFile",LOGFILE).toString();
-    architecture = ini_file.value("options/Architecture","auto").toString();
+    rootdir = ini_file.value("options/RootDir","/");
+    dbpath = ini_file.value("options/DBPath",DBPATH);
+    gpgdir = ini_file.value("options/GPGDir",GPGDIR);
+    logfile = ini_file.value("options/LogFile",LOGFILE);
+    architecture = ini_file.value("options/Architecture","auto");
     if (architecture == "auto") {
         struct utsname un;
         if(uname(&un) != 0) {
@@ -80,24 +81,25 @@ bool AlpmConfig::setConfPath(const QString & conf_filepath) {
         }
         architecture = un.machine;
     }
-    usesyslog = ini_file.value("options/UseSyslog",1).toInt();
-    disabledownloadtimeout = (bool)ini_file.value("options/DisableDownloadTimeout",0).toInt();
-    siglevel = ini_file.value("options/SigLevel","Never").toString().trimmed().split(QString::fromLatin1(" "),Qt::SkipEmptyParts);
-    localfilesiglevel = ini_file.value("options/LocalFileSigLevel",siglevel.join(" ")).toString().trimmed().split(" ",Qt::SkipEmptyParts);
-    remotefilesiglevel = ini_file.value("options/RemoteFileSigLevel",siglevel.join(" ")).toString().trimmed().split(" ",Qt::SkipEmptyParts);
-    holdpkgs2 = ini_file.value("options/HoldPkg","").toString().split(" ",Qt::SkipEmptyParts);
-    cachedirs = ini_file.value("options/CacheDir",CACHEDIR).toString().split(" ",Qt::SkipEmptyParts);
-    syncfirst = ini_file.value("options/SyncFirst","").toString().split(" ",Qt::SkipEmptyParts);
-    hookdirs = ini_file.value("options/HookDir",HOOKDIR).toString().split(" ",Qt::SkipEmptyParts);
-    ignoregroups = ini_file.value("options/IgnoreGroup","").toString().split(" ",Qt::SkipEmptyParts);
-    ignorepkgs = ini_file.value("options/IgnorePkg","").toString().split(" ",Qt::SkipEmptyParts);
-    noextract = ini_file.value("options/NoExtract","").toString().split(" ",Qt::SkipEmptyParts);
-    noupgrade = ini_file.value("options/NoUpgrade","").toString().split(" ",Qt::SkipEmptyParts);
+    usesyslog = ini_file.value("options/UseSyslog",true);
+    disabledownloadtimeout = ini_file.value("options/DisableDownloadTimeout",false);
+    siglevel = ini_file.value("options/SigLevel","Never").trimmed().split(QString::fromLatin1(" "),Qt::SkipEmptyParts);
+    localfilesiglevel = ini_file.value("options/LocalFileSigLevel",siglevel.join(" ")).trimmed().split(" ",Qt::SkipEmptyParts);
+    remotefilesiglevel = ini_file.value("options/RemoteFileSigLevel",siglevel.join(" ")).trimmed().split(" ",Qt::SkipEmptyParts);
+    holdpkgs2 = ini_file.value("options/HoldPkg","").split(" ",Qt::SkipEmptyParts);
+    cachedirs = ini_file.value("options/CacheDir",CACHEDIR).split(" ",Qt::SkipEmptyParts);
+    syncfirst = ini_file.value("options/SyncFirst","").split(" ",Qt::SkipEmptyParts);
+    hookdirs = ini_file.value("options/HookDir",HOOKDIR).split(" ",Qt::SkipEmptyParts);
+    ignoregroups = ini_file.value("options/IgnoreGroup","").split(" ",Qt::SkipEmptyParts);
+    ignorepkgs = ini_file.value("options/IgnorePkg","").split(" ",Qt::SkipEmptyParts);
+    noextract = ini_file.value("options/NoExtract","").split(" ",Qt::SkipEmptyParts);
+    noupgrade = ini_file.value("options/NoUpgrade","").split(" ",Qt::SkipEmptyParts);
 
     for (int i=0;i<groups.count();i++) {
         if (groups[i] == "options") continue;
         Repo repo(groups[i],architecture,&ini_file,siglevel);
         if (!repo.isValid()) continue;
+        if (index_of_repo(repo.name()) != -1) continue;
         repos.append(repo);
     }
     this->conf_filepath = ini_file.fileName();
@@ -105,7 +107,60 @@ bool AlpmConfig::setConfPath(const QString & conf_filepath) {
     return true;
 }
 
-const QString AlpmConfig::userName() {
+int AlpmConfig::index_of_repo(const QString & name) {
+    for (int i=0;i<repos.count();i++) {
+        if (!repos[i].name().compare(name,Qt::CaseInsensitive)) return i;
+    }
+    return -1;
+}
+
+bool AlpmConfig::addNewRepo(const QString & name,const QString & url,const QStringList & siglevels,const QStringList & usages) {
+    m_error.clear();
+    if (url.isNull() || url.isEmpty() || !QUrl(url).isValid()) {
+        m_error = "AlpmConfig::addNewRepo: "+QObject::tr("invalid url input!");
+        return false;
+    }
+
+    ConfReader ini_file(conf_filepath);
+    Repo repo(name,QStringList() << url,architecture,siglevels,usages);
+    if (!repo.isValid()) {
+        m_error = "AlpmConfig::addNewRepo: "+QObject::tr("cannot init repo object!");
+        return false;
+    }
+
+    if (index_of_repo(repo.name()) != -1) {
+        m_error = QString("AlpmConfig::addNewRepo: %1 - ").arg(repo.name())+QObject::tr("repo with such a name already exists!");
+        return false;
+    }
+
+    repos.append(repo);
+    ini_file.setValue(QString("%1/Server").arg(repo.name()),url);
+    if (!siglevels.isEmpty()) ini_file.setValue(QString("%1/SigLevel").arg(repo.name()),siglevels.join(" "));
+    if (!usages.isEmpty()) ini_file.setValue(QString("%1/Usage").arg(repo.name()),usages.join(" "));
+    return true;
+}
+
+bool AlpmConfig::deleteRepo(const QString & name) {
+    m_error.clear();
+    if (repos.count() <= 1) {
+        m_error = QString("AlpmConfig::deleteRepo: ")+QObject::tr("must stay at least one repo!");
+        return false;
+    }
+
+    int index;
+    if ((index = index_of_repo(name)) == -1) {
+        m_error = QString("AlpmConfig::deleteRepo: %1 - ").arg(name.toLower())+QObject::tr("repo with such a name does not exist!");
+        return false;
+    }
+
+    ConfReader ini_file(conf_filepath);
+    ini_file.remove(repos[index].m_orig_name+"/");
+    repos.removeAt(index);
+
+    return true;
+}
+
+const QString AlpmConfig::user_name() {
     uid_t uid = geteuid();
     struct passwd * pw = (uid == (uid_t)-1 && errno ? NULL : getpwuid(uid));
     if (pw == NULL) return QString();
@@ -113,7 +168,7 @@ const QString AlpmConfig::userName() {
     return QString::fromLocal8Bit(pw->pw_name);
 }
 
-const QString AlpmConfig::userDir() {
+const QString AlpmConfig::user_dir() {
     uid_t uid = geteuid();
     struct passwd * pw = (uid == (uid_t)-1 && errno ? NULL : getpwuid(uid));
     if (pw == NULL) return QString();
@@ -121,10 +176,10 @@ const QString AlpmConfig::userDir() {
     return QString::fromLocal8Bit(pw->pw_dir);
 }
 
-const QString AlpmConfig::userConfFile() {
+const QString AlpmConfig::user_conf_file() {
     QString configdir;
-    QString username = userName();
-    QString userdir = userDir();
+    QString username = user_name();
+    QString userdir = user_dir();
     if (username.isEmpty() || userdir.isEmpty()) configdir = QDir::separator() + QLatin1String(".config");
     else configdir = userdir + QDir::separator() +".config";
 
@@ -165,61 +220,56 @@ const QStringList AlpmConfig::dbExtensions() {
 }
 
 const QString AlpmConfig::dbExtension() {
-    QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
+    QSettings qalpm_ini_file(user_conf_file(),QSettings::IniFormat);
     QString ext = qalpm_ini_file.value("DBExt",DBEXT).toString();
     return (dbExtensions().contains(ext)?ext:DBEXT);
 }
 
 uint AlpmConfig::downloaderTimeout() {
-    QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
+    QSettings qalpm_ini_file(user_conf_file(),QSettings::IniFormat);
     return qalpm_ini_file.value("DownloaderTimeout",30000).toUInt();
 }
 
 uint AlpmConfig::downloaderThreadCount() {
-    QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
+    QSettings qalpm_ini_file(user_conf_file(),QSettings::IniFormat);
     return qalpm_ini_file.value("DownloaderThreads",get_nprocs_conf()).toUInt();
 }
 
 const QNetworkProxy AlpmConfig::downloaderProxy() {
-    QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
+    QSettings qalpm_ini_file(user_conf_file(),QSettings::IniFormat);
     return toNetworkProxy(qalpm_ini_file.value("DownloaderProxy",toByteArray(QNetworkProxy(QNetworkProxy::NoProxy))).toByteArray());
 }
 
 bool AlpmConfig::useSystemIcons() {
-    QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
+    QSettings qalpm_ini_file(user_conf_file(),QSettings::IniFormat);
     return qalpm_ini_file.value("UseSystemIcons",true).toBool();
 }
 
 bool AlpmConfig::setDBExtension(const QString & dbext) {
-    QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
+    QSettings qalpm_ini_file(user_conf_file(),QSettings::IniFormat);
     if (!dbExtensions().contains(dbext)) return false;
     qalpm_ini_file.setValue("DBExt",dbext);
-    qalpm_ini_file.sync();
     return true;
 }
 
 void AlpmConfig::setDownloaderProxy(const QNetworkProxy & proxy) {
-    QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
+    QSettings qalpm_ini_file(user_conf_file(),QSettings::IniFormat);
     qalpm_ini_file.setValue("DownloaderProxy",toByteArray(proxy));
-    qalpm_ini_file.sync();
 }
 
 void AlpmConfig::setDownloaderTimeout(uint value) {
-    QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
+    QSettings qalpm_ini_file(user_conf_file(),QSettings::IniFormat);
     qalpm_ini_file.setValue("DownloaderTimeout",value);
-    qalpm_ini_file.sync();
 }
 
 void AlpmConfig::setUsingSystemIcons(bool flag) {
-    QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
+    QSettings qalpm_ini_file(user_conf_file(),QSettings::IniFormat);
     qalpm_ini_file.setValue("UseSystemIcons",flag);
-    qalpm_ini_file.sync();
 }
 
 void AlpmConfig::setDownloaderThreads(uint value) {
-    QSettings qalpm_ini_file(userConfFile(),QSettings::IniFormat);
+    QSettings qalpm_ini_file(user_conf_file(),QSettings::IniFormat);
     qalpm_ini_file.setValue("DownloaderThreads",value);
-    qalpm_ini_file.sync();
 }
 
 QString AlpmConfig::confPath() const {
@@ -312,35 +362,68 @@ bool AlpmConfig::Repo::isValid() {
     return m_valid;
 }
 
-AlpmConfig::Repo::Repo(const QString & name,const QString & arch,QSettings * settings,const QStringList & def_siglevel) {
+AlpmConfig::Repo::Repo(const QString & name,const QStringList & urls, const QString & arch,const QStringList & siglevels,const QStringList & usages) {
     m_valid = true;
-    m_usage = 0;
+    m_usage = ALPM_DB_USAGE_ALL;
 
-    if (name.toLower() == "local") {
+    m_orig_name = name;
+    m_name = name.toLower();
+    if (m_name == "local") {
         m_valid = false;
         return;
     }
 
-    QString error;
-    m_name = name;
     m_arch = arch;
-    QString server = settings->value(QString("%1/Server").arg(name),"").toString().replace("$repo",name).replace("$arch",arch);
+    m_servers = urls;
+
+    QString value;
+    for (const QString & val: usages) {
+        value = val.toLower().trimmed();
+        if (value == "all") m_usage |= ALPM_DB_USAGE_ALL;
+        else if (value == "sync") m_usage |= ALPM_DB_USAGE_SYNC;
+        else if (value == "search") m_usage |= ALPM_DB_USAGE_SEARCH;
+        else if (value == "install") m_usage |= ALPM_DB_USAGE_INSTALL;
+        else if (value == "upgrage") m_usage |= ALPM_DB_USAGE_UPGRADE;
+    }
+
+    QString error = "";
+    if (!config_parse_siglevel(siglevels,m_siglevel,error)) {
+        m_valid = false;
+        return;
+    }
+
+    m_valid = error.isEmpty();
+}
+
+AlpmConfig::Repo::Repo(const QString & name, const QString & arch, ConfReader * settings, const QStringList & def_siglevel) {
+    m_valid = true;
+    m_usage = 0;
+
+    m_orig_name = name;
+    m_name = name.toLower();
+    if (m_name == "local") {
+        m_valid = false;
+        return;
+    }
+
+    QString error = "";
+    m_arch = arch;
+    QString server = settings->value(QString("%1/Server").arg(m_name),"").replace("$repo",m_name).replace("$arch",arch);
     if (!server.isEmpty()) m_servers.append(server);
-    server = settings->value(QString("%1/Include").arg(name),"").toString();
+    server = settings->value(QString("%1/Include").arg(m_name),"");
     if (!server.isEmpty()) setServersFromFile(server,error);
     if (!error.isEmpty()) {
         m_valid = false;
         return;
     }
 
-    if (!config_parse_siglevel(settings->value(QString("%1/SigLevel").arg(name),def_siglevel.join(" ")).toString().trimmed().split(" ",Qt::SkipEmptyParts),m_siglevel,error)) {
+    if (!config_parse_siglevel(settings->value(QString("%1/SigLevel").arg(m_name),def_siglevel.join(" ")).trimmed().split(" ",Qt::SkipEmptyParts),m_siglevel,error)) {
         m_valid = false;
         return;
     }
-    QStringList values = settings->value(QString("%1/Usage").arg(name),"All").toString().trimmed().split(" ",Qt::SkipEmptyParts);
     QString value;
-    for (int i=0;i<values.count();i++) {
-        value = values[i].toLower().trimmed();
+    for (QString & val: settings->value(QString("%1/Usage").arg(m_name),"All").trimmed().split(" ",Qt::SkipEmptyParts)) {
+        value = val.toLower().trimmed();
         if (value == "all") m_usage |= ALPM_DB_USAGE_ALL;
         else if (value == "sync") m_usage |= ALPM_DB_USAGE_SYNC;
         else if (value == "search") m_usage |= ALPM_DB_USAGE_SEARCH;
@@ -353,6 +436,7 @@ AlpmConfig::Repo::Repo(const QString & name,const QString & arch,QSettings * set
 
 bool AlpmConfig::Repo::config_parse_siglevel(const QStringList & values,int & level,QString & error) {
     level = ALPM_SIG_USE_DEFAULT;
+    error.clear();
 
     #define SET(siglevel) do { level |= (siglevel); } while(0)
     #define UNSET(siglevel) do { level &= ~(siglevel); } while(0)
