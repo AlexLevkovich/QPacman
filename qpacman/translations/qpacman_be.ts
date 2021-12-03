@@ -280,7 +280,7 @@
         <translation type="obsolete">рэжым прагляду</translation>
     </message>
     <message>
-        <location filename="../mainwindow.cpp" line="+187"/>
+        <location filename="../mainwindow.cpp" line="+198"/>
         <source>The contents of cache directory will be removed.
 Are you sure to continue?</source>
         <translation type="unfinished">Змесціва кэша будзе выдалена.
@@ -330,6 +330,21 @@ Are you sure to continue?</source>
         <location/>
         <source>Name</source>
         <translation type="unfinished">Назва</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Settings</source>
+        <translation type="unfinished">Налады</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Show the settings of pacman and qpacman</source>
+        <translation type="unfinished">Паказвае налады pacman і qpacman</translation>
+    </message>
+    <message>
+        <location/>
+        <source>Alt+S</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -409,7 +424,7 @@ Are you sure to continue?</source>
 <context>
     <name>ProxyTypeObject</name>
     <message>
-        <location filename="../infoview.cpp" line="+90"/>
+        <location filename="../settingstextbrowser.cpp" line="+527"/>
         <source>No proxy</source>
         <translation type="unfinished">Без проксі</translation>
     </message>
@@ -417,7 +432,7 @@ Are you sure to continue?</source>
 <context>
     <name>InfoView</name>
     <message>
-        <location line="+84"/>
+        <location filename="../infoview.cpp" line="+22"/>
         <source>is GUI frontend to</source>
         <translation type="unfinished">гэта графічны інтэрфейс да</translation>
     </message>
@@ -532,24 +547,20 @@ Are you sure to continue?</source>
         <translation type="unfinished">Значэнне</translation>
     </message>
     <message>
-        <location line="+40"/>
         <source>The following user variables are used</source>
-        <translation type="unfinished">Выкарыстаныя наступныя прыстасаваныя пераменныя</translation>
+        <translation type="obsolete">Выкарыстаныя наступныя прыстасаваныя пераменныя</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Variables</source>
-        <translation type="unfinished">Пераменныя</translation>
+        <translation type="obsolete">Пераменныя</translation>
     </message>
     <message>
-        <location line="+1"/>
         <source>Use the system icons</source>
-        <translation type="unfinished">Выкарыстоўваць сістэмныя абразкі</translation>
+        <translation type="obsolete">Выкарыстоўваць сістэмныя абразкі</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Database files&apos; suffix</source>
-        <translation type="unfinished">Суфікс файлаў базы дадзеных</translation>
+        <translation type="obsolete">Суфікс файлаў базы дадзеных</translation>
     </message>
     <message>
         <source>Database files&apos; suffix (restart of qpacman_service is needed)</source>
@@ -560,44 +571,36 @@ Are you sure to continue?</source>
         <translation type="obsolete">Суфікс файлаў баз дадзеных (неабходна перазагрузка)</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Count of the threads for each download</source>
-        <translation type="unfinished">Колькасць патокаў для загрузкі</translation>
+        <translation type="obsolete">Колькасць патокаў для загрузкі</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Connection timeout</source>
-        <translation type="unfinished">Затрымка для злучэнняў</translation>
+        <translation type="obsolete">Затрымка для злучэнняў</translation>
     </message>
     <message>
-        <location line="+0"/>
         <source> secs</source>
-        <translation type="unfinished"> секунд</translation>
+        <translation type="obsolete"> секунд</translation>
     </message>
     <message>
-        <location line="+3"/>
         <source>Proxy type</source>
-        <translation type="unfinished">Тып проксі</translation>
+        <translation type="obsolete">Тып проксі</translation>
     </message>
     <message>
-        <location line="+3"/>
         <source>Proxy address</source>
-        <translation type="unfinished">Адрас проксі</translation>
+        <translation type="obsolete">Адрас проксі</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Proxy port</source>
-        <translation type="unfinished">Порт для проксі</translation>
+        <translation type="obsolete">Порт для проксі</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Proxy user</source>
-        <translation type="unfinished">Карыстальнік для проксі</translation>
+        <translation type="obsolete">Карыстальнік для проксі</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Proxy password</source>
-        <translation type="unfinished">Пароль для карыстальніка</translation>
+        <translation type="obsolete">Пароль для карыстальніка</translation>
     </message>
 </context>
 <context>
@@ -735,6 +738,11 @@ Are you sure to continue?</source>
         <source>Repository</source>
         <translation type="obsolete">Сховішча</translation>
     </message>
+    <message>
+        <location filename="../settingstextbrowser.cpp" line="-450"/>
+        <source>Double click to edit...</source>
+        <translation type="unfinished">Падвойная пстрычка для рэдагавання...</translation>
+    </message>
 </context>
 <context>
     <name>PacmanInfoBrowser</name>
@@ -809,6 +817,243 @@ Are you sure to continue?</source>
     <message>
         <source>Quit</source>
         <translation type="obsolete">Выйсцi</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsTextBrowser</name>
+    <message>
+        <location line="+540"/>
+        <source>The following user variables are used</source>
+        <translation type="unfinished">Выкарыстаныя наступныя прыстасаваныя пераменныя</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Variables</source>
+        <translation type="unfinished">Пераменныя</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Use the system icons</source>
+        <translation type="unfinished">Выкарыстоўваць сістэмныя абразкі</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Database files&apos; suffix</source>
+        <translation type="unfinished">Суфікс файлаў базы дадзеных</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Count of the threads for each download</source>
+        <translation type="unfinished">Колькасць патокаў для загрузкі</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Connection timeout</source>
+        <translation type="unfinished">Затрымка для злучэнняў</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source> secs</source>
+        <translation type="unfinished"> секунд</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Proxy type</source>
+        <translation type="unfinished">Тып проксі</translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Proxy address</source>
+        <translation type="unfinished">Адрас проксі</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Proxy port</source>
+        <translation type="unfinished">Порт для проксі</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Proxy user</source>
+        <translation type="unfinished">Карыстальнік для проксі</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Proxy password</source>
+        <translation type="unfinished">Пароль для карыстальніка</translation>
+    </message>
+    <message>
+        <location line="+41"/>
+        <source>The following repositories Pacman has set up</source>
+        <translation type="unfinished">Pacman мае наступныя рэпазітары</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Name</source>
+        <translation type="unfinished">Назва</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Operations</source>
+        <translation type="unfinished">Аперацыі</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Add New Repository</source>
+        <translation type="unfinished">Дадаць новы рэпазітар</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Change</source>
+        <translation type="unfinished">Змянiць</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Remove</source>
+        <translation type="unfinished">Выдаліць</translation>
+    </message>
+    <message>
+        <location line="+39"/>
+        <source>Fill the fields below and press OK to add the new repository</source>
+        <translation type="unfinished">Запоўніце палі і націсніце OK для дадання новага рэпазітара</translation>
+    </message>
+    <message>
+        <location line="+59"/>
+        <source>The repo hasn&apos;t been changed!</source>
+        <translation type="unfinished">Рэпазітар не быў зменены!</translation>
+    </message>
+    <message>
+        <location line="-69"/>
+        <source>The repo %1 hasn&apos;t been removed!</source>
+        <translation type="unfinished">Рэпазітар %1 не выдалены!</translation>
+    </message>
+    <message>
+        <location line="-13"/>
+        <source>Press OK to change the repository</source>
+        <translation type="unfinished">Націсніце OK для змянення налад рэпазітара</translation>
+    </message>
+    <message>
+        <location line="+100"/>
+        <source>The new repo hasn&apos;t been created!</source>
+        <translation type="unfinished">Новы рэпазітар не быў створаны!</translation>
+    </message>
+</context>
+<context>
+    <name>ChangeRepoWidget</name>
+    <message>
+        <source>Name</source>
+        <translation type="obsolete">Назва</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation type="obsolete">Усталяваць</translation>
+    </message>
+</context>
+<context>
+    <name>RepoSettingsTextObject</name>
+    <message>
+        <location line="-648"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can use &lt;span style=&quot; font-weight:600;&quot;&gt;$repo&lt;/span&gt; and &lt;span style=&quot; font-weight:600;&quot;&gt;$arch&lt;/span&gt; variables in URLs:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$repo: &lt;/span&gt;to use the name of the repo you entered above&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$arch: &lt;/span&gt;to use the architectures you picked above&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вы можаце выкарыстоўваць &lt;span style=&quot; font-weight:600;&quot;&gt;$repo&lt;/span&gt; да &lt;span style=&quot; font-weight:600;&quot;&gt;$arch&lt;/span&gt; пераменныя ў запыце:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$repo: &lt;/span&gt;каб выкарыстоўваць назву што вы ўвялі вышэй&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$arch: &lt;/span&gt;каб выкарыстоўваць архітэктуру што вы выбралі вышэй&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <location line="-47"/>
+        <source>Name</source>
+        <translation type="unfinished">Назва</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Architecture</source>
+        <translation type="unfinished">Архітэктура</translation>
+    </message>
+    <message>
+        <location line="+24"/>
+        <source>Servers</source>
+        <translation type="unfinished">Серверы</translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Use mirrorlist file as a source of servers</source>
+        <translation type="unfinished">Выкарыстоўваць mirrorlist файл як крыніцу для сервераў</translation>
+    </message>
+    <message>
+        <location line="+4"/>
+        <source>Set the servers directly</source>
+        <translation type="unfinished">Увесці сервера ўручную</translation>
+    </message>
+    <message>
+        <location line="+30"/>
+        <source>Signature level</source>
+        <translation type="unfinished">Узровень подпісу</translation>
+    </message>
+    <message>
+        <location line="+9"/>
+        <source>Package</source>
+        <translation type="unfinished">Пакет</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <location line="+21"/>
+        <source>Never</source>
+        <translation type="unfinished">Нiколi</translation>
+    </message>
+    <message>
+        <location line="-14"/>
+        <location line="+17"/>
+        <source>Optional</source>
+        <translation type="unfinished">Неабавязкова</translation>
+    </message>
+    <message>
+        <location line="-14"/>
+        <location line="+17"/>
+        <source>Required</source>
+        <translation type="unfinished">Патрабуецца</translation>
+    </message>
+    <message>
+        <location line="-14"/>
+        <location line="+17"/>
+        <source>Trusted Only</source>
+        <translation type="unfinished">Толькі надзейныя</translation>
+    </message>
+    <message>
+        <location line="-14"/>
+        <location line="+17"/>
+        <source>Trust All</source>
+        <translation type="unfinished">Давяраць усяму</translation>
+    </message>
+    <message>
+        <location line="-14"/>
+        <source>Database</source>
+        <translation type="unfinished">База дадзеных</translation>
+    </message>
+    <message>
+        <location line="+19"/>
+        <source>Usage</source>
+        <translation type="unfinished">Выкарыстанне</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>All</source>
+        <translation type="unfinished">Усе</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Sync</source>
+        <translation type="unfinished">Сінхранізацыя</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Search</source>
+        <translation type="unfinished">Пошук</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Install</source>
+        <translation type="unfinished">Усталяванне</translation>
+    </message>
+    <message>
+        <location line="+2"/>
+        <source>Upgrade</source>
+        <translation type="unfinished">Абнаўленне</translation>
     </message>
 </context>
 </TS>

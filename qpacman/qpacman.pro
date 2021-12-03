@@ -28,7 +28,8 @@ SOURCES += \
     mainwindow.cpp \
     pacmantoolbar.cpp \
     searchlineedit.cpp \
-    searchwidget.cpp
+    searchwidget.cpp \
+    settingstextbrowser.cpp
 
 HEADERS += \
     fileslistwidget.h \
@@ -36,7 +37,8 @@ HEADERS += \
     mainwindow.h \
     pacmantoolbar.h \
     searchlineedit.h \
-    searchwidget.h
+    searchwidget.h \
+    settingstextbrowser.h
 
 FORMS += \
     mainwindow.ui \

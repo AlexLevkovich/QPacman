@@ -15,7 +15,7 @@ class ComboToolButton : public QToolButton {
     Q_OBJECT
 public:
     explicit ComboToolButton(QWidget *parent = 0);
-    QAction * currentAction();
+    QAction * currentAction() const;
     virtual QString iconText() const;
     void setMenu(QMenu *menu);
 

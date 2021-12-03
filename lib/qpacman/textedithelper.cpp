@@ -17,18 +17,19 @@ void TextEditHelper::insertText(const QTextCursor & cursor,const QString & text,
     insertText(cursor,text,qApp->palette().color(color),weight);
 }
 
-void TextEditHelper::insertText(const QTextCursor & cursor,const QString & text,QFont::Weight weight) {
-    insertText(cursor,text,qApp->palette().color(QPalette::WindowText),weight);
+void TextEditHelper::insertText(const QTextCursor & cursor,const QString & text,QFont::Weight weight,bool strikeout) {
+    insertText(cursor,text,qApp->palette().color(QPalette::WindowText),weight,strikeout);
 }
 
 void TextEditHelper::insertText(const QTextCursor & cursor,const QString & text) {
     insertText(cursor,text,qApp->palette().color(QPalette::WindowText),QFont::Normal);
 }
 
-void TextEditHelper::insertText(const QTextCursor & cursor,const QString & text,const QColor & color,QFont::Weight weight) {
+void TextEditHelper::insertText(const QTextCursor & cursor,const QString & text,const QColor & color,QFont::Weight weight,bool strikeout) {
     QTextCharFormat txtfmt;
     txtfmt.setFontWeight(weight);
     txtfmt.setForeground(color);
+    txtfmt.setFontStrikeOut(strikeout);
     QTextCursor(cursor).insertText(text,txtfmt);
 }
 
@@ -75,14 +76,21 @@ QTextTable * TextEditHelper::insertTable(const QTextCursor & cursor,int rows,int
     return QTextCursor(cursor).insertTable(rows,columns,tableft);
 }
 
-void TextEditHelper::setCellText(QTextTable * table,int row,int column,const QString & text,const QColor & background,const QColor & foreground,bool is_bold) {
-    QTextTableCellFormat cellft;
+void TextEditHelper::setCellText(QTextTable * table,int row,int column,const QString & text,const QColor & background,const QColor & foreground,bool is_bold,bool strikeout) {
+    QTextTableCell cell = table->cellAt(row,column);
+    QTextCharFormat cellft = cell.format();
     cellft.setVerticalAlignment(QTextCharFormat::AlignMiddle);
     if(foreground.isValid()) cellft.setForeground(foreground);
     if(background.isValid()) cellft.setBackground(background);
-    QTextTableCell cell = table->cellAt(row,column);
+    QTextCursor cursor(cell.firstCursorPosition());
+    cursor.movePosition(QTextCursor::Right,QTextCursor::KeepAnchor,cell.lastCursorPosition().position()-cursor.position());
+    cursor.removeSelectedText();
     cell.setFormat(cellft);
-    insertText(cell.firstCursorPosition(),text,is_bold?QFont::Bold:QFont::Normal);
+    insertText(cursor,text,is_bold?QFont::Bold:QFont::Normal,strikeout);
+}
+
+void TextEditHelper::setCellText(QTextTable * table,int row,int column,const QString & text,bool strikeout) {
+    setCellText(table,row,column,text,QColor(),QColor(),false,strikeout);
 }
 
 void TextEditHelper::setCellLink(QTextTable * table,int row,int column,const QString & url,const QString & text) {

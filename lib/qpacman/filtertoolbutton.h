@@ -23,7 +23,8 @@ public:
     };
 
     explicit FilterToolButton(QWidget *parent = 0);
-    FilterToolButton::ItemId getSelectedId();
+    FilterToolButton::ItemId getSelectedId() const;
+    QString getSelectedFilter() const;
     void fill(const QStringList & groups);
     void triggerSignal(QAction * action);
     bool setFilter(FilterToolButton::ItemId id,const QString & filter);
@@ -35,8 +36,6 @@ signals:
     void selected(FilterToolButton::ItemId sel,const QString & group);
 
 private:
-    FilterToolButton::ItemId is_sel;
-
     bool setFilter(QMenu * menu,FilterToolButton::ItemId id,const QString & filter);
     bool setFilter(const QList<QAction *> & actions,FilterToolButton::ItemId id,const QString & filter);
 };

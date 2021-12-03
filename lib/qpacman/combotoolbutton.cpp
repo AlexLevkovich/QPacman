@@ -32,7 +32,7 @@ QString ComboToolButton::iconText() const {
     return text;
 }
 
-QAction * ComboToolButton::currentAction() {
+QAction * ComboToolButton::currentAction() const {
     return curr_action;
 }
 

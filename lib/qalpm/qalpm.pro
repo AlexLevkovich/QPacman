@@ -39,24 +39,41 @@ DEFINES += ORG=\\\"$$ORG\\\"
 CONF=qalpm.conf
 DEFINES += CONF=\\\"$$CONF\\\"
 
-PACMANCONF = /etc/pacman.conf
+isEmpty(PACMANCONF) {
+    PACMANCONF = /etc/pacman.conf
+}
 DEFINES += PACMANCONF=\\\"$$PACMANCONF\\\"
 
-DBPATH = /var/lib/pacman/
+isEmpty(DBPATH) {
+    DBPATH = /var/lib/pacman/
+}
 DEFINES += DBPATH=\\\"$$DBPATH\\\"
 
-GPGDIR = /etc/pacman.d/gnupg/
+isEmpty(GPGDIR) {
+    GPGDIR = /etc/pacman.d/gnupg/
+}
 DEFINES += GPGDIR=\\\"$$GPGDIR\\\"
 
-LOGFILE = /var/log/pacman.log
+isEmpty(LOGFILE) {
+    LOGFILE = /var/log/pacman.log
+}
 DEFINES += LOGFILE=\\\"$$LOGFILE\\\"
 
-CACHEDIR = /var/cache/pacman/pkg/
+isEmpty(CACHEDIR) {
+    CACHEDIR = /var/cache/pacman/pkg/
+}
 DEFINES += CACHEDIR=\\\"$$CACHEDIR\\\"
 
-HOOKDIR1 = /etc/pacman.d/hooks/
-HOOKDIR2 = $$INSTALL_PREFIX/share/libalpm/hooks/
-DEFINES += HOOKDIR="\\\"$${HOOKDIR1}\ $${HOOKDIR2}\\\""
+HOOKDIR2 = /etc/pacman.d/hooks/
+HOOKDIR1 = $$INSTALL_PREFIX/share/libalpm/hooks/
+isEmpty(HOOKDIR) {
+    DEFINES += HOOKDIR="\\\"$${HOOKDIR1}\ $${HOOKDIR2}\\\""
+}
+
+isEmpty(MIRRORLIST) {
+    MIRRORLIST = /etc/pacman.d/mirrorlist
+}
+DEFINES += MIRRORLIST=\\\"$$MIRRORLIST\\\"
 
 DBEXT = .db
 DEFINES += DBEXT=\\\"$$DBEXT\\\"

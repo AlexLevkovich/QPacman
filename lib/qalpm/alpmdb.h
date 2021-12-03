@@ -19,7 +19,6 @@ class AlpmDB {
 public:
     AlpmDB(const AlpmDB & db);
     AlpmDB(const QString & name);
-    virtual ~AlpmDB();
     bool isValid() const;
     QLatin1String name() const;
     bool update(bool force = false);
@@ -28,7 +27,7 @@ public:
     static const QString extension();
 
     QList<AlpmPackage> packages(const QString & str = QString(),AlpmPackage::SearchFieldType fieldType = AlpmPackage::NAME,AlpmPackage::PackageFilter filter = AlpmPackage::IS_ALL,const QString & group = QString()) const;
-    const QStringList & groups();
+    QStringList groups() const;
 
     QList<AlpmPackage> find(const QRegularExpression & expr) const;
     AlpmPackage findByFileName(const QString & filename) const;

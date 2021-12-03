@@ -561,12 +561,156 @@ bool Alpm::cleanCacheDirs() {
     return false;
 }
 
-QStringList Alpm::repos() const {
-    if (!isValid()) return QStringList();
+Alpm::Repo::SigLevel::SigLevel() {
+    m_object = Both;
+    m_check = Default;
+    m_allowed = Nothing;
+}
 
-    QStringList ret;
-    if (replyToValue<QStringList>(m_interface->repos(),ret)) return ret;
-    return ret;
+Alpm::Repo::SigLevel::SigLevel(SigObject object,SigCheck check,SigAllowed allowed) {
+    m_object = object;
+    m_check = check;
+    m_allowed = allowed;
+}
+
+bool Alpm::Repo::SigLevel::operator==(const SigLevel & other) const {
+    return (m_object == other.m_object && m_check == other.m_check && m_allowed == other.m_allowed);
+}
+
+QDataStream & operator<<(QDataStream &argument,const Alpm::Repo::SigLevel & level) {
+    argument << (uint)level.object();
+    argument << (uint)level.check();
+    argument << (uint)level.allowed();
+
+    return argument;
+}
+
+const QDataStream & operator>>(const QDataStream &argument,Alpm::Repo::SigLevel & level) {
+    uint val;
+    (QDataStream &)argument >> val;
+    level.m_object = (Alpm::Repo::SigObject)val;
+    (QDataStream &)argument >> val;
+    level.m_check = (Alpm::Repo::SigCheck)val;
+    (QDataStream &)argument >> val;
+    level.m_allowed = (Alpm::Repo::SigAllowed)val;
+
+    return argument;
+}
+
+Alpm::Repo::Usage::Usage() {
+    m_sync = true;
+    m_search = true;
+    m_install = true;
+    m_upgrade = true;
+}
+
+Alpm::Repo::Usage::Usage(bool sync,bool search,bool install,bool upgrade) {
+    m_sync = sync;
+    m_search = search;
+    m_install = install;
+    m_upgrade = upgrade;
+}
+
+bool Alpm::Repo::Usage::isAll() const {
+    return ((m_sync && m_search && m_install && m_upgrade) || (!m_sync && !m_search && !m_install && !m_upgrade));
+}
+
+QDataStream & operator<<(QDataStream &argument,const Alpm::Repo::Usage & usage) {
+    argument << (int)usage.isSync();
+    argument << (int)usage.isSearch();
+    argument << (int)usage.isInstall();
+    argument << (int)usage.isUpgrade();
+
+    return argument;
+}
+
+const QDataStream & operator>>(const QDataStream &argument,Alpm::Repo::Usage & usage) {
+    int val;
+    (QDataStream &)argument >> val;
+    usage.m_sync = (bool)val;
+    (QDataStream &)argument >> val;
+    usage.m_search = (bool)val;
+    (QDataStream &)argument >> val;
+    usage.m_install = (bool)val;
+    (QDataStream &)argument >> val;
+    usage.m_upgrade = (bool)val;
+
+    return argument;
+}
+
+bool Alpm::Repo::isValid() const {
+    return m_valid;
+}
+
+Alpm::Repo::Repo(const QString & name,const QStringList & urls, const QStringList & arches,const ListSigLevel & siglevels,const Usage & usages) {
+    m_valid = true;
+    m_name = name.toLower();
+    if (m_name == "local") {
+        m_valid = false;
+        return;
+    }
+
+    m_arches = arches;
+    m_servers = urls;
+    for (QString & server: m_servers) {
+        for (const QString & arch: arches) server = server.replace("$repo",m_name).replace("$arch",arch);
+    }
+    m_servers.removeDuplicates();
+
+    m_usage = usages;
+    m_siglevel = siglevels;
+}
+
+Alpm::Repo::Repo(const Alpm::Repo & repo) {
+    *this = repo;
+}
+
+Alpm::Repo::Repo() {
+    m_valid = false;
+    m_usage = Usage();
+}
+
+Alpm::Repo & Alpm::Repo::operator=(const Alpm::Repo &repo) {
+    m_valid = repo.m_valid;
+    m_usage = repo.m_usage;
+    m_name = repo.m_name;
+    m_arches = repo.m_arches;
+    m_servers = repo.m_servers;
+    m_siglevel = repo.m_siglevel;
+    return *this;
+}
+
+QDataStream & operator<<(QDataStream &argument,const Alpm::Repo & repo) {
+    argument << repo.usage();
+    argument << repo.name();
+    argument << repo.arches();
+    argument << repo.servers();
+    argument << repo.siglevel();
+    argument << (bool)repo.m_valid;
+
+    return argument;
+}
+
+const QDataStream & operator>>(const QDataStream &argument,Alpm::Repo & repo) {
+    (QDataStream &)argument >> repo.m_usage;
+    (QDataStream &)argument >> repo.m_name;
+    (QDataStream &)argument >> repo.m_arches;
+    (QDataStream &)argument >> repo.m_servers;
+    (QDataStream &)argument >> repo.m_siglevel;
+    (QDataStream &)argument >> repo.m_valid;
+
+    return argument;
+}
+
+QList<Alpm::Repo> Alpm::repos() const {
+    if (!isValid()) return QList<Alpm::Repo>();
+
+    QByteArray ret;
+    if (!replyToValue<QByteArray>(m_interface->repos(),ret)) return QList<Alpm::Repo>();
+    QDataStream stream(&ret,QIODevice::ReadOnly);
+    QList<Alpm::Repo> list;
+    stream >> list;
+    return list;
 }
 
 QStringList Alpm::groups() const {
@@ -750,11 +894,11 @@ QString Alpm::logFileName() const {
     return ret;
 }
 
-QString Alpm::arch() const {
-    if (!isValid()) return QString();
+QStringList Alpm::arches() const {
+    if (!isValid()) return QStringList();
 
-    QString ret;
-    if (!replyToValue<QString>(m_interface->arch(),ret)) return QString();
+    QStringList ret;
+    if (!replyToValue<QStringList>(m_interface->arches(),ret)) return QStringList();
     return ret;
 }
 
@@ -1004,4 +1148,36 @@ void Alpm::dbRefresherIsAboutToStart() {
 
 void Alpm::updaterAboutToStart() {
     replyToVoid(m_interface->updaterAboutToStart());
+}
+
+bool Alpm::addNewRepo(const Alpm::Repo & repo) {
+    if (!isValid()) return false;
+
+    QByteArray arr;
+    QDataStream stream(&arr,QIODevice::WriteOnly);
+    stream << repo;
+
+    bool ret = false;
+    if (!replyToValue<bool>(m_interface->addNewRepo(arr),ret)) return ret;
+    return ret;
+}
+
+bool Alpm::addMirrorRepo(const Alpm::Repo & repo) {
+    if (!isValid()) return false;
+
+    QByteArray arr;
+    QDataStream stream(&arr,QIODevice::WriteOnly);
+    stream << repo;
+
+    bool ret = false;
+    if (!replyToValue<bool>(m_interface->addMirrorRepo(arr),ret)) return ret;
+    return ret;
+}
+
+bool Alpm::deleteRepo(const QString & name) {
+    if (!isValid()) return false;
+
+    bool ret = false;
+    if (!replyToValue<bool>(m_interface->deleteRepo(name),ret)) return ret;
+    return ret;
 }

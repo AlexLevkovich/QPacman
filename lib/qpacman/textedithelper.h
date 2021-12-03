@@ -12,6 +12,7 @@
 #include <QUrl>
 
 class QTextTable;
+class QTextFrame;
 
 class TextEditHelper {
 public:
@@ -20,8 +21,8 @@ public:
 protected:
     void insertText(const QTextCursor & cursor,const QString & text);
     void insertText(const QTextCursor & cursor,const QString & text,QPalette::ColorRole color,QFont::Weight weight = QFont::Normal);
-    void insertText(const QTextCursor & cursor,const QString & text,const QColor & color,QFont::Weight weight = QFont::Normal);
-    void insertText(const QTextCursor & cursor,const QString & text,QFont::Weight weight);
+    void insertText(const QTextCursor & cursor,const QString & text,const QColor & color,QFont::Weight weight = QFont::Normal,bool strikeout=false);
+    void insertText(const QTextCursor & cursor,const QString & text,QFont::Weight weight,bool strikeout = false);
     void insertLink(const QTextCursor & cursor,const QString & url,const QString & text = QString());
     void insertLink(const QTextCursor & cursor,const QString & url,const QString & text,QFont::Weight weight);
     void insertImage(const QTextCursor & cursor,const QString & name,const QSize & size = QSize(),const QUrl & url = QUrl()) const;
@@ -29,7 +30,8 @@ protected:
     QTextTable * insertTable(const QTextCursor & cursor,int rows,int columns,qreal border,Qt::Alignment aligment = Qt::AlignLeft,bool hasHeader = false);
     void setupTableHeader(QTextTable * table,const QColor & background,const QColor & foreground);
     void setTableRowColors(QTextTable * table,const QColor & evenBackground,const QColor & oddBackground);
-    void setCellText(QTextTable * table,int row,int column,const QString & text,const QColor & background = QColor(),const QColor & foreground = QColor(),bool is_bold = false);
+    void setCellText(QTextTable * table,int row,int column,const QString & text,const QColor & background = QColor(),const QColor & foreground = QColor(),bool is_bold = false,bool strikeout = false);
+    void setCellText(QTextTable * table,int row,int column,const QString & text,bool strikeout);
     void setCellLink(QTextTable * table,int row,int column,const QString & url,const QString & text);
 };
 

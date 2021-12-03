@@ -11,6 +11,12 @@ const QIcon ThemeIcons::get(ThemeIcons::Icon id) {
 
     QIcon icon;
     switch (id) {
+        case SERVER:
+            icon = QIcon::fromTheme("network-server");
+            break;
+        case LIST_ADD:
+            icon = QIcon::fromTheme("list-add");
+            break;
         case CHANGES_DLG:
             icon = QIcon::fromTheme("document-edit");
             break;
@@ -151,112 +157,116 @@ const QIcon ThemeIcons::get(ThemeIcons::Icon id) {
 
 const QString ThemeIcons::name(ThemeIcons::Icon id) {
     switch (id) {
+        case SERVER:
+            return QString::fromLatin1("://pics/network-server.svg");
+        case LIST_ADD:
+            return QString::fromLatin1("://pics/list-add.svg");
         case CHANGES_DLG:
-            return QString::fromLocal8Bit("://pics/document-edit.svg");
+            return QString::fromLatin1("://pics/document-edit.svg");
         case DOWNLOAD_AVERAGE:
-            return QString::fromLocal8Bit("://pics/globe.svg");
+            return QString::fromLatin1("://pics/globe.svg");
         case FIND:
-            return QString::fromLocal8Bit("://pics/edit-find.svg");
+            return QString::fromLatin1("://pics/edit-find.svg");
         case IMPORTANT:
-            return QString::fromLocal8Bit("://pics/help-about.svg");
+            return QString::fromLatin1("://pics/help-about.svg");
         case LOG_VIEW:
-            return QString::fromLocal8Bit("://pics/dialog-messages.svg");
+            return QString::fromLatin1("://pics/dialog-messages.svg");
         case PKG_NONINSTALLED_MARK:
-            return QString::fromLocal8Bit("://pics/package-available.svg");
+            return QString::fromLatin1("://pics/package-available.svg");
         case DOWNLOAD_ITEM:
-            return QString::fromLocal8Bit("://pics/edit-download.svg");
+            return QString::fromLatin1("://pics/edit-download.svg");
         case PKG_INSTALLED:
-            return QString::fromLocal8Bit("://pics/archive-insert.svg");
+            return QString::fromLatin1("://pics/archive-insert.svg");
         case PKG_REMOVED:
-            return QString::fromLocal8Bit("://pics/archive-remove.svg");
+            return QString::fromLatin1("://pics/archive-remove.svg");
         case PKG:
-            return QString::fromLocal8Bit("://pics/package-x-generic.svg");
+            return QString::fromLatin1("://pics/package-x-generic.svg");
         case ERROR_ITEM:
-            return QString::fromLocal8Bit("://pics/dialog-error.svg");
+            return QString::fromLatin1("://pics/dialog-error.svg");
         case HOOK_AVERAGE_ITEM:
-            return QString::fromLocal8Bit("://pics/run-build-configure.svg");
+            return QString::fromLatin1("://pics/run-build-configure.svg");
         case INSTALL_AVERAGE_ITEM:
-            return QString::fromLocal8Bit("://pics/run-build-install.svg");
+            return QString::fromLatin1("://pics/run-build-install.svg");
         case REMOVE_AVERAGE_ITEM:
-            return QString::fromLocal8Bit("://pics/run-build-prune.svg");
+            return QString::fromLatin1("://pics/run-build-prune.svg");
         case HOOK_ITEM:
         case INSTALL:
-            return QString::fromLocal8Bit("://pics/run-build.svg");
+            return QString::fromLatin1("://pics/run-build.svg");
         case ROOT_DLG:
-            return QString::fromLocal8Bit("://pics/security-low.svg");
+            return QString::fromLatin1("://pics/security-low.svg");
         case PROVIDER_DLG:
-            return QString::fromLocal8Bit("://pics/edit-select.svg");
+            return QString::fromLatin1("://pics/edit-select.svg");
         case PKG_REINSTALL_MARK:
-            return QString::fromLocal8Bit("://pics/package-reinstall.svg");
+            return QString::fromLatin1("://pics/package-reinstall.svg");
         case QUIT:
-            return QString::fromLocal8Bit("://pics/application-exit.svg");
+            return QString::fromLatin1("://pics/application-exit.svg");
         case CONFIGURE:
-            return QString::fromLocal8Bit("://pics/configure.svg");
+            return QString::fromLatin1("://pics/configure.svg");
         case PKG_REMOVE_MARK:
-            return QString::fromLocal8Bit("://pics/package-remove.svg");
+            return QString::fromLatin1("://pics/package-remove.svg");
         case CANCEL:
-            return QString::fromLocal8Bit("://pics/dialog-cancel.svg");
+            return QString::fromLatin1("://pics/dialog-cancel.svg");
         case OK:
-            return QString::fromLocal8Bit("://pics/dialog-ok.svg");
+            return QString::fromLatin1("://pics/dialog-ok.svg");
         case PKG_INSTALL_MARK:
-            return QString::fromLocal8Bit("://pics/package-install.svg");
+            return QString::fromLatin1("://pics/package-install.svg");
         case PKG_INSTALLED_MARK:
-            return QString::fromLocal8Bit("://pics/package-installed-updated.svg");
+            return QString::fromLatin1("://pics/package-installed-updated.svg");
         case COPY:
-            return QString::fromLocal8Bit("://pics/edit-copy.svg");
+            return QString::fromLatin1("://pics/edit-copy.svg");
         case SELECT_ALL:
-            return QString::fromLocal8Bit("://pics/edit-select-all.svg");
+            return QString::fromLatin1("://pics/edit-select-all.svg");
         case PKG_SELECT_ALL:
-            return QString::fromLocal8Bit("://pics/show-all-effects.svg");
+            return QString::fromLatin1("://pics/show-all-effects.svg");
         case UNDO_OR_RESET:
-            return QString::fromLocal8Bit("://pics/edit-undo.svg");
+            return QString::fromLatin1("://pics/edit-undo.svg");
         case ALL_PKGS:
-            return QString::fromLocal8Bit("://pics/package-x-generic.svg");
+            return QString::fromLatin1("://pics/package-x-generic.svg");
         case SYNC:
-            return QString::fromLocal8Bit("://pics/state-download.svg");
+            return QString::fromLatin1("://pics/state-download.svg");
         case NEXT:
-            return QString::fromLocal8Bit("://pics/go-next.svg");
+            return QString::fromLatin1("://pics/go-next.svg");
         case PREV:
-            return QString::fromLocal8Bit("://pics/go-previous.svg");
+            return QString::fromLatin1("://pics/go-previous.svg");
         case HELP:
-            return QString::fromLocal8Bit("://pics/help-about.svg");
+            return QString::fromLatin1("://pics/help-about.svg");
         case DELETE:
         case CLEAN_CACHE:
-            return QString::fromLocal8Bit("://pics/edit-delete.svg");
+            return QString::fromLatin1("://pics/edit-delete.svg");
         case PKG_GROUP:
-            return QString::fromLocal8Bit("://pics/folder.svg");
+            return QString::fromLatin1("://pics/folder.svg");
         case UPDATE_ITEM:
-            return QString::fromLocal8Bit("://pics/package-new.svg");
+            return QString::fromLatin1("://pics/package-new.svg");
         case UPDATE_REPOS:
-            return QString::fromLocal8Bit("://pics/state-sync.svg");
+            return QString::fromLatin1("://pics/state-sync.svg");
         case REPO:
-            return QString::fromLocal8Bit("://pics/repository.svg");
+            return QString::fromLatin1("://pics/repository.svg");
         case FILTER:
-            return QString::fromLocal8Bit("://pics/view-filter.svg");
+            return QString::fromLatin1("://pics/view-filter.svg");
         case REFRESH:
-            return QString::fromLocal8Bit("://pics/view-refresh.svg");
+            return QString::fromLatin1("://pics/view-refresh.svg");
         case WARNING:
-            return QString::fromLocal8Bit("://pics/warning.svg");
+            return QString::fromLatin1("://pics/warning.svg");
         case QPACMANTRAY:
-            return QString::fromLocal8Bit("://pics/qpacmantray.svg");
+            return QString::fromLatin1("://pics/qpacmantray.svg");
         case QPACMAN:
-            return QString::fromLocal8Bit("://pics/qpacman.svg");
+            return QString::fromLatin1("://pics/qpacman.svg");
         case ARCHLINUX:
-            return QString::fromLocal8Bit("://pics/Archlinux-icon-crystal-64.svg");
+            return QString::fromLatin1("://pics/Archlinux-icon-crystal-64.svg");
         case CHECKING_MOVIE:
-            return QString::fromLocal8Bit("://pics/checking.svg");
+            return QString::fromLatin1("://pics/checking.svg");
         case WAITING_MOVIE:
-            return QString::fromLocal8Bit("://pics/waiting.svg");
+            return QString::fromLatin1("://pics/waiting.svg");
         case DLG_PASSWORD:
-            return QString::fromLocal8Bit("://pics/dialog-password.svg");
+            return QString::fromLatin1("://pics/dialog-password.svg");
         case NO_ICON:
-            return QString::fromLocal8Bit("://pics/noicon.png");
+            return QString::fromLatin1("://pics/noicon.png");
         case REFRESH_BTN:
-            return QString::fromLocal8Bit("://pics/refresh-button.png");
+            return QString::fromLatin1("://pics/refresh-button.png");
         case REFRESH_BTN_SHADOW:
-            return QString::fromLocal8Bit("://pics/refresh-button_shadow.png");
+            return QString::fromLatin1("://pics/refresh-button_shadow.png");
         case LOCKED:
-            return QString::fromLocal8Bit("://pics/emblem-locked.svg");
+            return QString::fromLatin1("://pics/emblem-locked.svg");
         default:
             break;
     }

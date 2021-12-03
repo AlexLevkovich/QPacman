@@ -16,6 +16,7 @@
 #include <QComboBox>
 #include <QTextTable>
 #include <QLabel>
+#include <QPushButton>
 #include <QTextDocumentFragment>
 #include <QDebug>
 #include <limits.h>
@@ -267,11 +268,11 @@ QTextCharFormat WidgetTextObject::insertFormat() const {
 bool WidgetTextObject::insert(const QTextCursor & _cursor) {
     if (m_objectType == -1 || m_textEdit == NULL) return false;
 
+    if (m_widget != NULL) m_widget->setVisible(true);
     QTextCharFormat charFormat = insertFormat();
     QTextCursor cursor(_cursor.isNull()?m_textEdit->textCursor():_cursor);
     cursor.insertText(QString(QChar::ObjectReplacementCharacter),charFormat);
     m_textEdit->setTextCursor(cursor);
-    if (m_widget != NULL) m_widget->setVisible(true);
     return true;
 }
 
@@ -460,6 +461,31 @@ void CheckBoxTextObject::setText(const QString & text) {
     if (m_widget == NULL) return;
     inputCheckBox()->setText(text);
     m_textEdit->repaint();
+}
+
+ButtonTextObject::ButtonTextObject(QTextEdit *parent,const QIcon & icon,const QString & text) : WidgetTextObject(parent,new QPushButton()) {
+    if (m_widget == NULL) return;
+    inputButton()->setText(text);
+    inputButton()->setIcon(icon);
+    connect(inputButton(),&QAbstractButton::clicked,this,&ButtonTextObject::clicked);
+}
+
+ButtonTextObject::ButtonTextObject(QTextEdit *parent,const QString & text) : WidgetTextObject(parent,new QPushButton()) {
+    if (m_widget == NULL) return;
+    inputButton()->setText(text);
+    connect(inputButton(),&QAbstractButton::clicked,this,&ButtonTextObject::clicked);
+}
+
+QPushButton * ButtonTextObject::inputButton() {
+    return (QPushButton *)m_widget;
+}
+
+QString ButtonTextObject::text() const {
+    return ((ButtonTextObject *)this)->inputButton()->text();
+}
+
+QIcon ButtonTextObject::icon() const {
+    return ((ButtonTextObject *)this)->inputButton()->icon();
 }
 
 ComboBoxTextObject::ComboBoxTextObject(QTextEdit *parent,const QStringList & items) : WidgetTextObject(parent,new QComboBox()) {

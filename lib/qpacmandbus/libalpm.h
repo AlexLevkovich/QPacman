@@ -19,6 +19,97 @@ class QDBusServiceWatcher;
 class Alpm : public QObject {
     Q_OBJECT
 public:
+    class Repo {
+    public:
+
+      enum SigObject {
+          Package = (1 << 0),
+          Database = (1 << 1),
+          Both = (1 << 2)
+      };
+
+      enum SigCheck {
+          Optional = (1 << 0),
+          Required = (1 << 1),
+          Never = (1 << 2),
+          Default = (1 << 3)
+      };
+
+      enum SigAllowed {
+          TrustedOnly = (1 << 0),
+          TrustAll = (1 << 1),
+          Nothing = (1 << 2)
+      };
+
+      class SigLevel {
+      public:
+          SigLevel();
+          SigLevel(SigObject object,SigCheck check,SigAllowed allowed);
+
+          bool operator==(const SigLevel & other) const;
+
+          SigObject object() const { return m_object; }
+          SigCheck check() const { return m_check; }
+          SigAllowed allowed() const { return m_allowed; }
+
+          friend QDataStream & operator<<(QDataStream &argument,const SigLevel & level);
+          friend const QDataStream & operator>>(const QDataStream &argument,SigLevel & level);
+
+       private:
+          SigObject m_object;
+          SigCheck m_check;
+          SigAllowed m_allowed;
+      };
+
+      class ListSigLevel: public QList<SigLevel> {
+      public:
+          ListSigLevel() : QList<SigLevel>() {}
+      };
+
+      class Usage {
+      public:
+          Usage();
+          Usage(bool sync,bool search,bool install,bool upgrade);
+
+          bool isSync() const { return m_sync; }
+          bool isSearch() const { return m_search; }
+          bool isInstall() const { return m_install; }
+          bool isUpgrade() const { return m_upgrade; }
+          bool isAll() const;
+
+          friend QDataStream & operator<<(QDataStream &argument,const Usage & usage);
+          friend const QDataStream & operator>>(const QDataStream &argument,Usage & usage);
+      private:
+          bool m_sync;
+          bool m_search;
+          bool m_install;
+          bool m_upgrade;
+      };
+
+      Repo();
+      Repo(const Repo & repo);
+      Repo(const QString & name,const QStringList & urls,const QStringList & arches,const ListSigLevel & siglevels,const Usage & usages);
+
+      bool isValid() const;
+      QString name() const { return this->m_name; }
+      QStringList arches() const { return this->m_arches; }
+      QStringList servers() const { return this->m_servers; }
+      ListSigLevel siglevel() const { return this->m_siglevel; }
+      Usage usage() const { return m_usage; }
+
+      friend QDataStream & operator<<(QDataStream &argument,const Repo & repo);
+      friend const QDataStream & operator>>(const QDataStream &argument,Repo & repo);
+      Repo & operator=(const Repo &repo);
+
+    private:
+      bool m_valid;
+      Usage m_usage;
+      QString m_name;
+      QStringList m_arches;
+      QStringList m_servers;
+      ListSigLevel m_siglevel;
+    };
+
     Alpm(QObject * parent = NULL);
     ~Alpm();
     static Alpm * instance();
@@ -41,10 +132,14 @@ public:
     bool askShowTrayOptions();
     bool removeLockFile();
     bool cleanCacheDirs();
-    QStringList repos() const;
+    QList<Repo> repos() const;
     QStringList groups() const;
     QStringList allDBs() const;
     bool areMarkedPackages() const;
+
+    bool addNewRepo(const Alpm::Repo & repo);
+    bool addMirrorRepo(const Alpm::Repo & repo);
+    bool deleteRepo(const QString & name);
 
     uint downloaderTimeout() const;
     uint downloaderThreadCount() const;
@@ -61,7 +156,7 @@ public:
     QString dbPath() const;
     QString gpgDir() const;
     QString logFileName() const;
-    QString arch() const;
+    QStringList arches() const;
     bool doUseSysLog() const;
     bool doDisableDownloadTimeout() const;
     QStringList sigLevel() const;

@@ -4,32 +4,47 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../alpmconfig.cpp" line="+67"/>
+        <location filename="../alpmconfig.cpp" line="+69"/>
         <source>Can&apos;t find [options] section!</source>
         <translation type="unfinished">Секцыя [options] не знойдзена!</translation>
     </message>
     <message>
-        <location line="+12"/>
+        <location line="+13"/>
         <source>Can&apos;t determine system&apos;s architecture!</source>
         <translation type="unfinished">Немагчыма вызначыць архітэктуру сістэмы!</translation>
     </message>
     <message>
-        <location line="+41"/>
         <source>invalid url input!</source>
-        <translation type="unfinished">пададзены няправільны url!</translation>
+        <translation type="obsolete">пададзены няправільны url!</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+71"/>
+        <location line="+44"/>
         <source>cannot init repo object!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+5"/>
+        <location line="-39"/>
+        <location line="+44"/>
         <source>repo with such a name already exists!</source>
         <translation type="unfinished">repo з такім імем ужо ёсць!</translation>
     </message>
     <message>
-        <location line="+14"/>
+        <location line="-65"/>
+        <location line="+45"/>
+        <location line="+45"/>
+        <source>Alpm class is not initialized!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-85"/>
+        <location line="+45"/>
+        <location line="+45"/>
+        <source>Alpm is executing the other method!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
         <source>must stay at least one repo!</source>
         <translation type="unfinished">хаця б адзін repo павінен застацца!</translation>
     </message>
@@ -39,19 +54,17 @@
         <translation type="unfinished">няма repo з такім імём!</translation>
     </message>
     <message>
-        <location line="+130"/>
+        <location line="+140"/>
         <source>Pacman&apos;s conf file is unknown!</source>
         <translation type="unfinished">Невядомы канфігурацыйны файл для pacman!</translation>
     </message>
     <message>
-        <location line="+189"/>
         <source>Siglevel has wrong value!</source>
-        <translation type="unfinished">Некарэктнае значэнне Siglevel!</translation>
+        <translation type="obsolete">Некарэктнае значэнне Siglevel!</translation>
     </message>
     <message>
-        <location line="+15"/>
         <source>Can&apos;t open</source>
-        <translation type="unfinished">Немагчыма адкрыць</translation>
+        <translation type="obsolete">Немагчыма адкрыць</translation>
     </message>
     <message>
         <location filename="../byteshumanizer.cpp" line="+11"/>
@@ -99,7 +112,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../libalpm.cpp" line="+457"/>
+        <location filename="../libalpm.cpp" line="+531"/>
         <source>%1 is in IgnorePkg/IgnoreGroup. Install anyway?</source>
         <translation type="unfinished">%1 у IgnorePkg/IgnoreGroup. Усё роўна ўсталяваць?</translation>
     </message>
@@ -305,7 +318,9 @@ Do you want to delete it?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../confreader.cpp" line="+137"/>
+        <location filename="../confreader.h" line="+104"/>
+        <location line="+26"/>
+        <location line="+26"/>
         <source>wrong input key!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -321,7 +336,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-878"/>
+        <location filename="../libalpm.cpp" line="-952"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам трэба выбраць пастаўшчыка для пакета %1:
@@ -354,7 +369,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Вы згодны? : </translation>
     </message>
     <message>
-        <location line="+149"/>
+        <location line="+223"/>
         <source>(%1/%2) downloaded</source>
         <translation type="unfinished">(%1/%2) загружана</translation>
     </message>
@@ -468,12 +483,11 @@ Do you want to delete it?</source>
         <translation type="unfinished">Ня магчыма проиницилизировать Alpm клас базуючыся на дадзеным файле налад!</translation>
     </message>
     <message>
-        <location line="+2"/>
         <source>Cannot invoke the function in the thread if other one is still working!</source>
-        <translation type="unfinished">Немагчыма зарустить заданне ў патоку калі іншае яшчэ працуе!</translation>
+        <translation type="obsolete">Немагчыма зарустить заданне ў патоку калі іншае яшчэ працуе!</translation>
     </message>
     <message>
-        <location line="+4"/>
+        <location line="+6"/>
         <source>Nothing to download!!!</source>
         <translation type="unfinished">Няма чаго загружаць!!!</translation>
     </message>
@@ -499,7 +513,12 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пачынаем поўнае абнаўленне сістэмы...</translation>
     </message>
     <message>
-        <location line="-466"/>
+        <location line="-472"/>
+        <source>The function in the thread is still running!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
         <source>Stopped because of user refusal!!!</source>
         <translation type="unfinished">Спынена па жаданнi карыстальніка!!!</translation>
     </message>

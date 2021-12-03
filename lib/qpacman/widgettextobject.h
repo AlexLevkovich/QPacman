@@ -21,6 +21,7 @@ class QCheckBox;
 class QComboBox;
 class QLabel;
 class QLayout;
+class QPushButton;
 
 // undo/redo does not work for the objects by default because setAutoDeletable(true).
 // do setAutoDeletable(false) to have undo/redo. But it is memory expensive.
@@ -90,6 +91,7 @@ private:
     friend class ComboBoxTextObject;
     friend class LabelTextObject;
     friend class SimpleLabelTextObject;
+    friend class ButtonTextObject;
 };
 
 class SimpleLabelTextObject : public WidgetTextObject {
@@ -175,6 +177,19 @@ signals:
 
 private slots:
     void onActivated(int index);
+};
+
+class ButtonTextObject : public WidgetTextObject {
+    Q_OBJECT
+public:
+    ButtonTextObject(QTextEdit *parent,const QIcon & icon,const QString & text);
+    ButtonTextObject(QTextEdit *parent,const QString & text);
+    QPushButton *inputButton();
+    QString text() const;
+    QIcon icon() const;
+
+signals:
+    void clicked(bool checked = false);
 };
 
 class LabelTextObject : public WidgetTextObject {

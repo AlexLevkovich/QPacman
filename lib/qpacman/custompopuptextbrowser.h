@@ -21,7 +21,6 @@ private slots:
 
 protected:
     void keyPressEvent(QKeyEvent *e);
-
 };
 
 #endif // CUSTOMPOPUPTEXTBROWSER_H

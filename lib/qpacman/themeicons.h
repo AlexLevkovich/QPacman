@@ -65,7 +65,9 @@ public:
         REFRESH_BTN,
         REFRESH_BTN_SHADOW,
         ARCHLINUX,
-        LOCKED
+        LOCKED,
+        LIST_ADD,
+        SERVER
     };
     static const QIcon get(ThemeIcons::Icon id);
     static const QString name(ThemeIcons::Icon id);

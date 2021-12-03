@@ -40,11 +40,14 @@ public:
 FilterToolButton::FilterToolButton(QWidget *parent) : ComboToolButton(parent) {
     setIcon(ThemeIcons::get(ThemeIcons::FILTER));
     setToolTip(tr("Filters the packages by different groups"));
-    is_sel = IS_ALL;
 }
 
-FilterToolButton::ItemId FilterToolButton::getSelectedId() {
-    return is_sel;
+FilterToolButton::ItemId FilterToolButton::getSelectedId() const {
+    return (currentAction() == NULL)?IS_ALL:((currentAction()->menu() == NULL)?((IdAction *)currentAction())->id():IS_UNKNOWN);
+}
+
+QString FilterToolButton::getSelectedFilter() const {
+    return (currentAction() == NULL)?"":((currentAction()->menu() == NULL)?((IdAction *)currentAction())->text():currentAction()->menu()->title());
 }
 
 void FilterToolButton::fill(const QStringList & _groups) {
@@ -77,7 +80,6 @@ void FilterToolButton::fill(const QStringList & _groups) {
     }
     menu->addMenu(group_menu);
 
-    is_sel = IS_ALL;
     QMenu * old_menu = this->menu();
     setMenu(menu);
     if (old_menu != NULL) delete old_menu;
@@ -118,7 +120,6 @@ bool FilterToolButton::setFilter(const QList<QAction *> & actions,FilterToolButt
 }
 
 void FilterToolButton::onMenuItemSelected(QAction * action) {
-    is_sel = ((action->menu() == NULL)?((IdAction *)action)->id():IS_UNKNOWN);
     QString filter = action->iconText();
     if (filter.contains("&")) filter = filter.replace("&","");
     emit selected(getSelectedId(),filter);

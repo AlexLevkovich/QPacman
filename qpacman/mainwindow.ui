@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>841</width>
-    <height>659</height>
+    <height>750</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -167,6 +167,9 @@
         <widget class="InfoView" name="infoBrowser"/>
        </item>
        <item>
+        <widget class="SettingsTextBrowser" name="settingsBrowser"/>
+       </item>
+       <item>
         <widget class="QPlainTextEdit" name="logWindow"/>
        </item>
        <item>
@@ -200,6 +203,7 @@
    <addaction name="actionReset"/>
    <addaction name="actionLog"/>
    <addaction name="actionInfo"/>
+   <addaction name="actionSettings"/>
    <addaction name="actionCancel"/>
    <addaction name="actionApply"/>
   </widget>
@@ -434,6 +438,24 @@
     <bool>true</bool>
    </property>
   </action>
+  <action name="actionSettings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="configure">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+   <property name="toolTip">
+    <string>Show the settings of pacman and qpacman</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+S</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -471,6 +493,11 @@
    <class>InfoView</class>
    <extends>QTextBrowser</extends>
    <header location="global">infoview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SettingsTextBrowser</class>
+   <extends>QTextBrowser</extends>
+   <header>settingstextbrowser.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -679,7 +679,7 @@ Are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+16"/>
+        <location line="+19"/>
         <source>All</source>
         <translation type="unfinished">Все</translation>
     </message>

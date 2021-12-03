@@ -32,7 +32,7 @@ enum Errors {
     ALPM_CONFIG_FAILED            = (ALPM_ERR_OK - 8),
     ALPM_LINK_LOCAL_DB_FAILED     = (ALPM_ERR_OK - 7),
     ALPM_HANDLE_FAILED            = (ALPM_ERR_OK - 6),
-    THREAD_IS_ALREADY_RUNNING     = (ALPM_ERR_OK - 5),
+    THREAD_IS_STILL_RUNNING       = (ALPM_ERR_OK - 5),
     CANNOT_LOAD_CONFIG            = (ALPM_ERR_OK - 4),
     USER_REFUSAL                  = (ALPM_ERR_OK - 3),
     NOTHING_DOWNLOAD              = (ALPM_ERR_OK - 2),
@@ -274,6 +274,80 @@ bool Alpm::open(const QString & confpath,const QString & dbpath) {
     return true;
 }
 
+alpm_list_t * Alpm::convert_list(const QStringList & list) {
+    alpm_list_t * ret = NULL;
+
+    for (int i=0;i<list.count();i++) {
+        ret = alpm_list_add(ret,strdup(list[i].toLocal8Bit().constData()));
+    }
+
+    return ret;
+}
+
+bool Alpm::add_sync_db(const AlpmConfig::Repo & repo) {
+    alpm_db_t *db_handle = alpm_register_syncdb(m_alpm_handle,repo.name().toLocal8Bit().constData(),repo.siglevel());
+    if (db_handle) {
+        alpm_db_set_servers(db_handle,convert_list(repo.servers()));
+        alpm_db_set_usage(db_handle,repo.usage());
+    }
+    else {
+        m_alpm_errno = alpm_errno(m_alpm_handle);
+        return false;
+    }
+
+    AlpmDB db(db_handle);
+    m_syncDBs.append(db);
+    m_groups += db.groups();
+    AlpmPackage res;
+    for (AlpmPackage & pkg: db.packages()) {
+        if (pkg.isIgnorable()) continue;
+        for (AlpmPackage::Dependence & dep: pkg.replaces()) {
+            res = m_localDB.findByPackageName(dep.name());
+            if (!res.isValid()) continue;
+            if (dep.isAppropriate(res)) m_replaces[res] << pkg;
+        }
+    }
+    m_groups.removeDuplicates();
+    return true;
+}
+
+bool Alpm::remove_sync_db(const QString & db_name) {
+    bool ret = false;
+    QList<AlpmPackage> list;
+    for (int j=(m_syncDBs.count()-1);j>=0;j--) {
+        AlpmDB & db = m_syncDBs[j];
+        if (db.name() == db_name) {
+            alpm_db_unregister(db.m_db_handle);
+            m_syncDBs.removeAt(j);
+            QMapIterator<AlpmPackage,QList<AlpmPackage> > i(m_replaces);
+            while (i.hasNext()) {
+                i.next();
+                list = i.value();
+                for (int k=(list.count()-1);k>=0;k--) {
+                    if (list[k].repo() == db_name) {
+                        list.removeAt(k);
+                        if (list.isEmpty()) m_replaces.remove(i.key());
+                        else m_replaces[i.key()] = list;
+                        break;
+                    }
+                }
+            }
+            ret = true;
+            break;
+        }
+    }
+
+    if (ret) {
+        m_groups.clear();
+        for (AlpmDB & db: m_syncDBs) {
+            m_groups += db.groups();
+        }
+        m_groups.removeDuplicates();
+    }
+
+    return ret;
+}
+
 void Alpm::recreatedbs() {
     m_localDB = AlpmDB(alpm_get_localdb(m_alpm_handle));
     m_syncDBs.clear();
@@ -340,7 +414,7 @@ bool Alpm::close() {
         qApp->processEvents(QEventLoop::AllEvents,100);
     }
     if (!ok && ThreadRun::isMethodExecuting()) {
-        m_alpm_errno = THREAD_IS_ALREADY_RUNNING;
+        m_alpm_errno = THREAD_IS_STILL_RUNNING;
         return false;
     }
 
@@ -929,8 +1003,8 @@ QString Alpm::lastError(int * error_id) const {
             return tr("Cannot create the link for local's db!");
         case ALPM_HANDLE_FAILED:
             return tr("Cannot create Alpm handle from config handle!");
-        case THREAD_IS_ALREADY_RUNNING:
-            return tr("Cannot invoke the function in the thread if other one is still working!");
+        case THREAD_IS_STILL_RUNNING:
+            return tr("The function in the thread is still running!");
         case CANNOT_LOAD_CONFIG:
             return m_config.lastError();
         case NOTHING_DOWNLOAD:
@@ -1811,15 +1885,6 @@ QList<AlpmPackage> Alpm::find(const QRegularExpression & expr) const {
     std::sort(ret.begin(),ret.end(),pkgLessThan);
 
     return ret;
-}
-
-QStringList Alpm::repos() const {
-    QStringList m_repos;
-    for (AlpmDB & db: ((Alpm *)this)->allSyncDBs()) {
-        m_repos.append(db.name());
-    }
-    m_repos.append(localDB().name());
-    return m_repos;
 }
 
 QStringList Alpm::groups() const {

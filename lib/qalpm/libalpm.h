@@ -44,7 +44,6 @@ public:
     QStringList cacheDirs() const;
     bool cleanCacheDirs();
 
-    QStringList repos() const;
     // you need to execute queryPackages() first to have groups() filled
     QStringList groups() const;
     QList<AlpmDB> allSyncDBs() const;
@@ -146,6 +145,9 @@ private slots:
     void on_method_finished(const QString & name,const QVariant & result,ThreadRun::RC rc);
 
 private:
+    alpm_list_t * convert_list(const QStringList & list);
+    bool add_sync_db(const AlpmConfig::Repo & repo);
+    bool remove_sync_db(const QString & db_name);
     int wait_for_answer();
     void query_packages_portion(QList<AlpmPackage> & pkgs,int startindex,int lastindex) const;
     void sync_sysupgrade_portion(QList<AlpmPackage> & add_pkgs,int startindex,int lastindex);
@@ -209,6 +211,7 @@ private:
     static AlpmConfig * p_config;
 
     friend class AlpmPackage;
+    friend class AlpmConfig;
     friend class AlpmDB;
     friend class ThreadRun;
     friend class OverwriteHandler;

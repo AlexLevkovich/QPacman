@@ -401,8 +401,11 @@ bool QPacmanService::cleanCacheDirs() {
     return Alpm::instance()->cleanCacheDirs();
 }
 
-QStringList QPacmanService::repos() {
-    return Alpm::instance()->repos();
+QByteArray QPacmanService::repos() {
+    QByteArray ret;
+    QDataStream stream((QByteArray *)&ret,QIODevice::WriteOnly);
+    stream << Alpm::instance()->config()->repositories();
+    return ret;
 }
 
 QStringList QPacmanService::groups() {
@@ -674,8 +677,8 @@ QString QPacmanService::logFileName() {
     return Alpm::config()->logFileName();
 }
 
-QString QPacmanService::arch() {
-    return Alpm::config()->arch();
+QStringList QPacmanService::arches() {
+    return Alpm::config()->arches();
 }
 
 bool QPacmanService::doUseSysLog() {
@@ -687,15 +690,15 @@ bool QPacmanService::doDisableDownloadTimeout() {
 }
 
 QStringList QPacmanService::sigLevel() {
-    return Alpm::config()->sigLevel();
+    return Alpm::config()->sigLevel().toStringList();
 }
 
 QStringList QPacmanService::localFileSigLevel() {
-    return Alpm::config()->localFileSigLevel();
+    return Alpm::config()->localFileSigLevel().toStringList();
 }
 
 QStringList QPacmanService::remoteFileSigLevel() {
-    return Alpm::config()->remoteFileSigLevel();
+    return Alpm::config()->remoteFileSigLevel().toStringList();
 }
 
 QStringList QPacmanService::holdPkgs() {
@@ -760,6 +763,26 @@ QByteArray QPacmanService::findByPackageNameProvides(const QByteArray & provide)
     QDataStream stream((QByteArray *)&ret,QIODevice::WriteOnly);
     stream << Alpm::instance()->findByPackageNameProvides(dep);
     return ret;
+}
+
+bool QPacmanService::addNewRepo(const QByteArray & repo) {
+    AlpmConfig::Repo in;
+    QDataStream stream((QByteArray *)&repo,QIODevice::ReadOnly);
+    stream >> in;
+
+    return Alpm::instance()->config()->addNewRepo(in);
+}
+
+bool QPacmanService::addMirrorRepo(const QByteArray & repo) {
+    AlpmConfig::Repo in;
+    QDataStream stream((QByteArray *)&repo,QIODevice::ReadOnly);
+    stream >> in;
+
+    return Alpm::instance()->config()->addMirrorRepo(in);
+}
+
+bool QPacmanService::deleteRepo(const QString & name) {
+    return Alpm::instance()->config()->deleteRepo(name);
 }
 
 QByteArray QPacmanService::findLocalByPackageNameProvides(const QByteArray & provide) {

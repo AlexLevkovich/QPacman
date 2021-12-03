@@ -57,6 +57,7 @@ private slots:
     void onDownloadingCompleted(ThreadRun::RC rc,const QString & error);
     void onTrayRefresherStart();
     void onTrayUpdaterStart();
+    void on_actionSettings_triggered(bool checked);
 
 protected:
     void closeEvent(QCloseEvent * event);

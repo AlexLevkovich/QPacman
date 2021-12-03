@@ -33,7 +33,7 @@ public:
     Q_INVOKABLE void askShowTrayOptions();
     Q_INVOKABLE bool removeLockFile();
     Q_INVOKABLE bool cleanCacheDirs();
-    Q_INVOKABLE QStringList repos();
+    Q_INVOKABLE QByteArray repos();
     Q_INVOKABLE QStringList groups();
     Q_INVOKABLE QStringList allDBs();
     Q_INVOKABLE QByteArray packageUrl(const QByteArray & pkg);
@@ -77,7 +77,7 @@ public:
     Q_INVOKABLE QString dbPath();
     Q_INVOKABLE QString gpgDir();
     Q_INVOKABLE QString logFileName();
-    Q_INVOKABLE QString arch();
+    Q_INVOKABLE QStringList arches();
     Q_INVOKABLE bool doUseSysLog();
     Q_INVOKABLE bool doDisableDownloadTimeout();
     Q_INVOKABLE QStringList sigLevel();
@@ -97,7 +97,9 @@ public:
     Q_INVOKABLE void resetPackageChangeStatuses();
     Q_INVOKABLE QByteArray createLocalPackage(const QString & pkgpath);
     Q_INVOKABLE void deleteLocalPackage(const QByteArray & pkg);
-
+    Q_INVOKABLE bool addNewRepo(const QByteArray & repo);
+    Q_INVOKABLE bool addMirrorRepo(const QByteArray & repo);
+    Q_INVOKABLE bool deleteRepo(const QString & name);
     Q_INVOKABLE void dbRefresherIsAboutToStart();
     Q_INVOKABLE void updaterAboutToStart();
 

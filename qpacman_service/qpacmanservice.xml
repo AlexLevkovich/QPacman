@@ -213,7 +213,7 @@
     </method>
     <method name="repos">
       <arg type="a(ii)" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QByteArray"/>
     </method>
     <method name="dbExtensions">
       <arg type="a(ii)" direction="out"/>
@@ -278,8 +278,9 @@
     <method name="logFileName">
       <arg type="s" direction="out"/>
     </method>
-    <method name="arch">
-      <arg type="s" direction="out"/>
+    <method name="arches">
+      <arg type="a(ii)" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QStringList"/>
     </method>
     <method name="doUseSysLog">
       <arg type="b" direction="out"/>
@@ -380,6 +381,20 @@
       <arg type="b" direction="out"/>
       <arg name="pkg" type="a(iii)" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="addNewRepo">
+      <arg type="b" direction="out"/>
+      <arg name="repo" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="addMirrorRepo">
+      <arg type="b" direction="out"/>
+      <arg name="repo" type="a(iii)" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QByteArray"/>
+    </method>
+    <method name="deleteRepo">
+      <arg type="b" direction="out"/>
+      <arg name="name" type="s" direction="in"/>
     </method>
     <method name="packageDefaultStatus">
       <arg type="i" direction="out"/>

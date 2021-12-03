@@ -30,16 +30,20 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) , ui(new Ui::MainWi
     view_group->add(ui->waitView);
     view_group->add(ui->logWindow);
     view_group->add(ui->infoBrowser);
+    view_group->add(ui->settingsBrowser);
 
     acgroup = new ExclusiveActionGroup(this);
     acgroup->addAction(ui->actionLog);
     acgroup->addAction(ui->actionInfo);
+    acgroup->addAction(ui->actionSettings);
 
     ui->actionApply->setIcon(ThemeIcons::get(ThemeIcons::INSTALL));
     ui->actionReset->setIcon(ThemeIcons::get(ThemeIcons::UNDO_OR_RESET));
     ui->actionMark_All->setIcon(ThemeIcons::get(ThemeIcons::PKG_SELECT_ALL));
     ui->actionRefresh->setIcon(ThemeIcons::get(ThemeIcons::UPDATE_REPOS));
     ui->actionLog->setIcon(ThemeIcons::get(ThemeIcons::LOG_VIEW));
+    ui->actionInfo->setIcon(ThemeIcons::get(ThemeIcons::IMPORTANT));
+    ui->actionSettings->setIcon(ThemeIcons::get(ThemeIcons::CONFIGURE));
     ui->actionRefreshList->setIcon(ThemeIcons::get(ThemeIcons::REFRESH));
     ui->actionCacheCleanUp->setIcon(ThemeIcons::get(ThemeIcons::CLEAN_CACHE));
     ui->actionPrevious->setIcon(ThemeIcons::get(ThemeIcons::PREV));
@@ -67,6 +71,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) , ui(new Ui::MainWi
 
     initCombos();
 
+    connect(ui->settingsBrowser,&SettingsTextBrowser::dbsRefreshNeeded,this,&MainWindow::on_actionRefresh_triggered);
     connect(Alpm::instance(),&Alpm::do_start_dbrefresher,this,&MainWindow::onTrayRefresherStart);
     connect(Alpm::instance(),&Alpm::do_start_package_updater,this,&MainWindow::onTrayUpdaterStart);
     connect(ui->actionApply,SIGNAL(triggered()),this,SLOT(onActionApply()));
@@ -86,10 +91,16 @@ MainWindow::~MainWindow() {
     delete ui;
 }
 
+static const QStringList reposToStringList(const QList<Alpm::Repo> & repos) {
+    QStringList ret;
+    for (const Alpm::Repo & repo: repos) ret.append(repo.name());
+    return ret;
+}
+
 void MainWindow::initCombos() {
     SearchWidget * sw = ui->mainToolBar->findSearchWidget();
     sw->fillFiltersInCombo(Alpm::instance()->groups());
-    sw->fillReposInCombo(Alpm::instance()->repos());
+    sw->fillReposInCombo(reposToStringList(Alpm::instance()->repos()));
 }
 
 void MainWindow::onRefreshBeginning() {
@@ -203,6 +214,7 @@ void MainWindow::on_actionLog_triggered(bool checked) {
         enableActions(false);
         ui->actionLog->setEnabled(true);
         ui->actionInfo->setEnabled(true);
+        ui->actionSettings->setEnabled(true);
     }
     else {
         view_group->setCurrent(ui->splitter);
@@ -216,6 +228,7 @@ void MainWindow::on_actionInfo_triggered(bool checked) {
         enableActions(false);
         ui->actionLog->setEnabled(true);
         ui->actionInfo->setEnabled(true);
+        ui->actionSettings->setEnabled(true);
     }
     else {
         view_group->setCurrent(ui->splitter);
@@ -253,6 +266,7 @@ void MainWindow::dbRefreshCompleted(ThreadRun::RC rc,const QString &) {
         ui->actionCancel->setVisible(false);
         ui->actionApply->setVisible(true);
         enableActions(true);
+        initCombos();
         QMetaObject::invokeMethod(ui->packetView,"refreshRows",Qt::QueuedConnection);
     }
     else {
@@ -383,3 +397,18 @@ void MainWindow::onTrayRefresherStart() {
 void MainWindow::onTrayUpdaterStart() {
     on_actionFullUpdate_triggered();
 }
+
+void MainWindow::on_actionSettings_triggered(bool checked) {
+    if (checked) {
+        view_group->setCurrent(ui->settingsBrowser);
+        enableActions(false);
+        ui->actionLog->setEnabled(true);
+        ui->actionInfo->setEnabled(true);
+        ui->actionSettings->setEnabled(true);
+    }
+    else {
+        view_group->setCurrent(ui->splitter);
+        enableActions(true);
+    }
+}
+

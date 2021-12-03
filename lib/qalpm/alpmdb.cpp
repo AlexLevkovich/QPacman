@@ -77,8 +77,6 @@ AlpmDB::AlpmDB(const AlpmDB & db) {
     m_alpm_handle = db.m_alpm_handle;
 }
 
-AlpmDB::~AlpmDB() {}
-
 bool AlpmDB::isAppropriateDepsForPackageName(const QString & name,const QList<AlpmPackage::Dependence> & deps) const {
     for (const AlpmPackage::Dependence & dep: deps) {
         if (dep.isAppropriate(AlpmPackage::Dependence::fromString(name))) return true;
@@ -143,7 +141,7 @@ const QMap<AlpmPackage::Dependence,QList<AlpmPackage> > & AlpmDB::provides() {
     return m_provides;
 }
 
-const QStringList & AlpmDB::groups() {
+QStringList AlpmDB::groups() const {
     if (!m_groups.isEmpty()) return m_groups;
 
     if (!isValid()) return check_error(m_groups,"Wrong db handle!!!");

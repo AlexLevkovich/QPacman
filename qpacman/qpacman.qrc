@@ -20,5 +20,8 @@
         <file>pics/view-refresh.svg</file>
         <file>pics/state-download.svg</file>
         <file>pics/state-sync.svg</file>
+        <file>pics/list-add.svg</file>
+        <file>pics/document-edit.svg</file>
+        <file>pics/network-server.svg</file>
     </qresource>
 </RCC>
