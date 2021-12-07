@@ -912,29 +912,44 @@ Are you sure to continue?</source>
         <translation type="unfinished">Выдаліць</translation>
     </message>
     <message>
-        <location line="+39"/>
+        <location line="+29"/>
+        <source>The repo %1 hasn&apos;t been removed!
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
         <source>Fill the fields below and press OK to add the new repository</source>
         <translation type="unfinished">Запоўніце палі і націсніце OK для дадання новага рэпазітара</translation>
     </message>
     <message>
         <location line="+59"/>
+        <source>The repo hasn&apos;t been changed!
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>The new repo hasn&apos;t been created!
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>The repo hasn&apos;t been changed!</source>
-        <translation type="unfinished">Рэпазітар не быў зменены!</translation>
+        <translation type="obsolete">Рэпазітар не быў зменены!</translation>
     </message>
     <message>
-        <location line="-69"/>
         <source>The repo %1 hasn&apos;t been removed!</source>
-        <translation type="unfinished">Рэпазітар %1 не выдалены!</translation>
+        <translation type="obsolete">Рэпазітар %1 не выдалены!</translation>
     </message>
     <message>
-        <location line="-13"/>
+        <location line="-100"/>
         <source>Press OK to change the repository</source>
         <translation type="unfinished">Націсніце OK для змянення налад рэпазітара</translation>
     </message>
     <message>
-        <location line="+100"/>
         <source>The new repo hasn&apos;t been created!</source>
-        <translation type="unfinished">Новы рэпазітар не быў створаны!</translation>
+        <translation type="obsolete">Новы рэпазітар не быў створаны!</translation>
     </message>
 </context>
 <context>
@@ -951,7 +966,7 @@ Are you sure to continue?</source>
 <context>
     <name>RepoSettingsTextObject</name>
     <message>
-        <location line="-648"/>
+        <location line="-548"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can use &lt;span style=&quot; font-weight:600;&quot;&gt;$repo&lt;/span&gt; and &lt;span style=&quot; font-weight:600;&quot;&gt;$arch&lt;/span&gt; variables in URLs:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$repo: &lt;/span&gt;to use the name of the repo you entered above&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$arch: &lt;/span&gt;to use the architectures you picked above&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вы можаце выкарыстоўваць &lt;span style=&quot; font-weight:600;&quot;&gt;$repo&lt;/span&gt; да &lt;span style=&quot; font-weight:600;&quot;&gt;$arch&lt;/span&gt; пераменныя ў запыце:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$repo: &lt;/span&gt;каб выкарыстоўваць назву што вы ўвялі вышэй&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$arch: &lt;/span&gt;каб выкарыстоўваць архітэктуру што вы выбралі вышэй&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>

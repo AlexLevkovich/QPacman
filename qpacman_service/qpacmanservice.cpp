@@ -426,7 +426,8 @@ bool QPacmanService::queryPackages(const QString & name,int fieldType,int filter
 }
 
 QString QPacmanService::lastError() {
-    return Alpm::instance()->lastError();
+    QString err = Alpm::instance()->lastError();
+    return err.isEmpty()?Alpm::instance()->config()->lastError():(err + " " + Alpm::instance()->config()->lastError());
 }
 
 class FilesMethodPauser {

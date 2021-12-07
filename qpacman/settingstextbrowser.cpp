@@ -719,7 +719,7 @@ void SettingsTextBrowser::remove_button_clicked(const QString & repo) {
     if (!ret) {
         moveCursor(QTextCursor::End);
         textCursor().insertBlock();
-        insertText(textCursor(),QString(tr("The repo %1 hasn't been removed!")).arg(repo)+":",QColor::fromRgb(255,0,0));
+        insertText(textCursor(),QString(tr("The repo %1 hasn't been removed!\n")).arg(repo)+Alpm::instance()->lastError(),QColor::fromRgb(255,0,0));
     }
     emit_refresh_at_hide = true;
 }
@@ -788,7 +788,7 @@ void SettingsTextBrowser::changeSettingsResult(bool result) {
     if (!ret) {
         moveCursor(QTextCursor::End);
         textCursor().insertBlock();
-        insertText(textCursor(),tr("The repo hasn't been changed!")+":",QColor::fromRgb(255,0,0));
+        insertText(textCursor(),tr("The repo hasn't been changed!\n")+Alpm::instance()->lastError(),QColor::fromRgb(255,0,0));
     }
 }
 
@@ -806,6 +806,6 @@ void SettingsTextBrowser::addNewSettingsResult(bool result) {
     if (!ret) {
         moveCursor(QTextCursor::End);
         textCursor().insertBlock();
-        insertText(textCursor(),tr("The new repo hasn't been created!")+":",QColor::fromRgb(255,0,0));
+        insertText(textCursor(),tr("The new repo hasn't been created!\n")+Alpm::instance()->lastError(),QColor::fromRgb(255,0,0));
     }
 }

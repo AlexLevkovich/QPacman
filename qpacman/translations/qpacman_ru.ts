@@ -912,29 +912,44 @@ Are you sure to continue?</source>
         <translation type="unfinished">Удалить</translation>
     </message>
     <message>
-        <location line="+39"/>
+        <location line="+29"/>
+        <source>The repo %1 hasn&apos;t been removed!
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
         <source>Fill the fields below and press OK to add the new repository</source>
         <translation type="unfinished">Заполните поля и нажмите OK для добавления нового репозитория</translation>
     </message>
     <message>
         <location line="+59"/>
+        <source>The repo hasn&apos;t been changed!
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+18"/>
+        <source>The new repo hasn&apos;t been created!
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>The repo hasn&apos;t been changed!</source>
-        <translation type="unfinished">Репозиторий не был изменен!</translation>
+        <translation type="obsolete">Репозиторий не был изменен!</translation>
     </message>
     <message>
-        <location line="-69"/>
         <source>The repo %1 hasn&apos;t been removed!</source>
-        <translation type="unfinished">Репозиторий %1 не удален!</translation>
+        <translation type="obsolete">Репозиторий %1 не удален!</translation>
     </message>
     <message>
-        <location line="-13"/>
+        <location line="-100"/>
         <source>Press OK to change the repository</source>
         <translation type="unfinished">Нажмите OK для изменения настроек репозитория</translation>
     </message>
     <message>
-        <location line="+100"/>
         <source>The new repo hasn&apos;t been created!</source>
-        <translation type="unfinished">Новый репозиторий не был создан!</translation>
+        <translation type="obsolete">Новый репозиторий не был создан!</translation>
     </message>
 </context>
 <context>
@@ -951,7 +966,7 @@ Are you sure to continue?</source>
 <context>
     <name>RepoSettingsTextObject</name>
     <message>
-        <location line="-648"/>
+        <location line="-548"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;You can use &lt;span style=&quot; font-weight:600;&quot;&gt;$repo&lt;/span&gt; and &lt;span style=&quot; font-weight:600;&quot;&gt;$arch&lt;/span&gt; variables in URLs:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$repo: &lt;/span&gt;to use the name of the repo you entered above&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$arch: &lt;/span&gt;to use the architectures you picked above&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вы можете использовать &lt;span style=&quot; font-weight:600;&quot;&gt;$repo&lt;/span&gt; и &lt;span style=&quot; font-weight:600;&quot;&gt;$arch&lt;/span&gt; переменные в запросе:&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$repo: &lt;/span&gt;чтобы использовать название что вы ввели выше&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;$arch: &lt;/span&gt;чтобы использовать архитектуру что вы выбрали выше&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
