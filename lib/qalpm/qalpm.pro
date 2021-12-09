@@ -93,7 +93,6 @@ SOURCES += \
     archivefilesiterator.cpp \
     byteshumanizer.cpp \
     confreader.cpp \
-    inotifier.cpp \
     libalpm.cpp \
     multidownloader.cpp \
     networkreplyproxy.cpp \
@@ -107,7 +106,6 @@ HEADERS += \
     archivefilesiterator.h \
     confreader.h \
     downloaderinterface.h \
-    inotifier.h \
     libalpm.h \
     multidownloader.h \
     networkreplyproxy.h \

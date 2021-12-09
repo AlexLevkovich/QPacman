@@ -106,7 +106,7 @@ Alpm::Alpm(QObject *parent) : ThreadRun(parent) {
 #endif
 
     connect(this,SIGNAL(method_finished(const QString&,const QVariant&,ThreadRun::RC)),this,SLOT(on_method_finished(const QString&,const QVariant&,ThreadRun::RC)));
-    connect(&lock_watcher,SIGNAL(changed(const QString &)),this,SLOT(lockFileChanged(const QString &)));
+    connect(&lock_watcher,SIGNAL(fileChanged(const QString &)),this,SLOT(lockFileChanged(const QString &)));
 }
 
 Alpm::~Alpm() {
@@ -122,6 +122,7 @@ void Alpm::on_method_finished(const QString & name,const QVariant & result,Threa
 void Alpm::lockFileChanged(const QString & path) {
     if (path != lockFilePath()) return;
     emit locking_changed(path,QFile(path).exists());
+    if (!lock_watcher.files().contains(path)) lock_watcher.addPath(path);
 }
 
 bool Alpm::emit_event(const char *member,QGenericArgument val0,QGenericArgument val1,QGenericArgument val2,QGenericArgument val3,QGenericArgument val4,QGenericArgument val5,QGenericArgument val6,QGenericArgument val7,QGenericArgument val8,QGenericArgument val9) {
@@ -268,7 +269,7 @@ bool Alpm::open(const QString & confpath,const QString & dbpath) {
     alpm_option_set_eventcb(m_alpm_handle,operation_event_fn,NULL);
     alpm_option_set_fetchcb(m_alpm_handle,operation_fetch_fn,NULL);
 
-    lock_watcher.addPath(QFileInfo(lockFilePath()).dir().path());
+    lock_watcher.addPath(lockFilePath());
     recreatedbs();
 
     return true;
@@ -418,7 +419,7 @@ bool Alpm::close() {
         return false;
     }
 
-    lock_watcher.removeAllPaths();
+    lock_watcher.removePaths(lock_watcher.files());
     alpm_release(m_alpm_handle);
     m_alpm_handle = NULL;
     m_groups.clear();

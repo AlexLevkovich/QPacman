@@ -13,7 +13,7 @@
 #include <QFlags>
 #include <QDir>
 #include "alpmdb.h"
-#include "inotifier.h"
+#include <QFileSystemWatcher>
 #include "alpmpackage.h"
 #include "alpmconfig.h"
 #include "alpmfuture.h"
@@ -197,7 +197,7 @@ private:
     alpm_handle_t * m_alpm_handle;
     int m_alpm_errno;
     QStringList m_groups;
-    Inotifier lock_watcher;
+    QFileSystemWatcher lock_watcher;
     AlpmConfig m_config;
     AlpmDB m_localDB;
     QFlagEventLoop * m_question_loop;
