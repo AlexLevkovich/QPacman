@@ -13,13 +13,13 @@
 #include <QFlags>
 #include <QDir>
 #include "alpmdb.h"
-#include <QFileSystemWatcher>
 #include "alpmpackage.h"
 #include "alpmconfig.h"
 #include "alpmfuture.h"
 #include "qalpmtypes.h"
 
 class QFlagEventLoop;
+class LockFileSystemWatcher;
 
 typedef union _alpm_question_t alpm_question_t;
 typedef union _alpm_event_t alpm_event_t;
@@ -197,7 +197,7 @@ private:
     alpm_handle_t * m_alpm_handle;
     int m_alpm_errno;
     QStringList m_groups;
-    QFileSystemWatcher lock_watcher;
+    LockFileSystemWatcher * lock_watcher;
     AlpmConfig m_config;
     AlpmDB m_localDB;
     QFlagEventLoop * m_question_loop;

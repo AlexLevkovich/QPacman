@@ -9,6 +9,7 @@
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QDirIterator>
+#include <QFileSystemWatcher>
 #include "alpmdownloader.h"
 #ifdef USE_QDBUS
 #include <QDBusMetaType>
@@ -93,6 +94,30 @@ template<class ForwardIt, class T, class Compare> static ForwardIt binary_search
     return it;
 }
 
+class LockFileSystemWatcher: public QFileSystemWatcher {
+public:
+    LockFileSystemWatcher(QObject *parent = NULL) : QFileSystemWatcher(parent) {
+        connect(this,&QFileSystemWatcher::directoryChanged,this,[=](const QString & path) {
+            QString path2look = path;
+            if (!path2look.endsWith(QDir::separator())) path2look += QDir::separator();
+            for (const QString & file: m_files) {
+                if (file.contains(path2look)) QMetaObject::invokeMethod(this,"fileChanged",Qt::QueuedConnection,Q_ARG(QString,file));
+            }
+        });
+    }
+
+    void addPath(const QString & path) {
+        m_files.append(path);
+        QFileSystemWatcher::addPath(QFileInfo(path).dir().path());
+    }
+
+    void removeAllPaths() {
+        removePaths(directories());
+    }
+private:
+    QStringList m_files;
+};
+
 Alpm::Alpm(QObject *parent) : ThreadRun(parent) {
     m_alpm_handle = NULL;
     m_alpm_errno = ALPM_ERR_OK;
@@ -106,7 +131,7 @@ Alpm::Alpm(QObject *parent) : ThreadRun(parent) {
 #endif
 
     connect(this,SIGNAL(method_finished(const QString&,const QVariant&,ThreadRun::RC)),this,SLOT(on_method_finished(const QString&,const QVariant&,ThreadRun::RC)));
-    connect(&lock_watcher,SIGNAL(fileChanged(const QString &)),this,SLOT(lockFileChanged(const QString &)));
+    connect(lock_watcher = new LockFileSystemWatcher(),SIGNAL(fileChanged(const QString &)),this,SLOT(lockFileChanged(const QString &)));
 }
 
 Alpm::~Alpm() {
@@ -120,9 +145,9 @@ void Alpm::on_method_finished(const QString & name,const QVariant & result,Threa
 }
 
 void Alpm::lockFileChanged(const QString & path) {
+    qDebug() << path << lockFilePath() << QFile(path).exists();
     if (path != lockFilePath()) return;
     emit locking_changed(path,QFile(path).exists());
-    if (!lock_watcher.files().contains(path)) lock_watcher.addPath(path);
 }
 
 bool Alpm::emit_event(const char *member,QGenericArgument val0,QGenericArgument val1,QGenericArgument val2,QGenericArgument val3,QGenericArgument val4,QGenericArgument val5,QGenericArgument val6,QGenericArgument val7,QGenericArgument val8,QGenericArgument val9) {
@@ -269,7 +294,7 @@ bool Alpm::open(const QString & confpath,const QString & dbpath) {
     alpm_option_set_eventcb(m_alpm_handle,operation_event_fn,NULL);
     alpm_option_set_fetchcb(m_alpm_handle,operation_fetch_fn,NULL);
 
-    lock_watcher.addPath(lockFilePath());
+    lock_watcher->addPath(lockFilePath());
     recreatedbs();
 
     return true;
@@ -419,7 +444,7 @@ bool Alpm::close() {
         return false;
     }
 
-    lock_watcher.removePaths(lock_watcher.files());
+    lock_watcher->removeAllPaths();
     alpm_release(m_alpm_handle);
     m_alpm_handle = NULL;
     m_groups.clear();
