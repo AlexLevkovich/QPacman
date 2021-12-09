@@ -9,6 +9,7 @@
 #include "sigwatch.h"
 #include "stacktracer.h"
 #include "malloc.h"
+#include <unistd.h>
 
 void setupTranslations(const QString & installDir,const QString & alpmLocalDir) {
     QTranslator * m_translator = new QTranslator(QCoreApplication::instance());

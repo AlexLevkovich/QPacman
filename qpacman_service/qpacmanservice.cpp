@@ -38,8 +38,16 @@ QPacmanService::QPacmanService(QObject *parent) : QObject(parent), QDBusContext(
 
     new QPacmanServiceAdaptor(this);
     QDBusConnection dbus = QDBusConnection::systemBus();
-    if (!dbus.registerObject("/", this)) qDebug() << "Cannot register QPacmanService object!" << dbus.lastError();
-    if (!dbus.registerService("com.alexl.qt.QPacmanService")) qDebug() << "Cannot register QPacmanService service!" << dbus.lastError();
+    if (!dbus.registerObject("/", this)) {
+        qDebug() << "Cannot register QPacmanService object!" << dbus.lastError();
+        QCoreApplication::instance()->exit(1);
+        return;
+    }
+    if (!dbus.registerService("com.alexl.qt.QPacmanService")) {
+        qDebug() << "Cannot register QPacmanService service!" << dbus.lastError();
+        QCoreApplication::instance()->exit(2);
+        return;
+    }
 
     locked_outside = Alpm::instance()->isLocked();
     reload_is_needed = false;
