@@ -179,6 +179,7 @@ void ConfReader::clear() {
     m_key_values.clear();
     m_sorted_key_values.clear();
     m_sections.clear();
+    m_sync_is_needed = true;
 }
 
 void ConfReader::sort() {
