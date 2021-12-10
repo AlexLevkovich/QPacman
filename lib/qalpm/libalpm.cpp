@@ -145,7 +145,6 @@ void Alpm::on_method_finished(const QString & name,const QVariant & result,Threa
 }
 
 void Alpm::lockFileChanged(const QString & path) {
-    qDebug() << path << lockFilePath() << QFile(path).exists();
     if (path != lockFilePath()) return;
     emit locking_changed(path,QFile(path).exists());
 }
