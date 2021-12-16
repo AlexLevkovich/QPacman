@@ -26,6 +26,6 @@ You can use **CONFIG+=USER_AUTH=0** in qmake arguments if you need to use root a
 
 **QT5 only**  
 
-Depends: '**Qt >= 5: core,network,gui,dbus,multimedia,widgets,svg**', '**pacman**', '**pam**', '**libarchive**' '**binutils**' '**appstream-qt**' '**archlinux-appstream-data**' and '**gawk**' as a makedepend. 
+Depends: '**Qt >= 5: core,network,gui,dbus,multimedia,widgets,svg**', '**pacman**', '**pam**', '**libarchive**' '**binutils**' '**appstream-qt**' '**archlinux-appstream-data**'. 
   
 
