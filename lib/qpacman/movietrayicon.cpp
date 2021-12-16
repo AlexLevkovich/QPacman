@@ -25,7 +25,7 @@ MovieTrayIcon::MovieTrayIcon(QObject *parent) : QObject(parent) {
     connect(m_tray_icon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(activatedReason(QSystemTrayIcon::ActivationReason)));
     connect(m_tray_icon,SIGNAL(messageClicked()),this,SIGNAL(messageClicked()));
     connect(&m_movie,SIGNAL(frameChanged(int)),this,SLOT(frameChanged(int)));
-    connect(m_menu,&QMenu::aboutToShow,[&]() { emit menuAboutToShow(m_menu); });
+    connect(m_menu,&QMenu::aboutToShow,this,[&]() { emit menuAboutToShow(m_menu); });
     qApp->installEventFilter(this);
 
     QMetaObject::invokeMethod(this,"setMenu",Qt::QueuedConnection);
@@ -51,7 +51,7 @@ void MovieTrayIcon::checkTopLevelWindows() {
     if (m_menu == NULL) return;
     if (m_tray_icon == NULL) return;
     bool is_another = false;
-    for (QWindow * wnd: QGuiApplication::topLevelWindows()) {
+    for (QWindow * & wnd: QGuiApplication::topLevelWindows()) {
         if (wnd != m_menu->windowHandle() && (wnd->visibility() != QWindow::Hidden)) {
             is_another = true;
             break;

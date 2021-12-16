@@ -4,7 +4,7 @@ Description=QPacman DBus service
 [Service]
 Type=dbus
 BusName=com.alexl.qt.QPacmanService
-ExecStart=/usr/bin/qpacman_service
+ExecStart=$$INSTALL_PREFIX/bin/qpacman_service
 
 [Install]
 WantedBy=multi-user.target

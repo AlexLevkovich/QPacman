@@ -1,4 +1,4 @@
 [D-BUS Service]
 Name=com.alexl.qt.QPacmanService
-Exec=/usr/bin/qpacman_service
+Exec=$$INSTALL_PREFIX/bin/qpacman_service
 User=root
