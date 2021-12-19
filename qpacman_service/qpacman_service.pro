@@ -8,6 +8,7 @@ CONFIG -= app_bundle
 isEmpty(INSTALL_PREFIX) {
     INSTALL_PREFIX = /usr
 }
+DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 
 isEmpty(USER_AUTH) {
     USER_AUTH = 1

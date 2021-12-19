@@ -21,6 +21,7 @@ int main(int argc, char *argv[]) {
     mallopt(M_MXFAST,0);
     mallopt(M_ARENA_MAX,2);
     mallopt(M_TRIM_THRESHOLD,131072);
+    qputenv("PATH",QString("%1/bin:$1/sbin").arg(INSTALL_PREFIX).toLocal8Bit());
 
     QCoreApplication::setOrganizationName("AlexL");
     QCoreApplication::setApplicationName("qpacman_service");
