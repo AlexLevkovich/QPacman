@@ -10,6 +10,10 @@ isEmpty(INSTALL_PREFIX) {
 }
 DEFINES += INSTALL_PREFIX=\\\"$$INSTALL_PREFIX\\\"
 
+isEmpty(JEMALLOC_PATH) {
+    JEMALLOC_PATH = $$INSTALL_PREFIX/lib/libjemalloc.so
+}
+
 isEmpty(USER_AUTH) {
     USER_AUTH = 1
 }

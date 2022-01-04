@@ -5,7 +5,7 @@ Description=QPacman DBus service
 Type=dbus
 BusName=com.alexl.qt.QPacmanService
 ExecStart=$$INSTALL_PREFIX/bin/qpacman_service
-Environment=\"PATH=$$INSTALL_PREFIX/bin:$$INSTALL_PREFIX/sbin\"
+Environment=\"PATH=$$INSTALL_PREFIX/bin:$$INSTALL_PREFIX/sbin;LD_PRELOAD=$$JEMALLOC_PATH\"
 
 [Install]
 WantedBy=multi-user.target
