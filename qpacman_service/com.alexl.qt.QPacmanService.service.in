@@ -1,4 +1,4 @@
 [D-BUS Service]
 Name=com.alexl.qt.QPacmanService
-Exec=/bin/bash -c \"LD_PRELOAD=$$JEMALLOC_PATH /$$INSTALL_PREFIX/bin/qpacman_service\"
+Exec=/bin/bash -c \"LD_PRELOAD=$$JEMALLOC_PATH $$INSTALL_PREFIX/bin/qpacman_service\"
 User=root
