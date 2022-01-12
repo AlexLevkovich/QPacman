@@ -17,5 +17,6 @@ int main(int argc, char *argv[]) {
     setupTranslations(QString::fromLatin1("qpacmantray"),TRANS_DIR2,TRANS_DIR1,TRANS_DIR4,TRANS_DIR3);
 
     Alpm alpm;
+    QObject::connect(qApp,&QGuiApplication::commitDataRequest,&alpm,[&]() { alpm.setMethodTerminateFlag(); });
     return a.exec();
 }
