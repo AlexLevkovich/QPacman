@@ -100,7 +100,7 @@ public:
         connect(this,&QFileSystemWatcher::directoryChanged,this,[=](const QString & path) {
             QString path2look = path;
             if (!path2look.endsWith(QDir::separator())) path2look += QDir::separator();
-            for (const QString & file: m_files) {
+            for (QString & file: m_files) {
                 if (file.contains(path2look)) QMetaObject::invokeMethod(this,"fileChanged",Qt::QueuedConnection,Q_ARG(QString,file));
             }
         });
@@ -558,25 +558,25 @@ void Alpm::operation_question_fn(void *,alpm_question_t * question) {
             question->install_ignorepkg.install = answer?1:0;
             break;
         case ALPM_QUESTION_REPLACE_PKG:
-            p_alpm->emit_question(QObject::tr("Replace %1 with %2/%3?").arg(QString::fromLocal8Bit(alpm_pkg_get_name(question->replace.oldpkg))).
-                                                                                           arg(QString::fromLocal8Bit(alpm_db_get_name(question->replace.newdb))).
-                                                                                           arg(QString::fromLocal8Bit(alpm_pkg_get_name(question->replace.newpkg))),
-                                                                                           &answer);
+            p_alpm->emit_question(QObject::tr("Replace %1 with %2/%3?").arg(QString::fromLocal8Bit(alpm_pkg_get_name(question->replace.oldpkg)),
+                                                                            QString::fromLocal8Bit(alpm_db_get_name(question->replace.newdb)),
+                                                                            QString::fromLocal8Bit(alpm_pkg_get_name(question->replace.newpkg))),
+                                                                            &answer);
             question->replace.replace = answer?1:0;
             break;
         case ALPM_QUESTION_CONFLICT_PKG:
             if(!strcmp((const char *)question->conflict.conflict->package1,(const char *)question->conflict.conflict->reason->name) || !strcmp((const char *)question->conflict.conflict->package2,(const char *)question->conflict.conflict->reason->name)) {
-                p_alpm->emit_question(QObject::tr("%1 and %2 are in conflict. Remove %3?").arg(QString::fromLocal8Bit((const char *)question->conflict.conflict->package1)).
-                                                                                           arg(QString::fromLocal8Bit((const char *)question->conflict.conflict->package2)).
-                                                                                           arg(QString::fromLocal8Bit((const char *)question->conflict.conflict->package2)),
-                                                                                           &answer);
+                p_alpm->emit_question(QObject::tr("%1 and %2 are in conflict. Remove %3?").arg(QString::fromLocal8Bit((const char *)question->conflict.conflict->package1),
+                                                                                               QString::fromLocal8Bit((const char *)question->conflict.conflict->package2),
+                                                                                               QString::fromLocal8Bit((const char *)question->conflict.conflict->package2)),
+                                                                                               &answer);
             } else {
-                p_alpm->emit_question(QObject::tr("%1 and %2 are in conflict (%3-%4). Remove %5?").arg(QString::fromLocal8Bit((const char *)question->conflict.conflict->package1)).
-                                                                                                   arg(QString::fromLocal8Bit((const char *)question->conflict.conflict->package2)).
-                                                                                                   arg(QString::fromLocal8Bit((const char *)question->conflict.conflict->reason->name)).
-                                                                                                   arg(QString::fromLocal8Bit((const char *)question->conflict.conflict->reason->version)).
-                                                                                                   arg(QString::fromLocal8Bit((const char *)question->conflict.conflict->package2)),
-                                                                                                   &answer);
+                p_alpm->emit_question(QObject::tr("%1 and %2 are in conflict (%3-%4). Remove %5?").arg(QString::fromLocal8Bit((const char *)question->conflict.conflict->package1),
+                                                                                                       QString::fromLocal8Bit((const char *)question->conflict.conflict->package2),
+                                                                                                       QString::fromLocal8Bit((const char *)question->conflict.conflict->reason->name),
+                                                                                                       QString::fromLocal8Bit((const char *)question->conflict.conflict->reason->version),
+                                                                                                       QString::fromLocal8Bit((const char *)question->conflict.conflict->package2)),
+                                                                                                       &answer);
             }
             question->conflict.remove = answer?1:0;
             break;
@@ -628,10 +628,10 @@ void Alpm::operation_question_fn(void *,alpm_question_t * question) {
 
                 p_alpm->emit_question(QObject::tr("Import PGP key %1%2/%3, \"%4\", created: %5%6?").arg(key->length).
                                                                                                     arg(QChar::fromLatin1((char)key->pubkey_algo)).
-                                                                                                    arg(QString::fromLocal8Bit((const char *)key->fingerprint)).
-                                                                                                    arg(QString::fromLocal8Bit((const char *)key->uid)).
-                                                                                                    arg(QString::fromLocal8Bit((const char *)created)).
-                                                                                                    arg(QString::fromLocal8Bit((const char *)revoked)),
+                                                                                                    arg(QString::fromLocal8Bit((const char *)key->fingerprint),
+                                                                                                        QString::fromLocal8Bit((const char *)key->uid),
+                                                                                                        QString::fromLocal8Bit((const char *)created),
+                                                                                                        QString::fromLocal8Bit((const char *)revoked)),
                                                                                                     &answer);
                 question->import_key.import = answer?1:0;
             }
@@ -891,8 +891,8 @@ void Alpm::operation_event_fn(void *,alpm_event_t * event) {
         {
             alpm_event_optdep_removal_t *e = &event->optdep_removal;
             char * dep_string = alpm_dep_compute_string(e->optdep);
-            p_alpm->emit_information(QObject::tr("%1 optionally requires %2").arg(QString::fromLocal8Bit((const char *)alpm_pkg_get_name(e->pkg))).
-                                                                                  arg(QString::fromLocal8Bit((const char *)dep_string)));
+            p_alpm->emit_information(QObject::tr("%1 optionally requires %2").arg(QString::fromLocal8Bit((const char *)alpm_pkg_get_name(e->pkg)),
+                                                                                  QString::fromLocal8Bit((const char *)dep_string)));
             free(dep_string);
             break;
         }
@@ -1187,7 +1187,7 @@ QString Alpm::download_package(const QString & download_url) const {
 
 QString Alpm::download_package(const AlpmPackage & pkg) const {
     QString ret;
-    for (const QLatin1String & remote_loc: pkg.remoteLocations()) {
+    for (QLatin1String & remote_loc: pkg.remoteLocations()) {
         if (remote_loc.isEmpty()) continue;
         ret = download_package(remote_loc+QDir::separator()+pkg.fileName());
         if (!ret.isEmpty()) break;
@@ -1226,13 +1226,8 @@ QStringList Alpm::download_packages(const QList<AlpmPackage> & pkgs) {
     QString out_path;
     for (i=0;i<pkgs.count();i++) {
         filename = pkgs.at(i).fileName();
-        emit_event("download_start",Q_ARG(QString,filename));
         out_path = download_package(pkgs.at(i));
         if (!out_path.isEmpty()) downloaded_paths.append(out_path);
-        else {
-            emit_event("downloads_failed");
-            return downloaded_paths;
-        }
     }
 
     emit_event("downloads_completed");
@@ -1278,7 +1273,7 @@ bool Alpm::do_process_targets(bool remove) {
             alpm_pkg_t *pkg = list.valuePtr();
             dl_size += alpm_pkg_download_size(pkg);
             install_size += alpm_pkg_get_isize(pkg);
-            install_targets.append(QString("%3/%1=%2").arg(QString::fromLocal8Bit(alpm_pkg_get_name(pkg))).arg(QString::fromLocal8Bit(alpm_pkg_get_version(pkg))).arg(QString::fromLocal8Bit((db_name = (char *)alpm_db_get_name(alpm_pkg_get_db(pkg)))?db_name:"local")));
+            install_targets.append(QString("%3/%1=%2").arg(QString::fromLocal8Bit(alpm_pkg_get_name(pkg)),QString::fromLocal8Bit(alpm_pkg_get_version(pkg)),QString::fromLocal8Bit((db_name = (char *)alpm_db_get_name(alpm_pkg_get_db(pkg)))?db_name:"local")));
         } while(list.goNext());
     }
     list.detach();
@@ -1287,7 +1282,7 @@ bool Alpm::do_process_targets(bool remove) {
         do {
             alpm_pkg_t *pkg = rlist.valuePtr();
             remove_size += alpm_pkg_get_isize(pkg);
-            remove_targets.append(QString("%3/%1=%2").arg(QString::fromLocal8Bit(alpm_pkg_get_name(pkg))).arg(QString::fromLocal8Bit(alpm_pkg_get_version(pkg))).arg(QString::fromLocal8Bit((db_name = (char *)alpm_db_get_name(alpm_pkg_get_db(pkg)))?db_name:"local")));
+            remove_targets.append(QString("%3/%1=%2").arg(QString::fromLocal8Bit(alpm_pkg_get_name(pkg)),QString::fromLocal8Bit(alpm_pkg_get_version(pkg)),QString::fromLocal8Bit((db_name = (char *)alpm_db_get_name(alpm_pkg_get_db(pkg)))?db_name:"local")));
         } while(rlist.goNext());
     }
     rlist.detach();
@@ -1342,7 +1337,6 @@ void Alpm::sync_sysupgrade_portion(QList<AlpmPackage> & add_pkgs,int startindex,
 
     if (_startindex == _lastindex) return;
 
-    int sel_index = _startindex;
     alpm_question_select_provider_t provider_question;
     provider_question.type = ALPM_QUESTION_SELECT_PROVIDER;
     provider_question.use_index = 0;
@@ -1354,7 +1348,7 @@ void Alpm::sync_sysupgrade_portion(QList<AlpmPackage> & add_pkgs,int startindex,
     alpm_depend_t alpm_dep = depend_t(AlpmPackage::Dependence(add_pkgs[_startindex]));
     provider_question.depend = &alpm_dep;
     operation_question_fn(NULL,(alpm_question_t *)&provider_question);
-    sel_index = _startindex + provider_question.use_index;
+    int sel_index = _startindex + provider_question.use_index;
     free(alpm_dep.name);
     free(alpm_dep.desc);
     free(alpm_dep.version);
@@ -1419,7 +1413,7 @@ void Alpm::sync_sysupgrade(int m_install_flags) {
     std::sort(remove_pkgs.begin(),remove_pkgs.end(),sort_cmp);
     std::sort(add_pkgs.begin(),add_pkgs.end(),sort_cmp);
 
-    QList<AlpmPackage>::const_iterator it;
+    QList<AlpmPackage>::iterator it;
     for (j=0;j<remove_pkgs.count();j++) {
         it = binary_search_ex(add_pkgs.begin(),add_pkgs.end(),remove_pkgs[j],only_pkg_name_cmp);
         if (it == add_pkgs.end()) continue;
@@ -1561,15 +1555,15 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
                 alpm_list_t *trans_add = alpm_trans_get_add(m_alpm_handle);
                 alpm_pkg_t *pkg;
                 if(list.valuePtr()->causingpkg == NULL) {
-                    err = tr("Unable to satisfy dependency '%1' required by %2").arg(depstring).arg(QString::fromLocal8Bit(list.valuePtr()->target));
+                    err = tr("Unable to satisfy dependency '%1' required by %2").arg(depstring,QString::fromLocal8Bit(list.valuePtr()->target));
                     emit_information(err);
                     emit_error(err);
                 } else if((pkg = alpm_pkg_find(trans_add,list.valuePtr()->causingpkg))) {
-                    err = tr("Installing %1 (%2) breaks dependency '%3' required by %4").arg(QString::fromLocal8Bit(list.valuePtr()->causingpkg)).arg(QString::fromLocal8Bit(alpm_pkg_get_version(pkg))).arg(depstring).arg(QString::fromLocal8Bit(list.valuePtr()->target));
+                    err = tr("Installing %1 (%2) breaks dependency '%3' required by %4").arg(QString::fromLocal8Bit(list.valuePtr()->causingpkg),QString::fromLocal8Bit(alpm_pkg_get_version(pkg)),depstring,QString::fromLocal8Bit(list.valuePtr()->target));
                     emit_information(err);
                     emit_error(err);
                 } else {
-                    err = tr("Removing %1 breaks dependency '%2' required by %3").arg(QString::fromLocal8Bit(list.valuePtr()->causingpkg)).arg(depstring).arg(QString::fromLocal8Bit(list.valuePtr()->target));
+                    err = tr("Removing %1 breaks dependency '%2' required by %3").arg(QString::fromLocal8Bit(list.valuePtr()->causingpkg),depstring,QString::fromLocal8Bit(list.valuePtr()->target));
                     emit_information(err);
                     emit_error(err);
                 }
@@ -1583,12 +1577,12 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
             do {
                 if (list.isEmpty()) break;
                 if(list.valuePtr()->reason->mod == ALPM_DEP_MOD_ANY) {
-                    err = tr("%1 and %2 are in conflict").arg(QString::fromLocal8Bit(list.valuePtr()->package1)).arg(QString::fromLocal8Bit(list.valuePtr()->package2));
+                    err = tr("%1 and %2 are in conflict").arg(QString::fromLocal8Bit(list.valuePtr()->package1),QString::fromLocal8Bit(list.valuePtr()->package2));
                     emit_information(err);
                     emit_error(err);
                 } else {
                     char *reason = alpm_dep_compute_string(list.valuePtr()->reason);
-                    err = tr("%1 and %2 are in conflict (%3)").arg(QString::fromLocal8Bit(list.valuePtr()->package1)).arg(QString::fromLocal8Bit(list.valuePtr()->package2)).arg(QString::fromLocal8Bit(reason));
+                    err = tr("%1 and %2 are in conflict (%3)").arg(QString::fromLocal8Bit(list.valuePtr()->package1),QString::fromLocal8Bit(list.valuePtr()->package2),QString::fromLocal8Bit(reason));
                     emit_information(err);
                     emit_error(err);
                     free(reason);
@@ -1630,18 +1624,18 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
                 alpm_fileconflict_t *conflict = list.valuePtr();
                 switch(conflict->type) {
                     case ALPM_FILECONFLICT_TARGET:
-                        err = tr("%1 exists in both '%2' and '%3'").arg(QString::fromLocal8Bit(conflict->file)).arg(QString::fromLocal8Bit(conflict->target)).arg(QString::fromLocal8Bit(conflict->ctarget));
+                        err = tr("%1 exists in both '%2' and '%3'").arg(QString::fromLocal8Bit(conflict->file),QString::fromLocal8Bit(conflict->target),QString::fromLocal8Bit(conflict->ctarget));
                         emit_information(err);
                         emit_error(err);
                         break;
                     case ALPM_FILECONFLICT_FILESYSTEM:
                         if(conflict->ctarget[0]) {
-                            err = tr("%1: %2 exists in filesystem (owned by %3)").arg(QString::fromLocal8Bit(conflict->target)).arg(QString::fromLocal8Bit(conflict->file)).arg(QString::fromLocal8Bit(conflict->ctarget));
+                            err = tr("%1: %2 exists in filesystem (owned by %3)").arg(QString::fromLocal8Bit(conflict->target),QString::fromLocal8Bit(conflict->file),QString::fromLocal8Bit(conflict->ctarget));
                             emit_information(err);
                             emit_error(err);
                         }
                         else {
-                            err = tr("%1: %2 exists in filesystem").arg(QString::fromLocal8Bit(conflict->target)).arg(QString::fromLocal8Bit(conflict->file));
+                            err = tr("%1: %2 exists in filesystem").arg(QString::fromLocal8Bit(conflict->target),QString::fromLocal8Bit(conflict->file));
                             emit_information(err);
                             emit_error(err);
                         }
@@ -1727,7 +1721,7 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
                 tmpstr = alpm_dep_compute_string(list.valuePtr()->depend);
                 QString depstring = QString::fromLocal8Bit(tmpstr);
                 free(tmpstr);
-                err = tr("%1: removing %2 breaks dependency '%3'").arg(QString::fromLocal8Bit(list.valuePtr()->target)).arg(QString::fromLocal8Bit(list.valuePtr()->causingpkg)).arg(depstring);
+                err = tr("%1: removing %2 breaks dependency '%3'").arg(QString::fromLocal8Bit(list.valuePtr()->target),QString::fromLocal8Bit(list.valuePtr()->causingpkg),depstring);
                 emit_information(err);
                 emit_error(err);
             } while(list.goNext());
@@ -1797,7 +1791,7 @@ ThreadRun::RC Alpm::removePackages(const QList<AlpmPackage> & pkgs,bool cascade)
 bool Alpm::isLocked() const {
     if (!isValid(true)) return true;
 
-    return QFileInfo(lockFilePath()).exists();
+    return QFileInfo::exists(lockFilePath());
 }
 
 bool Alpm::removeLockFile() {
