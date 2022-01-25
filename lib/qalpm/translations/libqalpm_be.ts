@@ -496,7 +496,7 @@ Do you want to delete it?</source>
         <translation type="obsolete">Пачынаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+484"/>
+        <location line="+478"/>
         <location line="+6"/>
         <location line="+181"/>
         <source>Skipping target: %1</source>
@@ -513,7 +513,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пачынаем поўнае абнаўленне сістэмы...</translation>
     </message>
     <message>
-        <location line="-472"/>
+        <location line="-466"/>
         <source>The function in the thread is still running!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -523,7 +523,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Спынена па жаданнi карыстальніка!!!</translation>
     </message>
     <message>
-        <location line="+508"/>
+        <location line="+502"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 мае няправільную архітэктуру</translation>
     </message>
@@ -540,7 +540,7 @@ Do you want to delete it?</source>
     <message>
         <location line="+4"/>
         <source>Removing %1 breaks dependency &apos;%2&apos; required by %3</source>
-        <translation>Выдаленне %1 ламае залежнасць: &apos;%3&apos; патрабуе %3</translation>
+        <translation type="unfinished">Выдаленне %1 ламае залежнасць: &apos;%3&apos; патрабуе %2</translation>
     </message>
     <message>
         <location line="+14"/>
