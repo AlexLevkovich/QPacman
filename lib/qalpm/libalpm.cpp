@@ -1409,7 +1409,7 @@ void Alpm::sync_sysupgrade(int m_install_flags) {
         }
     }
 
-    add_pkgs = updates();
+    add_pkgs.append(updates());
     std::sort(remove_pkgs.begin(),remove_pkgs.end(),sort_cmp);
     std::sort(add_pkgs.begin(),add_pkgs.end(),sort_cmp);
 
@@ -1563,9 +1563,9 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
                     emit_information(err);
                     emit_error(err);
                 } else {
-                    err = tr("Removing %1 breaks dependency '%2' required by %3").arg(QString::fromLocal8Bit(list.valuePtr()->causingpkg),depstring,QString::fromLocal8Bit(list.valuePtr()->target));
-                    emit_information(err);
-                    emit_error(err);
+                     err = tr("Removing %1 breaks dependency '%2' required by %3").arg(QString::fromLocal8Bit(list.valuePtr()->causingpkg),depstring,QString::fromLocal8Bit(list.valuePtr()->target));
+                     emit_information(err);
+                     emit_error(err);
                 }
             } while(list.goNext());
             data = NULL;
