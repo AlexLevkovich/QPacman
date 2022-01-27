@@ -90,14 +90,8 @@ static bool operator<(const QSize &s1, const QSize &s2) {
 }
 
 QSize MovieIcon::iconSize(const QString & iconpath) {
-    QIcon icon;
-    return iconSize(iconpath,icon);
-}
-
-QSize MovieIcon::iconSize(const QString & iconpath,QIcon & icon) {
-    icon = QIcon(iconpath);
     QSize size;
-    if (iconpath.toLower().endsWith(".svg")) {
+    if (iconpath.endsWith(".svg",Qt::CaseInsensitive)) {
         QSvgRenderer svg(iconpath);
         QRect rect = svg.viewBox();
         if ((rect.width() != 0) && (rect.height() != 0)) {
@@ -106,7 +100,7 @@ QSize MovieIcon::iconSize(const QString & iconpath,QIcon & icon) {
         else return QSize();
     }
     else {
-        QList<QSize> sizes = icon.availableSizes();
+        QList<QSize> sizes = QIcon(iconpath).availableSizes();
         std::sort(sizes.begin(),sizes.end());
         size = sizes.isEmpty()?QSize():sizes.last();
     }
@@ -122,7 +116,7 @@ bool MovieIcon::update(int index) {
         QString name = m_icons[index].toString();
         QPixmap whole_pixmap(size.width()*(m_size.width()/(m_is_simple[index])[0].size().width()),size.height()*(m_size.height()/(m_is_simple[index])[0].size().height()));
         whole_pixmap.fill(Qt::transparent);
-        if (name.toLower().endsWith(".svg")) {
+        if (name.endsWith(".svg",Qt::CaseInsensitive)) {
             QSvgRenderer svg(name);
             QPainter painter(&whole_pixmap);
             svg.render(&painter,QRectF(0,0,whole_pixmap.width(),whole_pixmap.height()));
@@ -150,8 +144,7 @@ bool MovieIcon::update(int index) {
 bool MovieIcon::add(const QString & iconpath,const QList<QRect> & rects) {
     stop();
 
-    QIcon icon;
-    QSize size = iconSize(iconpath,icon);
+    QSize size = iconSize(iconpath);
     if (!size.isValid()) return false;
     if (rects.count() <= 0) return false;
 

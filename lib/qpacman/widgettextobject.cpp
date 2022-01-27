@@ -324,6 +324,7 @@ void WidgetTextObject::onContentsChange(int pos,int removed,int added) {
         return;
     }
     if (m_pos < pos) return;
+    if (m_textEdit == NULL) return;
 
     QTextCursor cursor = m_textEdit->textCursor();
     if (removed == added) {

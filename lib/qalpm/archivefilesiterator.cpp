@@ -54,7 +54,7 @@ ArchiveFileReader::ArchiveFileReader(const QString & archive_path) {
         close();
         return;
     }
-    m_begin = pos();
+    m_begin = lseek(m_fd,0,SEEK_CUR);
     if (m_begin == (off_t)-1) {
         m_error = QString::fromLocal8Bit(strerror(errno));
         close();

@@ -71,7 +71,7 @@ void AlpmDownloader::download_progress(qint64 downloaded,int percents,qint64 spe
 }
 
 bool AlpmDownloader::removeFile(const QString & filename) {
-    if (!QFileInfo(filename).exists()) return true;
+    if (!QFileInfo::exists(filename)) return true;
     if (!QFile(filename).remove()) {
         emit error(tr("Cannot delete the following file: %1").arg(filename));
         if (isRunning()) exit(-1);
@@ -111,7 +111,7 @@ QString AlpmDownloader::outputFileName() const {
 
 bool AlpmDownloader::renameFile(const QString & filename,const QString & new_filename) {
     QFile(filename).rename(new_filename);
-    if (QFileInfo(new_filename).exists()) {
+    if (QFileInfo::exists(new_filename)) {
         QFile(filename).remove();
         return true;
     }

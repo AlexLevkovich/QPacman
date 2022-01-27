@@ -273,21 +273,21 @@ void SingleApplicationPrivate::slotConnectionEstablished()
     QLocalSocket *nextConnSocket = server->nextPendingConnection();
     connectionMap.insert(nextConnSocket, ConnectionInfo());
 
-    QObject::connect(nextConnSocket, &QLocalSocket::aboutToClose,
+    QObject::connect(nextConnSocket, &QLocalSocket::aboutToClose,this,
         [nextConnSocket, this]() {
             auto &info = connectionMap[nextConnSocket];
-            Q_EMIT this->slotClientConnectionClosed( nextConnSocket, info.instanceId );
+            this->slotClientConnectionClosed( nextConnSocket, info.instanceId );
         }
     );
 
-    QObject::connect(nextConnSocket, &QLocalSocket::disconnected,
+    QObject::connect(nextConnSocket, &QLocalSocket::disconnected,this,
         [nextConnSocket, this](){
             connectionMap.remove(nextConnSocket);
             nextConnSocket->deleteLater();
         }
     );
 
-    QObject::connect(nextConnSocket, &QLocalSocket::readyRead,
+    QObject::connect(nextConnSocket, &QLocalSocket::readyRead,this,
         [nextConnSocket, this]() {
             auto &info = connectionMap[nextConnSocket];
             switch(info.stage) {
@@ -298,7 +298,7 @@ void SingleApplicationPrivate::slotConnectionEstablished()
                 readInitMessageBody(nextConnSocket);
                 break;
             case StageConnected:
-                Q_EMIT this->slotDataAvailable( nextConnSocket, info.instanceId );
+                this->slotDataAvailable( nextConnSocket, info.instanceId );
                 break;
             default:
                 break;
@@ -396,7 +396,7 @@ void SingleApplicationPrivate::readInitMessageBody( QLocalSocket *sock )
     }
 
     if (sock->bytesAvailable() > 0) {
-        Q_EMIT this->slotDataAvailable( sock, instanceId );
+        this->slotDataAvailable( sock, instanceId );
     }
 }
 
@@ -409,5 +409,5 @@ void SingleApplicationPrivate::slotDataAvailable( QLocalSocket *dataSocket, quin
 void SingleApplicationPrivate::slotClientConnectionClosed( QLocalSocket *closedSocket, quint32 instanceId )
 {
     if( closedSocket->bytesAvailable() > 0 )
-        Q_EMIT slotDataAvailable( closedSocket, instanceId  );
+        slotDataAvailable( closedSocket, instanceId  );
 }

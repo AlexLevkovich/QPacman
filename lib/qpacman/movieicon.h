@@ -59,7 +59,6 @@ private slots:
 
 private:
     bool add(const QString & iconpath,const QList<QRect> & rects);
-    QSize iconSize(const QString & iconpath,QIcon & icon);
     QSize iconSize(const QString & iconpath);
     void putStaticImage(QPixmap & frame);
     void updateArrays();

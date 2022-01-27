@@ -56,9 +56,9 @@ PackageProcessor::PackageProcessor(ProgressView * view,QAction * cancelAction,Op
     if (cancelAction != NULL) connect(cancelAction,SIGNAL(triggered()),this,SLOT(cancelTriggered()));
     m_cancelAction = cancelAction;
 
-    connect(pkgChangeDlg,&QObject::destroyed,[&]() { pkgChangeDlg = NULL; });
-    connect(pkgProviderDlg,&QObject::destroyed,[&]() { pkgProviderDlg = NULL; });
-    connect(questionDlg,&QObject::destroyed,[&]() { questionDlg = NULL; });
+    connect(pkgChangeDlg,&QObject::destroyed,this,[&]() { pkgChangeDlg = NULL; });
+    connect(pkgProviderDlg,&QObject::destroyed,this,[&]() { pkgProviderDlg = NULL; });
+    connect(questionDlg,&QObject::destroyed,this,[&]() { questionDlg = NULL; });
     connect(Alpm::instance(),SIGNAL(information(const QString &,bool)),this,SIGNAL(logString(const QString &)));
     connect(Alpm::instance(),SIGNAL(optdepends_event(const QString &,const StringStringMap &,const StringStringMap &)),this,SLOT(on_optdepends_event(const QString &,const StringStringMap &,const StringStringMap &)));
     connect(Alpm::instance(),&Alpm::all_hooks,this,[&](const QString & message) { on_event(1,message); });
