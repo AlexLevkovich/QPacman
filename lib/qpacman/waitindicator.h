@@ -6,6 +6,7 @@
 #include <QPixmap>
 
 class QEvent;
+class QTimer;
 
 class WaitIndicator : public QThread {
     Q_OBJECT
@@ -20,11 +21,9 @@ protected:
 private slots:
     void changeAngle();
 
-signals:
-   void doStop();
-   void doStart();
-
 private:
+    QTimer * timer();
+
     double m_size;
     int angle;
     double m_actualInnerRadius;

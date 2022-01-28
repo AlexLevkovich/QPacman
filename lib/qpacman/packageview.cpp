@@ -337,8 +337,8 @@ void PackageView::refreshRows(const QString & name,AlpmPackage::SearchFieldType 
     if (m_is_refreshing) return;
 
     clear();
-    emit refreshBeginning();
     m_is_refreshing = true;
+    emit refreshBeginning();
     if (!Alpm::instance()->queryPackages(name,fieldType,filter,group,repo)) return;
     currentSelectionState = PackageView::SelectionState(name,fieldType,filter,group,repo);
     emit search_changed(name,fieldType,filter,group,repo);
@@ -352,7 +352,10 @@ void PackageView::package_queried(const AlpmPackage & pkg) {
     m_model->appendRow(pkg);
 }
 
-void PackageView::packages_queried(const QString &,ThreadRun::RC rc) {
+void PackageView::packages_queried(const QString & name,ThreadRun::RC rc) {
+    if (name != "Alpm::query_packages" || !m_is_refreshing) return;
+
+    m_is_refreshing = false;
     if (rc == ThreadRun::OK) {
         if (currentSelectionState.package().isValid()) {
             selectPackageByState(currentSelectionState);
@@ -360,7 +363,6 @@ void PackageView::packages_queried(const QString &,ThreadRun::RC rc) {
         }
     }
     emit refreshCompleted();
-    m_is_refreshing = false;
     history_disabled = false;
 }
 

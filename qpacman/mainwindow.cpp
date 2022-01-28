@@ -115,8 +115,8 @@ void MainWindow::onRefreshCompleted() {
     ui->filesTree->clear();
     ui->pacInfoView->clear();
     enableActions(true);
-    view_group->setCurrent(ui->splitter);
     acgroup->uncheckAllActions();
+    view_group->setCurrent(ui->splitter);
 }
 
 static const QList<QAction *> childrenActions(QObject * main_object) {

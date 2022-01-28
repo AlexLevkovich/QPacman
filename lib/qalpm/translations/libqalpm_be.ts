@@ -281,7 +281,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Памылка пры загрузцы %1</translation>
     </message>
     <message>
-        <location line="+689"/>
+        <location line="+688"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Абнаўляем базу дадзеных: %1...</translation>
     </message>
@@ -336,7 +336,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-953"/>
+        <location filename="../libalpm.cpp" line="-952"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам трэба выбраць пастаўшчыка для пакета %1:
@@ -496,14 +496,14 @@ Do you want to delete it?</source>
         <translation type="obsolete">Пачынаем загрузку %1</translation>
     </message>
     <message>
-        <location line="+482"/>
+        <location line="+478"/>
         <location line="+6"/>
-        <location line="+183"/>
+        <location line="+181"/>
         <source>Skipping target: %1</source>
         <translation type="unfinished">Прапускаем %1</translation>
     </message>
     <message>
-        <location line="-180"/>
+        <location line="-178"/>
         <source>%1: %2</source>
         <translation type="unfinished"></translation>
     </message>
@@ -513,7 +513,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пачынаем поўнае абнаўленне сістэмы...</translation>
     </message>
     <message>
-        <location line="-470"/>
+        <location line="-466"/>
         <source>The function in the thread is still running!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -523,7 +523,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Спынена па жаданнi карыстальніка!!!</translation>
     </message>
     <message>
-        <location line="+506"/>
+        <location line="+502"/>
         <source>Package %1 does not have a valid architecture</source>
         <translation type="unfinished">Пакет %1 мае няправільную архітэктуру</translation>
     </message>
@@ -564,12 +564,12 @@ Do you want to delete it?</source>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+152"/>
+        <location line="+150"/>
         <source>Failed to commit transaction (%1)</source>
         <translation type="unfinished">Немагчыма выканаць транзакцыю (%1)</translation>
     </message>
     <message>
-        <location line="-142"/>
+        <location line="-140"/>
         <source>%1 exists in both &apos;%2&apos; and &apos;%3&apos;</source>
         <translation type="unfinished">%1 існуе ў двух пакетах &apos;%2&apos; and &apos;%3&apos;</translation>
     </message>
@@ -599,7 +599,7 @@ Do you want to delete it?</source>
         <translation>Усе пакеты ўсталяваныя без памылак!</translation>
     </message>
     <message>
-        <location line="+44"/>
+        <location line="+42"/>
         <source>Failed to prepare transaction (%1)</source>
         <translation type="unfinished">Немагчыма падрыхтаваць транзакцыю (%1)</translation>
     </message>

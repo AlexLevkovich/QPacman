@@ -33,22 +33,27 @@ void WaitIndicator::run() {
     parent->installEventFilter(this);
 
     QTimer timer;
+    setProperty("timer",(qlonglong)&timer);
     timer.setInterval(50);
     connect(&timer,&QTimer::timeout,this,&WaitIndicator::changeAngle,Qt::QueuedConnection);
-    connect(this,&WaitIndicator::doStart,&timer,[&]() { timer.start(); },Qt::QueuedConnection);
-    connect(this,&WaitIndicator::doStop,&timer,&QTimer::stop,Qt::QueuedConnection);
 
     if (parent->isVisible()) QMetaObject::invokeMethod(this,"doStart",Qt::QueuedConnection);
 
     exec();
 }
 
+QTimer * WaitIndicator::timer() {
+    QVariant val = property("timer");
+    if (!val.isValid()) return NULL;
+    return (QTimer *)val.toLongLong();
+}
+
 bool WaitIndicator::eventFilter(QObject *obj, QEvent *event) {
     QWidget * parent = (QWidget *)this->parent();
 
     if (obj == parent) {
-        if (event->type() == QEvent::Show) emit doStart();
-        else if (event->type() == QEvent::Hide) emit doStop();
+        if (event->type() == QEvent::Show) emit QMetaObject::invokeMethod(timer(),"start",Qt::QueuedConnection);
+        else if (event->type() == QEvent::Hide) QMetaObject::invokeMethod(timer(),"stop",Qt::QueuedConnection);
         else if (event->type() == QEvent::Paint) {
             QPaintEvent * e = (QPaintEvent *)event;
             QRect pixmapRect((parent->width()-m_size)*0.5,(parent->height()-m_size)*0.5,m_size,m_size);
