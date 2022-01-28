@@ -1126,7 +1126,6 @@ QList<AlpmPackage> Alpm::query_packages(const QString & name,AlpmPackage::Search
     m_packages.erase(std::remove_if(m_packages.begin(),m_packages.end(),[](const AlpmPackage & pkg){return !pkg.isValid();}),m_packages.end());
     if (repo == "local") m_packages.erase(std::remove_if(m_packages.begin(),m_packages.end(),[](const AlpmPackage & pkg){return (pkg.repo() != "local");}),m_packages.end());
 
-    malloc_trim(0);
     return m_packages;
 }
 
@@ -1178,7 +1177,6 @@ void Alpm::update_dbs(bool force) {
     AlpmPackage::m_change_statuses.clear();
     recreatedbs();
 
-    malloc_trim(0);
     m_alpm_errno = ALPM_ERR_OK;
 }
 
@@ -1234,7 +1232,6 @@ QStringList Alpm::download_packages(const QList<AlpmPackage> & pkgs) {
     }
 
     emit_event("downloads_completed");
-    malloc_trim(0);
 
     return downloaded_paths;
 }
@@ -1256,7 +1253,6 @@ QList<AlpmPackage> Alpm::updates() const {
 
     std::sort(ret.begin(),ret.end(),sort_cmp);
     ret.erase(std::unique(ret.begin(),ret.end(),sort_equal_cmp),ret.end());
-    malloc_trim(0);
 
     return ret;
 }
@@ -1677,8 +1673,6 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
     emit_information(tr("No errors occurred, the packages were successfully installed."),true);
     FREELIST(data);
 
-    malloc_trim(0);
-
     m_alpm_errno = ALPM_ERR_OK;
 }
 
@@ -1780,7 +1774,6 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
     FREELIST(data);
 
     emit_information(tr("No errors occurred, the packages were successfully removed."),true);
-    malloc_trim(0);
     m_alpm_errno = ALPM_ERR_OK;
 }
 
