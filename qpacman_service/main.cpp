@@ -18,9 +18,9 @@ void setupTranslations(const QString & installDir,const QString & alpmLocalDir) 
 }
 
 int main(int argc, char *argv[]) {
-    mallopt(M_MXFAST,0);
+    //mallopt(M_MXFAST,0);
     mallopt(M_ARENA_MAX,2);
-    mallopt(M_TRIM_THRESHOLD,1024);
+    //mallopt(M_TRIM_THRESHOLD,1024);
     mallopt(M_MMAP_THRESHOLD,1024);
     qputenv("PATH",QString("%1/bin:$1/sbin").arg(INSTALL_PREFIX).toLocal8Bit());
 
