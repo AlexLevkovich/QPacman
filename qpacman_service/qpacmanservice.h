@@ -185,6 +185,8 @@ private:
     bool check_password(const QString & pw);
     static int pam_auth(int num_msg, const struct pam_message **msg,struct pam_response **resp, void *appdata_ptr);
     static const QString username_of_pid(pid_t pid);
+    void connect_method_finished();
+    void disconnect_method_finished();
 
     static bool m_files_executing;
     bool locked_outside;

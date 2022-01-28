@@ -26,7 +26,6 @@ class ActionApplier : public QObject {
 
 public:
     ActionApplier(QPacmanService * parent);
-    ~ActionApplier();
 
 signals:
     void optional_pkgs_selected(const QStringList & pkgs);

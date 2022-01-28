@@ -12,9 +12,6 @@ ActionApplier::ActionApplier(QPacmanService *parent) : QObject(parent) {
 
     init();
 
-    disconnect(Alpm::instance(),SIGNAL(method_finished(QString,QStringList,ThreadRun::RC)),parent,SLOT(onmethod_finished(QString,QStringList,ThreadRun::RC)));
-    disconnect(Alpm::instance(),SIGNAL(method_finished(QString,ThreadRun::RC)),parent,SLOT(onmethod_finished(QString,ThreadRun::RC)));
-    disconnect(Alpm::instance(),SIGNAL(method_finished(QString,QList<AlpmPackage>,ThreadRun::RC)),parent,SLOT(onmethod_finished(QString,QList<AlpmPackage>,ThreadRun::RC)));
     connect(Alpm::instance(),SIGNAL(method_finished(QString,ThreadRun::RC)),SLOT(processing_completed(QString,ThreadRun::RC)),Qt::QueuedConnection);
 
     if (m_remove_all_pkgs.count() > 0) {
@@ -38,12 +35,6 @@ ActionApplier::ActionApplier(QPacmanService *parent) : QObject(parent) {
         m_phase = INSTALLDEPS;
         processing_completed("",ThreadRun::BAD);
     }
-}
-
-ActionApplier::~ActionApplier() {
-    connect(Alpm::instance(),SIGNAL(method_finished(QString,QStringList,ThreadRun::RC)),parent(),SLOT(onmethod_finished(QString,QStringList,ThreadRun::RC)));
-    connect(Alpm::instance(),SIGNAL(method_finished(QString,ThreadRun::RC)),parent(),SLOT(onmethod_finished(QString,ThreadRun::RC)));
-    connect(Alpm::instance(),SIGNAL(method_finished(QString,QList<AlpmPackage>,ThreadRun::RC)),parent(),SLOT(onmethod_finished(QString,QList<AlpmPackage>,ThreadRun::RC)));
 }
 
 void ActionApplier::processing_completed(const QString & funcname,ThreadRun::RC rc) {

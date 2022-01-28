@@ -101,9 +101,19 @@ QPacmanService::QPacmanService(QObject *parent) : QObject(parent), QDBusContext(
     connect(Alpm::instance(),&Alpm::pkg_files_loaded,this,&QPacmanService::pkg_files_loaded);
     connect(Alpm::instance(),&Alpm::starting_scriplet,this,&QPacmanService::starting_scriplet);
     connect(Alpm::instance(),&Alpm::scriplet_executed,this,&QPacmanService::scriplet_executed);
+    connect_method_finished();
+}
+
+void QPacmanService::connect_method_finished() {
     connect(Alpm::instance(),SIGNAL(method_finished(QString,QStringList,ThreadRun::RC)),this,SLOT(onmethod_finished(QString,QStringList,ThreadRun::RC)));
     connect(Alpm::instance(),SIGNAL(method_finished(QString,ThreadRun::RC)),this,SLOT(onmethod_finished(QString,ThreadRun::RC)));
     connect(Alpm::instance(),SIGNAL(method_finished(QString,QList<AlpmPackage>,ThreadRun::RC)),this,SLOT(onmethod_finished(QString,QList<AlpmPackage>,ThreadRun::RC)));
+}
+
+void QPacmanService::disconnect_method_finished() {
+    disconnect(Alpm::instance(),SIGNAL(method_finished(QString,QStringList,ThreadRun::RC)),this,SLOT(onmethod_finished(QString,QStringList,ThreadRun::RC)));
+    disconnect(Alpm::instance(),SIGNAL(method_finished(QString,ThreadRun::RC)),this,SLOT(onmethod_finished(QString,ThreadRun::RC)));
+    disconnect(Alpm::instance(),SIGNAL(method_finished(QString,QList<AlpmPackage>,ThreadRun::RC)),this,SLOT(onmethod_finished(QString,QList<AlpmPackage>,ThreadRun::RC)));
 }
 
 void QPacmanService::do_alpm_reopen() {
@@ -558,7 +568,8 @@ ThreadRun::RC QPacmanService::install_packages(const QList<AlpmPackage> & pkgs,b
 ThreadRun::RC QPacmanService::processPackages(const String & root_pw) {
     if (!check_password(root_pw)) return ThreadRun::ROOTPW;
 
-    new ActionApplier(this);
+    disconnect_method_finished();
+    connect(new ActionApplier(this),&QObject::destroyed,this,[&]() { connect_method_finished(); });
     return ThreadRun::OK;
 }
 
