@@ -21,7 +21,7 @@ void RepoToolButton::fill(const QStringList & repos) {
     QString text = this->text();
 
     QMenu * menu = new QMenu(this);
-    connect(this,SIGNAL(triggered(QAction *)),this,SLOT(onMenuItemSelected(QAction *)));
+    connect(this,&RepoToolButton::triggered,this,&RepoToolButton::onMenuItemSelected);
 
     QIcon icon = ThemeIcons::get(ThemeIcons::REPO);
     menu->addAction(icon,RepoAll_Str)->setProperty("All",1);

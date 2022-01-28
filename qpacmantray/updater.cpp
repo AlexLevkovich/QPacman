@@ -10,14 +10,14 @@
 Updater::Updater(QObject *parent) : QObject(parent) {
     if (Alpm::instance()->executingMethodName().isEmpty()) {
         if (isQPacmanStarted()) {
-            connect(Alpm::instance(),SIGNAL(method_finished(const QString &,ThreadRun::RC)),this,SLOT(onupdate_method_finished(const QString &,ThreadRun::RC)));
+            connect(Alpm::instance(),SIGNAL(method_finished(QString,ThreadRun::RC)),this,SLOT(onupdate_method_finished(QString,ThreadRun::RC)));
             Alpm::instance()->updaterAboutToStart();
         }
         else {
             updateWindow = PackageProcessor::createMainProcessorWindow(&progressView,&logView,&cancelAction,&logAction,tr("Package Updater..."));
             PackageInstaller * pkg_inst = new PackageInstaller(QList<AlpmPackage>(),QList<AlpmPackage>(),false,progressView,cancelAction,NULL,NULL);
             connect(pkg_inst,&PackageInstaller::completed,this,&Updater::onInstallerCompleted);
-            connect((QObject *)pkg_inst,SIGNAL(logString(const QString &)),(QObject *)logView,SLOT(appendPlainText(const QString &)));
+            connect(pkg_inst,&PackageInstaller::logString,logView,&QPlainTextEdit::appendPlainText);
             connect(updateWindow,&QObject::destroyed,this,&Updater::deleteLater);
         }
     }
@@ -29,8 +29,8 @@ void Updater::onInstallerCompleted(ThreadRun::RC rc) {
     logAction->setEnabled(true);
     cancelAction->setEnabled(false);
 
-    connect(sender(),&QObject::destroyed,[&]() { cancelAction->setEnabled(true); });
-    connect(cancelAction,SIGNAL(triggered()),updateWindow,SLOT(close()));
+    connect(sender(),&QObject::destroyed,this,[&]() { cancelAction->setEnabled(true); });
+    connect(cancelAction,&QAction::triggered,updateWindow,&QMainWindow::close);
     cancelAction->setEnabled(true);
 
     emit completed(rc);

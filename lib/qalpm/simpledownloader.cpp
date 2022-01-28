@@ -122,7 +122,7 @@ bool SimpleDownloader::start() {
 QNetworkReply * SimpleDownloader::get(const QNetworkRequest & request) {
     QNetworkReply * m_reply = m_manager->get(request);
     if (m_reply == NULL) {
-        was_error(tr("Returned wrong QNetworkReply pointer!!!"));
+        was_error_part(tr("Returned wrong QNetworkReply pointer!!!"));
         return NULL;
     }
     m_reply = new NetworkReplyProxy(m_reply,m_timeout,this);
@@ -133,11 +133,11 @@ void SimpleDownloader::private_start() {
     QNetworkReply * m_reply = get(QNetworkRequest(m_url));
     if (m_reply == NULL) return;
 
-    connect(m_reply,SIGNAL(metaDataChanged()),this,SLOT(metaDataChanged()));
-    connect(m_reply,SIGNAL(errorOccurred(QNetworkReply::NetworkError)),this,SLOT(was_error(QNetworkReply::NetworkError)));
-    connect(m_reply,SIGNAL(finished()),this,SLOT(get_finished()));
-    connect(m_reply,SIGNAL(readyRead()),this,SLOT(get_readyRead()));
-    connect(m_reply,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(get_downloadProgress(qint64,qint64)));
+    connect(m_reply,&QNetworkReply::metaDataChanged,this,&SimpleDownloader::metaDataChanged);
+    connect(m_reply,&QNetworkReply::errorOccurred,this,&SimpleDownloader::was_error);
+    connect(m_reply,&QNetworkReply::finished,this,&SimpleDownloader::get_finished);
+    connect(m_reply,&QNetworkReply::readyRead,this,&SimpleDownloader::get_readyRead);
+    connect(m_reply,&QNetworkReply::downloadProgress,this,&SimpleDownloader::get_downloadProgress);
     connect(m_reply,&QNetworkReply::sslErrors,[=]() { m_reply->ignoreSslErrors(); });
 }
 
@@ -146,10 +146,10 @@ void SimpleDownloader::was_error(QNetworkReply::NetworkError error) {
 
     if (error == QNetworkReply::OperationCanceledError) return;
 
-    was_error(m_reply->errorString(),m_reply);
+    was_error_part(m_reply->errorString(),m_reply);
 }
 
-void SimpleDownloader::was_error(const QString & error,QNetworkReply * reply) {
+void SimpleDownloader::was_error_part(const QString & error,QNetworkReply * reply) {
     m_out_file.close();
     updateModiffTime();
     m_is_started = false;
@@ -166,13 +166,13 @@ void SimpleDownloader::was_error(const QString & error,QNetworkReply * reply) {
 bool SimpleDownloader::correctOutputFilePath(QNetworkReply * reply) {
     QString out_path = m_outputName;
     if (out_path.isEmpty()) {
-        was_error(tr("The path to output file was not passed!!!"),reply);
+        was_error_part(tr("The path to output file was not passed!!!"),reply);
         return false;
     }
     if (QFileInfo(out_path).isDir()) {
         QString disposition = reply->header(QNetworkRequest::ContentDispositionHeader).toString();
         if (disposition.isEmpty() || !disposition.contains("filename=\"")) {
-            was_error(tr("Cannot determine the output file name!!!"),reply);
+            was_error_part(tr("Cannot determine the output file name!!!"),reply);
             return false;
         }
         else {
@@ -192,7 +192,7 @@ void SimpleDownloader::metaDataChanged() {
         if (!new_url_data.isEmpty()) {
             QUrl new_url = QUrl::fromEncoded(new_url_data);
             if (new_url != m_url) {
-                was_error("",m_reply);
+                was_error_part("",m_reply);
                 emit location_changed(new_url);
                 return;
             }
@@ -200,7 +200,7 @@ void SimpleDownloader::metaDataChanged() {
     }
 
     if (statusCode >= 400) {
-        was_error(tr("The server returned %1 code!").arg(statusCode),m_reply);
+        was_error_part(tr("The server returned %1 code!").arg(statusCode),m_reply);
         return;
     }
 
@@ -211,7 +211,7 @@ void SimpleDownloader::metaDataChanged() {
 
     m_out_file.setFileName(m_outputName);
     if (!m_out_file.open(QIODevice::WriteOnly|QIODevice::Truncate)) {
-        was_error(m_out_file.errorString(),m_reply);
+        was_error_part(m_out_file.errorString(),m_reply);
         return;
     }
 
@@ -250,7 +250,7 @@ void SimpleDownloader::get_readyRead() {
     while (written < len) {
         ret = m_out_file.write(data.data()+written,len-written);
         if (ret < 0) {
-            was_error(m_out_file.errorString(),m_reply);
+            was_error_part(m_out_file.errorString(),m_reply);
             return;
         }
         written += ret;

@@ -38,12 +38,12 @@ WidgetTextObject::WidgetTextObject(QTextEdit *parent,QWidget * widget) : QObject
     if (m_textEdit == NULL) return;
     m_textEdit->document()->documentLayout()->registerHandler(m_objectType,this);
     m_textEdit->installEventFilter(this);
-    connect(m_textEdit->document(),SIGNAL(contentsChange(int,int,int)),SLOT(onContentsChange(int,int,int)));
+    connect(m_textEdit->document(),&QTextDocument::contentsChange,this,&WidgetTextObject::onContentsChange);
 
     if (m_widget == NULL) return;
     m_widget->setVisible(false);
     m_widget->setParent(m_textEdit->viewport());
-    connect(m_widget,SIGNAL(destroyed()),SLOT(onWidgetDestroyed()));
+    connect(m_widget,&QObject::destroyed,this,&WidgetTextObject::onWidgetDestroyed);
 }
 
 WidgetTextObject::WidgetTextObject(QTextEdit *parent) : WidgetTextObject(parent,new QWidget()) {}
@@ -353,7 +353,7 @@ QTextEdit * WidgetTextObject::textEdit() {
 LineEditTextObject::LineEditTextObject(QTextEdit *parent,const QString & text) : WidgetTextObject(parent,new QLineEdit()) {
     if (m_widget == NULL) return;
     setText(text);
-    connect(m_widget,SIGNAL(textChanged(const QString &)),this,SIGNAL(textChanged(const QString &)));
+    connect(inputLineEdit(),&QLineEdit::textChanged,this,&LineEditTextObject::textChanged);
 }
 
 QString LineEditTextObject::text() const {
@@ -431,7 +431,7 @@ CheckBoxTextObject::CheckBoxTextObject(QTextEdit *parent,const QString & text,bo
     if (m_widget == NULL) return;
     setChecked(checked);
     setText(text);
-    connect(m_widget,SIGNAL(stateChanged(int)),this,SLOT(onStateChanged(int)));
+    connect(inputCheckBox(),&QCheckBox::stateChanged,this,&CheckBoxTextObject::onStateChanged);
 }
 
 void CheckBoxTextObject::onStateChanged(int state) {

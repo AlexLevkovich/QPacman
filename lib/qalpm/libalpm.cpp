@@ -16,6 +16,7 @@
 #endif
 #include <QDebug>
 #include <alpm.h>
+#include <malloc.h>
 
 Alpm * Alpm::p_alpm = NULL;
 int Alpm::m_percent = -1;
@@ -130,8 +131,8 @@ Alpm::Alpm(QObject *parent) : ThreadRun(parent) {
     qDBusRegisterMetaType<StringStringMap>();
 #endif
 
-    connect(this,SIGNAL(method_finished(const QString&,const QVariant&,ThreadRun::RC)),this,SLOT(on_method_finished(const QString&,const QVariant&,ThreadRun::RC)));
-    connect(lock_watcher = new LockFileSystemWatcher(),SIGNAL(fileChanged(const QString &)),this,SLOT(lockFileChanged(const QString &)));
+    connect(this,SIGNAL(method_finished(QString,QVariant,ThreadRun::RC)),this,SLOT(on_method_finished(QString,QVariant,ThreadRun::RC)));
+    connect(lock_watcher = new LockFileSystemWatcher(),&LockFileSystemWatcher::fileChanged,this,&Alpm::lockFileChanged);
 }
 
 Alpm::~Alpm() {
@@ -1125,6 +1126,7 @@ QList<AlpmPackage> Alpm::query_packages(const QString & name,AlpmPackage::Search
     m_packages.erase(std::remove_if(m_packages.begin(),m_packages.end(),[](const AlpmPackage & pkg){return !pkg.isValid();}),m_packages.end());
     if (repo == "local") m_packages.erase(std::remove_if(m_packages.begin(),m_packages.end(),[](const AlpmPackage & pkg){return (pkg.repo() != "local");}),m_packages.end());
 
+    malloc_trim(0);
     return m_packages;
 }
 
@@ -1176,6 +1178,7 @@ void Alpm::update_dbs(bool force) {
     AlpmPackage::m_change_statuses.clear();
     recreatedbs();
 
+    malloc_trim(0);
     m_alpm_errno = ALPM_ERR_OK;
 }
 
@@ -1231,6 +1234,7 @@ QStringList Alpm::download_packages(const QList<AlpmPackage> & pkgs) {
     }
 
     emit_event("downloads_completed");
+    malloc_trim(0);
 
     return downloaded_paths;
 }
@@ -1252,6 +1256,7 @@ QList<AlpmPackage> Alpm::updates() const {
 
     std::sort(ret.begin(),ret.end(),sort_cmp);
     ret.erase(std::unique(ret.begin(),ret.end(),sort_equal_cmp),ret.end());
+    malloc_trim(0);
 
     return ret;
 }
@@ -1672,6 +1677,8 @@ void Alpm::install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flag
     emit_information(tr("No errors occurred, the packages were successfully installed."),true);
     FREELIST(data);
 
+    malloc_trim(0);
+
     m_alpm_errno = ALPM_ERR_OK;
 }
 
@@ -1773,6 +1780,7 @@ void Alpm::remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade
     FREELIST(data);
 
     emit_information(tr("No errors occurred, the packages were successfully removed."),true);
+    malloc_trim(0);
     m_alpm_errno = ALPM_ERR_OK;
 }
 

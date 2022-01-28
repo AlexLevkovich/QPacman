@@ -39,8 +39,8 @@ void MessageDialog::init(const QString& label,const QString & log,const QString 
 
 MessageDialog * MessageDialog::post(const QString& messagelabel,const QString & log,bool is_error,const QString & title) {
     MessageDialog * dlg = new MessageDialog(messagelabel,log,title,is_error);
-    connect(dlg,SIGNAL(accepted()),dlg,SLOT(deleteLater()));
-    connect(dlg,SIGNAL(rejected()),dlg,SLOT(deleteLater()));
+    connect(dlg,&MessageDialog::accepted,dlg,&MessageDialog::deleteLater);
+    connect(dlg,&MessageDialog::rejected,dlg,&MessageDialog::deleteLater);
     QMetaObject::invokeMethod(dlg,"open",Qt::QueuedConnection);
     return dlg;
 }
@@ -61,7 +61,7 @@ bool MessageDialog::event(QEvent *e) {
             firstTime = false;
             QList<QPushButton *> buttons = findChildren<QPushButton *>();
             for (int i=0;i<buttons.count();i++) {
-                connect(buttons[i],SIGNAL(clicked()),this,SLOT(setSizeable()),Qt::QueuedConnection);
+                connect(buttons[i],&QPushButton::clicked,this,&MessageDialog::setSizeable,Qt::QueuedConnection);
             }
         }
         setSizeable();

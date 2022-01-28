@@ -20,8 +20,8 @@ OptionalDepsDlg::OptionalDepsDlg() : QDialog(SingleApplication::findMainWindow()
     m_opt_deps_enabled = false;
     m_processing_completed = false;
 
-    connect(ui->depsWidget->model(),SIGNAL(rowsInserted(const QModelIndex &,int,int)),this,SLOT(rowsChanged()));
-    connect(ui->depsWidget->model(),SIGNAL(rowsRemoved(const QModelIndex &,int,int)),this,SLOT(rowsChanged()));
+    connect(ui->depsWidget->model(),&QAbstractItemModel::rowsInserted,this,&OptionalDepsDlg::rowsChanged);
+    connect(ui->depsWidget->model(),&QAbstractItemModel::rowsRemoved,this,&OptionalDepsDlg::rowsChanged);
 }
 
 OptionalDepsDlg::~OptionalDepsDlg() {

@@ -74,17 +74,17 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) , ui(new Ui::MainWi
     connect(ui->settingsBrowser,&SettingsTextBrowser::dbsRefreshNeeded,this,&MainWindow::on_actionRefresh_triggered);
     connect(Alpm::instance(),&Alpm::do_start_dbrefresher,this,&MainWindow::onTrayRefresherStart);
     connect(Alpm::instance(),&Alpm::do_start_package_updater,this,&MainWindow::onTrayUpdaterStart);
-    connect(ui->actionApply,SIGNAL(triggered()),this,SLOT(onActionApply()));
-    connect(ui->filesTree,SIGNAL(downloadRequested(AlpmPackage)),this,SLOT(onDownloadRequested(AlpmPackage)));
+    connect(ui->actionApply,&QAction::triggered,this,&MainWindow::onActionApply);
+    connect(ui->filesTree,&FilesListWidget::downloadRequested,this,&MainWindow::onDownloadRequested);
     connect(ui->packetView,&PackageView::refreshBeginning,this,&MainWindow::onRefreshBeginning);
     connect(ui->packetView,&PackageView::refreshCompleted,this,&MainWindow::onRefreshCompleted);
-    connect(searchWidget,SIGNAL(search_changed(const QString &,CategoryToolButton::ItemId,FilterToolButton::ItemId,const QString &,const QString &)),this,SLOT(onSearchChanged(const QString &,CategoryToolButton::ItemId,FilterToolButton::ItemId,const QString &,const QString &)));
-    connect(ui->packetView,SIGNAL(search_changed(const QString &,AlpmPackage::SearchFieldType,AlpmPackage::PackageFilter,const QString &,const QString &)),this,SLOT(onViewSearchChanged(const QString &,AlpmPackage::SearchFieldType,AlpmPackage::PackageFilter,const QString &,const QString &)));
-    connect(ui->pacInfoView,SIGNAL(packageUrlSelected(const QString &,const QString &,int)),this,SLOT(onPackageUrlSelected(const QString &,const QString &,int)));
-    connect(ui->pacInfoView,SIGNAL(reasonUrlSelected(const QString &)),this,SLOT(onReasonUrlSelected(const QString &)));
-    connect(ui->pacInfoView,SIGNAL(groupUrlSelected(const QString &)),this,SLOT(onGroupUrlSelected(const QString &)));
-    connect(ui->packetView,SIGNAL(selectionChanged(const AlpmPackage&)),this,SLOT(onViewSelectionChanged(const AlpmPackage&)));
-    connect(ui->packetView,SIGNAL(rowChoosingStateChanged(const QModelIndex &)),this,SLOT(onRowChoosingStateChanged(const QModelIndex &)));
+    connect(searchWidget,&SearchWidget::search_changed,this,&MainWindow::onSearchChanged);
+    connect(ui->packetView,&PackageView::search_changed,this,&MainWindow::onViewSearchChanged);
+    connect(ui->pacInfoView,&PacmanInfoBrowser::packageUrlSelected,this,&MainWindow::onPackageUrlSelected);
+    connect(ui->pacInfoView,&PacmanInfoBrowser::reasonUrlSelected,this,&MainWindow::onReasonUrlSelected);
+    connect(ui->pacInfoView,&PacmanInfoBrowser::groupUrlSelected,this,&MainWindow::onGroupUrlSelected);
+    connect(ui->packetView,SIGNAL(selectionChanged(AlpmPackage)),this,SLOT(onViewSelectionChanged(AlpmPackage)));
+    connect(ui->packetView,&PackageView::rowChoosingStateChanged,this,&MainWindow::onRowChoosingStateChanged);
 }
 
 MainWindow::~MainWindow() {
@@ -257,8 +257,8 @@ void MainWindow::on_actionRefresh_triggered() {
     ui->packetView->clear();
     ui->progressView->clear();
     PackageProcessor * processor = new DBRefresher(ui->progressView,ui->actionCancel);
-    connect(processor,SIGNAL(completed(ThreadRun::RC,const QString &)),SLOT(dbRefreshCompleted(ThreadRun::RC,const QString &)),Qt::QueuedConnection);
-    connect(processor,SIGNAL(logString(const QString &)),this,SLOT(logString(const QString &)));
+    connect(processor,&PackageProcessor::completed,this,&MainWindow::dbRefreshCompleted,Qt::QueuedConnection);
+    connect(processor,&PackageProcessor::logString,this,&MainWindow::logString);
 }
 
 void MainWindow::dbRefreshCompleted(ThreadRun::RC rc,const QString &) {
@@ -271,12 +271,12 @@ void MainWindow::dbRefreshCompleted(ThreadRun::RC rc,const QString &) {
     }
     else {
         ui->actionCancel->setEnabled(true);
-        connect(ui->actionCancel,SIGNAL(triggered()),this,SLOT(error_cancel_triggered()));
+        connect(ui->actionCancel,&QAction::triggered,this,&MainWindow::error_cancel_triggered);
     }
 }
 
 void MainWindow::error_cancel_triggered(bool do_refresh) {
-    disconnect(ui->actionCancel,SIGNAL(triggered()),this,SLOT(error_cancel_triggered()));
+    disconnect(ui->actionCancel,&QAction::triggered,this,&MainWindow::error_cancel_triggered);
     ui->actionCancel->setEnabled(false);
     ui->actionCancel->setVisible(false);
     ui->actionApply->setVisible(true);
@@ -316,10 +316,10 @@ void MainWindow::onActionApply() {
     ui->progressView->clear();
     optdep = new OptionalDepsDlg();
     ActionApplier * applier = new ActionApplier(ui->progressView,ui->actionCancel,optdep);
-    connect(optdep,SIGNAL(selected(const QStringList &)),this,SLOT(onselect_packages(const QStringList &)));
+    connect(optdep,&OptionalDepsDlg::selected,this,&MainWindow::onselect_packages);
     connect(optdep,&QObject::destroyed,this,[&]() { optdep = NULL; });
-    connect(applier,SIGNAL(completed(ThreadRun::RC,const QString &)),this,SLOT(onApplierCompleted(ThreadRun::RC,const QString &)),Qt::QueuedConnection);
-    connect(applier,SIGNAL(logString(const QString &)),this,SLOT(logString(const QString &)));
+    connect(applier,&ActionApplier::completed,this,&MainWindow::onApplierCompleted,Qt::QueuedConnection);
+    connect(applier,&ActionApplier::logString,this,&MainWindow::logString);
 }
 
 void MainWindow::onselect_packages(const QStringList & pkgs) {
@@ -343,7 +343,7 @@ void MainWindow::onApplierCompleted(ThreadRun::RC rc,const QString &) {
     else {
         if (optdep != NULL) optdep->deleteLater();
         ui->actionCancel->setEnabled(true);
-        connect(ui->actionCancel,SIGNAL(triggered()),this,SLOT(error_cancel_triggered()));
+        connect(ui->actionCancel,&QAction::triggered,this,&MainWindow::error_cancel_triggered);
     }
 }
 
@@ -358,10 +358,10 @@ void MainWindow::on_actionFullUpdate_triggered() {
     ui->progressView->clear();
     optdep = new OptionalDepsDlg();
     PackageInstaller * installer = new PackageInstaller(QList<AlpmPackage>(),QList<AlpmPackage>(),false,ui->progressView,ui->actionCancel,optdep);
-    connect(optdep,SIGNAL(selected(const QStringList &)),this,SLOT(onselect_packages(const QStringList &)));
+    connect(optdep,&OptionalDepsDlg::selected,this,&MainWindow::onselect_packages);
     connect(optdep,&QObject::destroyed,this,[&]() { optdep = NULL; });
-    connect(installer,SIGNAL(completed(ThreadRun::RC,const QString &)),this,SLOT(onApplierCompleted(ThreadRun::RC,const QString &)),Qt::QueuedConnection);
-    connect(installer,SIGNAL(logString(const QString &)),this,SLOT(logString(const QString &)));
+    connect(installer,&PackageInstaller::completed,this,&MainWindow::onApplierCompleted,Qt::QueuedConnection);
+    connect(installer,&PackageInstaller::logString,this,&MainWindow::logString);
 }
 
 void MainWindow::onDownloadRequested(const AlpmPackage & pkg) {
@@ -372,8 +372,8 @@ void MainWindow::onDownloadRequested(const AlpmPackage & pkg) {
     ui->actionCancel->setVisible(true);
     ui->actionApply->setVisible(false);
     PackageProcessor * processor = new PackageDownloader(QList<AlpmPackage>() << pkg,ui->progressView,ui->actionCancel);
-    connect(processor,SIGNAL(completed(ThreadRun::RC,const QString &)),SLOT(onDownloadingCompleted(ThreadRun::RC,const QString &)),Qt::QueuedConnection);
-    connect(processor,SIGNAL(logString(const QString &)),this,SLOT(logString(const QString &)));
+    connect(processor,&PackageProcessor::completed,this,&MainWindow::onDownloadingCompleted,Qt::QueuedConnection);
+    connect(processor,&PackageProcessor::logString,this,&MainWindow::logString);
 }
 
 void MainWindow::onDownloadingCompleted(ThreadRun::RC rc,const QString &) {
@@ -386,7 +386,7 @@ void MainWindow::onDownloadingCompleted(ThreadRun::RC rc,const QString &) {
     }
     else {
         ui->actionCancel->setEnabled(true);
-        connect(ui->actionCancel,&QAction::triggered,[&]() {error_cancel_triggered(false);});
+        connect(ui->actionCancel,&QAction::triggered,this,[&]() {error_cancel_triggered(false);});
     }
 }
 

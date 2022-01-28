@@ -14,7 +14,7 @@ CategoryToolButton::CategoryToolButton(QWidget *parent) : ComboToolButton(parent
     desc_action = menu.addAction(icon,tr("Search in descriptions"),this,SLOT(onSearchByDesc()));
     filename_action = menu.addAction(icon,tr("Search by file name"),this,SLOT(onSearchByFileName()));
     dep_action = menu.addAction(icon,tr("Search by dependency"),this,SLOT(onSearchByDependency()));
-    connect(this,SIGNAL(triggered(QAction *)),this,SLOT(onMenuItemSelected(QAction *)));
+    connect(this,&CategoryToolButton::triggered,this,&CategoryToolButton::onMenuItemSelected);
 
     is_sel = IS_NAME;
     setMenu(&menu);

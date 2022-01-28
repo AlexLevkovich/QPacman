@@ -32,7 +32,7 @@ public slots:
     void checkingCompleted(const QString & error,int err_id);
 
 private slots:
-    void clicked();
+    void onclicked();
 
 private:
     void initMenu(QMenu * menu);

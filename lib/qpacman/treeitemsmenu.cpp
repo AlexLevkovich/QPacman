@@ -19,10 +19,10 @@ TreeItemsMenu::TreeItemsMenu(QWidget *parent) : QMenu(parent) {
     treeWidget = new TreeMenuWidget(this);
     treeAction = new QWidgetAction(this);
     treeAction->setDefaultWidget(treeWidget);
-    connect(this,SIGNAL(aboutToShow()),this,SLOT(aboutToShow()));
+    connect(this,&TreeItemsMenu::aboutToShow,this,&TreeItemsMenu::onAboutToShow);
 }
 
-void TreeItemsMenu::aboutToShow() {
+void TreeItemsMenu::onAboutToShow() {
     if (!isFirstTime) return;
     isFirstTime = false;
 

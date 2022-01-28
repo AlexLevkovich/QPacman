@@ -14,7 +14,7 @@ ComboToolButton::ComboToolButton(QWidget *parent) : QToolButton(parent) {
     setPopupMode(QToolButton::MenuButtonPopup);
     setAutoRaise(true);
 
-    connect(this,SIGNAL(triggered(QAction *)),this,SLOT(onMenuSelected(QAction *)));
+    connect(this,&ComboToolButton::triggered,this,&ComboToolButton::onMenuSelected);
 
     menuObject = NULL;
     curr_action = NULL;
@@ -52,8 +52,8 @@ void ComboToolButton::setMenu(QMenu *menu) {
         for (int i=0;i<actions.count();i++) {
             QAction * action = actions.at(i);
             if (action->menu() == NULL) {
-                QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction *,action));
-                QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction *,action));
+                QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction*,action));
+                QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction*,action));
                 break;
             }
         }
@@ -61,8 +61,8 @@ void ComboToolButton::setMenu(QMenu *menu) {
             for (int i=0;i<actions.count();i++) {
                 QAction * action = actions.at(i);
                 if ((action->iconText() == currActionText) && (action->menu() == NULL)) {
-                    QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction *,action));
-                    QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction *,action));
+                    QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction*,action));
+                    QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction*,action));
                     currActionText.clear();
                     return;
                 }
@@ -78,13 +78,13 @@ bool ComboToolButton::eventFilter(QObject * obj,QEvent * event) {
         QAction * action = (QAction *)child_event->child();
         if (action->inherits("QAction") && (menuObject != NULL) && (action->menu() == NULL)) {
             menuObject = NULL;
-            QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction *,action));
-            QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction *,action));
+            QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction*,action));
+            QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction*,action));
         }
         if (action->inherits("QAction") && !currActionText.isEmpty() && (action->iconText() == currActionText) && (action->menu() == NULL)) {
             currActionText.clear();
-            QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction *,action));
-            QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction *,action));
+            QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction*,action));
+            QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction*,action));
         }
     }
     return ret;

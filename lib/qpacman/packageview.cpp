@@ -297,10 +297,10 @@ PackageView::PackageView(QWidget *parent) : QTreeView(parent) {
     history_count = 0;
     m_is_refreshing = false;
 
-    connect(delegate,SIGNAL(rowChoosingStateChanged(const QModelIndex &)),this,SIGNAL(rowChoosingStateChanged(const QModelIndex &)));
-    connect(&selectTimer,SIGNAL(timeout()),this,SLOT(selectTimeout()));
+    connect(delegate,&InstallButtonDelegate::rowChoosingStateChanged,this,&PackageView::rowChoosingStateChanged);
+    connect(&selectTimer,&QTimer::timeout,this,&PackageView::selectTimeout);
     connect(Alpm::instance(),&Alpm::package_queried,this,&PackageView::package_queried);
-    connect(Alpm::instance(),SIGNAL(method_finished(const QString &,ThreadRun::RC)),this,SLOT(packages_queried(const QString &,ThreadRun::RC)));
+    connect(Alpm::instance(),SIGNAL(method_finished(QString,ThreadRun::RC)),this,SLOT(packages_queried(QString,ThreadRun::RC)));
     connect(Alpm::instance(),&Alpm::alpm_reopen,this,&PackageView::refresh_needed);
 }
 

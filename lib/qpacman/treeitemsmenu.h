@@ -22,7 +22,7 @@ protected:
     bool eventFilter(QObject *obj,QEvent *event);
 
 private slots:
-    void aboutToShow();
+    void onAboutToShow();
 
 private:
     QWidgetAction * treeAction;

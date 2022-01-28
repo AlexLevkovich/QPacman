@@ -34,9 +34,9 @@ void WaitIndicator::run() {
 
     QTimer timer;
     timer.setInterval(50);
-    connect(&timer,SIGNAL(timeout()),this,SLOT(changeAngle()),Qt::QueuedConnection);
-    connect(this,SIGNAL(doStart()),&timer,SLOT(start()),Qt::QueuedConnection);
-    connect(this,SIGNAL(doStop()),&timer,SLOT(stop()),Qt::QueuedConnection);
+    connect(&timer,&QTimer::timeout,this,&WaitIndicator::changeAngle,Qt::QueuedConnection);
+    connect(this,&WaitIndicator::doStart,&timer,[&]() { timer.start(); },Qt::QueuedConnection);
+    connect(this,&WaitIndicator::doStop,&timer,&QTimer::stop,Qt::QueuedConnection);
 
     if (parent->isVisible()) QMetaObject::invokeMethod(this,"doStart",Qt::QueuedConnection);
 

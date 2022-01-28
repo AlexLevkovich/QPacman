@@ -101,9 +101,9 @@ QPacmanService::QPacmanService(QObject *parent) : QObject(parent), QDBusContext(
     connect(Alpm::instance(),&Alpm::pkg_files_loaded,this,&QPacmanService::pkg_files_loaded);
     connect(Alpm::instance(),&Alpm::starting_scriplet,this,&QPacmanService::starting_scriplet);
     connect(Alpm::instance(),&Alpm::scriplet_executed,this,&QPacmanService::scriplet_executed);
-    connect(Alpm::instance(),SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)),this,SLOT(onmethod_finished(const QString&,const QStringList&,ThreadRun::RC)));
-    connect(Alpm::instance(),SIGNAL(method_finished(const QString&,ThreadRun::RC)),this,SLOT(onmethod_finished(const QString&,ThreadRun::RC)));
-    connect(Alpm::instance(),SIGNAL(method_finished(const QString&,const QList<AlpmPackage>&,ThreadRun::RC)),this,SLOT(onmethod_finished(const QString&,const QList<AlpmPackage>&,ThreadRun::RC)));
+    connect(Alpm::instance(),SIGNAL(method_finished(QString,QStringList,ThreadRun::RC)),this,SLOT(onmethod_finished(QString,QStringList,ThreadRun::RC)));
+    connect(Alpm::instance(),SIGNAL(method_finished(QString,ThreadRun::RC)),this,SLOT(onmethod_finished(QString,ThreadRun::RC)));
+    connect(Alpm::instance(),SIGNAL(method_finished(QString,QList<AlpmPackage>,ThreadRun::RC)),this,SLOT(onmethod_finished(QString,QList<AlpmPackage>,ThreadRun::RC)));
 }
 
 void QPacmanService::do_alpm_reopen() {

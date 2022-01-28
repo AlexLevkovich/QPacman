@@ -19,10 +19,10 @@ SearchWidget::SearchWidget(QWidget *parent) : QWidget(parent), ui(new Ui::Search
     ui->repoButton->setIconSize(ui->categoryButton->iconSize());
     ui->filterButton->setIconSize(ui->categoryButton->iconSize());
 
-    connect(ui->filterButton,SIGNAL(selected(FilterToolButton::ItemId,const QString &)),this,SLOT(onSelectedFilter(FilterToolButton::ItemId,const QString &)));
-    connect(ui->repoButton,SIGNAL(selected(const QString &)),this,SLOT(onSelectedRepo(const QString &)));
-    connect(ui->categoryButton,SIGNAL(selected(CategoryToolButton::ItemId)),this,SLOT(onSelectedCategory(CategoryToolButton::ItemId)));
-    connect(ui->searchBox,SIGNAL(changed(const QString &)),this,SLOT(onTextChanged(const QString &)));
+    connect(ui->filterButton,&FilterToolButton::selected,this,&SearchWidget::onSelectedFilter);
+    connect(ui->repoButton,&RepoToolButton::selected,this,&SearchWidget::onSelectedRepo);
+    connect(ui->categoryButton,&CategoryToolButton::selected,this,&SearchWidget::onSelectedCategory);
+    connect(ui->searchBox,&SearchLineEdit::changed,this,&SearchWidget::onTextChanged);
 }
 
 SearchWidget::~SearchWidget() {

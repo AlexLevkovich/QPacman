@@ -23,8 +23,8 @@ protected:
     void showEvent(QShowEvent *event);
 
 private slots:
-    void headerSectionCountChanged(int old_count,int new_count);
-    void itemChanged(QTreeWidgetItem * item,int col);
+    void onHeaderSectionCountChanged(int old_count,int new_count);
+    void onItemChanged(QTreeWidgetItem * item,int col);
 
 private:
     bool existsExpandedRootItem();

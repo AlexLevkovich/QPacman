@@ -26,18 +26,18 @@ NetworkReplyProxy::NetworkReplyProxy(QNetworkReply* reply, int timeout, QObject*
         setFinished(true);
     }
     if (!isFinished()) {
-        connect(m_reply,SIGNAL(metaDataChanged()),SLOT(applyMetaData()));
-        connect(m_reply,SIGNAL(readyRead()),SLOT(handleReadyRead()));
-        connect(m_reply,SIGNAL(errorOccurred(QNetworkReply::NetworkError)),SLOT(errorInternal(QNetworkReply::NetworkError)));
-        connect(m_reply,SIGNAL(finished()),SLOT(handleFinished()));
-        connect(m_reply,SIGNAL(uploadProgress(qint64,qint64)),SIGNAL(uploadProgress(qint64,qint64)));
-        connect(m_reply,SIGNAL(downloadProgress(qint64,qint64)),SIGNAL(downloadProgress(qint64,qint64)));
-        connect(m_reply,SIGNAL(sslErrors(const QList<QSslError> &)),SIGNAL(sslErrors(const QList<QSslError> &)));
-        connect(m_reply,SIGNAL(redirectAllowed()),SIGNAL(redirectAllowed()));
-        connect(m_reply,SIGNAL(aboutToClose()),SIGNAL(aboutToClose()));
-        connect(m_reply,SIGNAL(redirected(const QUrl &)),SIGNAL(redirected(const QUrl &)));
-        connect(m_reply,SIGNAL(preSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator *)),SIGNAL(preSharedKeyAuthenticationRequired(QSslPreSharedKeyAuthenticator *)));
-        connect(&m_timer,SIGNAL(timeout()),SLOT(timeout()));
+        connect(m_reply,&QNetworkReply::metaDataChanged,this,[=]() { applyMetaData(); });
+        connect(m_reply,&QNetworkReply::readyRead,this,[=]() { handleReadyRead(); });
+        connect(m_reply,&QNetworkReply::errorOccurred,this,&NetworkReplyProxy::errorInternal);
+        connect(m_reply,&QNetworkReply::finished,this,&NetworkReplyProxy::handleFinished);
+        connect(m_reply,&QNetworkReply::uploadProgress,this,&NetworkReplyProxy::uploadProgress);
+        connect(m_reply,&QNetworkReply::downloadProgress,this,&NetworkReplyProxy::downloadProgress);
+        connect(m_reply,&QNetworkReply::sslErrors,this,&NetworkReplyProxy::sslErrors);
+        connect(m_reply,&QNetworkReply::redirectAllowed,this,&NetworkReplyProxy::redirectAllowed);
+        connect(m_reply,&QNetworkReply::aboutToClose,this,&NetworkReplyProxy::aboutToClose);
+        connect(m_reply,&QNetworkReply::redirected,this,&NetworkReplyProxy::redirected);
+        connect(m_reply,&QNetworkReply::preSharedKeyAuthenticationRequired,this,&NetworkReplyProxy::preSharedKeyAuthenticationRequired);
+        connect(&m_timer,&QTimer::timeout,this,&NetworkReplyProxy::timeout);
 
         if (m_timer.interval() > 0) m_timer.start();
     }

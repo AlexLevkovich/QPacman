@@ -292,7 +292,7 @@ MultiDownloader::MultiDownloader(const QUrl & url,int threads_count,const QStrin
     m_part_manager = new PartManager(m_outputName,0);
     m_timer = new QTimer(this);
 
-    connect(m_timer,SIGNAL(timeout()),this,SLOT(ontimeout()));
+    connect(m_timer,&QTimer::timeout,this,&MultiDownloader::ontimeout);
 }
 
 void MultiDownloader::setProxy(const QNetworkProxy & proxy) {
@@ -377,7 +377,7 @@ bool MultiDownloader::start() {
 QNetworkReply * MultiDownloader::get(const QNetworkRequest & request) {
     QNetworkReply * m_reply = m_manager->get(request);
     if (m_reply == NULL) {
-        was_error(tr("Returned wrong QNetworkReply pointer!!!"));
+        was_error_part(tr("Returned wrong QNetworkReply pointer!!!"));
         return NULL;
     }
     m_reply = new NetworkReplyProxy(m_reply,m_timeout,this);
@@ -389,8 +389,8 @@ void MultiDownloader::private_start() {
     if (m_reply == NULL) return;
 
     m_reply->setProperty("type","main");
-    connect(m_reply,SIGNAL(metaDataChanged()),this,SLOT(mainMetaDataChanged()));
-    connect(m_reply,SIGNAL(errorOccurred(QNetworkReply::NetworkError)),this,SLOT(was_error(QNetworkReply::NetworkError)));
+    connect(m_reply,&QNetworkReply::metaDataChanged,this,&MultiDownloader::mainMetaDataChanged);
+    connect(m_reply,&QNetworkReply::errorOccurred,this,&MultiDownloader::was_error);
     connect(m_reply,&QNetworkReply::sslErrors,[=]() { m_reply->ignoreSslErrors(); });
 }
 
@@ -401,13 +401,13 @@ void MultiDownloader::setDataLength(qint64 size) {
 bool MultiDownloader::correctOutputFilePath(QNetworkReply * reply) {
     QString out_path = m_part_manager->outputName();
     if (out_path.isEmpty()) {
-        was_error(tr("The path to output file was not passed!!!"),reply);
+        was_error_part(tr("The path to output file was not passed!!!"),reply);
         return false;
     }
     if (QFileInfo(out_path).isDir()) {
         QString disposition = reply->header(QNetworkRequest::ContentDispositionHeader).toString();
         if (disposition.isEmpty() || !disposition.contains("filename=\"")) {
-            was_error(tr("Cannot determine the output file name!!!"),reply);
+            was_error_part(tr("Cannot determine the output file name!!!"),reply);
             return false;
         }
         else {
@@ -427,7 +427,7 @@ void MultiDownloader::mainMetaDataChanged() {
         if (!new_url_data.isEmpty()) {
             QUrl new_url = QUrl::fromEncoded(new_url_data);
             if (new_url != m_url) {
-                was_error("",m_reply);
+                was_error_part("",m_reply);
                 emit location_changed(new_url);
                 return;
             }
@@ -435,13 +435,13 @@ void MultiDownloader::mainMetaDataChanged() {
     }
 
     if (statusCode >= 400) {
-        was_error(tr("The server returned %1 code!").arg(statusCode),m_reply);
+        was_error_part(tr("The server returned %1 code!").arg(statusCode),m_reply);
         return;
     }
 
     qint64 length = m_reply->header(QNetworkRequest::ContentLengthHeader).toLongLong();
     if (length <= 0 || m_url.scheme().toLower() == "ftp") {
-        was_error("",m_reply);
+        was_error_part("",m_reply);
         emit download_impossible();
         return;
     }
@@ -459,7 +459,7 @@ void MultiDownloader::mainMetaDataChanged() {
     if (!correctOutputFilePath(m_reply)) return;
 
     if (!m_part_manager->clear()) {
-        was_error(m_part_manager->errorString(),m_reply);
+        was_error_part(m_part_manager->errorString(),m_reply);
         return;
     }
 
@@ -482,7 +482,7 @@ bool MultiDownloader::addNewPartDownload(int part_id,int try_counter) {
         if (countWorkingParts() >= m_threads_count) return false;
         part_id = m_part_manager->createOrFindEmptyPart(dataLength(),working_indexes);
         if (part_id < 0) {
-            was_error(m_part_manager->errorString());
+            was_error_part(m_part_manager->errorString());
             return false;
         }
     }
@@ -500,10 +500,10 @@ bool MultiDownloader::addNewPartDownload(int part_id,int try_counter) {
     m_reply->setProperty("type","child");
     m_reply->setProperty("part",part_id);
     m_reply->setProperty("try_counter",try_counter);
-    connect(m_reply,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(was_error(QNetworkReply::NetworkError)));
-    connect(m_reply,SIGNAL(finished()),this,SLOT(child_finished()));
-    connect(m_reply,SIGNAL(readyRead()),this,SLOT(child_readyRead()));
-    connect(m_reply,SIGNAL(metaDataChanged()),this,SLOT(childMetaDataChanged()));
+    connect(m_reply,&QNetworkReply::errorOccurred,this,&MultiDownloader::was_error);
+    connect(m_reply,&QNetworkReply::finished,this,&MultiDownloader::child_finished);
+    connect(m_reply,&QNetworkReply::readyRead,this,&MultiDownloader::child_readyRead);
+    connect(m_reply,&QNetworkReply::metaDataChanged,this,&MultiDownloader::childMetaDataChanged);
     connect(m_reply,&QNetworkReply::sslErrors,[=]() { m_reply->ignoreSslErrors(); });
 
     return true;
@@ -515,7 +515,7 @@ void MultiDownloader::childMetaDataChanged() {
     if (m_threads_count > 1) {
         int statusCode = m_reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         if (statusCode != 206) {
-            was_error("",m_reply);
+            was_error_part("",m_reply);
             emit download_impossible();
             return;
         }
@@ -529,10 +529,10 @@ void MultiDownloader::was_error(QNetworkReply::NetworkError error) {
 
     if (error == QNetworkReply::OperationCanceledError) return;
 
-    was_error(m_reply->errorString(),m_reply);
+    was_error_part(m_reply->errorString(),m_reply);
 }
 
-void MultiDownloader::was_error(const QString & error,QNetworkReply * reply) {
+void MultiDownloader::was_error_part(const QString & error,QNetworkReply * reply) {
     if (reply != NULL && error.isEmpty()) {
         m_timer->stop();
         m_part_manager->close();
@@ -585,7 +585,7 @@ void MultiDownloader::child_readyRead() {
     }
 
     if (!m_part_manager->writeToPart(part_id,m_reply->readAll())) {
-        was_error(m_part_manager->errorString(),m_reply);
+        was_error_part(m_part_manager->errorString(),m_reply);
         return;
     }
 }
@@ -647,9 +647,9 @@ bool MultiDownloader::terminate() {
     invokeMethod("private_terminate");
 
     QEventLoop loop;
-    connect(this,SIGNAL(download_completed()),&loop,SLOT(quit()));
-    connect(this,SIGNAL(download_terminated()),&loop,SLOT(quit()));
-    connect(this,SIGNAL(error_occured()),&loop,SLOT(quit()));
+    connect(this,&MultiDownloader::download_completed,&loop,&QEventLoop::quit);
+    connect(this,&MultiDownloader::download_terminated,&loop,&QEventLoop::quit);
+    connect(this,&MultiDownloader::error_occured,&loop,&QEventLoop::quit);
     loop.exec();
 
     setDataLength(m_save_size);

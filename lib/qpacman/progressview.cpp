@@ -253,10 +253,10 @@ ProgressView::ProgressView(QWidget *parent,bool clear_on_hide) : QTreeView(paren
     setItemDelegate(new ProgressDelegate(this));
     if (old_delegate != NULL) old_delegate->deleteLater();
 
-    connect(m_model,SIGNAL(rowsInserted(const QModelIndex &,int,int)),this,SLOT(rowsChanged()));
-    connect(m_model,SIGNAL(rowsInserted(const QModelIndex &,int,int)),this,SLOT(rowsInserted(const QModelIndex &,int,int)),Qt::QueuedConnection);
-    connect(m_model,SIGNAL(rowsRemoved(const QModelIndex &,int,int)),this,SLOT(rowsChanged()));
-    connect(m_model,SIGNAL(itemChanged(QStandardItem *)),this,SLOT(itemChanged(QStandardItem *)));
+    connect(m_model,&ProgressModel::rowsInserted,this,&ProgressView::rowsChanged);
+    connect(m_model,&ProgressModel::rowsInserted,this,&ProgressView::rowsInserted,Qt::QueuedConnection);
+    connect(m_model,&ProgressModel::rowsRemoved,this,&ProgressView::rowsChanged);
+    connect(m_model,&ProgressModel::itemChanged,this,&ProgressView::itemChanged);
 }
 
 bool ProgressView::doClearOnHide() const {

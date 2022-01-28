@@ -43,7 +43,7 @@ void OptionsMenu::show_event() {
     QList<OkCancelTitleBar *> titleBars = this->titleBars();
     for (int i=0;i<widgets().count();i++) {
         if (haveTitleRadios()) m_child_widgets.append(titleBars[i]->radioButton);
-        QList<QWidget *> childs = widgets()[i]->findChildren<QWidget *>(QString(),Qt::FindChildrenRecursively);
+        QList<QWidget *> childs = widgets().at(i)->findChildren<QWidget *>(QString(),Qt::FindChildrenRecursively);
         for (int j=0;j<childs.count();j++) {
             if (qobject_cast<QLabel *>(childs[j])) continue;
             m_child_widgets.append(childs[j]);
@@ -133,7 +133,7 @@ void OptionsMenu::init() {
     int count = widgets().count();
     int i;
     for (i=0;i<count;i++) {
-        if (widgets()[i]->setStatus(m_status)) checked_index = i;
+        if (widgets().at(i)->setStatus(m_status)) checked_index = i;
     }
     OkCancelTitleBar * titlebar;
     for (i=0;i<count;i++) {
@@ -143,22 +143,22 @@ void OptionsMenu::init() {
         titlebar = new OkCancelTitleBar(i,widget);
         titlebar->setRadioButtonVisible(haveTitleRadios());
         titlebar->setChecked(i == checked_index);
-        titlebar->setText(titleTexts()[i]);
+        titlebar->setText(titleTexts().at(i));
         titlebar->setOkButtonVisible((i == 0) && hasTitleOkButton());
         titlebar->setCancelButtonVisible((i == 0) && hasTitleCancelButton());
-        titlebar->setIcon(this->widgets()[i]->currentStatusIcon());
+        titlebar->setIcon(this->widgets().at(i)->currentStatusIcon());
         widget->setTitleBarWidget(titlebar);
-        widget->setWidget(this->widgets()[i]);
+        widget->setWidget(this->widgets().at(i));
         widget->setFeatures(QDockWidget::NoDockWidgetFeatures);
-        widgets()[i]->setEnabled(i == checked_index);
+        widgets().at(i)->setEnabled(i == checked_index);
         action->setDefaultWidget(widget);
         addAction(action);
 
         if (i == 0) {
-            connect(titlebar,SIGNAL(okClicked()),SLOT(okClicked()));
-            connect(titlebar,SIGNAL(cancelClicked()),SLOT(close()));
+            connect(titlebar,&OkCancelTitleBar::okClicked,this,&OptionsMenu::okClicked);
+            connect(titlebar,&OkCancelTitleBar::cancelClicked,this,&OptionsMenu::close);
         }
-        connect(titlebar,SIGNAL(checkStateChanged(bool)),SLOT(titleCheckStateChanged(bool)));
+        connect(titlebar,&OkCancelTitleBar::checkStateChanged,this,&OptionsMenu::titleCheckStateChanged);
     }
     m_init_ok = true;
     if (m_show_event_ok && m_init_ok) QMetaObject::invokeMethod(this,"show_event",Qt::QueuedConnection);
@@ -188,20 +188,20 @@ void OptionsMenu::titleCheckStateChanged(bool state) {
     QList<OkCancelTitleBar *> titlebars = titleBars();
     for (int i=0;i<titlebars.count();i++) {
         if (titlebars[i] == titlebar) {
-            widgets()[i]->setEnabled(true);
+            widgets().at(i)->setEnabled(true);
             continue;
         }
         titlebars[i]->setChecked(!state);
-        widgets()[i]->setEnabled(false);
+        widgets().at(i)->setEnabled(false);
     }
 }
 
 void OptionsMenu::okClicked() {
     QAction * action = new QAction(this);
-    action->setText(widgets()[checked_index]->currentStatusText());
-    action->setToolTip(widgets()[checked_index]->currentStatusTextHint());
-    action->setIcon(widgets()[checked_index]->currentStatusIcon());
-    action->setData((int)widgets()[checked_index]->currentStatus());
+    action->setText(widgets().at(checked_index)->currentStatusText());
+    action->setToolTip(widgets().at(checked_index)->currentStatusTextHint());
+    action->setIcon(widgets().at(checked_index)->currentStatusIcon());
+    action->setData((int)widgets().at(checked_index)->currentStatus());
     emit triggered(action);
     close();
 }
@@ -297,9 +297,9 @@ OkCancelTitleBar::OkCancelTitleBar(int index,QWidget *parent) : QWidget(parent) 
 
     qApp->installEventFilter(this);
 
-    connect(radioButton,SIGNAL(clicked(bool)),SIGNAL(checkStateChanged(bool)));
-    connect(okButton,SIGNAL(clicked()),SIGNAL(okClicked()));
-    connect(cancelButton,SIGNAL(clicked()),SIGNAL(cancelClicked()));
+    connect(radioButton,&QRadioButton::clicked,this,&OkCancelTitleBar::checkStateChanged);
+    connect(okButton,&QToolButton::clicked,this,&OkCancelTitleBar::okClicked);
+    connect(cancelButton,&QToolButton::clicked,this,&OkCancelTitleBar::cancelClicked);
 }
 
 bool OkCancelTitleBar::isRadioButtonVisible() const {

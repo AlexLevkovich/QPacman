@@ -68,7 +68,7 @@ void FilterToolButton::fill(const QStringList & _groups) {
     state_menu->setTitle(tr("By state"));
     state_menu->setIcon(ThemeIcons::get(ThemeIcons::FILTER));
     menu->addMenu(state_menu);
-    connect(this,SIGNAL(triggered(QAction *)),this,SLOT(onMenuItemSelected(QAction *)));
+    connect(this,&FilterToolButton::triggered,this,&FilterToolButton::onMenuItemSelected);
 
     QIcon icon = ThemeIcons::get(ThemeIcons::PKG_GROUP);
     QMenu * group_menu = new QMenu(menu);

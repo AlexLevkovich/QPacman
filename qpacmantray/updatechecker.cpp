@@ -12,7 +12,7 @@
 NetworkConfigurationChecker::NetworkConfigurationChecker(QObject * parent) : QObject(parent) {
     m_is_online = status();
     m_timer.setInterval(1000);
-    connect(&m_timer,SIGNAL(timeout()),this,SLOT(process()));
+    connect(&m_timer,&QTimer::timeout,this,&NetworkConfigurationChecker::process);
 }
 
 void NetworkConfigurationChecker::start() {
@@ -45,11 +45,11 @@ bool NetworkConfigurationChecker::status() {
 }
 
 UpdateChecker::UpdateChecker(QObject * parent) : PackageProcessorBase(parent) {
-    connect(&network_checker,&NetworkConfigurationChecker::onlineStateChanged,[&](bool online) {
+    connect(&network_checker,&NetworkConfigurationChecker::onlineStateChanged,this,[&](bool online) {
         if (!online) return;
         if (Alpm::instance()->executingMethodName().isEmpty()) {
             if (isQPacmanStarted()) {
-                connect(Alpm::instance(),SIGNAL(method_finished(const QString &,ThreadRun::RC)),this,SLOT(onupdate_method_finished(const QString &,ThreadRun::RC)));
+                connect(Alpm::instance(),SIGNAL(method_finished(QString,ThreadRun::RC)),this,SLOT(onupdate_method_finished(QString,ThreadRun::RC)));
                 Alpm::instance()->dbRefresherIsAboutToStart();
             }
             else connect(new DBRefresher(),&DBRefresher::completed,this,&UpdateChecker::oncompleted);

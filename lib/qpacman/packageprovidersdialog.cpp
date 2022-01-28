@@ -20,7 +20,7 @@ PackageProvidersDialog::PackageProvidersDialog() : UnableToCloseDialog(SingleApp
 
     new WindowCenterer(this);
 
-    connect(Alpm::instance(),SIGNAL(select_provider(const QString &,const QStringList &)),this,SLOT(select_provider(const QString &,const QStringList &)));
+    connect(Alpm::instance(),&Alpm::select_provider,this,&PackageProvidersDialog::select_provider);
 }
 
 PackageProvidersDialog::~PackageProvidersDialog() {

@@ -98,7 +98,7 @@ void InstallButtonDelegate::show_menu(const AlpmPackage & pkg,const QModelIndex 
     menu->grabKeyboard();
     menu->setMinimumWidth(rect.width());
     menu->setProperty("menu_index",index);
-    connect(menu,SIGNAL(triggered(QAction *)),this,SLOT(menu_triggered(QAction *)));
+    connect(menu,&QMenu::triggered,this,&InstallButtonDelegate::menu_triggered);
     menu->exec(view->viewport()->mapToGlobal(QPoint(rect.x(),rect.y()+rect.height())));
     menu->releaseKeyboard();
     menu->deleteLater();

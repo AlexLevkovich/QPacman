@@ -33,9 +33,9 @@ void QPacmanTrayApplication::secondary_init() {
 
 void QPacmanTrayApplication::primary_init() {
     m_mainWindow = new TrayPreferences(0);
-    connect(m_mainWindow,SIGNAL(showRequest()),this,SLOT(putMainWindowOnTop()));
-    QTimer::singleShot(SHOW_PREFS_DELAY,[&](){
-        connect(Alpm::instance(),SIGNAL(show_tray_options()),this,SLOT(putMainWindowOnTop()));
+    connect(m_mainWindow,&TrayPreferences::showRequest,this,&QPacmanTrayApplication::putMainWindowOnTop);
+    QTimer::singleShot(SHOW_PREFS_DELAY,this,[&]() {
+        connect(Alpm::instance(),&Alpm::show_tray_options,this,&QPacmanTrayApplication::putMainWindowOnTop);
     });
 }
 

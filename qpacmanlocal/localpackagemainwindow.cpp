@@ -52,7 +52,7 @@ LocalPackageMainWindow::LocalPackageMainWindow(const QStringList & packages,QWid
     empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
     ui->toolBar->insertWidget(ui->actionCancel,empty);
 
-    connect(ui->actionInstall,SIGNAL(triggered()),this,SLOT(onActionInstall()));
+    connect(ui->actionInstall,&QAction::triggered,this,&LocalPackageMainWindow::onActionInstall);
 
     QMetaObject::invokeMethod(this,"init",Qt::QueuedConnection);
 }
@@ -86,7 +86,7 @@ void LocalPackageMainWindow::init() {
     ui->packageView->header()->setSectionResizeMode(2,QHeaderView::ResizeToContents);
     ui->packageView->header()->setSectionsMovable(false);
 
-    connect(ui->packageView->selectionModel(),SIGNAL(selectionChanged(const QItemSelection &,const QItemSelection &)),this,SLOT(onSelectionChanged(const QItemSelection &,const QItemSelection &)));
+    connect(ui->packageView->selectionModel(),&QItemSelectionModel::selectionChanged,this,&LocalPackageMainWindow::onSelectionChanged);
 
     view_group->setCurrent(ui->splitter);
 }
@@ -108,8 +108,8 @@ void LocalPackageMainWindow::onActionInstall() {
         depsInstall->setVisible(false);
         forceInstall->setVisible(false);
         PackageInstaller * installer = new PackageInstaller(model->allrows(),forceInstall->isChecked()?model->allrows():QList<AlpmPackage>(),depsInstall->isChecked(),ui->progressView,ui->actionCancel,NULL,NULL);
-        connect(installer,SIGNAL(completed(ThreadRun::RC,const QString &)),this,SLOT(operation_completed(ThreadRun::RC,const QString &)));
-        connect(installer,SIGNAL(logString(const QString &)),this,SLOT(logString(const QString &)));
+        connect(installer,&PackageInstaller::completed,this,&LocalPackageMainWindow::operation_completed);
+        connect(installer,&PackageInstaller::logString,this,&LocalPackageMainWindow::logString);
     }
 }
 
@@ -138,7 +138,7 @@ void LocalPackageMainWindow::operation_completed(ThreadRun::RC rc,const QString 
     ui->actionCancel->setVisible(true);
     ui->actionCancel->setEnabled(true);
     ui->actionLog->setVisible(true);
-    connect(ui->actionCancel,SIGNAL(triggered()),this,SLOT(close()));
+    connect(ui->actionCancel,&QAction::triggered,this,&LocalPackageMainWindow::close);
     ui->actionCancel->setText(tr("Quit"));
 }
 

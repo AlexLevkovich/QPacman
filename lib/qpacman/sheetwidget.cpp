@@ -20,13 +20,13 @@ SheetWidget::SheetWidget(QWidget *parent) : QTreeWidget(parent) {
 
     setIconSize(quadroSize(fontMetrics().height()+4));
 
-    connect(this,SIGNAL(itemCollapsed(QTreeWidgetItem *)),this,SLOT(collapseExpandItem()));
-    connect(this,SIGNAL(itemExpanded(QTreeWidgetItem *)),this,SLOT(collapseExpandItem()));
-    connect(header(),SIGNAL(sectionCountChanged(int,int)),this,SLOT(headerSectionCountChanged(int,int)));
-    connect(this,SIGNAL(itemChanged(QTreeWidgetItem *,int)),this,SLOT(itemChanged(QTreeWidgetItem *,int)));
+    connect(this,&SheetWidget::itemCollapsed,this,&SheetWidget::collapseExpandItem);
+    connect(this,&SheetWidget::itemExpanded,this,&SheetWidget::collapseExpandItem);
+    connect(header(),&QHeaderView::sectionCountChanged,this,&SheetWidget::onHeaderSectionCountChanged);
+    connect(this,&SheetWidget::itemChanged,this,&SheetWidget::onItemChanged);
 }
 
-void SheetWidget::itemChanged(QTreeWidgetItem * item,int col) {
+void SheetWidget::onItemChanged(QTreeWidgetItem * item,int col) {
     if (item->parent() != NULL && item->parent()->parent() != NULL) return;
     if (item->parent() != NULL || (item->childCount() <= 0 && col > 0)) {
         if (item->parent() != NULL) item->parent()->setFirstColumnSpanned(true);
@@ -44,7 +44,7 @@ void SheetWidget::itemChanged(QTreeWidgetItem * item,int col) {
     setMinimumWidth(qMax(header_width,root_item_width)+(verticalScrollBar()->isVisible()?verticalScrollBar()->width():0));
 }
 
-void SheetWidget::headerSectionCountChanged(int old_count,int new_count) {
+void SheetWidget::onHeaderSectionCountChanged(int old_count,int new_count) {
     if (old_count < new_count && column_widths.count() < new_count) {
         for (int i=((old_count > column_widths.count())?0:old_count);i<new_count;i++) {
             header()->setSectionResizeMode(i,QHeaderView::Interactive);

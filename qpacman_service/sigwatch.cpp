@@ -71,7 +71,7 @@ UnixSignalWatcherPrivate::UnixSignalWatcherPrivate(UnixSignalWatcher *q) :
 
     // Create a notifier for the read end of the pair
     notifier = new QSocketNotifier(sockpair[1], QSocketNotifier::Read);
-    QObject::connect(notifier, SIGNAL(activated(int)), q, SLOT(_q_onNotify(int)));
+    QObject::connect(notifier,&QSocketNotifier::activated,this,&UnixSignalWatcherPrivate::_q_onNotify);
     notifier->setEnabled(true);
 }
 

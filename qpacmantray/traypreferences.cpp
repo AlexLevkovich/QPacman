@@ -45,11 +45,11 @@ TrayPreferences::TrayPreferences(int timeout,QWidget *parent) : QMainWindow(pare
     ui->categoryList->addCategory("Alpm",ui->alpmOptions,ThemeIcons::get(ThemeIcons::ARCHLINUX));
     ui->categoryList->select(ui->trayOptions);
 
-    connect(actionPreferences,SIGNAL(triggered()),this,SIGNAL(showRequest()));
-    connect(actionCheck_for_updates,SIGNAL(triggered()),this,SLOT(onCheckForUpdatesTriggered()));
-    connect(actionUpdate_now,SIGNAL(triggered()),this,SLOT(onUpdateNowTriggered()));
-    connect(actionQuit,SIGNAL(triggered()),this,SLOT(onQuitTriggered()));
-    connect(&m_timer,SIGNAL(timeout()),this,SLOT(onCheckForUpdatesTriggered()));
+    connect(actionPreferences,&QAction::triggered,this,&TrayPreferences::showRequest);
+    connect(actionCheck_for_updates,&QAction::triggered,this,&TrayPreferences::onCheckForUpdatesTriggered);
+    connect(actionUpdate_now,&QAction::triggered,this,&TrayPreferences::onUpdateNowTriggered);
+    connect(actionQuit,&QAction::triggered,this,&TrayPreferences::onQuitTriggered);
+    connect(&m_timer,&QTimer::timeout,this,&TrayPreferences::onCheckForUpdatesTriggered);
 
     m_timer.start(timeout);
 }
@@ -96,7 +96,7 @@ void TrayPreferences::onCheckForUpdatesTriggered() {
     updateActions();
     m_tray->checkingInProgress();
     UpdateChecker * checker = new UpdateChecker();
-    connect(checker,SIGNAL(completed(ThreadRun::RC,const QString &,const QStringList &)),this,SLOT(checker_completed(ThreadRun::RC,const QString &,const QStringList &)));
+    connect(checker,&UpdateChecker::completed,this,&TrayPreferences::checker_completed);
 }
 
 void TrayPreferences::checker_completed(ThreadRun::RC ok,const QString & error,const QStringList & updates) {
@@ -118,7 +118,7 @@ void TrayPreferences::onUpdateNowTriggered() {
     updateActions();
 
     updater = new Updater(this);
-    connect(updater,&QObject::destroyed,[&]() { updater = NULL; updateActions(); });
+    connect(updater,&QObject::destroyed,this,[&]() { updater = NULL; updateActions(); });
     connect(updater,&Updater::completed,this,&TrayPreferences::onUpdaterCompleted);
 }
 

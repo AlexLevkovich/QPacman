@@ -22,9 +22,9 @@ Q_DECLARE_METATYPE(QAction *)
 #define min(a,b) ((a<b)?a:b)
 #endif
 
-TreeMenuWidget::TreeMenuWidget(QWidget *parent) : QTreeWidget(parent) {
-    connect(this,SIGNAL(triggered(QAction*)),parent,SIGNAL(triggered(QAction*)));
-    connect(this,SIGNAL(hovered(QAction*)),parent,SIGNAL(hovered(QAction*)));
+TreeMenuWidget::TreeMenuWidget(QMenu *parent) : QTreeWidget(parent) {
+    connect(this,&TreeMenuWidget::triggered,parent,&QMenu::triggered);
+    connect(this,&TreeMenuWidget::hovered,parent,&QMenu::hovered);
 
     setColumnCount(1);
     setHeaderHidden(true);

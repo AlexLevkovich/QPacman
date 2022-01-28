@@ -21,9 +21,6 @@ private slots:
     void changeAngle();
 
 signals:
-#ifndef Q_MOC_RUN
-    private:
-#endif
    void doStop();
    void doStart();
 

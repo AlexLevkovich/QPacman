@@ -48,7 +48,7 @@ QPacmanTrayIcon::QPacmanTrayIcon(bool * use_sound,QObject *parent) : MovieTrayIc
 
     setIcon(ThemeIcons::QPACMANTRAY);
 
-    connect(this,SIGNAL(clicked()),this,SLOT(clicked()));
+    connect(this,&QPacmanTrayIcon::clicked,this,&QPacmanTrayIcon::onclicked);
 }
 
 void QPacmanTrayIcon::setIcon(ThemeIcons::Icon id) {
@@ -63,7 +63,7 @@ void QPacmanTrayIcon::setIcon(ThemeIcons::Icon id,int input_frame_height,int del
     MovieTrayIcon::setIcon(name,input_frame_height,delay);
 }
 
-void QPacmanTrayIcon::clicked() {
+void QPacmanTrayIcon::onclicked() {
     if (m_checkUpdatesAction->isEnabled() && (m_id == ThemeIcons::WARNING)) m_checkUpdatesAction->trigger();
     else if (m_updateAction->isEnabled() && (m_id == ThemeIcons::QPACMANTRAY)) m_updateAction->trigger();
 }

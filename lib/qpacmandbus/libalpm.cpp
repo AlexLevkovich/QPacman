@@ -102,9 +102,9 @@ Alpm::Alpm(QObject * parent) : QObject(parent) {
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::show_tray_options,this,&Alpm::show_tray_options);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::package_updater_started,this,&Alpm::package_updater_started);
     connect(m_interface,&ComAlexlQtQPacmanServiceInterface::do_start_package_updater,this,&Alpm::do_start_package_updater);
-    connect(m_interface,SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)),this,SIGNAL(method_finished(const QString&,const QStringList&,ThreadRun::RC)));
-    connect(m_interface,SIGNAL(method_finished(const QString&,ThreadRun::RC)),this,SIGNAL(method_finished(const QString&,ThreadRun::RC)));
-    connect(m_interface,SIGNAL(package_queried(const QByteArray&)),this,SLOT(onpackage_queried(const QByteArray&)));
+    connect(m_interface,SIGNAL(method_finished(QString,QStringList,ThreadRun::RC)),this,SIGNAL(method_finished(QString,QStringList,ThreadRun::RC)));
+    connect(m_interface,SIGNAL(method_finished(QString,ThreadRun::RC)),this,SIGNAL(method_finished(QString,ThreadRun::RC)));
+    connect(m_interface,&ComAlexlQtQPacmanServiceInterface::package_queried,this,&Alpm::onpackage_queried);
 }
 
 Alpm::~Alpm() {

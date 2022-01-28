@@ -16,7 +16,7 @@
 CustomPopupTextBrowser::CustomPopupTextBrowser(QWidget *parent) : QTextBrowser(parent) {
     new TextImageHandler(this);
     setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this,SIGNAL(customContextMenuRequested(const QPoint&)),this,SLOT(showContextMenu(const QPoint &)));
+    connect(this,&CustomPopupTextBrowser::customContextMenuRequested,this,&CustomPopupTextBrowser::showContextMenu);
 }
 
 void CustomPopupTextBrowser::showContextMenu(const QPoint &pt) {

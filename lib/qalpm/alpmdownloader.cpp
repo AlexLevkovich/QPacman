@@ -41,12 +41,12 @@ void AlpmDownloader::init(const QUrl & url,int threads_count,int timeout,const Q
 void AlpmDownloader::init2() {
     m_downloaded = 0;
 
-    connect(downloader,SIGNAL(download_completed()),this,SLOT(download_completed()));
+    connect(downloader,&DownloaderInterface::download_completed,this,&AlpmDownloader::download_completed);
     if (downloader->inherits("MultiDownloader"))
-        connect(downloader,SIGNAL(download_impossible()),this,SLOT(download_impossible()));
-    connect(downloader,SIGNAL(progress(qint64,int,qint64)),SLOT(download_progress(qint64,int,qint64)));
-    connect(downloader,SIGNAL(error_occured()),SLOT(download_error()));
-    connect(downloader,SIGNAL(location_changed(const QUrl &)),SLOT(location_changed(const QUrl &)));
+        connect((MultiDownloader *)downloader,&MultiDownloader::download_impossible,this,&AlpmDownloader::download_impossible);
+    connect(downloader,&DownloaderInterface::progress,this,&AlpmDownloader::download_progress);
+    connect(downloader,&DownloaderInterface::error_occured,this,&AlpmDownloader::download_error);
+    connect(downloader,&DownloaderInterface::location_changed,this,&AlpmDownloader::location_changed);
     QMetaObject::invokeMethod(this,"start",Qt::QueuedConnection);
 }
 

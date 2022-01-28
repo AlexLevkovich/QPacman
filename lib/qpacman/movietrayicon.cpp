@@ -22,9 +22,9 @@ MovieTrayIcon::MovieTrayIcon(QObject *parent) : QObject(parent) {
     m_tray_icon = new QSystemTrayIcon();
     m_menu = new QMenu();
 
-    connect(m_tray_icon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(activatedReason(QSystemTrayIcon::ActivationReason)));
-    connect(m_tray_icon,SIGNAL(messageClicked()),this,SIGNAL(messageClicked()));
-    connect(&m_movie,SIGNAL(frameChanged(int)),this,SLOT(frameChanged(int)));
+    connect(m_tray_icon,&QSystemTrayIcon::activated,this,&MovieTrayIcon::activatedReason);
+    connect(m_tray_icon,&QSystemTrayIcon::messageClicked,this,&MovieTrayIcon::messageClicked);
+    connect(&m_movie,&MovieIcon::frameChanged,this,&MovieTrayIcon::frameChanged);
     connect(m_menu,&QMenu::aboutToShow,this,[&]() { emit menuAboutToShow(m_menu); });
     qApp->installEventFilter(this);
 

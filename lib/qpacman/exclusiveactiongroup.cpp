@@ -7,7 +7,7 @@
 
 ExclusiveActionGroup::ExclusiveActionGroup(QObject *parent) : QActionGroup(parent) {
     setExclusive(false);
-    connect(this,SIGNAL(triggered(QAction *)),SLOT(ontriggered(QAction *)));
+    connect(this,&QActionGroup::triggered,this,&ExclusiveActionGroup::ontriggered);
 }
 
 void ExclusiveActionGroup::ontriggered(QAction * action) {

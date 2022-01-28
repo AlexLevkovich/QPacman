@@ -13,13 +13,14 @@ class QAction;
 class QTreeWidgetItem;
 class QMouseEvent;
 class QShowEvent;
+class QMenu;
 
 class TreeMenuWidget : public QTreeWidget {
     friend class TreeItemsMenu;
 
     Q_OBJECT
 public:
-    explicit TreeMenuWidget(QWidget *parent = 0);
+    explicit TreeMenuWidget(QMenu *parent = 0);
 
 protected:
     void actionEvent(QActionEvent * e);

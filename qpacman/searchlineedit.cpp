@@ -7,8 +7,8 @@
 #include <QTimer>
 
 SearchLineEdit::SearchLineEdit(QWidget *parent) : QLineEdit(parent) {
-    connect(this,SIGNAL(textEdited(const QString &)),this,SLOT(onTextEdited(const QString &)));
-    connect(&timer,SIGNAL(timeout()),this,SLOT(onTimeout()));
+    connect(this,&QLineEdit::textEdited,this,&SearchLineEdit::onTextEdited);
+    connect(&timer,&QTimer::timeout,this,&SearchLineEdit::onTimeout);
 }
 
 void SearchLineEdit::onTextEdited(const QString & /*str*/) {

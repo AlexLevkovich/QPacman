@@ -23,8 +23,8 @@ PackageChangesDialog::PackageChangesDialog() : UnableToCloseDialog(SingleApplica
 
     new WindowCenterer(this);
 
-    connect(Alpm::instance(),SIGNAL(install_packages_confirmation(const QStringList &,const QStringList &,qint64,qint64,qint64)),this,SLOT(install_packages_confirmation(const QStringList &,const QStringList &,qint64,qint64,qint64)));
-    connect(Alpm::instance(),SIGNAL(remove_packages_confirmation(const QStringList &,qint64)),this,SLOT(remove_packages_confirmation(const QStringList &,qint64)));
+    connect(Alpm::instance(),&Alpm::install_packages_confirmation,this,&PackageChangesDialog::install_packages_confirmation);
+    connect(Alpm::instance(),&Alpm::remove_packages_confirmation,this,&PackageChangesDialog::remove_packages_confirmation);
 }
 
 PackageChangesDialog::~PackageChangesDialog() {

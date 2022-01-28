@@ -12,7 +12,7 @@ QuestionDialog::QuestionDialog() : QMessageBox(SingleApplication::findMainWindow
     setDefaultButton(addButton(QMessageBox::Yes));
     setEscapeButton((QAbstractButton *)addButton(QMessageBox::No));
 
-    connect(Alpm::instance(),SIGNAL(question(const QString &)),this,SLOT(on_question(const QString &)));
+    connect(Alpm::instance(),&Alpm::question,this,&QuestionDialog::on_question);
 }
 
 void QuestionDialog::on_question(const QString & str) {

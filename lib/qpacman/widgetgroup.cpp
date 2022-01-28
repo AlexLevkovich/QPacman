@@ -12,7 +12,7 @@ bool WidgetGroup::add(QWidget * wnd) {
     if (wnd == NULL || m_widgets.contains(wnd)) return false;
     m_widgets.append(wnd);
     wnd->setVisible(false);
-    connect(wnd,SIGNAL(destroyed(QObject *)),SLOT(destroyed(QObject *)));
+    connect(wnd,&QObject::destroyed,this,&QObject::destroyed);
     return true;
 }
 
@@ -22,12 +22,12 @@ void WidgetGroup::destroyed(QObject * obj) {
 
 bool WidgetGroup::remove(QWidget * wnd) {
     bool ret = (m_widgets.removeAll(wnd) > 0);
-    if (ret) disconnect(wnd,SIGNAL(destroyed(QObject *)),this,SLOT(destroyed(QObject *)));
+    if (ret) disconnect(wnd,&QObject::destroyed,this,&QObject::destroyed);
     return ret;
 }
 
 void WidgetGroup::clear() {
-    while (!m_widgets.isEmpty()) disconnect(m_widgets.takeFirst(),SIGNAL(destroyed(QObject *)),this,SLOT(destroyed(QObject *)));
+    while (!m_widgets.isEmpty()) disconnect(m_widgets.takeFirst(),&QObject::destroyed,this,&QObject::destroyed);
 }
 
 QList<QWidget *> WidgetGroup::widgets() const {
