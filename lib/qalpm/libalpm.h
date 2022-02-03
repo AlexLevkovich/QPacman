@@ -155,7 +155,7 @@ private:
     void install_packages(const QList<AlpmPackage> & m_pkgs,int m_install_flags,const QList<AlpmPackage> & forcedpkgs);
     void remove_packages(const QList<AlpmPackage> & m_pkgs,bool remove_cascade);
     void update_dbs(bool force);
-    QList<AlpmPackage> query_packages(const QString & name = QString(),AlpmPackage::SearchFieldType fieldType = AlpmPackage::NAME,AlpmPackage::PackageFilter filter = AlpmPackage::IS_ALL,const QString & group = QString(),const QString & repo = QString()) const;
+    QList<AlpmPackage> query_packages(const QString & name = QString(),AlpmPackage::SearchFieldType fieldType = AlpmPackage::NAME,AlpmPackage::PackageFilter filter = AlpmPackage::IS_ALL,const QString & group = QString(),const QString & repo = QString());
     QStringList download_packages(const QList<AlpmPackage> & pkgs);
     QString download_package(const QString & download_url) const;
     QString download_package(const AlpmPackage & pkg) const;
@@ -203,6 +203,7 @@ private:
     QFlagEventLoop * m_question_loop;
     QList<AlpmDB> m_syncDBs;
     QMap<AlpmPackage,QList<AlpmPackage> > m_replaces;
+    QList<AlpmPackage> m_packages;
 
     static QStringList m_download_errs;
     static int prev_event_type;

@@ -281,7 +281,7 @@ Do you want to delete it?</source>
         <translation type="unfinished">Ошибка при загрузке %1</translation>
     </message>
     <message>
-        <location line="+688"/>
+        <location line="+687"/>
         <source>Updating %1 db...</source>
         <translation type="unfinished">Обновляем базу данных: %1...</translation>
     </message>
@@ -336,7 +336,7 @@ Do you want to delete it?</source>
 <context>
     <name>Alpm</name>
     <message>
-        <location filename="../libalpm.cpp" line="-952"/>
+        <location filename="../libalpm.cpp" line="-951"/>
         <source>You need to pick up what provider to use for %1 package:
 </source>
         <translation type="unfinished">Вам нужно выбрать поставщика для пакета %1:

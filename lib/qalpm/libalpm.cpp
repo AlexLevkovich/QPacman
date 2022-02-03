@@ -1095,9 +1095,8 @@ void Alpm::query_packages_portion(QList<AlpmPackage> & pkgs,int startindex,int l
     }
 }
 
-QList<AlpmPackage> Alpm::query_packages(const QString & name,AlpmPackage::SearchFieldType fieldType,AlpmPackage::PackageFilter filter,const QString & group,const QString & repo) const {
-    QList<AlpmPackage> m_packages;
-
+QList<AlpmPackage> Alpm::query_packages(const QString & name,AlpmPackage::SearchFieldType fieldType,AlpmPackage::PackageFilter filter,const QString & group,const QString & repo) {
+    m_packages.clear();
     for (AlpmDB & db: allSyncDBs()) {
         if (!repo.isEmpty() && repo != db.name() && repo != "local") continue;
         m_packages += db.packages(name,fieldType,filter,group);
@@ -1247,7 +1246,8 @@ ThreadRun::RC Alpm::downloadPackages(const QList<AlpmPackage> & pkgs) {
 QList<AlpmPackage> Alpm::updates() const {
     QList<AlpmPackage> ret;
 
-    for (AlpmPackage & pkg: query_packages()) {
+    if (executingMethodName() == "Alpm::query_packages") return ret;
+    for (AlpmPackage & pkg: ((Alpm *)this)->query_packages()) {
         if (pkg.isUpdate()) ret.append(pkg);
     }
 
