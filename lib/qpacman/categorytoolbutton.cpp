@@ -22,7 +22,7 @@ CategoryToolButton::CategoryToolButton(QWidget *parent) : ComboToolButton(parent
 }
 
 void CategoryToolButton::setItemId(CategoryToolButton::ItemId id) {
-    QAction * action = NULL;
+    QAction * action = nullptr;
     switch(id) {
     case IS_NAME:
         action = name_action;

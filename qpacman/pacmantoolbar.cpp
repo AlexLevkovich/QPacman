@@ -15,8 +15,8 @@ SearchWidget * PacmanToolBar::findSearchWidget() {
     QWidget * widget;
     for (int i=0;i<actions.count();i++) {
         widget = widgetForAction(actions[i]);
-        if ((widget != NULL) && widget->inherits("SearchWidget")) return (SearchWidget *)widget;
+        if ((widget != nullptr) && widget->inherits("SearchWidget")) return (SearchWidget *)widget;
     }
 
-    return NULL;
+    return nullptr;
 }

@@ -109,7 +109,7 @@ public:
       ListSigLevel m_siglevel;
     };
 
-    Alpm(QObject * parent = NULL);
+    Alpm(QObject * parent = nullptr);
     ~Alpm();
     static Alpm * instance();
     QString lastError() const;

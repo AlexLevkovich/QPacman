@@ -298,12 +298,18 @@ Do you want to delete it?</source>
         <translation type="unfinished">Нечего писать. Эта часть полна!!!</translation>
     </message>
     <message>
-        <location filename="../archivefilesiterator.cpp" line="+34"/>
+        <location filename="../archivefilesiterator.cpp" line="+80"/>
         <source>Cannot init archive&apos;s handle!!!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+281"/>
+        <location line="+55"/>
+        <location line="+12"/>
+        <source>ArchiveFileReader is not initialized!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+226"/>
         <source>Alpm is not open!</source>
         <translation type="unfinished">Alpm не открыта!!!</translation>
     </message>
@@ -313,8 +319,18 @@ Do you want to delete it?</source>
         <translation type="unfinished">Пакет не найден!</translation>
     </message>
     <message>
-        <location line="+21"/>
+        <location line="+27"/>
         <source>Invalid entry name for stat()!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+128"/>
+        <source>InstalledPackageFileReader is not initialized!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>InstalledPackageFileReader: entry can&apos;t be read!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

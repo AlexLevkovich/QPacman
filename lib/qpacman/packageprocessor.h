@@ -26,7 +26,7 @@ class QuestionDialog;
 class PackageProcessorBase : public QObject {
     Q_OBJECT
 public:
-    PackageProcessorBase(QObject * parent = NULL) : QObject(parent) {}
+    PackageProcessorBase(QObject * parent = nullptr) : QObject(parent) {}
 signals:
     void logString(const QString & str);
     void completed(ThreadRun::RC ok,const QString & error);
@@ -35,7 +35,7 @@ signals:
 class PackageProcessor : public PackageProcessorBase {
     Q_OBJECT
 public:
-    PackageProcessor(ProgressView * view = NULL,QAction * cancelAction = NULL,OptionalDepsDlg * optdlg = NULL,QObject *parent = nullptr);
+    PackageProcessor(ProgressView * view = nullptr,QAction * cancelAction = nullptr,OptionalDepsDlg * optdlg = nullptr,QObject *parent = nullptr);
     ~PackageProcessor();
     static QMainWindow * createMainProcessorWindow(ProgressView ** view,QPlainTextEdit ** logView,QAction ** cancelAction,QAction ** logAction,const QString & tittle);
 

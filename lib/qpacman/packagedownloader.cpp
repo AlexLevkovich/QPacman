@@ -10,7 +10,7 @@
 #include <QTimer>
 #include <QDebug>
 
-PackageDownloader::PackageDownloader(const QList<AlpmPackage> & pkgs,ProgressView * view,QAction * cancelAction,QObject *parent) : PackageProcessor(view,cancelAction,NULL,parent) {
+PackageDownloader::PackageDownloader(const QList<AlpmPackage> & pkgs,ProgressView * view,QAction * cancelAction,QObject *parent) : PackageProcessor(view,cancelAction,nullptr,parent) {
     m_pkgs = pkgs;
 }
 

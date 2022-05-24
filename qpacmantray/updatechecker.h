@@ -12,7 +12,7 @@
 class NetworkConfigurationChecker : public QObject {
     Q_OBJECT
 public:
-    NetworkConfigurationChecker(QObject * parent = NULL);
+    NetworkConfigurationChecker(QObject * parent = nullptr);
     void start();
     void stop();
     bool isOnline();
@@ -33,7 +33,7 @@ private:
 class UpdateChecker : public PackageProcessorBase {
     Q_OBJECT
 public:
-    UpdateChecker(QObject * parent = NULL);
+    UpdateChecker(QObject * parent = nullptr);
 
 private slots:
     void oncompleted(ThreadRun::RC ok,const QString & error);

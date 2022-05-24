@@ -15,7 +15,7 @@ Updater::Updater(QObject *parent) : QObject(parent) {
         }
         else {
             updateWindow = PackageProcessor::createMainProcessorWindow(&progressView,&logView,&cancelAction,&logAction,tr("Package Updater..."));
-            PackageInstaller * pkg_inst = new PackageInstaller(QList<AlpmPackage>(),QList<AlpmPackage>(),false,progressView,cancelAction,NULL,NULL);
+            PackageInstaller * pkg_inst = new PackageInstaller(QList<AlpmPackage>(),QList<AlpmPackage>(),false,progressView,cancelAction,nullptr,nullptr);
             connect(pkg_inst,&PackageInstaller::completed,this,&Updater::onInstallerCompleted);
             connect(pkg_inst,&PackageInstaller::logString,logView,&QPlainTextEdit::appendPlainText);
             connect(updateWindow,&QObject::destroyed,this,&Updater::deleteLater);

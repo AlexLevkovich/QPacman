@@ -11,11 +11,11 @@
 #include <QPushButton>
 #include <QMainWindow>
 
-MessageDialog::MessageDialog(const QString& label,const QString & log,const QString & title) : QMessageBox(NULL) {
+MessageDialog::MessageDialog(const QString& label,const QString & log,const QString & title) : QMessageBox(nullptr) {
     init(label,log,title,false);
 }
 
-MessageDialog::MessageDialog(const QString& label,const QString & log,const QString & title,bool is_error) : QMessageBox(NULL) {
+MessageDialog::MessageDialog(const QString& label,const QString & log,const QString & title,bool is_error) : QMessageBox(nullptr) {
     init(label,log,title,is_error);
 }
 
@@ -85,7 +85,7 @@ MessageDialog * ErrorDialog::post(const QString& messagelabel,const QString & lo
 
 void MessageDialog::open() {
     QMainWindow * wnd = SingleApplication::findMainWindow();
-    if (wnd != NULL) {
+    if (wnd != nullptr) {
         setParent(wnd,wnd_flags);
         setModal(true);
         new WindowCenterer(this);

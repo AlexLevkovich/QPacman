@@ -12,14 +12,14 @@
 #include <QScreen>
 
 WindowCenterer::WindowCenterer(QWidget * wnd) : QObject(wnd) {
-    if (wnd != NULL) wnd->installEventFilter(this);
+    if (wnd != nullptr) wnd->installEventFilter(this);
 }
 
 bool WindowCenterer::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::Show) {
         QWidget * wnd = (QWidget *)obj;
         QWidget * parent = (QWidget *)wnd->parent();
-        if (parent == NULL || parent->isHidden()) wnd->move(QApplication::desktop()->window()->windowHandle()->screen()->geometry().center() - wnd->rect().center());
+        if (parent == nullptr || parent->isHidden()) wnd->move(QApplication::desktop()->window()->windowHandle()->screen()->geometry().center() - wnd->rect().center());
         else wnd->move(parent->window()->frameGeometry().topLeft() + parent->window()->rect().center() - wnd->rect().center());
 
     }

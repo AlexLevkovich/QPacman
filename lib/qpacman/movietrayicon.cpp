@@ -32,10 +32,10 @@ MovieTrayIcon::MovieTrayIcon(QObject *parent) : QObject(parent) {
 }
 
 MovieTrayIcon::~MovieTrayIcon() {
-    if (m_menu != NULL) delete m_menu;
-    m_menu = NULL;
-    if (m_tray_icon != NULL) delete m_tray_icon;
-    m_tray_icon = NULL;
+    if (m_menu != nullptr) delete m_menu;
+    m_menu = nullptr;
+    if (m_tray_icon != nullptr) delete m_tray_icon;
+    m_tray_icon = nullptr;
 }
 
 bool MovieTrayIcon::eventFilter(QObject *watched, QEvent *event) {
@@ -48,8 +48,8 @@ bool MovieTrayIcon::eventFilter(QObject *watched, QEvent *event) {
 }
 
 void MovieTrayIcon::checkTopLevelWindows() {
-    if (m_menu == NULL) return;
-    if (m_tray_icon == NULL) return;
+    if (m_menu == nullptr) return;
+    if (m_tray_icon == nullptr) return;
     bool is_another = false;
     for (QWindow * & wnd: QGuiApplication::topLevelWindows()) {
         if (wnd != m_menu->windowHandle() && (wnd->visibility() != QWindow::Hidden)) {
@@ -59,17 +59,17 @@ void MovieTrayIcon::checkTopLevelWindows() {
     }
     if (!is_another && QGuiApplication::quitOnLastWindowClosed()) {
         QSystemTrayIcon * tray = m_tray_icon;
-        m_tray_icon = NULL;
+        m_tray_icon = nullptr;
         delete tray;
         QMenu * menu = m_menu;
-        m_menu = NULL;
+        m_menu = nullptr;
         delete menu;
     }
 }
 
 void MovieTrayIcon::setMenu() {
-    if (m_tray_icon == NULL) return;
-    if (m_menu == NULL) return;
+    if (m_tray_icon == nullptr) return;
+    if (m_menu == nullptr) return;
     initMenu(m_menu);
     m_tray_icon->setContextMenu(m_menu);
 }
@@ -81,7 +81,7 @@ void MovieTrayIcon::setVisible(bool flag) {
 }
 
 void MovieTrayIcon::setTrayVisible(bool flag) {
-    if (m_tray_icon == NULL) return;
+    if (m_tray_icon == nullptr) return;
     m_tray_icon->setVisible(flag);
     if (flag && m_movie.frameCount() > 0) m_movie.start();
     else if (!flag) m_movie.stop();
@@ -96,7 +96,7 @@ void MovieTrayIcon::hide() {
 }
 
 bool MovieTrayIcon::isVisible() const {
-    if (m_tray_icon == NULL) return false;
+    if (m_tray_icon == nullptr) return false;
     return m_tray_icon->isVisible();
 }
 
@@ -134,27 +134,27 @@ void MovieTrayIcon::setIcon(const QString & iconname,int input_frame_height,int 
 }
 
 void MovieTrayIcon::frameChanged(int id) {
-   if (m_tray_icon == NULL) return;
+   if (m_tray_icon == nullptr) return;
     m_tray_icon->setIcon(QIcon(m_movie.frame(id)));
 }
 
 void MovieTrayIcon::showMessage(const QString & title,const QString & msg,const QIcon &icon,int msecs) {
-    if (m_tray_icon == NULL) return;
+    if (m_tray_icon == nullptr) return;
     m_tray_icon->showMessage(title,truncateMsg(msg).join('\n'),icon,msecs);
 }
 
 void MovieTrayIcon::showMessage(const QString & title,const QString & msg,QSystemTrayIcon::MessageIcon icon,int msecs) {
-    if (m_tray_icon == NULL) return;
+    if (m_tray_icon == nullptr) return;
     m_tray_icon->showMessage(title,truncateMsg(msg).join('\n'),icon,msecs);
 }
 
 void MovieTrayIcon::setToolTip(const QString & title,const QString & msg) {
-    if (m_tray_icon == NULL) return;
+    if (m_tray_icon == nullptr) return;
     m_tray_icon->setToolTip(title+"\n"+truncateMsg(msg).join('\n'));
 }
 
 void MovieTrayIcon::clearTooltip() {
-    if (m_tray_icon == NULL) return;
+    if (m_tray_icon == nullptr) return;
     m_tray_icon->setToolTip(QString());
 }
 
@@ -186,6 +186,6 @@ QStringList MovieTrayIcon::truncateMsg(const QString & msg) const {
 }
 
 QRect MovieTrayIcon::geometry() const {
-    if (m_tray_icon == NULL) return QRect();
+    if (m_tray_icon == nullptr) return QRect();
     return m_tray_icon->geometry();
 }

@@ -28,14 +28,14 @@ typedef struct _alpm_depend_t alpm_depend_t;
 class Alpm : public ThreadRun {
     Q_OBJECT
 public:
-    Alpm(QObject *parent = NULL);
+    Alpm(QObject *parent = nullptr);
     ~Alpm();
     bool open(const QString & confpath,const QString & dbpath = QString());
     bool reopen();
     bool close();
     bool isValid(bool change_errno = false) const;
     QString arch() const;
-    QString lastError(int * error_id = NULL) const;
+    QString lastError(int * error_id = nullptr) const;
     QString dbDirPath() const;
     QString lockFilePath() const;
     static const QString version();

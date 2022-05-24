@@ -9,7 +9,7 @@
 #include "qpacmanservice_interface.h"
 #include "dbusstring.h"
 
-Alpm * m_alpm_instance = NULL;
+Alpm * m_alpm_instance = nullptr;
 
 QDBusArgument & operator<<(QDBusArgument &argument,const ThreadRun::RC & rc) {
     argument.beginStructure();
@@ -30,9 +30,9 @@ const QDBusArgument & operator>>(const QDBusArgument &argument,ThreadRun::RC & r
 
 Alpm::Alpm(QObject * parent) : QObject(parent) {
     m_valid = false;
-    m_interface = NULL;
+    m_interface = nullptr;
 
-    if (m_alpm_instance == NULL) m_alpm_instance = this;
+    if (m_alpm_instance == nullptr) m_alpm_instance = this;
     else {
         m_error = tr("The only one instance of Alpm is allowed!!!");
         QMetaObject::invokeMethod(this,"error",Qt::QueuedConnection,Q_ARG(QString,m_error));
@@ -108,7 +108,7 @@ Alpm::Alpm(QObject * parent) : QObject(parent) {
 }
 
 Alpm::~Alpm() {
-    m_alpm_instance = NULL;
+    m_alpm_instance = nullptr;
 }
 
 Alpm * Alpm::instance() {
@@ -116,7 +116,7 @@ Alpm * Alpm::instance() {
 }
 
 bool Alpm::isValid() const {
-    return m_interface != NULL && m_valid;
+    return m_interface != nullptr && m_valid;
 }
 
 void Alpm::onpackage_queried(const QByteArray &result) {

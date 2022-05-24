@@ -9,6 +9,7 @@
 #include <QStringList>
 #include <QObject>
 #include <QDateTime>
+#include <QFile>
 #include "alpmfuture.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -30,7 +31,7 @@ public:
     ArchiveFileIterator & operator=(const ArchiveFileIterator &other);
 
 private:
-    ArchiveFileIterator(ArchiveReader * reader = NULL,off_t pos = (off_t)-1);
+    ArchiveFileIterator(ArchiveReader * reader = nullptr,off_t pos = (off_t)-1);
     bool atEnd() const;
 
     ArchiveReader * m_reader;
@@ -73,6 +74,11 @@ public:
     virtual qint64 entryUid() const = 0;
     virtual qint64 entryGid() const = 0;
     virtual qint64 entrySize() const = 0;
+    QByteArray entryReadAllRemaining();
+    bool entryReadLine(QByteArray & data,qint64 maxSize = 0);
+    bool entryRead(QByteArray & data,qint64 maxSize);
+protected:
+    virtual qint64 entryRead(char * data,qint64 maxSize) = 0;
 };
 
 class ArchiveFileReader : public ArchiveEntry, public ArchiveReader {
@@ -109,6 +115,7 @@ public:
 protected:
     // returns false by default, it might be used to omit some files during iteration
     virtual bool omitText(const QString & path) const;
+    qint64 entryRead(char * data,qint64 maxSize);
 
 private:
     void close();
@@ -166,6 +173,9 @@ public:
 
     static const QStringList fileList(const QString & pkg_name);
 
+protected:
+    qint64 entryRead(char * data,qint64 maxSize);
+
 private:
     bool isValid() const;
     bool stat() const;
@@ -177,6 +187,7 @@ private:
     QList<AlpmPackage::FileInfo> m_files;
     QString m_error;
     struct stat m_stat;
+    QFile m_entry_file;
 };
 
 class ArchiveFileReaderLoop : public ThreadRun {
@@ -186,7 +197,7 @@ public:
     // reader will be deleted automatically as well as ArchiveFileReaderLoop
     // so all do you need is `new ArchiveFileReaderLoop()`
     // connect to filePath() and this->destroyed() signal indicates completing the processing
-    ArchiveFileReaderLoop(ArchiveReader * reader,QObject * parent = NULL);
+    ArchiveFileReaderLoop(ArchiveReader * reader,QObject * parent = nullptr);
     ~ArchiveFileReaderLoop();
 signals:
     void fileInfo(const QString & name,qint64 size,const QString & linkContents,const QDateTime & mdate,mode_t perms);

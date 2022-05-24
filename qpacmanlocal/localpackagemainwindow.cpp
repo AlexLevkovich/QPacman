@@ -62,7 +62,7 @@ LocalPackageMainWindow::~LocalPackageMainWindow() {
 }
 
 void LocalPackageMainWindow::init() {
-    if (Alpm::instance() == NULL) {
+    if (Alpm::instance() == nullptr) {
         qApp->quit();
         return;
     }
@@ -107,7 +107,7 @@ void LocalPackageMainWindow::onActionInstall() {
         ui->actionInstall->setVisible(false);
         depsInstall->setVisible(false);
         forceInstall->setVisible(false);
-        PackageInstaller * installer = new PackageInstaller(model->allrows(),forceInstall->isChecked()?model->allrows():QList<AlpmPackage>(),depsInstall->isChecked(),ui->progressView,ui->actionCancel,NULL,NULL);
+        PackageInstaller * installer = new PackageInstaller(model->allrows(),forceInstall->isChecked()?model->allrows():QList<AlpmPackage>(),depsInstall->isChecked(),ui->progressView,ui->actionCancel,nullptr,nullptr);
         connect(installer,&PackageInstaller::completed,this,&LocalPackageMainWindow::operation_completed);
         connect(installer,&PackageInstaller::logString,this,&LocalPackageMainWindow::logString);
     }

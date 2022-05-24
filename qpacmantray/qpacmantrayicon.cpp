@@ -84,7 +84,7 @@ void QPacmanTrayIcon::updatesFound(const QStringList & pkgs) {
         QString title = tr("New packages are available:");
         setToolTip(title,message);
         showMessage(title,message);
-        if (m_use_sound != NULL && *m_use_sound) MediaPlayer::play_good();
+        if (m_use_sound != nullptr && *m_use_sound) MediaPlayer::play_good();
     }
     else {
         QString title = tr("No new packages are available!");
@@ -120,6 +120,6 @@ void QPacmanTrayIcon::checkingCompleted(const QString & error,int) {
         QString title = tr("There were errors diring processing!");
         setToolTip(title,error);
         showMessage(title,error);
-        if (m_use_sound != NULL && *m_use_sound) MediaPlayer::play_bad();
+        if (m_use_sound != nullptr && *m_use_sound) MediaPlayer::play_bad();
     }
 }

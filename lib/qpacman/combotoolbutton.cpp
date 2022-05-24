@@ -16,8 +16,8 @@ ComboToolButton::ComboToolButton(QWidget *parent) : QToolButton(parent) {
 
     connect(this,&ComboToolButton::triggered,this,&ComboToolButton::onMenuSelected);
 
-    menuObject = NULL;
-    curr_action = NULL;
+    menuObject = nullptr;
+    curr_action = nullptr;
 }
 
 void ComboToolButton::onMenuSelected(QAction * action) {
@@ -27,7 +27,7 @@ void ComboToolButton::onMenuSelected(QAction * action) {
 }
 
 QString ComboToolButton::iconText() const {
-    QString text = (curr_action == NULL)?this->text():curr_action->iconText();
+    QString text = (curr_action == nullptr)?this->text():curr_action->iconText();
     if (text.contains("&")) text = text.replace("&","");
     return text;
 }
@@ -43,7 +43,7 @@ void ComboToolButton::keyPressEvent(QKeyEvent * event) {
 }
 
 void ComboToolButton::setMenu(QMenu *menu) {
-    currActionText = (curr_action != NULL)?curr_action->iconText():QString();
+    currActionText = (curr_action != nullptr)?curr_action->iconText():QString();
     QToolButton::setMenu(menu);
     menuObject = menu;
     QList<QAction *> actions = menu->actions();
@@ -51,7 +51,7 @@ void ComboToolButton::setMenu(QMenu *menu) {
     else {
         for (int i=0;i<actions.count();i++) {
             QAction * action = actions.at(i);
-            if (action->menu() == NULL) {
+            if (action->menu() == nullptr) {
                 QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction*,action));
                 QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction*,action));
                 break;
@@ -60,7 +60,7 @@ void ComboToolButton::setMenu(QMenu *menu) {
         if (!currActionText.isEmpty()) {
             for (int i=0;i<actions.count();i++) {
                 QAction * action = actions.at(i);
-                if ((action->iconText() == currActionText) && (action->menu() == NULL)) {
+                if ((action->iconText() == currActionText) && (action->menu() == nullptr)) {
                     QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction*,action));
                     QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction*,action));
                     currActionText.clear();
@@ -76,12 +76,12 @@ bool ComboToolButton::eventFilter(QObject * obj,QEvent * event) {
     if (event->type() == QEvent::ChildAdded) {
         QChildEvent * child_event = (QChildEvent *)event;
         QAction * action = (QAction *)child_event->child();
-        if (action->inherits("QAction") && (menuObject != NULL) && (action->menu() == NULL)) {
-            menuObject = NULL;
+        if (action->inherits("QAction") && (menuObject != nullptr) && (action->menu() == nullptr)) {
+            menuObject = nullptr;
             QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction*,action));
             QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction*,action));
         }
-        if (action->inherits("QAction") && !currActionText.isEmpty() && (action->iconText() == currActionText) && (action->menu() == NULL)) {
+        if (action->inherits("QAction") && !currActionText.isEmpty() && (action->iconText() == currActionText) && (action->menu() == nullptr)) {
             currActionText.clear();
             QMetaObject::invokeMethod(this,"onMenuSelected",Qt::QueuedConnection,Q_ARG(QAction*,action));
             QMetaObject::invokeMethod(this,"triggered",Qt::QueuedConnection,Q_ARG(QAction*,action));

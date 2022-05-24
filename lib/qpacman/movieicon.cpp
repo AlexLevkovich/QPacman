@@ -11,7 +11,7 @@
 
 int MovieIcon::defaultSpeed = 1;
 
-MovieIcon::MovieIcon(const QList<QIcon> & icons,const QSize & output_frame_size) : QObject(NULL) {
+MovieIcon::MovieIcon(const QList<QIcon> & icons,const QSize & output_frame_size) : QObject(nullptr) {
     m_speed = defaultSpeed;
     frame_id = -1;
     setSize(output_frame_size);
@@ -29,7 +29,7 @@ MovieIcon::MovieIcon(QMovie * movie,const QSize & output_frame_size) {
     connect(&m_timer,&QTimer::timeout,this,&MovieIcon::timeout);
 }
 
-MovieIcon::MovieIcon(const QString & iconpath,int input_frame_height,const QSize & output_frame_size) : QObject(NULL) {
+MovieIcon::MovieIcon(const QString & iconpath,int input_frame_height,const QSize & output_frame_size) : QObject(nullptr) {
     m_speed = defaultSpeed;
     frame_id = -1;
     setSize(output_frame_size);
@@ -38,7 +38,7 @@ MovieIcon::MovieIcon(const QString & iconpath,int input_frame_height,const QSize
     connect(&m_timer,&QTimer::timeout,this,&MovieIcon::timeout);
 }
 
-MovieIcon::MovieIcon(const QString & iconpath,const QList<QPoint> & start_poses,const QSize & size,const QSize & output_frame_size) : QObject(NULL) {
+MovieIcon::MovieIcon(const QString & iconpath,const QList<QPoint> & start_poses,const QSize & size,const QSize & output_frame_size) : QObject(nullptr) {
     m_speed = defaultSpeed;
     frame_id = -1;
     setSize(output_frame_size);
@@ -47,7 +47,7 @@ MovieIcon::MovieIcon(const QString & iconpath,const QList<QPoint> & start_poses,
     connect(&m_timer,&QTimer::timeout,this,&MovieIcon::timeout);
 }
 
-MovieIcon::MovieIcon(const QIcon & icon,const QSize & output_frame_size) : QObject(NULL) {
+MovieIcon::MovieIcon(const QIcon & icon,const QSize & output_frame_size) : QObject(nullptr) {
     m_speed = defaultSpeed;
     frame_id = -1;
     setSize(output_frame_size);

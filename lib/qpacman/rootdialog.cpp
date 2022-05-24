@@ -13,7 +13,7 @@
 #include <QEvent>
 #include <QDebug>
 
-RootDialog::RootDialog() : UnableToCloseDialog(NULL), ui(new Ui::RootDialog) {
+RootDialog::RootDialog() : UnableToCloseDialog(nullptr), ui(new Ui::RootDialog) {
     ui->setupUi(this);
     firstTime = true;
 

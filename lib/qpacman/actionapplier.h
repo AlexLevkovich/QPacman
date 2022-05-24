@@ -15,7 +15,7 @@ class ProgressView;
 class ActionApplier : public PackageProcessor {
     Q_OBJECT
 public:
-    ActionApplier(ProgressView * view = NULL,QAction * cancelAction = NULL,OptionalDepsDlg * optdlg = NULL,QObject *parent = nullptr);
+    ActionApplier(ProgressView * view = nullptr,QAction * cancelAction = nullptr,OptionalDepsDlg * optdlg = nullptr,QObject *parent = nullptr);
 
 private slots:
     ThreadRun::RC process(const QString & pw);

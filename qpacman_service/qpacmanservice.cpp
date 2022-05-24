@@ -512,7 +512,7 @@ int QPacmanService::pam_auth(int num_msg, const struct pam_message **,struct pam
 bool QPacmanService::check_password(const QString & pw) {
     if (pw.isNull()) return false;
 
-    pam_handle_t * pamh = NULL;
+    pam_handle_t * pamh = nullptr;
     pam_conv conv = {QPacmanService::pam_auth,(void *)&pw};
     int ret = pam_start("sudo",
 #if USER_AUTH > 0
@@ -584,7 +584,7 @@ bool QPacmanService:: packageIsDownloaded(const QByteArray & arr) {
     AlpmPackage pkg;
     QDataStream stream((QByteArray *)&arr,QIODevice::ReadOnly);
     stream >> pkg;
-    return pkg.isDownloaded(NULL);
+    return pkg.isDownloaded(nullptr);
 }
 
 ThreadRun::RC QPacmanService::updateDBs(bool force) {

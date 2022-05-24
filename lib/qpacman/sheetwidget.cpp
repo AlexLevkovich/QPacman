@@ -27,18 +27,18 @@ SheetWidget::SheetWidget(QWidget *parent) : QTreeWidget(parent) {
 }
 
 void SheetWidget::onItemChanged(QTreeWidgetItem * item,int col) {
-    if (item->parent() != NULL && item->parent()->parent() != NULL) return;
-    if (item->parent() != NULL || (item->childCount() <= 0 && col > 0)) {
-        if (item->parent() != NULL) item->parent()->setFirstColumnSpanned(true);
+    if (item->parent() != nullptr && item->parent()->parent() != nullptr) return;
+    if (item->parent() != nullptr || (item->childCount() <= 0 && col > 0)) {
+        if (item->parent() != nullptr) item->parent()->setFirstColumnSpanned(true);
         column_widths[col] = qMax(qMax(column_widths[col],header()->iconSize().width()+20+header()->fontMetrics().horizontalAdvance(model()->headerData(col,Qt::Horizontal).toString())+(frameWidth()*2)),fontMetrics().horizontalAdvance(item->text(col))+(frameWidth()*2)+style()->pixelMetric(QStyle::PM_TreeViewIndentation,0,this)+(2*style()->pixelMetric(QStyle::PM_HeaderMargin,0,this))+iconSize().width());
         header()->resizeSection(col,column_widths[col]);
 
-        if (item->parent() == NULL && item->childCount() <= 0 && col == 1) {
+        if (item->parent() == nullptr && item->childCount() <= 0 && col == 1) {
             column_widths[0] = qMax(qMax(column_widths[0],header()->iconSize().width()+20+header()->fontMetrics().horizontalAdvance(model()->headerData(0,Qt::Horizontal).toString())+(frameWidth()*2)),fontMetrics().horizontalAdvance(item->text(0))+(frameWidth()*2)+style()->pixelMetric(QStyle::PM_TreeViewIndentation,0,this)+(2*style()->pixelMetric(QStyle::PM_HeaderMargin,0,this))+iconSize().width());
             header()->resizeSection(0,column_widths[0]);
         }
     }
-    int root_item_width = iconSize().width()+20+style()->pixelMetric(QStyle::PM_TreeViewIndentation,0,this)+fontMetrics().horizontalAdvance((item->parent() == NULL)?item->text(0):item->parent()->text(0))+(frameWidth()*2);
+    int root_item_width = iconSize().width()+20+style()->pixelMetric(QStyle::PM_TreeViewIndentation,0,this)+fontMetrics().horizontalAdvance((item->parent() == nullptr)?item->text(0):item->parent()->text(0))+(frameWidth()*2);
     int header_width = header()->length()+(frameWidth()*2);
     if (root_item_width > header_width) header()->resizeSection(0,header()->sectionSize(0)+(root_item_width - header_width));
     setMinimumWidth(qMax(header_width,root_item_width)+(verticalScrollBar()->isVisible()?verticalScrollBar()->width():0));
@@ -62,7 +62,7 @@ void SheetWidget::mousePressEvent(QMouseEvent * event) {
     QTreeWidget::mousePressEvent(event);
 
     QTreeWidgetItem * item = itemAt(event->pos());
-    if ((item != NULL) && (item->childCount() > 0) && itemsExpandable()) {
+    if ((item != nullptr) && (item->childCount() > 0) && itemsExpandable()) {
         item->setExpanded(!item->isExpanded());
     }
 }

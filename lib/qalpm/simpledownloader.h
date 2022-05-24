@@ -51,7 +51,7 @@ private:
     void updateModiffTime();
     bool correctOutputFilePath(QNetworkReply * reply);
     QNetworkReply * get(const QNetworkRequest & request);
-    void was_error_part(const QString & error,QNetworkReply * reply = NULL);
+    void was_error_part(const QString & error,QNetworkReply * reply = nullptr);
 
     QString m_outputName;
     qint64 m_size;

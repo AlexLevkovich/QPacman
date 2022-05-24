@@ -147,7 +147,7 @@ int PartManager::part_zero_fill(int id) {
 int PartManager::writeToPart(int part_id,char * data,int len) {
     if (!isOpen()) return 0;
 
-    if (len <= 0 || data == NULL || !isValid()) {
+    if (len <= 0 || data == nullptr || !isValid()) {
         m_error = QObject::tr("Nothing to write!!!");
         return 0;
     }
@@ -356,7 +356,7 @@ bool MultiDownloader::start() {
         return false;
     }
 
-    if (m_manager == NULL) {
+    if (m_manager == nullptr) {
         setErrorString(tr("Invalid QNetworkAccessManager instance!!!"));
         return false;
     }
@@ -376,9 +376,9 @@ bool MultiDownloader::start() {
 
 QNetworkReply * MultiDownloader::get(const QNetworkRequest & request) {
     QNetworkReply * m_reply = m_manager->get(request);
-    if (m_reply == NULL) {
+    if (m_reply == nullptr) {
         was_error_part(tr("Returned wrong QNetworkReply pointer!!!"));
-        return NULL;
+        return nullptr;
     }
     m_reply = new NetworkReplyProxy(m_reply,m_timeout,this);
     return m_reply;
@@ -386,7 +386,7 @@ QNetworkReply * MultiDownloader::get(const QNetworkRequest & request) {
 
 void MultiDownloader::private_start() {
     QNetworkReply * m_reply = get(QNetworkRequest(m_url));
-    if (m_reply == NULL) return;
+    if (m_reply == nullptr) return;
 
     m_reply->setProperty("type","main");
     connect(m_reply,&QNetworkReply::metaDataChanged,this,&MultiDownloader::mainMetaDataChanged);
@@ -495,7 +495,7 @@ bool MultiDownloader::addNewPartDownload(int part_id,int try_counter) {
     qint64 curr_pos = m_part_manager->partCurrPos(part_id);
     if (m_threads_count > 1) part_request.setRawHeader("Range",QString("bytes=%1-%2").arg(curr_pos).arg(curr_pos+m_part_manager->partRest(part_id)-1).toLatin1());
     QNetworkReply * m_reply = get(part_request);
-    if (m_reply == NULL) return false;
+    if (m_reply == nullptr) return false;
 
     m_reply->setProperty("type","child");
     m_reply->setProperty("part",part_id);
@@ -533,19 +533,19 @@ void MultiDownloader::was_error(QNetworkReply::NetworkError error) {
 }
 
 void MultiDownloader::was_error_part(const QString & error,QNetworkReply * reply) {
-    if (reply != NULL && error.isEmpty()) {
+    if (reply != nullptr && error.isEmpty()) {
         m_timer->stop();
         m_part_manager->close();
         reply->abort();
         reply->deleteLater();
     }
-    else if (reply == NULL && !error.isEmpty()) {
+    else if (reply == nullptr && !error.isEmpty()) {
         setErrorString(error);
         m_timer->stop();
         m_part_manager->close();
         emit error_occured();
     }
-    else if (reply != NULL && reply->property("type").toString() == "main") {
+    else if (reply != nullptr && reply->property("type").toString() == "main") {
         setErrorString(error);
         m_timer->stop();
         m_part_manager->close();
@@ -554,10 +554,10 @@ void MultiDownloader::was_error_part(const QString & error,QNetworkReply * reply
         reply->deleteLater();
         emit error_occured();
     }
-    else if (reply != NULL) {
+    else if (reply != nullptr) {
         int try_count = m_connect_attempt_count;
-        if (reply != NULL) try_count = reply->property("try_counter").toInt();
-        if (reply != NULL && try_count < m_connect_attempt_count) {
+        if (reply != nullptr) try_count = reply->property("try_counter").toInt();
+        if (reply != nullptr && try_count < m_connect_attempt_count) {
             try_count++;
             reply->abort();
             reply->deleteLater();
@@ -592,7 +592,7 @@ void MultiDownloader::child_readyRead() {
 
 void MultiDownloader::child_finished() {
     QNetworkReply * m_reply = (QNetworkReply *)QObject::sender();
-    if (m_reply == NULL) return;
+    if (m_reply == nullptr) return;
     if (!m_error.isEmpty()) return;
 
     m_reply->abort();

@@ -11,7 +11,7 @@
 class CategoryWidget : public QWidget {
     Q_OBJECT
 public:
-    CategoryWidget(QWidget *parent = NULL) : QWidget(parent) {}
+    CategoryWidget(QWidget *parent = nullptr) : QWidget(parent) {}
 public slots:
     virtual void okPressed() = 0;
 };

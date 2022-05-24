@@ -30,7 +30,7 @@ OptionalDepsDlg::~OptionalDepsDlg() {
 
 void OptionalDepsDlg::setProcessingEnabled() {
     m_processing_completed = true;
-    on_depsWidget_itemChanged(NULL,0);
+    on_depsWidget_itemChanged(nullptr,0);
 }
 
 void OptionalDepsDlg::rowsChanged() {

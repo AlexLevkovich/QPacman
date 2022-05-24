@@ -99,7 +99,7 @@ void UnixSignalWatcherPrivate::watchForSignal(int signal)
     sigact.sa_flags = 0;
     ::sigemptyset(&sigact.sa_mask);
     sigact.sa_flags |= SA_RESTART;
-    if (::sigaction(signal, &sigact, NULL)) {
+    if (::sigaction(signal, &sigact, nullptr)) {
         qDebug() << "UnixSignalWatcher: sigaction: " << ::strerror(errno);
         return;
     }

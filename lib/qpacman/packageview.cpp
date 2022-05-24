@@ -309,8 +309,8 @@ void PackageView::setModel(QAbstractItemModel * model) {
     QAbstractItemModel *m = this->model();
     model->setParent(this);
     QTreeView::setModel(model);
-    if (sm != NULL) sm->deleteLater();
-    if (m != NULL) m->deleteLater();
+    if (sm != nullptr) sm->deleteLater();
+    if (m != nullptr) m->deleteLater();
 }
 
 void PackageView::markAll() {

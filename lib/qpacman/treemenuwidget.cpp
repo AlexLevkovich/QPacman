@@ -65,7 +65,7 @@ void TreeMenuWidget::actionEvent(QActionEvent * e) {
 void TreeMenuWidget::removeItem(QAction * action) {
     for (int i=0;i<model()->rowCount();i++) {
         QTreeWidgetItem * temp_item = itemFromIndex(model()->index(i,0));
-        if (temp_item == NULL) continue;
+        if (temp_item == nullptr) continue;
 
         if (temp_item->data(0,Qt::UserRole).value<QAction *>() == action) {
             delete temp_item;
@@ -76,7 +76,7 @@ void TreeMenuWidget::removeItem(QAction * action) {
 
 void TreeMenuWidget::mouseMoveEvent(QMouseEvent * event) {
     QTreeWidgetItem * item = itemAt(event->pos());
-    if (item != NULL) {
+    if (item != nullptr) {
         selectionModel()->select(indexFromItem(item,0),QItemSelectionModel::ClearAndSelect);
         setCurrentItem(item);
         emit hovered(item->data(0,Qt::UserRole).value<QAction *>());
@@ -85,12 +85,12 @@ void TreeMenuWidget::mouseMoveEvent(QMouseEvent * event) {
 
 void TreeMenuWidget::mousePressEvent(QMouseEvent * event) {
     QTreeWidgetItem * item = itemAt(event->pos());
-    if ((item != NULL) && (item->childCount() <= 0)) {
+    if ((item != nullptr) && (item->childCount() <= 0)) {
         ((QMenu *)parent())->hide();
         emit triggered(item->data(0,Qt::UserRole).value<QAction *>());
     }
 
-    if ((item != NULL) && (item->childCount() > 0) && itemsExpandable()) {
+    if ((item != nullptr) && (item->childCount() > 0) && itemsExpandable()) {
         item->setExpanded(!item->isExpanded());
     }
 }
@@ -104,13 +104,13 @@ void TreeMenuWidget::showEvent(QShowEvent * /*event*/) {
     }
 
     QTreeWidgetItem * item = itemFromIndex(model()->index(0,0));
-    if (item != NULL) scrollToItem(item);
+    if (item != nullptr) scrollToItem(item);
 }
 
 void TreeMenuWidget::changeItem(QAction * action) {
     for (int i=0;i<model()->rowCount();i++) {
         QTreeWidgetItem * temp_item = itemFromIndex(model()->index(i,0));
-        if (temp_item == NULL) continue;
+        if (temp_item == nullptr) continue;
 
         if (temp_item->data(0,Qt::UserRole).value<QAction *>() == action) {
             setItem(temp_item,action);
@@ -120,9 +120,9 @@ void TreeMenuWidget::changeItem(QAction * action) {
 }
 
 QTreeWidgetItem * TreeMenuWidget::initItem(QTreeWidgetItem * parent,TreeMenuWidget * widget,QAction * action) {
-    QTreeWidgetItem * temp_item = NULL;
-    if (parent != NULL) temp_item = new QTreeWidgetItem(parent);
-    else if (widget != NULL) temp_item = new QTreeWidgetItem(this);
+    QTreeWidgetItem * temp_item = nullptr;
+    if (parent != nullptr) temp_item = new QTreeWidgetItem(parent);
+    else if (widget != nullptr) temp_item = new QTreeWidgetItem(this);
     else temp_item = new QTreeWidgetItem();
 
     setItem(temp_item,action);
@@ -143,13 +143,13 @@ void TreeMenuWidget::addItem(QAction * action,QAction * before) {
     if (action->inherits("QWidgetAction")) return;
     if (action->isSeparator()) return;
 
-    QTreeWidgetItem * temp_item = NULL;
+    QTreeWidgetItem * temp_item = nullptr;
     QAction * menuAction = action->data().value<QAction *>();
-    if (menuAction != NULL) {
-        QTreeWidgetItem * item = NULL;
+    if (menuAction != nullptr) {
+        QTreeWidgetItem * item = nullptr;
         for (int i=0;i<model()->rowCount();i++) {
             temp_item = itemFromIndex(model()->index(i,0));
-            if (temp_item == NULL) continue;
+            if (temp_item == nullptr) continue;
 
             if (temp_item->data(0,Qt::UserRole).value<QAction *>() == menuAction) {
                 item = temp_item;
@@ -157,46 +157,46 @@ void TreeMenuWidget::addItem(QAction * action,QAction * before) {
             }
         }
 
-        temp_item = NULL;
-        if (item != NULL) temp_item = addSimpleItem(item,action,before);
+        temp_item = nullptr;
+        if (item != nullptr) temp_item = addSimpleItem(item,action,before);
     }
     else temp_item = addSimpleItem(action,before);
-    if (temp_item == NULL) return;
+    if (temp_item == nullptr) return;
 
-    if (action->menu() != NULL) addMenuItem(temp_item,action);
+    if (action->menu() != nullptr) addMenuItem(temp_item,action);
 }
 
 void TreeMenuWidget::addMenuItem(QTreeWidgetItem * item,QAction * action) {
     QList<QAction *> actions = action->menu()->actions();
     for (int i=0;i<actions.count();i++) {
-        QTreeWidgetItem * temp_item = initItem(item,NULL,actions[i]);
-        if (actions[i]->menu() != NULL) addMenuItem(temp_item,actions[i]);
+        QTreeWidgetItem * temp_item = initItem(item,nullptr,actions[i]);
+        if (actions[i]->menu() != nullptr) addMenuItem(temp_item,actions[i]);
     }
 }
 
 QTreeWidgetItem * TreeMenuWidget::addSimpleItem(QAction * action,QAction * before) {
-    if (before == NULL) {
-        return initItem(NULL,this,action);
+    if (before == nullptr) {
+        return initItem(nullptr,this,action);
     }
 
     for (int i=0;i<topLevelItemCount();i++) {
         QTreeWidgetItem * root_item = topLevelItem(i);
         if (root_item->data(0,Qt::UserRole).value<QAction *>() == before) {
-            QTreeWidgetItem * temp_item = initItem(NULL,NULL,action);
+            QTreeWidgetItem * temp_item = initItem(nullptr,nullptr,action);
             insertTopLevelItem(i,temp_item);
             return temp_item;
         }
 
         root_item = addSimpleChildItem(root_item,action,before);
-        if (root_item != NULL) return root_item;
+        if (root_item != nullptr) return root_item;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 QTreeWidgetItem * TreeMenuWidget::addSimpleItem(QTreeWidgetItem * parent_item,QAction * action,QAction * before) {
-    if (before == NULL) {
-        return initItem(parent_item,NULL,action);
+    if (before == nullptr) {
+        return initItem(parent_item,nullptr,action);
     }
 
     return addSimpleChildItem(parent_item,action,before);
@@ -206,15 +206,15 @@ QTreeWidgetItem * TreeMenuWidget::addSimpleChildItem(QTreeWidgetItem * item,QAct
     for (int i=0;i<item->childCount();i++) {
         QTreeWidgetItem * child_item = item->child(i);
         if (child_item->data(0,Qt::UserRole).value<QAction *>() == before) {
-            QTreeWidgetItem * temp_item = initItem(NULL,NULL,action);
+            QTreeWidgetItem * temp_item = initItem(nullptr,nullptr,action);
             item->insertChild(i,temp_item);
             return temp_item;
         }
         child_item = addSimpleChildItem(child_item,action,before);
-        if (child_item != NULL) return child_item;
+        if (child_item != nullptr) return child_item;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void TreeMenuWidget::calculateHeight() {

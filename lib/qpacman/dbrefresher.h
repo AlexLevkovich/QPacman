@@ -11,7 +11,7 @@
 class DBRefresher : public PackageProcessor {
     Q_OBJECT
 public:
-    DBRefresher(ProgressView * view = NULL,QAction * cancelAction = NULL,QObject *parent = NULL);
+    DBRefresher(ProgressView * view = nullptr,QAction * cancelAction = nullptr,QObject *parent = nullptr);
 
 private slots:
     ThreadRun::RC process(const QString & pw);

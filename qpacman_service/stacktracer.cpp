@@ -38,7 +38,7 @@ StackTracer::StackTracer(const QString & output) {
     struct sigaction sigact;
     sigact.sa_sigaction = (void (*)(int,siginfo_t *,void *))crit_err_hdlr;
     sigact.sa_flags = SA_RESTART | SA_SIGINFO;
-    if (sigaction(SIGSEGV, &sigact, (struct sigaction *)NULL) != 0) {
+    if (sigaction(SIGSEGV, &sigact, (struct sigaction *)nullptr) != 0) {
         fprintf(stderr, "error setting SIGSEGV signal handler\n");
         ::exit(EXIT_FAILURE);
     }
@@ -82,8 +82,8 @@ void StackTracer::crit_err_hdlr(int sig_num, void * _info, void * ucontext) {
     array[1] = caller_address;
     messages = backtrace_symbols(array, size);
     /* skip first stack frame (points here) */
-    for (i = 1; i < size && messages != NULL; ++i) {
-        dem_str = bfd_demangle(NULL,messages[i],3);
+    for (i = 1; i < size && messages != nullptr; ++i) {
+        dem_str = bfd_demangle(nullptr,messages[i],3);
         fprintf(backtraceFile,"%s\n",dem_str);
         free(dem_str);
     }

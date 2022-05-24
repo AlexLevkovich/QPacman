@@ -13,7 +13,7 @@
 #include "libalpm.h"
 #include <QDebug>
 
-DBRefresher::DBRefresher(ProgressView * view,QAction * cancelAction,QObject *parent) : PackageProcessor(view,cancelAction,NULL,parent) {}
+DBRefresher::DBRefresher(ProgressView * view,QAction * cancelAction,QObject *parent) : PackageProcessor(view,cancelAction,nullptr,parent) {}
 
 ThreadRun::RC DBRefresher::process(const QString &) {
     return Alpm::instance()->updateDBs();

@@ -44,7 +44,7 @@ void WaitIndicator::run() {
 
 QTimer * WaitIndicator::timer() {
     QVariant val = property("timer");
-    if (!val.isValid()) return NULL;
+    if (!val.isValid()) return nullptr;
     return (QTimer *)val.toLongLong();
 }
 

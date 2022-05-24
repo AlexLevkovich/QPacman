@@ -14,7 +14,7 @@ class OptionalDepsDlg;
 class PackageInstaller : public PackageProcessor {
     Q_OBJECT
 public:
-    PackageInstaller(const QList<AlpmPackage> & pkgs = QList<AlpmPackage>(),const QList<AlpmPackage> & forcedpkgs = QList<AlpmPackage>(),bool asdeps = false,ProgressView * view = NULL,QAction * cancelAction = NULL,OptionalDepsDlg * optdlg = NULL,QObject *parent = nullptr);
+    PackageInstaller(const QList<AlpmPackage> & pkgs = QList<AlpmPackage>(),const QList<AlpmPackage> & forcedpkgs = QList<AlpmPackage>(),bool asdeps = false,ProgressView * view = nullptr,QAction * cancelAction = nullptr,OptionalDepsDlg * optdlg = nullptr,QObject *parent = nullptr);
 
 private slots:
     ThreadRun::RC process(const QString & pw);

@@ -85,7 +85,7 @@ bool OptionsMenu::eventFilter(QObject *obj, QEvent *e) {
 
     QKeyEvent * event = (QKeyEvent *)e;
     int i = -1;
-    widget = NULL;
+    widget = nullptr;
     for (i=0;i<m_child_widgets.count();i++) {
         if (m_child_widgets[i]->hasFocus()) {
             widget = m_child_widgets[i];
@@ -94,11 +94,11 @@ bool OptionsMenu::eventFilter(QObject *obj, QEvent *e) {
         }
     }
 
-    if ((widget != NULL) && (e->type() == QEvent::KeyRelease)) {
+    if ((widget != nullptr) && (e->type() == QEvent::KeyRelease)) {
         QCoreApplication::postEvent(widget,new QKeyEvent(event->type(),event->key(),event->modifiers(),event->nativeScanCode(),event->nativeVirtualKey(),event->nativeModifiers(),event->text()));
         return true;
     }
-    else if ((widget != NULL) && (e->type() == QEvent::KeyPress)) {
+    else if ((widget != nullptr) && (e->type() == QEvent::KeyPress)) {
         bool is_edit_widget = widget->inputMethodQuery(Qt::ImCursorPosition).isValid();
         if ((event->key() == Qt::Key_Tab) && (is_edit_widget?(event->modifiers() & Qt::ShiftModifier):1)) {
             if ((index+1) >= m_child_widgets.count()) index = -1;

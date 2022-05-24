@@ -37,7 +37,7 @@ static void parseEVR(char *evr, const char **ep, const char **vp,
         *se++ = '\0';
         release = se;
     } else {
-        release = NULL;
+        release = nullptr;
     }
 
     if(ep) *ep = epoch;
@@ -495,13 +495,13 @@ AlpmPackage::AlpmPackage(const QString & pkgpath,bool delete_at_destruction) {
     m_pkg_size = -1;
     m_pkg_isize = -1;
     delete_at_destruction = false;
-    if (Alpm::instance() == NULL) return;
+    if (Alpm::instance() == nullptr) return;
     *this = Alpm::instance()->createLocalPackage(pkgpath);
     this->delete_at_destruction = delete_at_destruction;
 }
 
 AlpmPackage::~AlpmPackage() {
-    if (Alpm::instance() != NULL && m_type == AlpmPackage::File && delete_at_destruction) {
+    if (Alpm::instance() != nullptr && m_type == AlpmPackage::File && delete_at_destruction) {
         Alpm::instance()->deleteLocalPackage(*this);
     }
 }
@@ -594,14 +594,14 @@ QLatin1String AlpmPackage::description() const {
 }
 
 QUrl AlpmPackage::url() const {
-    if (Alpm::instance() == NULL) return QUrl();
+    if (Alpm::instance() == nullptr) return QUrl();
     if (m_url.isValid()) return m_url;
 
     return (((AlpmPackage *)this)->m_url = Alpm::instance()->packageUrl(*this));
 }
 
 QString AlpmPackage::fileName() const {
-    if (Alpm::instance() == NULL) return QString();
+    if (Alpm::instance() == nullptr) return QString();
     if (!m_filename.isEmpty()) return m_filename;
 
     return (((AlpmPackage *)this)->m_filename = Alpm::instance()->packageFileName(*this));
@@ -612,28 +612,28 @@ QString AlpmPackage::filePath() const {
 }
 
 QDateTime AlpmPackage::buildDate() const {
-    if (Alpm::instance() == NULL) return QDateTime();
+    if (Alpm::instance() == nullptr) return QDateTime();
     if (m_build_date.isValid()) return m_build_date;
 
     return (((AlpmPackage *)this)->m_build_date = Alpm::instance()->packageBuildDate(*this));
 }
 
 QDateTime AlpmPackage::installDate() const {
-    if (Alpm::instance() == NULL) return QDateTime();
+    if (Alpm::instance() == nullptr) return QDateTime();
     if (m_install_date.isValid()) return m_install_date;
 
     return (((AlpmPackage *)this)->m_install_date = Alpm::instance()->packageInstallDate(*this));
 }
 
 QString AlpmPackage::packager() const {
-    if (Alpm::instance() == NULL) return QString();
+    if (Alpm::instance() == nullptr) return QString();
     if (!m_packager.isEmpty()) return m_packager;
 
     return (((AlpmPackage *)this)->m_packager = Alpm::instance()->packagePackager(*this));
 }
 
 QLatin1String AlpmPackage::arch() const {
-    if (Alpm::instance() == NULL) return QLatin1String();
+    if (Alpm::instance() == nullptr) return QLatin1String();
     if (!m_arch.isEmpty()) return QLatin1String(m_arch);
 
     return QLatin1String(((AlpmPackage *)this)->m_arch = Alpm::instance()->packageArch(*this));
@@ -648,147 +648,147 @@ bool AlpmPackage::isInstalled() const {
 }
 
 AlpmPackage::UserChangeStatus AlpmPackage::changeStatus() const {
-    if (Alpm::instance() == NULL) return AlpmPackage::DO_NOTHING;
+    if (Alpm::instance() == nullptr) return AlpmPackage::DO_NOTHING;
 
     return Alpm::instance()->packageChangeStatus(*this);
 }
 
 QStringList AlpmPackage::licenses() const {
-    if (Alpm::instance() == NULL) return QStringList();
+    if (Alpm::instance() == nullptr) return QStringList();
     if (!m_licenses.isEmpty()) return m_licenses;
 
     return ((AlpmPackage *)this)->m_licenses = Alpm::instance()->packageLicenses(*this);
 }
 
 QStringList AlpmPackage::requiredby() const {
-    if (Alpm::instance() == NULL) return QStringList();
+    if (Alpm::instance() == nullptr) return QStringList();
     if (!m_requiredby.isEmpty()) return m_requiredby;
 
     return ((AlpmPackage *)this)->m_requiredby = Alpm::instance()->packageRequiredby(*this);
 }
 
 QStringList AlpmPackage::optionalfor() const {
-    if (Alpm::instance() == NULL) return QStringList();
+    if (Alpm::instance() == nullptr) return QStringList();
     if (!m_optionalfor.isEmpty()) return m_optionalfor;
 
     return ((AlpmPackage *)this)->m_optionalfor = Alpm::instance()->packageOptionalfor(*this);
 }
 
 QStringList AlpmPackage::groups() const {
-    if (Alpm::instance() == NULL) return QStringList();
+    if (Alpm::instance() == nullptr) return QStringList();
     if (!m_groups.isEmpty()) return m_groups;
 
     return ((AlpmPackage *)this)->m_groups = Alpm::instance()->packageGroups(*this);
 }
 
 QList<AlpmPackage::Dependence> AlpmPackage::depends() const {
-    if (Alpm::instance() == NULL) return QList<AlpmPackage::Dependence>();
+    if (Alpm::instance() == nullptr) return QList<AlpmPackage::Dependence>();
     if (!m_depends.isEmpty()) return m_depends;
 
     return ((AlpmPackage *)this)->m_depends = Alpm::instance()->packageDepends(*this);
 }
 
 QList<AlpmPackage::Dependence> AlpmPackage::optdepends() const {
-    if (Alpm::instance() == NULL) return QList<AlpmPackage::Dependence>();
+    if (Alpm::instance() == nullptr) return QList<AlpmPackage::Dependence>();
     if (!m_optdepends.isEmpty()) return m_optdepends;
 
     return ((AlpmPackage *)this)->m_optdepends = Alpm::instance()->packageOptDepends(*this);
 }
 
 QList<AlpmPackage::Dependence> AlpmPackage::conflicts() const {
-    if (Alpm::instance() == NULL) return QList<AlpmPackage::Dependence>();
+    if (Alpm::instance() == nullptr) return QList<AlpmPackage::Dependence>();
     if (!m_conflicts.isEmpty()) return m_conflicts;
 
     return ((AlpmPackage *)this)->m_conflicts = Alpm::instance()->packageConflicts(*this);
 }
 
 QList<AlpmPackage::Dependence> AlpmPackage::provides() const {
-    if (Alpm::instance() == NULL) return QList<AlpmPackage::Dependence>();
+    if (Alpm::instance() == nullptr) return QList<AlpmPackage::Dependence>();
     if (!m_provides.isEmpty()) return m_provides;
 
     return ((AlpmPackage *)this)->m_provides = Alpm::instance()->packageProvides(*this);
 }
 
 QList<AlpmPackage::Dependence> AlpmPackage::replaces() const {
-    if (Alpm::instance() == NULL) return QList<AlpmPackage::Dependence>();
+    if (Alpm::instance() == nullptr) return QList<AlpmPackage::Dependence>();
     if (!m_replaces.isEmpty()) return m_replaces;
 
     return ((AlpmPackage *)this)->m_replaces = Alpm::instance()->packageReplaces(*this);
 }
 
 AlpmPackage::Type AlpmPackage::type() const {
-    if (Alpm::instance() == NULL) return AlpmPackage::Unknown;
+    if (Alpm::instance() == nullptr) return AlpmPackage::Unknown;
     if (m_type != AlpmPackage::Unknown) return m_type;
 
     return ((AlpmPackage *)this)->m_type = Alpm::instance()->packageType(*this);
 }
 
 qint64 AlpmPackage::size() const {
-    if (Alpm::instance() == NULL) return -1;
+    if (Alpm::instance() == nullptr) return -1;
     if (m_pkg_size >= 0) return m_pkg_size;
 
     return ((AlpmPackage *)this)->m_pkg_size = Alpm::instance()->packageSize(*this);
 }
 
 qint64 AlpmPackage::installedSize() const {
-    if (Alpm::instance() == NULL) return -1;
+    if (Alpm::instance() == nullptr) return -1;
     if (m_pkg_isize >= 0) return m_pkg_isize;
 
     return ((AlpmPackage *)this)->m_pkg_isize = Alpm::instance()->packageInstalledSize(*this);
 }
 
 AlpmPackage::Reason AlpmPackage::reason() const {
-    if (Alpm::instance() == NULL) return AlpmPackage::Undefined;
+    if (Alpm::instance() == nullptr) return AlpmPackage::Undefined;
 
     return Alpm::instance()->packageReason(*this);
 }
 
 bool AlpmPackage::setReason(AlpmPackage::Reason reason) {
-    if (Alpm::instance() == NULL) return false;
+    if (Alpm::instance() == nullptr) return false;
 
     return Alpm::instance()->packageSetReason(*this,reason);
 }
 
 bool AlpmPackage::isOrphaned() const {
-    if (Alpm::instance() == NULL) return false;
+    if (Alpm::instance() == nullptr) return false;
 
     if (m_isOrphaned == 'U') ((AlpmPackage *)this)->m_isOrphaned = Alpm::instance()->packageIsOrphaned(*this)?'Y':'N';
     return (m_isOrphaned == 'Y');
 }
 
 bool AlpmPackage::setChangeStatus(AlpmPackage::UserChangeStatus status) {
-    if (Alpm::instance() == NULL) return false;
+    if (Alpm::instance() == nullptr) return false;
 
     return Alpm::instance()->packageSetChangeStatus(*this,status);
 }
 
 QList<AlpmPackage::UserChangeStatus> AlpmPackage::possibleChangeStatuses() const {
-    if (Alpm::instance() == NULL) return QList<AlpmPackage::UserChangeStatus>();
+    if (Alpm::instance() == nullptr) return QList<AlpmPackage::UserChangeStatus>();
 
     return Alpm::instance()->packagePossibleChangeStatuses(*this);
 }
 
 AlpmPackage::UserChangeStatus AlpmPackage::defaultStatus() const {
-    if (Alpm::instance() == NULL) return AlpmPackage::DO_NOTHING;
+    if (Alpm::instance() == nullptr) return AlpmPackage::DO_NOTHING;
 
     return Alpm::instance()->packageDefaultStatus(*this);
 }
 
 QUrl AlpmPackage::iconUrl() const {
-    if (Alpm::instance() == NULL) return QUrl();
+    if (Alpm::instance() == nullptr) return QUrl();
     if (m_icon_url.isValid()) return m_icon_url;
 
     return (((AlpmPackage *)this)->m_icon_url = Alpm::instance()->packageIconUrl(*this));
 }
 
 QList<AlpmPackage::FileInfo> AlpmPackage::files() const {
-    if (Alpm::instance() == NULL) return QList<AlpmPackage::FileInfo>();
+    if (Alpm::instance() == nullptr) return QList<AlpmPackage::FileInfo>();
 
     return Alpm::instance()->packageFiles(*this);
 }
 
 bool AlpmPackage::isDownloaded() const {
-    if (Alpm::instance() == NULL) return false;
+    if (Alpm::instance() == nullptr) return false;
 
     return Alpm::instance()->packageIsDownloaded(*this);
 }
@@ -843,7 +843,7 @@ void AlpmPackage::FileInfo::setPath(const QString & path) {
 }
 
 void AlpmPackage::resetAllChangeStatuses() {
-    if (Alpm::instance() == NULL) return;
+    if (Alpm::instance() == nullptr) return;
 
     Alpm::instance()->resetPackageChangeStatuses();
 }

@@ -85,7 +85,7 @@ QVariant CategoryModel::data(const QModelIndex &index, int role) const {
 }
 
 Category *CategoryModel::findCategoryById(int id) {
-    if (id >= m_categories.size()) return NULL;
+    if (id >= m_categories.size()) return nullptr;
     return m_categories.at(id);
 }
 
@@ -205,7 +205,7 @@ void CategoryListView::selectionChanged(const QItemSelection & selected,const QI
     int index = -1;
     for (int i=0;i<categories.count();i++) {
         if (i == indexes.at(0).row()) index = i;
-        else if (categories.at(i)->widget != NULL) categories.at(i)->widget->setVisible(false);
+        else if (categories.at(i)->widget != nullptr) categories.at(i)->widget->setVisible(false);
     }
-    if (index != -1 && categories.at(index)->widget != NULL) categories.at(index)->widget->setVisible(true);
+    if (index != -1 && categories.at(index)->widget != nullptr) categories.at(index)->widget->setVisible(true);
 }

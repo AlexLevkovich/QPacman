@@ -13,12 +13,12 @@ class IdAction : public QAction {
 protected:
     IdAction(FilterToolButton::ItemId id,const QString & text,QMenu * parent): QAction(text,parent) {
         m_id = id;
-        parent->insertAction(NULL,this);
+        parent->insertAction(nullptr,this);
     }
 
     IdAction(FilterToolButton::ItemId id,const QIcon & icon,const QString & text,QMenu * parent): QAction(icon,text,parent) {
         m_id = id;
-        parent->insertAction(NULL,this);
+        parent->insertAction(nullptr,this);
     }
 
 private:
@@ -43,11 +43,11 @@ FilterToolButton::FilterToolButton(QWidget *parent) : ComboToolButton(parent) {
 }
 
 FilterToolButton::ItemId FilterToolButton::getSelectedId() const {
-    return (currentAction() == NULL)?IS_ALL:((currentAction()->menu() == NULL)?((IdAction *)currentAction())->id():IS_UNKNOWN);
+    return (currentAction() == nullptr)?IS_ALL:((currentAction()->menu() == nullptr)?((IdAction *)currentAction())->id():IS_UNKNOWN);
 }
 
 QString FilterToolButton::getSelectedFilter() const {
-    return (currentAction() == NULL)?"":((currentAction()->menu() == NULL)?((IdAction *)currentAction())->text():currentAction()->menu()->title());
+    return (currentAction() == nullptr)?"":((currentAction()->menu() == nullptr)?((IdAction *)currentAction())->text():currentAction()->menu()->title());
 }
 
 void FilterToolButton::fill(const QStringList & _groups) {
@@ -82,7 +82,7 @@ void FilterToolButton::fill(const QStringList & _groups) {
 
     QMenu * old_menu = this->menu();
     setMenu(menu);
-    if (old_menu != NULL) delete old_menu;
+    if (old_menu != nullptr) delete old_menu;
 
     setText(text);
     if (!setFilter(id,text)) setText(all_str);
@@ -98,9 +98,9 @@ bool FilterToolButton::setFilter(QMenu * menu,FilterToolButton::ItemId id,const 
 
 bool FilterToolButton::setFilter(const QList<QAction *> & actions,FilterToolButton::ItemId id,const QString & filter) {
     for (int i=0;i<actions.count();i++) {
-        ItemId item_id = ((actions[i]->menu() == NULL)?((IdAction *)actions[i])->id():IS_UNKNOWN);
+        ItemId item_id = ((actions[i]->menu() == nullptr)?((IdAction *)actions[i])->id():IS_UNKNOWN);
 
-        if (actions[i]->menu() == NULL) {
+        if (actions[i]->menu() == nullptr) {
             QString filter_str = actions[i]->text();
             if (filter_str.contains("&")) filter_str = filter_str.replace("&","");
             bool is_ok = ((id == IS_GROUP) && (id == item_id) && (filter_str == filter));
@@ -112,7 +112,7 @@ bool FilterToolButton::setFilter(const QList<QAction *> & actions,FilterToolButt
                 return true;
             }
         }
-        else if (actions[i]->menu() != NULL) {
+        else if (actions[i]->menu() != nullptr) {
             if (setFilter(actions[i]->menu(),id,filter)) return true;
         }
     }

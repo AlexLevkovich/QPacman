@@ -15,7 +15,7 @@ class QMenu;
 class QPacmanTrayIcon : public MovieTrayIcon {
     Q_OBJECT
 public:
-    QPacmanTrayIcon(bool * use_sound = NULL,QObject *parent = NULL);
+    QPacmanTrayIcon(bool * use_sound = nullptr,QObject *parent = nullptr);
 
     QAction * checkUpdatesAction() { return m_checkUpdatesAction; }
     QAction * updateAction() { return m_updateAction; }

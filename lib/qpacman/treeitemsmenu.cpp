@@ -43,7 +43,7 @@ void TreeItemsMenu::actionEvent(QActionEvent * e) {
         }
         else {
             QMenu * menu = e->action()->menu();
-            if (menu != NULL) menu->installEventFilter(this);
+            if (menu != nullptr) menu->installEventFilter(this);
             ((QTreeWidget *)treeWidget)->insertAction(e->before(),e->action());
         }
     }
@@ -64,7 +64,7 @@ bool TreeItemsMenu::eventFilter(QObject * obj,QEvent * event) {
     QActionEvent * e = (QActionEvent *)event;
     if (event->type() == QActionEvent::ActionAdded) {
          QMenu * menu = e->action()->menu();
-         if (menu != NULL) {
+         if (menu != nullptr) {
              menu->installEventFilter(this);
          }
          treeWidget->insertAction(((QMenu *)obj)->menuAction(),e->before(),e->action());

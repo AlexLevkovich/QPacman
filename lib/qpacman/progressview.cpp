@@ -26,10 +26,10 @@ void ProgressDelegate::paint(QPainter *painter,const QStyleOptionViewItem &optio
     QString text = index.data(Qt::DisplayRole).toString();
     QIcon icon = index.data(Qt::DecorationRole).value<QIcon>();
     int decorationSize = option.fontMetrics.height() + 4;
-    if (item != NULL && item->type() <= QStandardItem::UserType) QStyledItemDelegate::paint(painter,option,index);
-    else if (item != NULL && (item->type() & SimpleItem::Progress)) {
+    if (item != nullptr && item->type() <= QStandardItem::UserType) QStyledItemDelegate::paint(painter,option,index);
+    else if (item != nullptr && (item->type() & SimpleItem::Progress)) {
         QWidget * viewport = view()->viewport();
-        if (viewport != NULL) {
+        if (viewport != nullptr) {
             SimpleProgressItem * progress_item = (SimpleProgressItem *)item;
             progress_item->m_renderer.resize(option.rect.width(),option.rect.height());
             QPalette pal = progress_item->m_renderer.palette();
@@ -46,7 +46,7 @@ void ProgressDelegate::paint(QPainter *painter,const QStyleOptionViewItem &optio
             painter->restore();
         }
     }
-    else if (item != NULL && (item->type() & SimpleItem::Text)) {
+    else if (item != nullptr && (item->type() & SimpleItem::Text)) {
         if (!icon.isNull()) painter->drawPixmap(option.rect.x()+1,option.rect.y(),icon.pixmap(decorationSize));
         QRect textRect(option.rect);
         textRect.setX(textRect.x()+1);
@@ -56,7 +56,7 @@ void ProgressDelegate::paint(QPainter *painter,const QStyleOptionViewItem &optio
         painter->setPen(pen);
         painter->drawText(textRect,Qt::AlignLeft|Qt::AlignVCenter|Qt::TextSingleLine,text);
     }
-    else if (item != NULL && (item->type() & SimpleItem::Flat)) {
+    else if (item != nullptr && (item->type() & SimpleItem::Flat)) {
         QRect rect(option.rect);
         int height = option.fontMetrics.height();
         rect.setTop(rect.y()+((rect.height()-height)/2));
@@ -71,11 +71,11 @@ QSize ProgressDelegate::sizeHint(const QStyleOptionViewItem &option,const QModel
     SimpleItem * item = dynamic_cast<SimpleItem *>(model->itemFromIndex(index));
     int decorationSize = option.fontMetrics.height() + 4;
     QIcon icon = index.data(Qt::DecorationRole).value<QIcon>();
-    if (item != NULL && item->type() > QStandardItem::UserType) {
-        if (item != NULL && (item->type() & SimpleItem::Progress)) {
+    if (item != nullptr && item->type() > QStandardItem::UserType) {
+        if (item != nullptr && (item->type() & SimpleItem::Progress)) {
             return QSize(option.fontMetrics.horizontalAdvance(model->headerData(index.column(),Qt::Horizontal).toString())+10,decorationSize+2);
         }
-        else if (item != NULL && (item->type() & SimpleItem::Text)) {
+        else if (item != nullptr && (item->type() & SimpleItem::Text)) {
             return QSize(option.fontMetrics.horizontalAdvance(index.data(Qt::DisplayRole).toString())+(icon.isNull()?0:decorationSize)+4,decorationSize+2);
         }
     }
@@ -92,7 +92,7 @@ ProgressModel * SimpleItem::progressModel() {
 
 ProgressView * SimpleItem::progressView() {
     ProgressModel * model = progressModel();
-    if (model == NULL) return NULL;
+    if (model == nullptr) return nullptr;
     return dynamic_cast<ProgressView *>(model->parent());
 }
 
@@ -127,7 +127,7 @@ SimpleProgressItem::SimpleProgressItem(int min,int max,int value) : SimpleItem()
     int anim_timeout = QApplication::style()->styleHint(QStyle::SH_Widget_Animation_Duration);
     if (anim_timeout > 0) {
         QObject::connect(&m_timer,&QTimer::timeout,[&]() { ProgressModel * model = progressModel();
-                                                           if (model == NULL) return;
+                                                           if (model == nullptr) return;
                                                            QModelIndex index = model->indexFromItem(this);
                                                            if (!index.isValid()) return;
                                                            emit model->dataChanged(index,index);
@@ -214,21 +214,21 @@ bool SimpleProgressItem::isBusy() const {
 
 QString SimpleProgressItem::message() const {
     QStandardItem * item = parent()->child(row(),0);
-    return (item == NULL)?QString():item->text();
+    return (item == nullptr)?QString():item->text();
 }
 
 void SimpleProgressItem::setMessage(const QString & message) {
     QStandardItem * parent = this->parent();
-    if (parent == NULL) {
+    if (parent == nullptr) {
         QStandardItemModel * model = this->model();
-        if (model != NULL) {
+        if (model != nullptr) {
             QStandardItem * item = model->itemFromIndex(model->index(row(),0));
-            if (item != NULL) item->setText(message);
+            if (item != nullptr) item->setText(message);
         }
     }
     else {
         QStandardItem * item = parent->child(row(),0);
-        if (item != NULL) item->setText(message);
+        if (item != nullptr) item->setText(message);
     }
 }
 
@@ -251,7 +251,7 @@ ProgressView::ProgressView(QWidget *parent,bool clear_on_hide) : QTreeView(paren
 
     QAbstractItemDelegate * old_delegate = itemDelegate();
     setItemDelegate(new ProgressDelegate(this));
-    if (old_delegate != NULL) old_delegate->deleteLater();
+    if (old_delegate != nullptr) old_delegate->deleteLater();
 
     connect(m_model,&ProgressModel::rowsInserted,this,&ProgressView::rowsChanged);
     connect(m_model,&ProgressModel::rowsInserted,this,&ProgressView::rowsInserted,Qt::QueuedConnection);
@@ -369,7 +369,7 @@ void ProgressView::setProgressColumnWidth(quint64 width) {
 }
 
 bool ProgressView::moveRowAtEnd(QStandardItem * item) {
-    if (item == NULL) return false;
+    if (item == nullptr) return false;
 
     if (item->index().parent().isValid()) {
         item->parent()->appendRow(item->parent()->takeRow(item->row()));
@@ -393,16 +393,16 @@ void ProgressView::rowsChanged() {
 }
 
 SimpleProgressItem * ProgressView::previousProgressItem(QStandardItem * item) {
-    if (item == NULL) return NULL;
-    if (item->row() <= 0) return NULL;
-    if (item->column() != 1) return NULL;
+    if (item == nullptr) return nullptr;
+    if (item->row() <= 0) return nullptr;
+    if (item->column() != 1) return nullptr;
 
     do {
-        item = m_model->itemFromIndex(m_model->index(item->row()-1,item->column(),(item->parent() == NULL)?QModelIndex():item->parent()->index()));
-        if ((item != NULL) && (item->type() > QStandardItem::UserType) && (item->type() & SimpleItem::Progress)) return (SimpleProgressItem *)item;
-    } while (item != NULL);
+        item = m_model->itemFromIndex(m_model->index(item->row()-1,item->column(),(item->parent() == nullptr)?QModelIndex():item->parent()->index()));
+        if ((item != nullptr) && (item->type() > QStandardItem::UserType) && (item->type() & SimpleItem::Progress)) return (SimpleProgressItem *)item;
+    } while (item != nullptr);
 
-    return NULL;
+    return nullptr;
 }
 
 void ProgressView::rowsInserted(const QModelIndex & parent,int first,int last) {

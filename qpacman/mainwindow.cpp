@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent) , ui(new Ui::MainWi
     ui->setupUi(this);
 
     wasInit = false;
-    optdep = NULL;
+    optdep = nullptr;
 
     view_group = new WidgetGroup(this);
     view_group->add(ui->splitter);
@@ -250,7 +250,7 @@ void MainWindow::logString(const QString & str) {
 void MainWindow::on_actionRefresh_triggered() {
     enableActions(false);
 
-    if (optdep != NULL) optdep->deleteLater();
+    if (optdep != nullptr) optdep->deleteLater();
     view_group->setCurrent(ui->progressView);
     ui->actionCancel->setVisible(true);
     ui->actionApply->setVisible(false);
@@ -308,7 +308,7 @@ void MainWindow::closeEvent(QCloseEvent * event) {
 void MainWindow::onActionApply() {
     enableActions(false);
 
-    if (optdep != NULL) delete optdep;
+    if (optdep != nullptr) delete optdep;
     view_group->setCurrent(ui->progressView);
     ui->actionCancel->setVisible(true);
     ui->actionApply->setVisible(false);
@@ -317,7 +317,7 @@ void MainWindow::onActionApply() {
     optdep = new OptionalDepsDlg();
     ActionApplier * applier = new ActionApplier(ui->progressView,ui->actionCancel,optdep);
     connect(optdep,&OptionalDepsDlg::selected,this,&MainWindow::onselect_packages);
-    connect(optdep,&QObject::destroyed,this,[&]() { optdep = NULL; });
+    connect(optdep,&QObject::destroyed,this,[&]() { optdep = nullptr; });
     connect(applier,&ActionApplier::completed,this,&MainWindow::onApplierCompleted,Qt::QueuedConnection);
     connect(applier,&ActionApplier::logString,this,&MainWindow::logString);
 }
@@ -337,11 +337,11 @@ void MainWindow::onApplierCompleted(ThreadRun::RC rc,const QString &) {
         ui->actionCancel->setVisible(false);
         ui->actionApply->setVisible(true);
         enableActions(true);
-        if (optdep != NULL) optdep->setProcessingEnabled();
+        if (optdep != nullptr) optdep->setProcessingEnabled();
         ui->packetView->refreshRows();
     }
     else {
-        if (optdep != NULL) optdep->deleteLater();
+        if (optdep != nullptr) optdep->deleteLater();
         ui->actionCancel->setEnabled(true);
         connect(ui->actionCancel,&QAction::triggered,this,&MainWindow::error_cancel_triggered);
     }
@@ -350,7 +350,7 @@ void MainWindow::onApplierCompleted(ThreadRun::RC rc,const QString &) {
 void MainWindow::on_actionFullUpdate_triggered() {
     enableActions(false);
 
-    if (optdep != NULL) delete optdep;
+    if (optdep != nullptr) delete optdep;
     view_group->setCurrent(ui->progressView);
     ui->actionCancel->setVisible(true);
     ui->actionApply->setVisible(false);
@@ -359,7 +359,7 @@ void MainWindow::on_actionFullUpdate_triggered() {
     optdep = new OptionalDepsDlg();
     PackageInstaller * installer = new PackageInstaller(QList<AlpmPackage>(),QList<AlpmPackage>(),false,ui->progressView,ui->actionCancel,optdep);
     connect(optdep,&OptionalDepsDlg::selected,this,&MainWindow::onselect_packages);
-    connect(optdep,&QObject::destroyed,this,[&]() { optdep = NULL; });
+    connect(optdep,&QObject::destroyed,this,[&]() { optdep = nullptr; });
     connect(installer,&PackageInstaller::completed,this,&MainWindow::onApplierCompleted,Qt::QueuedConnection);
     connect(installer,&PackageInstaller::logString,this,&MainWindow::logString);
 }
@@ -367,7 +367,7 @@ void MainWindow::on_actionFullUpdate_triggered() {
 void MainWindow::onDownloadRequested(const AlpmPackage & pkg) {
     enableActions(false);
 
-    if (optdep != NULL) delete optdep;
+    if (optdep != nullptr) delete optdep;
     view_group->setCurrent(ui->progressView);
     ui->actionCancel->setVisible(true);
     ui->actionApply->setVisible(false);

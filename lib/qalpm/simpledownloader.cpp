@@ -104,7 +104,7 @@ bool SimpleDownloader::start() {
         return false;
     }
 
-    if (m_manager == NULL) {
+    if (m_manager == nullptr) {
         setErrorString(tr("Invalid QNetworkAccessManager instance!!!"));
         return false;
     }
@@ -121,9 +121,9 @@ bool SimpleDownloader::start() {
 
 QNetworkReply * SimpleDownloader::get(const QNetworkRequest & request) {
     QNetworkReply * m_reply = m_manager->get(request);
-    if (m_reply == NULL) {
+    if (m_reply == nullptr) {
         was_error_part(tr("Returned wrong QNetworkReply pointer!!!"));
-        return NULL;
+        return nullptr;
     }
     m_reply = new NetworkReplyProxy(m_reply,m_timeout,this);
     return m_reply;
@@ -131,7 +131,7 @@ QNetworkReply * SimpleDownloader::get(const QNetworkRequest & request) {
 
 void SimpleDownloader::private_start() {
     QNetworkReply * m_reply = get(QNetworkRequest(m_url));
-    if (m_reply == NULL) return;
+    if (m_reply == nullptr) return;
 
     connect(m_reply,&QNetworkReply::metaDataChanged,this,&SimpleDownloader::metaDataChanged);
     connect(m_reply,&QNetworkReply::errorOccurred,this,&SimpleDownloader::was_error);
@@ -153,7 +153,7 @@ void SimpleDownloader::was_error_part(const QString & error,QNetworkReply * repl
     m_out_file.close();
     updateModiffTime();
     m_is_started = false;
-    if (reply != NULL) {
+    if (reply != nullptr) {
         reply->abort();
         reply->deleteLater();
     }
@@ -225,7 +225,7 @@ void SimpleDownloader::metaDataChanged() {
 
 void SimpleDownloader::get_finished() {
     QNetworkReply * m_reply = (QNetworkReply *)QObject::sender();
-    if (m_reply == NULL) return;
+    if (m_reply == nullptr) return;
     if (!m_error.isEmpty()) return;
 
     m_reply->abort();

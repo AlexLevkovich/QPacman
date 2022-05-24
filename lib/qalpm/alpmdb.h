@@ -47,9 +47,9 @@ protected:
 
 private:
     static int no_version_compare(alpm_pkg_t * item1, alpm_pkg_t * item2);
-    template<class T> T & check_error(T & t,const char * err = NULL) const;
-    template<class T> T check_error(const T & t,const char * err = NULL) const;
-    void check_error(const char * err = NULL) const;
+    template<class T> T & check_error(T & t,const char * err = nullptr) const;
+    template<class T> T check_error(const T & t,const char * err = nullptr) const;
+    void check_error(const char * err = nullptr) const;
     bool isAppropriateDepsForPackageName(const QString & name,const QList<AlpmPackage::Dependence> & deps) const;
 
     alpm_db_t * m_db_handle;

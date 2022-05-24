@@ -21,7 +21,7 @@
 TrayPreferences::TrayPreferences(int timeout,QWidget *parent) : QMainWindow(parent), ui(new Ui::TrayPreferences) {
     ui->setupUi(this);
 
-    updater = NULL;
+    updater = nullptr;
     m_use_sound = ui->trayOptions->doPlaySound();
     m_tray = new QPacmanTrayIcon(&m_use_sound,this);
 
@@ -84,7 +84,7 @@ void TrayPreferences::on_buttonBox_rejected() {
 }
 
 void TrayPreferences::updateActions() {
-    actionUpdate_now->setEnabled(!m_blocking_operation && (updater == NULL));
+    actionUpdate_now->setEnabled(!m_blocking_operation && (updater == nullptr));
     actionCheck_for_updates->setEnabled(!m_blocking_operation);
     actionQuit->setEnabled(!m_blocking_operation);
 }
@@ -118,7 +118,7 @@ void TrayPreferences::onUpdateNowTriggered() {
     updateActions();
 
     updater = new Updater(this);
-    connect(updater,&QObject::destroyed,this,[&]() { updater = NULL; updateActions(); });
+    connect(updater,&QObject::destroyed,this,[&]() { updater = nullptr; updateActions(); });
     connect(updater,&Updater::completed,this,&TrayPreferences::onUpdaterCompleted);
 }
 

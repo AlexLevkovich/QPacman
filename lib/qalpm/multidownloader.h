@@ -139,7 +139,7 @@ protected:
 private:
     bool correctOutputFilePath(QNetworkReply * reply);
     QNetworkReply * get(const QNetworkRequest & request);
-    void was_error_part(const QString & error,QNetworkReply * reply = NULL);
+    void was_error_part(const QString & error,QNetworkReply * reply = nullptr);
     QList<int> workingPartIndexes();
     int countWorkingParts();
 

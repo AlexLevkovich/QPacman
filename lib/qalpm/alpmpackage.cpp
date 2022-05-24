@@ -19,7 +19,7 @@
 #include <limits>
 #include "archivefilesiterator.h"
 
-AppStream::Pool * AlpmPackage::m_pool = NULL;
+AppStream::Pool * AlpmPackage::m_pool = nullptr;
 QMultiHash<QString, AppStream::Component> AlpmPackage::m_appInfo;
 QMap<AlpmPackage::alpm_pkg_t_p,AlpmPackage::UserChangeStatus> AlpmPackage::m_change_statuses;
 const int metareg = AlpmPackage::registerMetaType();
@@ -224,7 +224,7 @@ bool AlpmPackage::Dependence::operator<(const Dependence & dep) {
 QList<AlpmPackage::Dependence> AlpmPackage::Dependence::findDepends(uint provider_id) const {
     QList<AlpmPackage::Dependence> ret;
     Alpm * alpm = Alpm::instance();
-    if (alpm == NULL) return ret;
+    if (alpm == nullptr) return ret;
 
     QList<AlpmPackage> pkgs = version().isEmpty()?alpm->findByPackageName(name()):alpm->findByPackageNameVersion(name(),version());
     if (pkgs.count() <= 0) {
@@ -240,7 +240,7 @@ QList<AlpmPackage::Dependence> AlpmPackage::Dependence::findDepends(uint provide
 
 bool AlpmPackage::Dependence::isInstalled() const {
     Alpm * alpm = Alpm::instance();
-    if (alpm == NULL) return false;
+    if (alpm == nullptr) return false;
     AlpmDB db = alpm->localDB();
     if (!db.findByPackageName(m_name).isValid()) {
         return db.findByPackageNameProvides(*this).count() > 0;
@@ -249,37 +249,37 @@ bool AlpmPackage::Dependence::isInstalled() const {
 }
 
 AlpmPackage::AlpmPackage() {
-    m_handle = NULL;
+    m_handle = nullptr;
     m_delete = false;
-    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
+    m_alpm_handle = (Alpm::instance() == nullptr)?nullptr:Alpm::instance()->m_alpm_handle;
 }
 
 AlpmPackage::AlpmPackage(alpm_pkg_t *pkg) {
     m_handle = pkg;
     m_delete = false;
-    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
+    m_alpm_handle = (Alpm::instance() == nullptr)?nullptr:Alpm::instance()->m_alpm_handle;
 }
 
 AlpmPackage::AlpmPackage(const QString & name,const QString & version,const QString & dbname) {
-    m_handle = NULL;
+    m_handle = nullptr;
     m_delete = false;
-    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
-    if ((Alpm::instance() == NULL) || (Alpm::instance()->m_alpm_handle == NULL)) return;
+    m_alpm_handle = (Alpm::instance() == nullptr)?nullptr:Alpm::instance()->m_alpm_handle;
+    if ((Alpm::instance() == nullptr) || (Alpm::instance()->m_alpm_handle == nullptr)) return;
     AlpmDB db(dbname);
     if (!db.isValid()) return;
     m_handle = alpm_db_get_pkg(db.m_db_handle,name.toLocal8Bit().constData());
     if (!isValid()) return;
     if (QString::fromLocal8Bit(alpm_pkg_get_version(m_handle)) != version) {
-        m_handle = NULL;
+        m_handle = nullptr;
         return;
     }
 }
 
 AlpmPackage::AlpmPackage(const QString & filename,bool do_delete) {
     m_delete = do_delete;
-    m_handle = NULL;
-    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
-    if ((Alpm::instance() == NULL) || (Alpm::instance()->m_alpm_handle == NULL)) return;
+    m_handle = nullptr;
+    m_alpm_handle = (Alpm::instance() == nullptr)?nullptr:Alpm::instance()->m_alpm_handle;
+    if ((Alpm::instance() == nullptr) || (Alpm::instance()->m_alpm_handle == nullptr)) return;
 
     alpm_pkg_load(Alpm::p_alpm->m_alpm_handle,filename.toLocal8Bit().constData(),1,0,&m_handle);
     m_filepath = filename;
@@ -374,7 +374,7 @@ const QDataStream & operator>>(const QDataStream &argument,AlpmPackage & pkg) {
 bool AlpmPackage::isUpdate() const {
     if (repo() == "local") return false;
     alpm_pkg_t * pkg = findInLocal(m_handle);
-    if (pkg == NULL) return false;
+    if (pkg == nullptr) return false;
     int ret = alpm_pkg_vercmp(alpm_pkg_get_version(pkg),alpm_pkg_get_version(m_handle));
     int usage = 0;
     return ((ret < 0) && !alpm_db_get_usage(alpm_pkg_get_db(m_handle),&usage) && (usage & ALPM_DB_USAGE_UPGRADE) && !isIgnorable());
@@ -385,7 +385,7 @@ bool AlpmPackage::isIgnorable() const {
 }
 
 bool AlpmPackage::isValid() const {
-    return ((Alpm::instance() != NULL) && (Alpm::instance()->m_alpm_handle != NULL) && (m_handle != NULL) && (m_alpm_handle == Alpm::instance()->m_alpm_handle));
+    return ((Alpm::instance() != nullptr) && (Alpm::instance()->m_alpm_handle != nullptr) && (m_handle != nullptr) && (m_alpm_handle == Alpm::instance()->m_alpm_handle));
 }
 
 QLatin1String AlpmPackage::name() const {
@@ -403,7 +403,7 @@ QLatin1String AlpmPackage::description() const {
 QUrl AlpmPackage::url() const {
     if (!isValid()) return QUrl();
     const char * str = alpm_pkg_get_url(m_handle);
-    return (str == NULL)?QUrl():QUrl::fromEncoded(QByteArray::fromRawData(str,strlen(str)));
+    return (str == nullptr)?QUrl():QUrl::fromEncoded(QByteArray::fromRawData(str,strlen(str)));
 }
 
 QString AlpmPackage::fileName() const {
@@ -419,7 +419,7 @@ QList<QLatin1String> AlpmPackage::remoteLocations() const {
     QList<QLatin1String> m_remotelocs;
     if (!isValid()) return m_remotelocs;
     alpm_db_t * db_t = alpm_pkg_get_db(m_handle);
-    if (db_t == NULL) return m_remotelocs;
+    if (db_t == nullptr) return m_remotelocs;
     AlpmList<char> locs(alpm_db_get_servers(db_t),AlpmList<char>::ignorefree);
     do {
          if (locs.isEmpty()) break;
@@ -445,7 +445,7 @@ bool AlpmPackage::isDownloaded(QString * path_pkg_file) const {
     for (int i=0;i<cacheDirs.size();i++) {
         pkg_path = cacheDirs.at(i)+QDir::separator()+fileName();
         if (QFileInfo(pkg_path).exists()) {
-            if (path_pkg_file != NULL) *path_pkg_file = pkg_path;
+            if (path_pkg_file != nullptr) *path_pkg_file = pkg_path;
             return true;
         }
     }
@@ -520,7 +520,7 @@ QStringList AlpmPackage::requiredby() const {
     if (!isValid() || (type() == AlpmPackage::Type::File)) return m_requiredby;
 
     alpm_pkg_t * pkg = findInLocal(m_handle);
-    if (pkg == NULL) pkg = m_handle;
+    if (pkg == nullptr) pkg = m_handle;
     AlpmList<char> list(alpm_pkg_compute_requiredby(pkg));
     do {
         if (list.isEmpty()) break;
@@ -535,7 +535,7 @@ QStringList AlpmPackage::optionalfor() const {
     if (!isValid() || (type() == AlpmPackage::Type::File)) return m_optionalfor;
 
     alpm_pkg_t * pkg = findInLocal(m_handle);
-    if (pkg == NULL) pkg = m_handle;
+    if (pkg == nullptr) pkg = m_handle;
     AlpmList<char> list(alpm_pkg_compute_optionalfor(pkg));
     do {
         if (list.isEmpty()) break;
@@ -577,7 +577,7 @@ AlpmPackage::Type AlpmPackage::type() const {
 QLatin1String AlpmPackage::repo() const {
     if (!isValid()) return QLatin1String();
     alpm_db_t * db_t = alpm_pkg_get_db(m_handle);
-    if (db_t == NULL || (type() == AlpmPackage::Type::File)) return QLatin1String();
+    if (db_t == nullptr || (type() == AlpmPackage::Type::File)) return QLatin1String();
     return QLatin1String(alpm_db_get_name(db_t));
 }
 
@@ -619,7 +619,7 @@ AlpmPackage::Reason AlpmPackage::reason() const {
     if (!isValid()) return AlpmPackage::Undefined;
     if (repo() == "local") return intToReason(alpm_pkg_get_reason(m_handle));
     alpm_pkg_t * pkg = findInLocal(m_handle);
-    if (pkg == NULL) return AlpmPackage::Undefined;
+    if (pkg == nullptr) return AlpmPackage::Undefined;
     return intToReason(alpm_pkg_get_reason(pkg));
 }
 
@@ -627,7 +627,7 @@ bool AlpmPackage::setReason(Reason reason) {
     if (reason == AlpmPackage::Undefined || !isValid()) return false;
     if (repo() == "local") return (alpm_pkg_set_reason(m_handle,(alpm_pkgreason_t)reasonToInt(reason)) == 0);
     alpm_pkg_t * pkg = findInLocal(m_handle);
-    if (pkg == NULL) return false;
+    if (pkg == nullptr) return false;
 
     return (alpm_pkg_set_reason(pkg,(alpm_pkgreason_t)reasonToInt(reason)) == 0);
 }
@@ -711,10 +711,10 @@ QList<AlpmPackage::FileInfo> AlpmPackage::files(const QString & archive_path) co
 
 QList<AlpmPackage::FileInfo> AlpmPackage::files(alpm_pkg_t * pkg) const {
     QList<AlpmPackage::FileInfo> ret;
-    if (pkg == NULL) return ret;
+    if (pkg == nullptr) return ret;
 
     alpm_filelist_t * files = alpm_pkg_get_files(pkg);
-    if (files == NULL) return ret;
+    if (files == nullptr) return ret;
 
     for (size_t i=0;i<files->count;i++) {
         ret.append(AlpmPackage::FileInfo(QString::fromLocal8Bit(files->files[i].name)));
@@ -732,10 +732,10 @@ QList<AlpmPackage::FileInfo> AlpmPackage::files() const {
         if (!ret.isEmpty()) return ret;
         if (repo() != "local") {
             alpm_pkg_t * pkg = findInLocal(m_pkg);
-            if (pkg != NULL && !strcmp(alpm_pkg_get_version(pkg),alpm_pkg_get_version(m_pkg))) m_pkg = pkg;
-            else m_pkg = NULL;
+            if (pkg != nullptr && !strcmp(alpm_pkg_get_version(pkg),alpm_pkg_get_version(m_pkg))) m_pkg = pkg;
+            else m_pkg = nullptr;
         }
-        if (m_pkg != NULL) return files(m_pkg);
+        if (m_pkg != nullptr) return files(m_pkg);
         else {
             for (QString & dir: Alpm::instance()->cacheDirs()) {
                 QString filepath = dir+fileName();
@@ -781,7 +781,7 @@ bool AlpmPackage::isOrphaned() const {
 }
 
 alpm_pkg_t * AlpmPackage::findInLocal(alpm_pkg_t * pkg) const {
-    if (!isValid()) return NULL;
+    if (!isValid()) return nullptr;
     return Alpm::instance()->localDB().findByPackageName(alpm_pkg_get_name(pkg)).handle();
 }
 
@@ -792,9 +792,9 @@ int AlpmPackage::pkg_version_compare(alpm_pkg_t * item1, alpm_pkg_t * item2) {
 }
 
 alpm_pkg_t * AlpmPackage::findInSync(alpm_pkg_t * pkg) const {
-    if (!isValid()) return NULL;
+    if (!isValid()) return nullptr;
 
-    alpm_pkg_t * ret = NULL;
+    alpm_pkg_t * ret = nullptr;
     const char * repo = alpm_db_get_name(alpm_pkg_get_db(pkg));
 
     for (AlpmDB & db: Alpm::instance()->allSyncDBs()) {
@@ -811,7 +811,7 @@ bool AlpmPackage::isInstalled() const {
     if (!isValid()) return false;
     if (repo() == "local") return true;
     alpm_pkg_t * pkg = findInLocal(m_handle);
-    if (pkg == NULL) return false;
+    if (pkg == nullptr) return false;
     return (alpm_pkg_vercmp(alpm_pkg_get_version(pkg),alpm_pkg_get_version(m_handle)) == 0);
 }
 
@@ -919,8 +919,8 @@ bool AlpmPackage::containsText(const QString & text,SearchFieldType field) {
 
 AlpmPackage & AlpmPackage::operator=(const AlpmPackage &other) {
     if (other.type() == AlpmPackage::Type::File && other.m_delete) {
-        m_handle = NULL;
-        m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
+        m_handle = nullptr;
+        m_alpm_handle = (Alpm::instance() == nullptr)?nullptr:Alpm::instance()->m_alpm_handle;
         alpm_pkg_load(m_alpm_handle,other.filePath().toLocal8Bit().constData(),1,0,&m_handle);
         m_filepath = other.filePath();
         m_delete = true;
@@ -953,7 +953,7 @@ QString AlpmPackage::download() const {
 }
 
 alpm_pkg_t * AlpmPackage::handle() const {
-    return isValid()?m_handle:NULL;
+    return isValid()?m_handle:nullptr;
 }
 
 QList<AlpmPackage::UserChangeStatus> AlpmPackage::possibleChangeStatuses() const {
@@ -1002,7 +1002,7 @@ QUrl AlpmPackage::iconUrl() const {
 
     if (name() == "qpacman") return QUrl("qrc://pics/qpacman.svg");
 
-    if (m_pool == NULL) {
+    if (m_pool == nullptr) {
         m_pool = new AppStream::Pool(qApp);
         if (!m_pool->load()) {
             qWarning() << "Unable to open AppStream pool:" << m_pool->lastError();

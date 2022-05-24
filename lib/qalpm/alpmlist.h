@@ -18,17 +18,17 @@ public:
 
     AlpmList(alpm_free_item free_fn = AlpmList::free) {
         m_free_fn = free_fn;
-        m_list_first = m_list = m_list_last = NULL;
+        m_list_first = m_list = m_list_last = nullptr;
         m_count = 0;
         m_count_add = 0;
     }
 
     AlpmList(const T* values,size_t count,alpm_free_item free_fn = AlpmList::free) {
         m_free_fn = free_fn;
-        m_list_first = m_list = m_list_last = NULL;
+        m_list_first = m_list = m_list_last = nullptr;
         m_count = 0;
         m_count_add = 0;
-        if (count <= 0 || values == NULL) return;
+        if (count <= 0 || values == nullptr) return;
 
         for (size_t i=0;i<count;i++) {
             append(values[i]);
@@ -38,10 +38,10 @@ public:
 
     AlpmList(const T** values,size_t count,alpm_free_item free_fn = AlpmList::free) {
         m_free_fn = free_fn;
-        m_list_first = m_list = m_list_last = NULL;
+        m_list_first = m_list = m_list_last = nullptr;
         m_count = 0;
         m_count_add = 0;
-        if (count <= 0 || values == NULL) return;
+        if (count <= 0 || values == nullptr) return;
 
         for (size_t i=0;i<count;i++) {
             append(values[i]);
@@ -58,29 +58,29 @@ public:
     }
 
     void clear() {
-        if (m_list_first != NULL) {
+        if (m_list_first != nullptr) {
             alpm_list_free_inner(m_list_first, (alpm_list_fn_free)m_free_fn);
             alpm_list_free(m_list_first);
         }
-        m_list_first = m_list = m_list_last = NULL;
+        m_list_first = m_list = m_list_last = nullptr;
         m_count = 0;
         m_count_add = 0;
     }
 
     T * valuePtr() {
-        if (m_list == NULL) return NULL;
+        if (m_list == nullptr) return nullptr;
         return (T *)m_list->data;
     }
 
     T * valuePtr() const {
-        if (m_list == NULL) return NULL;
+        if (m_list == nullptr) return nullptr;
         return (T *)m_list->data;
     }
 
     //moves the current item to the first one
     //returns false if the list is empty
     bool goFirst() const {
-        if (m_list_first == NULL) return false;
+        if (m_list_first == nullptr) return false;
         ((AlpmList *)this)->m_list = m_list_first;
         return true;
     }
@@ -88,7 +88,7 @@ public:
     //moves the current item to the next one
     //returns false if next item does not exist or the list is empty
     bool goNext() const {
-        if (m_list == NULL || m_list->next == NULL) return false;
+        if (m_list == nullptr || m_list->next == nullptr) return false;
         ((AlpmList *)this)->m_list = m_list->next;
         return true;
     }
@@ -96,7 +96,7 @@ public:
     //moves the current item to the previous one
     //returns false if previous item does not exist or the list is empty
     bool goPrev() const {
-        if (m_list == NULL || m_list->prev == NULL) return false;
+        if (m_list == nullptr || m_list->prev == nullptr) return false;
         ((AlpmList *)this)->m_list = m_list->prev;
         return true;
     }
@@ -104,7 +104,7 @@ public:
     //moves the current item to the last one
     //returns false if the list is empty
     bool goLast() const {
-        if (m_list_last == NULL) return false;
+        if (m_list_last == nullptr) return false;
         ((AlpmList *)this)->m_list = m_list_last;
         return true;
     }
@@ -125,7 +125,7 @@ public:
 
     //append the item after the current one
     T * append(const T & value,alpm_dup_item user_dup = AlpmList::dup) {
-        if (m_list == NULL) return insertFirst(value);
+        if (m_list == nullptr) return insertFirst(value);
 
         alpm_list_t * new_list_t = (alpm_list_t *)malloc(sizeof(alpm_list_t));
         if (m_list_last == m_list) m_list_last = new_list_t;
@@ -133,7 +133,7 @@ public:
         new_list_t->prev = m_list;
         new_list_t->next = m_list->next;
         m_list->next = new_list_t;
-        if (new_list_t->next != NULL) new_list_t->next->prev = new_list_t;
+        if (new_list_t->next != nullptr) new_list_t->next->prev = new_list_t;
         m_list = new_list_t;
 
         m_count_add++;
@@ -141,10 +141,10 @@ public:
     }
 
     //append the item (with already allocated value) after the current one
-    //if input value is NULL then it just returns
+    //if input value is nullptr then it just returns
     //don't delete the value you passed outside of this class
     void append(T * value) {
-        if (m_list == NULL) insertFirst(value);
+        if (m_list == nullptr) insertFirst(value);
 
         alpm_list_t * new_list_t = (alpm_list_t *)malloc(sizeof(alpm_list_t));
         if (m_list_last == m_list) m_list_last = new_list_t;
@@ -152,7 +152,7 @@ public:
         new_list_t->prev = m_list;
         new_list_t->next = m_list->next;
         m_list->next = new_list_t;
-        if (new_list_t->next != NULL) new_list_t->next->prev = new_list_t;
+        if (new_list_t->next != nullptr) new_list_t->next->prev = new_list_t;
         m_list = new_list_t;
 
         m_count_add++;
@@ -161,11 +161,11 @@ public:
     //insert the item to the first position
     T * insertFirst(const T & value,alpm_dup_item user_dup = AlpmList::dup) {
         alpm_list_t * new_list_t = (alpm_list_t *)malloc(sizeof(alpm_list_t));
-        if (m_list_last == NULL) m_list_last = new_list_t;
+        if (m_list_last == nullptr) m_list_last = new_list_t;
         new_list_t->data = user_dup((T *)&value);
-        new_list_t->prev = NULL;
+        new_list_t->prev = nullptr;
         new_list_t->next = m_list_first;
-        if (m_list_first != NULL) m_list_first->prev = new_list_t;
+        if (m_list_first != nullptr) m_list_first->prev = new_list_t;
         m_list = m_list_first = new_list_t;
 
         m_count_add++;
@@ -176,65 +176,65 @@ public:
     //don't delete the value you passed outside of this class
     void insertFirst(T * value) {
         alpm_list_t * new_list_t = (alpm_list_t *)malloc(sizeof(alpm_list_t));
-        if (m_list_last == NULL) m_list_last = new_list_t;
+        if (m_list_last == nullptr) m_list_last = new_list_t;
         new_list_t->data = value;
-        new_list_t->prev = NULL;
+        new_list_t->prev = nullptr;
         new_list_t->next = m_list_first;
-        if (m_list_first != NULL) m_list_first->prev = new_list_t;
+        if (m_list_first != nullptr) m_list_first->prev = new_list_t;
         m_list = m_list_first = new_list_t;
 
         m_count_add++;
     }
 
-    //removes the current item, returns NULL if the list is empty
+    //removes the current item, returns nullptr if the list is empty
     //if freedata == true and the previous item exists then it sets the previous item as the current one and returns the previous item's value
     //if freedata == true and the previous item does not exist then it sets the next item as the current one and returns the next item's value
     //if freedata == false the it sets the current item as decribed above and returns the removed item's value
     T * remove(bool freedata = true) {
-        if (m_list == NULL) return NULL;
+        if (m_list == nullptr) return nullptr;
         T * data = valuePtr();
 
-        if (m_list->next == NULL && m_list->prev != NULL) {
-            m_list->prev->next = NULL;
+        if (m_list->next == nullptr && m_list->prev != nullptr) {
+            m_list->prev->next = nullptr;
             m_list_last = m_list->prev;
-            if (freedata && m_list->data != NULL) m_free_fn((T *)m_list->data);
+            if (freedata && m_list->data != nullptr) m_free_fn((T *)m_list->data);
             alpm_list_t * m_list_tmp = m_list;
             m_list = m_list->prev;
             ::free(m_list_tmp);
             m_count_add--;
         }
-        else if (m_list->next == NULL && m_list->prev == NULL) {
-            m_list_last = m_list_first = NULL;
-            if (freedata && m_list->data != NULL) m_free_fn((T *)m_list->data);
+        else if (m_list->next == nullptr && m_list->prev == nullptr) {
+            m_list_last = m_list_first = nullptr;
+            if (freedata && m_list->data != nullptr) m_free_fn((T *)m_list->data);
             ::free(m_list);
-            m_list = NULL;
+            m_list = nullptr;
             m_count_add = 0;
         }
-        else if (m_list->next != NULL && m_list->prev != NULL) {
+        else if (m_list->next != nullptr && m_list->prev != nullptr) {
             m_list->prev->next = m_list->next;
             m_list->next->prev = m_list->prev;
-            if (freedata && m_list->data != NULL) m_free_fn((T*)m_list->data);
+            if (freedata && m_list->data != nullptr) m_free_fn((T*)m_list->data);
             alpm_list_t * m_list_tmp = m_list;
             m_list = m_list->prev;
             ::free(m_list_tmp);
             m_count_add--;
         }
-        else if (m_list->next != NULL && m_list->prev == NULL) {
+        else if (m_list->next != nullptr && m_list->prev == nullptr) {
             m_list_first = m_list->next;
-            m_list->next->prev = NULL;
-            if (freedata && m_list->data != NULL) m_free_fn((T *)m_list->data);
+            m_list->next->prev = nullptr;
+            if (freedata && m_list->data != nullptr) m_free_fn((T *)m_list->data);
             alpm_list_t * m_list_tmp = m_list;
             m_list = m_list->next;
             ::free(m_list_tmp);
             m_count_add--;
         }
 
-        return (T *)((m_list == NULL)?NULL:(freedata?m_list->data:data));
+        return (T *)((m_list == nullptr)?nullptr:(freedata?m_list->data:data));
     }
 
     QList<T*> toArray(alpm_dup_item user_dup = AlpmList::dup) const {
         alpm_list_t * m_list_save = m_list;
-        if (m_list_first == NULL) return QList<T*>();
+        if (m_list_first == nullptr) return QList<T*>();
         QList<T*> ret;
         if (!goFirst()) return ret;
         ret.append(user_dup(valuePtr()));
@@ -248,7 +248,7 @@ public:
     QString toString(alpm_item_string to_string,const QString & begin_str = QString()) const {
         alpm_list_t * m_list_save = m_list;
         QString ret;
-        if (m_list_first == NULL) return ret;
+        if (m_list_first == nullptr) return ret;
         if (!goFirst()) return ret;
         ret += begin_str + to_string(valuePtr())+"\n";
         while (goNext()) {
@@ -259,12 +259,12 @@ public:
     }
 
     bool isLast() const {
-        if (m_list_first == NULL) return false;
+        if (m_list_first == nullptr) return false;
         return (m_list == m_list_last);
     }
 
     bool isFirst() const {
-        if (m_list_first == NULL) return false;
+        if (m_list_first == nullptr) return false;
         return (m_list == m_list_first);
     }
 
@@ -277,10 +277,10 @@ public:
     //if found then it changes the current item and returns true
     //otherwise it returns false
     bool find(T * value,alpm_items_compare compare_fn) {
-        if (m_list == NULL) return false;
+        if (m_list == nullptr) return false;
 
         const alpm_list_t *lp = _find(value,compare_fn);
-        if (lp == NULL) return false;
+        if (lp == nullptr) return false;
         else ((AlpmList *)this)->m_list = lp;
 
         return true;
@@ -298,10 +298,10 @@ public:
     //otherwise it returns false
     //firstly, you have to sort this list using the same compare function.
     bool binaryFind(T * value,alpm_items_compare compare_fn) {
-        if (m_list == NULL) return false;
+        if (m_list == nullptr) return false;
 
         const alpm_list_t *lp = _binaryFind(value,compare_fn);
-        if (lp == NULL) return false;
+        if (lp == nullptr) return false;
         else m_list = (alpm_list_t *)lp;
 
         return true;
@@ -319,10 +319,10 @@ public:
     //if found then it just returns true
     //otherwise it returns false
     bool exists(T * value,alpm_items_compare compare_fn) {
-        if (m_list == NULL) return false;
+        if (m_list == nullptr) return false;
 
         const alpm_list_t *lp = _find(value,compare_fn);
-        if (lp == NULL) return false;
+        if (lp == nullptr) return false;
 
         return true;
     }
@@ -338,17 +338,17 @@ public:
     //move the current pointer to beginning
     void deleteDups(alpm_items_compare compare_fn) {
         const alpm_list_t *lp = m_list_first;
-        if (lp == NULL) return;
+        if (lp == nullptr) return;
 
         while(lp) {
             m_list = (alpm_list_t *)lp;
             do {
                 m_list = m_list->next;
-                if (m_list == NULL) break;
+                if (m_list == nullptr) break;
                 m_list = _find((T *)lp->data,compare_fn);
-                if (m_list != NULL) remove();
+                if (m_list != nullptr) remove();
                 else break;
-            } while (m_list != NULL);
+            } while (m_list != nullptr);
             lp = lp->next;
         }
 
@@ -357,16 +357,16 @@ public:
 
     void deleteSortedDups(alpm_items_compare compare_fn) {
         const alpm_list_t *lp = m_list_first;
-        if (lp == NULL) return;
+        if (lp == nullptr) return;
 
         while(lp) {
             m_list = (alpm_list_t *)lp;
             do {
                 m_list = m_list->next;
-                if (m_list == NULL) break;
+                if (m_list == nullptr) break;
                 if (!compare_fn((T *)m_list->data,(T *)lp->data)) remove();
                 else break;
-            } while (m_list != NULL);
+            } while (m_list != nullptr);
             lp = lp->next;
         }
 
@@ -387,7 +387,7 @@ public:
 
     alpm_list_t * detach() {
         alpm_list_t * list = m_list_first;
-        m_list_first = m_list = m_list_last = NULL;
+        m_list_first = m_list = m_list_last = nullptr;
         m_count = 0;
         m_count_add = 0;
         return list;
@@ -405,7 +405,7 @@ private:
     }
 
     alpm_list_t * _middle(alpm_list_t * start, alpm_list_t * last) {
-        if (!start) return NULL;
+        if (!start) return nullptr;
 
         alpm_list_t * slow = start;
         alpm_list_t * fast = start->next;
@@ -423,26 +423,26 @@ private:
 
     alpm_list_t * _binaryFind(T * value, alpm_items_compare compare_fn) {
         alpm_list_t * start = m_list;
-        alpm_list_t * last = NULL;
+        alpm_list_t * last = nullptr;
         int ret;
 
         do {
             alpm_list_t * mid = _middle(start, last);
-            if (mid == NULL) return NULL;
+            if (mid == nullptr) return nullptr;
 
             ret = compare_fn((T *)mid->data,value);
             if (!ret) return mid;
             else if (ret < 0) start = mid->next;
             else last = mid;
-            if ((start != NULL) && (start == last) && compare_fn((T *)start->data,value)) break;
+            if ((start != nullptr) && (start == last) && compare_fn((T *)start->data,value)) break;
 
-        } while (last == NULL || last != start);
+        } while (last == nullptr || last != start);
 
-        return NULL;
+        return nullptr;
     }
 
     alpm_list_t * _find(T * value,alpm_items_compare compare_fn) {
-        if (m_list == NULL) return NULL;
+        if (m_list == nullptr) return nullptr;
 
         const alpm_list_t *lp = m_list;
         while(lp) {
@@ -451,12 +451,12 @@ private:
             }
             lp = lp->next;
         }
-        return NULL;
+        return nullptr;
     }
 
     size_t list_count() {
-        if (m_list_first == NULL) {
-            m_list_last = NULL;
+        if (m_list_first == nullptr) {
+            m_list_last = nullptr;
             return 0;
         }
 

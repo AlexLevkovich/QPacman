@@ -20,7 +20,7 @@ QAction * ExclusiveActionGroup::checkedAction() const {
     for (QAction * & action: this->actions()) {
         if (action->isChecked()) return action;
     }
-    return NULL;
+    return nullptr;
 }
 
 void ExclusiveActionGroup::uncheckAllActions() {

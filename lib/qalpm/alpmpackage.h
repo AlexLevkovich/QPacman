@@ -203,7 +203,7 @@ public:
     bool hasNameAs(const QRegularExpression & expr) const;
     bool isOrphaned() const;
     bool isInstalled() const;
-    bool isDownloaded(QString * path_pkg_file = NULL) const;
+    bool isDownloaded(QString * path_pkg_file = nullptr) const;
     bool isFile() const;
     //inName - search in name() otherwise - in description()
     bool containsText(const QString & text,SearchFieldType field);
@@ -252,7 +252,7 @@ private:
             m_ptr = ptr;
         }
         alpm_pkg_t_p() {
-            m_ptr = NULL;
+            m_ptr = nullptr;
         }
         alpm_pkg_t * ptr() const {
             return m_ptr;

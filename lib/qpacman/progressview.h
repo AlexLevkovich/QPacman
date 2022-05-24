@@ -108,7 +108,7 @@ public:
 class ProgressView : public QTreeView {
     Q_OBJECT
 public:
-    ProgressView(QWidget *parent = NULL,bool clear_on_hide = true);
+    ProgressView(QWidget *parent = nullptr,bool clear_on_hide = true);
     void setProgressColumnWidth(quint64 width);
     SimpleTextItem     * appendHookRow(const QString & text);
     SimpleProgressItem * appendAverageHookProgressRow(const QString & text,int min = 0,int max = 0,int value = 0);

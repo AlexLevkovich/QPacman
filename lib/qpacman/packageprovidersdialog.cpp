@@ -37,7 +37,7 @@ void PackageProvidersDialog::fill(const QStringList & m_packages) {
     QString repo;
     QString name;
     QString version;
-    QTreeWidgetItem * firstitem = NULL;
+    QTreeWidgetItem * firstitem = nullptr;
     for (int i=0;i<m_packages.count();i++) {
         AlpmPackage::parseNameVersion(m_packages[i],repo,name,version);
         QTreeWidgetItem * item = new QTreeWidgetItem(ui->packagesList);
@@ -48,7 +48,7 @@ void PackageProvidersDialog::fill(const QStringList & m_packages) {
         if (i == 0) firstitem = item;
     }
 
-    if (firstitem != NULL) {
+    if (firstitem != nullptr) {
         ui->packagesList->setCurrentItem(firstitem);
     }
     new WindowCenterer(this);
@@ -63,7 +63,7 @@ void PackageProvidersDialog::on_buttonBox_rejected() {
 }
 
 uint PackageProvidersDialog::provider() const {
-    if (ui->packagesList->currentItem() != NULL) {
+    if (ui->packagesList->currentItem() != nullptr) {
         return ui->packagesList->currentIndex().row();
     }
     return 0;

@@ -32,7 +32,7 @@ QSize InstallButtonDelegate::sizeHint(const QStyleOptionViewItem & option,const 
 
     InstallButtonDelegate * p_this = (InstallButtonDelegate *)this;
     PackageView * view = qobject_cast<PackageView*>((QObject *)option.widget);
-    if (view != NULL && firsttime) {
+    if (view != nullptr && firsttime) {
         p_this->firsttime = false;
         qRegisterMetaType<QItemSelection>("QItemSelection");
         connect(view->selectionModel(),&QItemSelectionModel::selectionChanged,this,[=](const QItemSelection & selected,const QItemSelection &) { p_this->item_selected(selected,view); });
@@ -56,7 +56,7 @@ QSize InstallButtonDelegate::sizeHint(const QStyleOptionViewItem & option,const 
 bool InstallButtonDelegate::editorEvent(QEvent *event,QAbstractItemModel *_model,const QStyleOptionViewItem &option,const QModelIndex &index) {
     PackageItemModel * model = (PackageItemModel *)_model;
     PackageView * view = qobject_cast<PackageView*>((QObject *)option.widget);
-    if (view == NULL) return false;
+    if (view == nullptr) return false;
 
     if(((event->type() == QEvent::MouseButtonRelease) && (index.column() == lastColumn)) || ((event->type() == QEvent::KeyPress) && (((QKeyEvent *)event)->modifiers() & Qt::ShiftModifier) && (((QKeyEvent *)event)->key() == Qt::Key_Right))) {
          QRect arrowRect = option.rect;
@@ -91,7 +91,7 @@ bool InstallButtonDelegate::editorEvent(QEvent *event,QAbstractItemModel *_model
 }
 
 void InstallButtonDelegate::show_menu(const AlpmPackage & pkg,const QModelIndex & index,const QRect & rect,PackageView * view) {
-    QMenu * menu = NULL;
+    QMenu * menu = nullptr;
     if (!pkg.isInstalled()) menu = new InstallOptionsMenu(pkg.changeStatus(),view);
     else if (pkg.isInstalled() && (pkg.repo() == "local" || pkg.repo() == "aur")) menu = new UninstallOptionsMenu(pkg.changeStatus(),view);
     else menu = new ReinstallOptionsMenu(pkg.changeStatus(),view);
@@ -195,7 +195,7 @@ void InstallButtonDelegate::item_selected(const QItemSelection & selection,Packa
 
 bool InstallButtonDelegate::eventFilter(QObject *editor,QEvent *event) {
      PackageView * view = qobject_cast<PackageView*>(editor);
-     if (view == NULL || (event->type() != QEvent::KeyPress)) return false;
+     if (view == nullptr || (event->type() != QEvent::KeyPress)) return false;
 
      QKeyEvent * e = (QKeyEvent *)event;
      QModelIndex index = view->selectedRow();

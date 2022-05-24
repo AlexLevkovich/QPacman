@@ -53,7 +53,7 @@ void PackageChangesDialog::on_buttonBox_rejected() {
 }
 
 QTreeWidgetItem * PackageChangesDialog::fill(const QStringList & packages,const QString & labelString,const QIcon & icon) {
-    if (packages.count() <= 0) return NULL;
+    if (packages.count() <= 0) return nullptr;
 
     QTreeWidgetItem * root_item = new QTreeWidgetItem(ui->packagesList);
     root_item->setIcon(0,icon);

@@ -30,14 +30,14 @@ int PackageProcessor::root_counter = 0;
 QString PackageProcessor::m_pw;
 
 PackageProcessor::PackageProcessor(ProgressView * view,QAction * cancelAction,OptionalDepsDlg * optdlg,QObject *parent) : PackageProcessorBase(parent) {
-    eventItem = NULL;
-    downloadItem = NULL;
-    overalDownloadItem = NULL;
-    installItem = NULL;
-    overalInstallItem = NULL;
-    removeItem = NULL;
-    overalRemoveItem = NULL;
-    overalHookItem = NULL;
+    eventItem = nullptr;
+    downloadItem = nullptr;
+    overalDownloadItem = nullptr;
+    installItem = nullptr;
+    overalInstallItem = nullptr;
+    removeItem = nullptr;
+    overalRemoveItem = nullptr;
+    overalHookItem = nullptr;
     m_max_download_size = 0;
     m_downloaded_size = 0;
     m_xfered = 0;
@@ -52,13 +52,13 @@ PackageProcessor::PackageProcessor(ProgressView * view,QAction * cancelAction,Op
     m_optionalDepsDlg = optdlg;
 
     progressView = view;
-    if (progressView != NULL) progressView->installEventFilter(this);
-    if (cancelAction != NULL) connect(cancelAction,SIGNAL(triggered()),this,SLOT(cancelTriggered()));
+    if (progressView != nullptr) progressView->installEventFilter(this);
+    if (cancelAction != nullptr) connect(cancelAction,SIGNAL(triggered()),this,SLOT(cancelTriggered()));
     m_cancelAction = cancelAction;
 
-    connect(pkgChangeDlg,&QObject::destroyed,this,[&]() { pkgChangeDlg = NULL; });
-    connect(pkgProviderDlg,&QObject::destroyed,this,[&]() { pkgProviderDlg = NULL; });
-    connect(questionDlg,&QObject::destroyed,this,[&]() { questionDlg = NULL; });
+    connect(pkgChangeDlg,&QObject::destroyed,this,[&]() { pkgChangeDlg = nullptr; });
+    connect(pkgProviderDlg,&QObject::destroyed,this,[&]() { pkgProviderDlg = nullptr; });
+    connect(questionDlg,&QObject::destroyed,this,[&]() { questionDlg = nullptr; });
     connect(Alpm::instance(),&Alpm::information,this,&PackageProcessor::logString);
     connect(Alpm::instance(),&Alpm::optdepends_event,this,&PackageProcessor::on_optdepends_event);
     connect(Alpm::instance(),&Alpm::all_hooks,this,[&](const QString & message) { on_event(1,message); });
@@ -101,25 +101,25 @@ PackageProcessor::PackageProcessor(ProgressView * view,QAction * cancelAction,Op
     connect(Alpm::instance(),SIGNAL(method_finished(QString,QStringList,ThreadRun::RC)),this,SLOT(on_method_finished(QString,QStringList,ThreadRun::RC)));
     connect(Alpm::instance(),SIGNAL(method_finished(QString,ThreadRun::RC)),this,SLOT(on_method_finished(QString,ThreadRun::RC)));
     connect(&m_start_timer,&QTimer::timeout,this,&PackageProcessor::on_timeout);
-    if (progressView != NULL) connect(progressView,&ProgressView::rowAdded,this,&PackageProcessor::on_itemAdded,Qt::QueuedConnection);
-    if (m_optionalDepsDlg != NULL) connect(m_optionalDepsDlg,&QObject::destroyed,this,[&]() { m_optionalDepsDlg = NULL; });
+    if (progressView != nullptr) connect(progressView,&ProgressView::rowAdded,this,&PackageProcessor::on_itemAdded,Qt::QueuedConnection);
+    if (m_optionalDepsDlg != nullptr) connect(m_optionalDepsDlg,&QObject::destroyed,this,[&]() { m_optionalDepsDlg = nullptr; });
 
-    if (m_cancelAction != NULL) m_cancelAction->setEnabled(false);
+    if (m_cancelAction != nullptr) m_cancelAction->setEnabled(false);
     QMetaObject::invokeMethod(this,"exec_process",Qt::QueuedConnection);
     m_start_timer.start(3000);
 }
 
 PackageProcessor::~PackageProcessor() {
-    if (pkgChangeDlg != NULL) delete pkgChangeDlg;
-    if (pkgProviderDlg != NULL) delete pkgProviderDlg;
-    if (questionDlg != NULL) delete questionDlg;
+    if (pkgChangeDlg != nullptr) delete pkgChangeDlg;
+    if (pkgProviderDlg != nullptr) delete pkgProviderDlg;
+    if (questionDlg != nullptr) delete questionDlg;
 }
 
 void PackageProcessor::on_timeout() {
     m_start_timer.stop();
     QString err = tr("DBUS server is busy, may be another application is using it!");
     emit logString(err);
-    if (progressView != NULL) progressView->appendErrorRow(err);
+    if (progressView != nullptr) progressView->appendErrorRow(err);
     QMetaObject::invokeMethod(this,"completed",Qt::QueuedConnection,Q_ARG(ThreadRun::RC,ThreadRun::FORBIDDEN),Q_ARG(QString,err));
     deleteLater();
 }
@@ -156,7 +156,7 @@ void PackageProcessor::exec_process() {
             else {
                 QString err = tr("Superuser authentication failed!");
                 emit logString(err);
-                if (progressView != NULL) progressView->appendErrorRow(err);
+                if (progressView != nullptr) progressView->appendErrorRow(err);
                 QMetaObject::invokeMethod(this,"completed",Qt::QueuedConnection,Q_ARG(ThreadRun::RC,ThreadRun::BAD),Q_ARG(QString,err));
                 deleteLater();
             }
@@ -165,7 +165,7 @@ void PackageProcessor::exec_process() {
         else {
             QString err = tr("Superuser authentication failed: too many attempts!");
             emit logString(err);
-            if (progressView != NULL) progressView->appendErrorRow(err);
+            if (progressView != nullptr) progressView->appendErrorRow(err);
             QMetaObject::invokeMethod(this,"completed",Qt::QueuedConnection,Q_ARG(ThreadRun::RC,ThreadRun::BAD),Q_ARG(QString,err));
             deleteLater();
             root_counter = 0;
@@ -179,7 +179,7 @@ void PackageProcessor::exec_process() {
 }
 
 QMainWindow * PackageProcessor::createMainProcessorWindow(ProgressView ** view,QPlainTextEdit ** logView,QAction ** cancelAction,QAction ** logAction,const QString & tittle) {
-    QMainWindow * mainWnd = new QMainWindow(NULL);
+    QMainWindow * mainWnd = new QMainWindow(nullptr);
     mainWnd->setWindowIcon(QIcon("://pics/qpacman.svg"));
     QStackedWidget * mainWidget = new QStackedWidget(mainWnd);
     *view = new ProgressView(mainWidget,false);
@@ -229,19 +229,19 @@ PackageProcessor::SaveStateFilter::SaveStateFilter(QMainWindow * wnd) : QObject(
 }
 
 bool PackageProcessor::SaveStateFilter::eventFilter(QObject *obj,QEvent *event) {
-    if ((m_wnd != NULL) && (obj == m_wnd) && (event->type() == QEvent::Show) && !is_shown) {
+    if ((m_wnd != nullptr) && (obj == m_wnd) && (event->type() == QEvent::Show) && !is_shown) {
         is_shown = true;
         m_wnd->restoreGeometry(QSettings().value("geometry/processingwindow").toByteArray());
         new WindowCenterer(m_wnd);
     }
-    if ((m_wnd != NULL) && (obj == m_wnd) && (event->type() == QEvent::Close)) {
+    if ((m_wnd != nullptr) && (obj == m_wnd) && (event->type() == QEvent::Close)) {
         QSettings().setValue("geometry/processingwindow",m_wnd->saveGeometry());
     }
     return QObject::eventFilter(obj,event);
 }
 
 bool PackageProcessor::eventFilter(QObject *obj,QEvent *event) {
-    if ((progressView != NULL) && (obj == progressView) && (event->type() == QEvent::Close)) {
+    if ((progressView != nullptr) && (obj == progressView) && (event->type() == QEvent::Close)) {
         progressView->clear();
         i_currPkgName.clear();
         r_currPkgName.clear();
@@ -249,35 +249,35 @@ bool PackageProcessor::eventFilter(QObject *obj,QEvent *event) {
         m_max_download_size = 0;
         m_downloaded_size = 0;
         m_xfered = 0;
-        eventItem = NULL;
+        eventItem = nullptr;
         eventItems.clear();
     }
 
-    if ((event->type() == QEvent::Close) && obj->inherits("QWidgetWindow") && !Alpm::instance()->executingMethodName().isEmpty() && (obj->parent() == NULL)) return true;
+    if ((event->type() == QEvent::Close) && obj->inherits("QWidgetWindow") && !Alpm::instance()->executingMethodName().isEmpty() && (obj->parent() == nullptr)) return true;
 
     return QObject::eventFilter(obj,event);
 }
 
 void PackageProcessor::on_event(int id,const QString & str) {
-    if (progressView == NULL) return;
+    if (progressView == nullptr) return;
     eventItem = progressView->appendEventProgressRow(str);
     eventItems.insert(id,eventItem);
 }
 
 void PackageProcessor::on_event_completed(int id) {
-    SimpleProgressItem * eventItem = eventItems.contains(id)?eventItems[id]:NULL;
-    if (eventItem != NULL) eventItem->setMax();
+    SimpleProgressItem * eventItem = eventItems.contains(id)?eventItems[id]:nullptr;
+    if (eventItem != nullptr) eventItem->setMax();
 }
 
 void PackageProcessor::on_error(const QString & err) {
     QString str = err;
-    if (progressView == NULL) return;
+    if (progressView == nullptr) return;
     if (str.length() > 100) str = str.mid(0,100);
     progressView->appendErrorRow(str);
 }
 
 void PackageProcessor::on_information(const QString & str,bool significant) {
-    if (progressView == NULL) return;
+    if (progressView == nullptr) return;
     if (!significant) return;
     progressView->appendInformationRow(str);
 }
@@ -288,17 +288,17 @@ void PackageProcessor::on_event_progress(int percents) {
 }
 
 void PackageProcessor::full_download_size_found(qint64 dl_size) {
-    if (progressView == NULL) return;
+    if (progressView == nullptr) return;
     m_max_download_size = dl_size;
     m_downloaded_size = 0;
     overalDownloadItem = progressView->appendAverageDownloadProgressRow(tr("Overal download progress"),0,m_max_download_size);
 }
 
 void PackageProcessor::download_start(const QString & filename) {
-    if (progressView == NULL) return;
+    if (progressView == nullptr) return;
     if (currFileName.isEmpty()) {
-        if (m_cancelAction != NULL) m_cancelAction->setEnabled(true);
-        if (overalDownloadItem == NULL) overalDownloadItem = progressView->appendAverageDownloadProgressRow(tr("Overal download progress"));
+        if (m_cancelAction != nullptr) m_cancelAction->setEnabled(true);
+        if (overalDownloadItem == nullptr) overalDownloadItem = progressView->appendAverageDownloadProgressRow(tr("Overal download progress"));
     }
     if (currFileName != filename) {
         downloadItem = progressView->appendDownloadProgressRow(filename+": "+tr("connecting..."));
@@ -309,13 +309,13 @@ void PackageProcessor::download_start(const QString & filename) {
 }
 
 void PackageProcessor::download_db_start(const QString & dbname) {
-    if (progressView == NULL) return;
-    if (m_cancelAction != NULL) m_cancelAction->setEnabled(true);
+    if (progressView == nullptr) return;
+    if (m_cancelAction != nullptr) m_cancelAction->setEnabled(true);
     downloadItem = progressView->appendDownloadProgressRow(dbname+": "+tr("updating..."));
 }
 
 void PackageProcessor::download_progress(const QString & filename,qint64 xfered,qint64 total) {
-    if (progressView == NULL) return;
+    if (progressView == nullptr) return;
     if (currFileName != filename) {
         m_xfered = 0;
         downloadItem->setMessage(filename+((total > 0)?" ("+BytesHumanizer((double)total).toString()+")":""));
@@ -329,15 +329,15 @@ void PackageProcessor::download_progress(const QString & filename,qint64 xfered,
     if (downloadItem->maximum() > 0) downloadItem->setValue(xfered);
     m_downloaded_size += (xfered - m_xfered);
     m_xfered = xfered;
-    if (overalDownloadItem != NULL && overalDownloadItem->maximum() > 0) overalDownloadItem->setValue(m_downloaded_size);
-    if (overalDownloadItem != NULL && m_downloaded_size == m_max_download_size) {
+    if (overalDownloadItem != nullptr && overalDownloadItem->maximum() > 0) overalDownloadItem->setValue(m_downloaded_size);
+    if (overalDownloadItem != nullptr && m_downloaded_size == m_max_download_size) {
         overalDownloadItem->setMax();
     }
 }
 
 void PackageProcessor::install_progress(const QString & pkg_name,int percent,int n_targets,int current_target) {
-    if (progressView == NULL) return;
-    if (overalInstallItem == NULL && n_targets > 0) overalInstallItem = progressView->appendAverageInstallProgressRow(tr("Overal installation progress"),0,100*n_targets,0);
+    if (progressView == nullptr) return;
+    if (overalInstallItem == nullptr && n_targets > 0) overalInstallItem = progressView->appendAverageInstallProgressRow(tr("Overal installation progress"),0,100*n_targets,0);
     if (i_currPkgName != pkg_name) {
         i_currPkgName = pkg_name;
         installItem = progressView->appendInstallProgressRow(tr("Installing")+" "+pkg_name,0,100,0);
@@ -345,13 +345,13 @@ void PackageProcessor::install_progress(const QString & pkg_name,int percent,int
         progressView->moveRowAtEnd(overalInstallItem);
         blockSignals(false);
     }
-    if (overalInstallItem != NULL) overalInstallItem->setValue(((current_target-1)*100)+percent);
+    if (overalInstallItem != nullptr) overalInstallItem->setValue(((current_target-1)*100)+percent);
     installItem->setValue(percent);
 }
 
 void PackageProcessor::remove_progress(const QString & pkg_name,int percent,int n_targets,int current_target) {
-    if (progressView == NULL) return;
-    if (overalRemoveItem == NULL && n_targets > 0) overalRemoveItem = progressView->appendAverageRemoveProgressRow(tr("Overal removal progress"),0,100*n_targets,0);
+    if (progressView == nullptr) return;
+    if (overalRemoveItem == nullptr && n_targets > 0) overalRemoveItem = progressView->appendAverageRemoveProgressRow(tr("Overal removal progress"),0,100*n_targets,0);
     if (r_currPkgName != pkg_name) {
         r_currPkgName = pkg_name;
         removeItem = progressView->appendRemoveProgressRow(tr("Removing")+" "+pkg_name,0,100,0);
@@ -359,35 +359,35 @@ void PackageProcessor::remove_progress(const QString & pkg_name,int percent,int 
         progressView->moveRowAtEnd(overalRemoveItem);
         blockSignals(false);
     }
-    if (overalRemoveItem != NULL) overalRemoveItem->setValue(((current_target-1)*100)+percent);
+    if (overalRemoveItem != nullptr) overalRemoveItem->setValue(((current_target-1)*100)+percent);
     removeItem->setValue(percent);
 }
 
 void PackageProcessor::cancelTriggered() {
     Alpm::instance()->setMethodTerminateFlag();
-    if (m_cancelAction != NULL) m_cancelAction->setEnabled(false);
+    if (m_cancelAction != nullptr) m_cancelAction->setEnabled(false);
 }
 
 void PackageProcessor::downloadok() {
-    if (m_cancelAction != NULL) m_cancelAction->setEnabled(false);
-    if (overalInstallItem != NULL) overalInstallItem->setMax();
+    if (m_cancelAction != nullptr) m_cancelAction->setEnabled(false);
+    if (overalInstallItem != nullptr) overalInstallItem->setMax();
 }
 
 void PackageProcessor::on_itemAdded(const QModelIndex &,const QModelIndex & index) {
-    if (progressView == NULL) return;
+    if (progressView == nullptr) return;
     QStandardItem * item1 = ((QStandardItemModel *)progressView->model())->itemFromIndex(index);
     if (item1->type() <= QStandardItem::UserType) return;
     if (item1->type() & (SimpleItem::Progress|SimpleItem::Average)) {
         if (item1->type() & (SimpleItem::Install|SimpleItem::Remove|SimpleItem::Download|SimpleItem::Hook)) return;
     }
     SimpleProgressItem * item = progressView->previousProgressItem(item1);
-    if (item != NULL) item->setMax();
+    if (item != nullptr) item->setMax();
 }
 
 void PackageProcessor::on_hook(const QString & txt,int pos,int total) {
-    if (progressView == NULL) return;
-    if (overalHookItem == NULL && total > 0) overalHookItem = progressView->appendAverageHookProgressRow(tr("Overal hook progress"),0,total,0);
-    if (overalHookItem != NULL && pos > 0) {
+    if (progressView == nullptr) return;
+    if (overalHookItem == nullptr && total > 0) overalHookItem = progressView->appendAverageHookProgressRow(tr("Overal hook progress"),0,total,0);
+    if (overalHookItem != nullptr && pos > 0) {
         progressView->appendHookRow(txt);
         blockSignals(true);
         progressView->moveRowAtEnd(overalHookItem);
@@ -397,5 +397,5 @@ void PackageProcessor::on_hook(const QString & txt,int pos,int total) {
 }
 
 void PackageProcessor::on_optdepends_event(const QString & pkgname,const StringStringMap & installed,const StringStringMap & pending) {
-    if (m_optionalDepsDlg != NULL) m_optionalDepsDlg->fill(pkgname,installed,pending);
+    if (m_optionalDepsDlg != nullptr) m_optionalDepsDlg->fill(pkgname,installed,pending);
 }

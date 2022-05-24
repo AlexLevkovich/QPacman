@@ -168,7 +168,7 @@ private:
 class SettingsTextBrowser : public CustomPopupTextBrowser, public TextEditHelper {
     Q_OBJECT
 public:
-    SettingsTextBrowser(QWidget *parent = NULL);
+    SettingsTextBrowser(QWidget *parent = nullptr);
 
 private slots:
     void proxyActivated(int index);

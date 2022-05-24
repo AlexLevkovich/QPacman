@@ -11,7 +11,7 @@
 #endif
 
 bool ThreadRun::m_terminate = false;
-QObject * ThreadRun::m_instance = NULL;
+QObject * ThreadRun::m_instance = nullptr;
 QString ThreadRun::m_method_name;
 
 #ifdef USE_QDBUS

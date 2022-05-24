@@ -162,7 +162,7 @@ void RepoSettingsTextObject::init() {
     QAbstractItemModel * old_model = serversList->model();
     serversList->setModel(new QStandardItemModel());
     serversList->setItemDelegate(new RepoItemDelegate(serversList->model()));
-    if (old_model != NULL) delete old_model;
+    if (old_model != nullptr) delete old_model;
     serversList->setSelectionMode(QAbstractItemView::SingleSelection);
     serversList->setDragEnabled(false);
     serversList->setAcceptDrops(false);

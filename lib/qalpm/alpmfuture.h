@@ -26,7 +26,7 @@ class ThreadRun : public QObject {
 public:
     template <typename T> class AlpmFuture : public QFuture<T>, public QObject {
     public:
-        AlpmFuture(ThreadRun * parent,const QFuture<T> &other) : QFuture<T>(other), QObject(NULL) {
+        AlpmFuture(ThreadRun * parent,const QFuture<T> &other) : QFuture<T>(other), QObject(nullptr) {
             ThreadRun::m_instance = this;
             ThreadRun::m_terminate = false;
             QObject::connect(&watcher,SIGNAL(finished()),&loop,SLOT(quit()));
@@ -48,7 +48,7 @@ public:
 
     class AlpmFutureVoid : public QFuture<void>, public QObject {
     public:
-        AlpmFutureVoid(ThreadRun * parent,const QFuture<void> &other) : QFuture<void>(other), QObject(NULL) {
+        AlpmFutureVoid(ThreadRun * parent,const QFuture<void> &other) : QFuture<void>(other), QObject(nullptr) {
             ThreadRun::m_instance = this;
             ThreadRun::m_terminate = false;
             QObject::connect(&watcher,SIGNAL(finished()),&loop,SLOT(quit()));
@@ -81,10 +81,10 @@ public:
     friend const QDBusArgument & operator>>(const QDBusArgument &argument,ThreadRun::RC & rc);
 #endif
 
-    ThreadRun(QObject * parent = NULL);
+    ThreadRun(QObject * parent = nullptr);
     static void setTerminateFlag();
     static bool isTerminateFlagSet() { return m_terminate; }
-    static bool isMethodExecuting() { return (m_instance != NULL); }
+    static bool isMethodExecuting() { return (m_instance != nullptr); }
     static const QString executingMethodName() {
         return m_method_name;
     }
@@ -274,14 +274,14 @@ private:
     QString methodName(Function func) {
         QString ret;
         char ** strings = backtrace_symbols(reinterpret_cast<void **>(&func),1);
-        if (strings == NULL) return ret;
+        if (strings == nullptr) return ret;
         ret = QString::fromLocal8Bit((const char *)strings[0]);
         free(strings);
         int start = ret.indexOf('(');
         if (start < 0) return ret;
         int end = ret.indexOf('+',start);
         if (end < 0) return ret;
-        char * dem_str = bfd_demangle(NULL,ret.mid(start+1,end - start - 1).toLocal8Bit().constData(),3);
+        char * dem_str = bfd_demangle(nullptr,ret.mid(start+1,end - start - 1).toLocal8Bit().constData(),3);
         ret = QString::fromLocal8Bit(dem_str);
         free(dem_str);
         end = ret.indexOf('(',0);
@@ -289,12 +289,12 @@ private:
         return ret.mid(0,end);
     }
     template<typename T> void alpmFutureFinished(const T & result) {
-       m_instance = NULL;
+       m_instance = nullptr;
        emit method_finished(m_method_name,QVariant::fromValue<T>(result),isTerminateFlagSet()?ThreadRun::TERMINATED:lastMethodRC());
        m_method_name.clear();
     }
     void alpmFutureFinished() {
-        m_instance = NULL;
+        m_instance = nullptr;
         emit method_finished(m_method_name,isTerminateFlagSet()?ThreadRun::TERMINATED:lastMethodRC());
         m_method_name.clear();
     }

@@ -10,7 +10,7 @@
 #define SHOW_PREFS_DELAY 3000
 
 QPacmanTrayApplication::QPacmanTrayApplication(int &argc, char *argv[]) : SingleApplication(argc,argv,true) {
-    m_mainWindow = NULL;
+    m_mainWindow = nullptr;
     m_wasTopMost = false;
 
     QApplication::setQuitOnLastWindowClosed(false);
@@ -23,7 +23,7 @@ QPacmanTrayApplication::QPacmanTrayApplication(int &argc, char *argv[]) : Single
 }
 
 QPacmanTrayApplication::~QPacmanTrayApplication() {
-    if (m_mainWindow != NULL) delete m_mainWindow;
+    if (m_mainWindow != nullptr) delete m_mainWindow;
 }
 
 void QPacmanTrayApplication::secondary_init() {
@@ -40,7 +40,7 @@ void QPacmanTrayApplication::primary_init() {
 }
 
 void QPacmanTrayApplication::putMainWindowOnTop() {
-    if (m_mainWindow == NULL) return;
+    if (m_mainWindow == nullptr) return;
     m_mainWindow->setWindowFlags(m_mainWindow->windowFlags() | Qt::WindowStaysOnTopHint);
     m_wasTopMost = true;
     m_mainWindow->setVisible(true);
@@ -50,7 +50,7 @@ void QPacmanTrayApplication::putMainWindowOnTop() {
 
 bool QPacmanTrayApplication::notify(QObject *receiver, QEvent *event) {
     bool ret = SingleApplication::notify(receiver,event);
-    if (m_wasTopMost && (receiver != NULL) && (event->type() == QEvent::ActivationChange) && qobject_cast<QMainWindow *>(receiver) && ((QMainWindow *)receiver)->isActiveWindow()) {
+    if (m_wasTopMost && (receiver != nullptr) && (event->type() == QEvent::ActivationChange) && qobject_cast<QMainWindow *>(receiver) && ((QMainWindow *)receiver)->isActiveWindow()) {
         QMainWindow * mainWindow = (QMainWindow *)receiver;
         mainWindow->setWindowFlags(mainWindow->windowFlags() & ~Qt::WindowStaysOnTopHint);
         mainWindow->setVisible(true);

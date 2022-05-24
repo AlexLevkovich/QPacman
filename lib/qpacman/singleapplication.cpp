@@ -194,7 +194,7 @@ bool SingleApplication::sendMessage( QByteArray message, int timeout )
 }
 
 QMainWindow * SingleApplication::findMainWindow() {
-    if (activeMainWinds.count() <= 0) return NULL;
+    if (activeMainWinds.count() <= 0) return nullptr;
 
     return activeMainWinds.at(0);
 }
@@ -215,7 +215,7 @@ bool SingleApplication::isStarted(SingleApplication::Options options,const QStri
     QSharedMemory memory(SingleApplicationPrivate::createBlockServerName(options,appName,appVer,appPath,orgName,orgDomain));
     if (!memory.attach(QSharedMemory::ReadOnly)) return false;
     InstancesInfo* inst = static_cast<InstancesInfo*>(memory.data());
-    if (inst == NULL) return false;
+    if (inst == nullptr) return false;
     if (inst->primaryPid <= 0) return false;
     return QDir(QString("/proc/%1").arg(inst->primaryPid)).exists();
 }

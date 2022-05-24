@@ -14,7 +14,7 @@ class NetworkReplyProxy : public QNetworkReply {
   Q_OBJECT
 
   public:
-    NetworkReplyProxy(QNetworkReply* reply, int timeout = 0, QObject* parent = NULL);
+    NetworkReplyProxy(QNetworkReply* reply, int timeout = 0, QObject* parent = nullptr);
 
     void abort();
     void close();

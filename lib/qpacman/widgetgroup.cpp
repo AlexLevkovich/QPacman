@@ -9,7 +9,7 @@
 WidgetGroup::WidgetGroup(QObject *parent) : QObject(parent) {}
 
 bool WidgetGroup::add(QWidget * wnd) {
-    if (wnd == NULL || m_widgets.contains(wnd)) return false;
+    if (wnd == nullptr || m_widgets.contains(wnd)) return false;
     m_widgets.append(wnd);
     wnd->setVisible(false);
     connect(wnd,&QObject::destroyed,this,&QObject::destroyed);

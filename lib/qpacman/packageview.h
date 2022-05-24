@@ -108,7 +108,7 @@ public:
         friend class PackageView;
     };
 
-    PackageView(QWidget *parent = NULL);
+    PackageView(QWidget *parent = nullptr);
     bool isSelectPrevPossible();
     bool isSelectNextPossible();
     void refreshRows(const QString & name,AlpmPackage::SearchFieldType fieldType,AlpmPackage::PackageFilter filter,const QString & group,const QString & repo);

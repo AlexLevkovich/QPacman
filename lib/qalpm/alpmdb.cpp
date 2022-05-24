@@ -26,7 +26,7 @@ template<class ForwardIt, class T> static ForwardIt binary_search_ex(ForwardIt f
 void AlpmDB::check_error(const char * err) const {
     if (!isValid()) {
         Alpm::instance()->m_alpm_errno = ALPM_ERR_HANDLE_NULL;
-        if (err != NULL) qCritical() << err;
+        if (err != nullptr) qCritical() << err;
     }
 }
 
@@ -41,18 +41,18 @@ template<class T> T AlpmDB::check_error(const T & t,const char * err) const {
 }
 
 AlpmDB::AlpmDB() {
-    m_db_handle = NULL;
-    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
+    m_db_handle = nullptr;
+    m_alpm_handle = (Alpm::instance() == nullptr)?nullptr:Alpm::instance()->m_alpm_handle;
 }
 
 AlpmDB::AlpmDB(alpm_db_t * db_handle) {
     m_db_handle = db_handle;
-    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
+    m_alpm_handle = (Alpm::instance() == nullptr)?nullptr:Alpm::instance()->m_alpm_handle;
 }
 
 AlpmDB::AlpmDB(const QString & name) {
-    m_db_handle = NULL;
-    m_alpm_handle = (Alpm::instance() == NULL)?NULL:Alpm::instance()->m_alpm_handle;
+    m_db_handle = nullptr;
+    m_alpm_handle = (Alpm::instance() == nullptr)?nullptr:Alpm::instance()->m_alpm_handle;
     if (!isValid()) {
         Alpm::instance()->m_alpm_errno = ALPM_ERR_HANDLE_NULL;
         return;
@@ -161,14 +161,14 @@ QStringList AlpmDB::groups() const {
 }
 
 bool AlpmDB::isValid() const {
-    return (m_db_handle != NULL && Alpm::instance() != NULL && Alpm::instance()->m_alpm_handle != NULL && (Alpm::instance()->m_alpm_handle == m_alpm_handle));
+    return (m_db_handle != nullptr && Alpm::instance() != nullptr && Alpm::instance()->m_alpm_handle != nullptr && (Alpm::instance()->m_alpm_handle == m_alpm_handle));
 }
 
 QLatin1String AlpmDB::name() const {
     if (!isValid()) return QLatin1String();
 
     const char * name = alpm_db_get_name(m_db_handle);
-    return QLatin1String((name == NULL)?"":name);
+    return QLatin1String((name == nullptr)?"":name);
 }
 
 const QString AlpmDB::extension() {
@@ -264,9 +264,9 @@ AlpmPackage AlpmDB::findByFileName(const char * filename) const {
     do {
         if (pkgs.isEmpty()) break;
         pkg = pkgs.valuePtr();
-        if (pkg == NULL) continue;
+        if (pkg == nullptr) continue;
         alpm_filelist_t * files = alpm_pkg_get_files(pkg);
-        if (files == NULL) continue;
+        if (files == nullptr) continue;
         if(alpm_filelist_contains(files,filename)) {
             ret = AlpmPackage(pkg);
             break;

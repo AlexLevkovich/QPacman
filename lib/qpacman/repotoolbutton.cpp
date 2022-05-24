@@ -31,7 +31,7 @@ void RepoToolButton::fill(const QStringList & repos) {
 
     QMenu * old_menu = this->menu();
     setMenu(menu);
-    if (old_menu != NULL) delete old_menu;
+    if (old_menu != nullptr) delete old_menu;
 
     setText(text);
     bool isFound = false;

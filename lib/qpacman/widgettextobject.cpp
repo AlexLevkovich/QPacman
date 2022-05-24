@@ -23,7 +23,7 @@
 
 QMap<int,QList<QTextEdit *>> WidgetTextObject::objectTypes = QMap<int,QList<QTextEdit *>>();
 
-WidgetTextObject::WidgetTextObject(QTextEdit *parent,QWidget * widget) : QObject((parent == NULL)?NULL:parent->document()->documentLayout()) {
+WidgetTextObject::WidgetTextObject(QTextEdit *parent,QWidget * widget) : QObject((parent == nullptr)?nullptr:parent->document()->documentLayout()) {
     m_textEdit = parent;
     m_objectType = -1;
     m_widget = widget;
@@ -35,12 +35,12 @@ WidgetTextObject::WidgetTextObject(QTextEdit *parent,QWidget * widget) : QObject
     objectType();
     if (m_objectType == -1) return;
 
-    if (m_textEdit == NULL) return;
+    if (m_textEdit == nullptr) return;
     m_textEdit->document()->documentLayout()->registerHandler(m_objectType,this);
     m_textEdit->installEventFilter(this);
     connect(m_textEdit->document(),&QTextDocument::contentsChange,this,&WidgetTextObject::onContentsChange);
 
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     m_widget->setVisible(false);
     m_widget->setParent(m_textEdit->viewport());
     connect(m_widget,&QObject::destroyed,this,&WidgetTextObject::onWidgetDestroyed);
@@ -49,7 +49,7 @@ WidgetTextObject::WidgetTextObject(QTextEdit *parent,QWidget * widget) : QObject
 WidgetTextObject::WidgetTextObject(QTextEdit *parent) : WidgetTextObject(parent,new QWidget()) {}
 
 WidgetTextObject::~WidgetTextObject() {
-    if (m_textEdit == NULL || m_objectType == -1) return;
+    if (m_textEdit == nullptr || m_objectType == -1) return;
     m_textEdit->document()->documentLayout()->unregisterHandler(m_objectType);
     QList<QTextEdit *> edits = objectTypes[m_objectType];
     if (edits.count() == 1) objectTypes.remove(m_objectType);
@@ -58,12 +58,12 @@ WidgetTextObject::~WidgetTextObject() {
         objectTypes[m_objectType] = edits;
     }
     m_objectType = -1;
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     delete m_widget;
 }
 
 QLayout * WidgetTextObject::layout() const {
-    if (m_widget == NULL) return NULL;
+    if (m_widget == nullptr) return nullptr;
     return m_widget->layout();
 }
 
@@ -159,7 +159,7 @@ const QString WidgetTextObject::selectedText(QTextEdit * textedit) {
 }
 
 bool WidgetTextObject::setLayout(QLayout * layout) {
-    if (m_widget == NULL || layout == NULL) return false;
+    if (m_widget == nullptr || layout == nullptr) return false;
     m_widget->setLayout(layout);
     m_textEdit->repaint();
     return true;
@@ -179,7 +179,7 @@ void WidgetTextObject::expandToBlockHeight(bool expand) {
 
 int WidgetTextObject::objectType() {
     if (m_objectType != -1) return m_objectType;
-    if (m_textEdit == NULL) return -1;
+    if (m_textEdit == nullptr) return -1;
     for (int i=QTextFormat::UserObject;i<=INT_MAX;i++) {
         if (!objectTypes.contains(i) || !objectTypes[i].contains(m_textEdit)) {
             QList<QTextEdit *> edits = objectTypes[i];
@@ -193,18 +193,18 @@ int WidgetTextObject::objectType() {
 }
 
 void WidgetTextObject::onWidgetDestroyed() {
-    m_widget = NULL;
+    m_widget = nullptr;
 }
 
 bool WidgetTextObject::eventFilter(QObject *obj,QEvent *event) {
-    if (event->type() == QEvent::Show && m_widget != NULL) {
+    if (event->type() == QEvent::Show && m_widget != nullptr) {
         if (obj == m_textEdit) m_widget->move(-m_widget->width(),-m_widget->height());
     }
     return QObject::eventFilter(obj,event);
 }
 
 bool WidgetTextObject::resize(int width,int height) {
-    if (m_widget == NULL || m_textEdit == NULL) return false;
+    if (m_widget == nullptr || m_textEdit == nullptr) return false;
 
     m_widget->resize(width,height);
     m_textEdit->repaint();
@@ -217,7 +217,7 @@ bool WidgetTextObject::resize(const QSize & dimensions) {
 }
 
 QSize WidgetTextObject::size() const {
-    return ((WidgetTextObject *)this)->intrinsicSize(NULL,0,QTextFormat()).toSize();
+    return ((WidgetTextObject *)this)->intrinsicSize(nullptr,0,QTextFormat()).toSize();
 }
 
 int WidgetTextObject::width() const {
@@ -239,12 +239,12 @@ bool WidgetTextObject::setHeight(int height) {
 }
 
 QSizeF WidgetTextObject::intrinsicSize(QTextDocument *,int,const QTextFormat &) {
-    if (m_widget == NULL) return QSize(0,0);
+    if (m_widget == nullptr) return QSize(0,0);
     return QSizeF(m_widget->width(),m_widget->height());
 }
 
 void WidgetTextObject::drawObject(QPainter *,const QRectF &rect,QTextDocument * doc,int posInDocument,const QTextFormat &) {
-    if (m_widget == NULL || m_textEdit == NULL || !rect.isValid()) return;
+    if (m_widget == nullptr || m_textEdit == nullptr || !rect.isValid()) return;
 
     QRect rect2(rect.toRect());
     rect2.translate(0,-m_textEdit->verticalScrollBar()->value());
@@ -266,9 +266,9 @@ QTextCharFormat WidgetTextObject::insertFormat() const {
 }
 
 bool WidgetTextObject::insert(const QTextCursor & _cursor) {
-    if (m_objectType == -1 || m_textEdit == NULL) return false;
+    if (m_objectType == -1 || m_textEdit == nullptr) return false;
 
-    if (m_widget != NULL) m_widget->setVisible(true);
+    if (m_widget != nullptr) m_widget->setVisible(true);
     QTextCharFormat charFormat = insertFormat();
     QTextCursor cursor(_cursor.isNull()?m_textEdit->textCursor():_cursor);
     cursor.insertText(QString(QChar::ObjectReplacementCharacter),charFormat);
@@ -304,7 +304,7 @@ void WidgetTextObject::setAutoDeletable(bool flag) {
 }
 
 void WidgetTextObject::reinsert(const QFont & font) {
-    if (m_widget != NULL) {
+    if (m_widget != nullptr) {
         m_widget->setFont(font);
         m_widget->adjustSize();
     }
@@ -319,12 +319,12 @@ void WidgetTextObject::reinsert(const QFont & font) {
 }
 
 void WidgetTextObject::onContentsChange(int pos,int removed,int added) {
-    if (m_pos < 0 && added > 0 && m_textEdit != NULL) {
+    if (m_pos < 0 && added > 0 && m_textEdit != nullptr) {
         m_pos = indexOfReplacementChar(pos,added);
         return;
     }
     if (m_pos < pos) return;
-    if (m_textEdit == NULL) return;
+    if (m_textEdit == nullptr) return;
 
     QTextCursor cursor = m_textEdit->textCursor();
     if (removed == added) {
@@ -337,7 +337,7 @@ void WidgetTextObject::onContentsChange(int pos,int removed,int added) {
     if (removed > 0 && m_pos >= pos && m_pos < (pos + removed)) {
         if (m_auto_deletable) deleteLater();
         else {
-            if (m_widget != NULL) m_widget->move(-m_widget->width(),-m_widget->height());
+            if (m_widget != nullptr) m_widget->move(-m_widget->width(),-m_widget->height());
             m_pos = -1;
         }
         return;
@@ -351,18 +351,18 @@ QTextEdit * WidgetTextObject::textEdit() {
 }
 
 LineEditTextObject::LineEditTextObject(QTextEdit *parent,const QString & text) : WidgetTextObject(parent,new QLineEdit()) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     setText(text);
     connect(inputLineEdit(),&QLineEdit::textChanged,this,&LineEditTextObject::textChanged);
 }
 
 QString LineEditTextObject::text() const {
-    if (m_widget == NULL) return QString();
+    if (m_widget == nullptr) return QString();
     return ((LineEditTextObject *)this)->inputLineEdit()->text();
 }
 
 void LineEditTextObject::setText(const QString & text) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputLineEdit()->setText(text);
     m_textEdit->repaint();
 }
@@ -372,7 +372,7 @@ QLineEdit * LineEditTextObject::inputLineEdit() {
 }
 
 SpinBoxTextObject::SpinBoxTextObject(QTextEdit *parent,int min,int max,int value,const QString & suffix) : WidgetTextObject(parent,new QSpinBox()) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     setMin(min);
     setMax(max);
     setValue(value);
@@ -385,50 +385,50 @@ QSpinBox * SpinBoxTextObject::inputSpinBox() {
 }
 
 int SpinBoxTextObject::value() const {
-    if (m_widget == NULL) return 0;
+    if (m_widget == nullptr) return 0;
     return ((SpinBoxTextObject *)this)->inputSpinBox()->value();
 }
 
 int SpinBoxTextObject::min() const {
-    if (m_widget == NULL) return 0;
+    if (m_widget == nullptr) return 0;
     return ((SpinBoxTextObject *)this)->inputSpinBox()->minimum();
 }
 
 int SpinBoxTextObject::max() const {
-    if (m_widget == NULL) return 0;
+    if (m_widget == nullptr) return 0;
     return ((SpinBoxTextObject *)this)->inputSpinBox()->maximum();
 }
 
 QString SpinBoxTextObject::suffix() const {
-    if (m_widget == NULL) return QString();
+    if (m_widget == nullptr) return QString();
     return ((SpinBoxTextObject *)this)->inputSpinBox()->suffix();
 }
 
 void SpinBoxTextObject::setValue(int value) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputSpinBox()->setValue(value);
 }
 
 void SpinBoxTextObject::setMin(int min) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputSpinBox()->setMinimum(min);
     m_textEdit->repaint();
 }
 
 void SpinBoxTextObject::setMax(int max) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputSpinBox()->setMaximum(max);
     m_textEdit->repaint();
 }
 
 void SpinBoxTextObject::setSuffix(const QString & suffix) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputSpinBox()->setSuffix(suffix);
     m_textEdit->repaint();
 }
 
 CheckBoxTextObject::CheckBoxTextObject(QTextEdit *parent,const QString & text,bool checked) : WidgetTextObject(parent,new QCheckBox()) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     setChecked(checked);
     setText(text);
     connect(inputCheckBox(),&QCheckBox::stateChanged,this,&CheckBoxTextObject::onStateChanged);
@@ -443,36 +443,36 @@ QCheckBox * CheckBoxTextObject::inputCheckBox() {
 }
 
 bool CheckBoxTextObject::isChecked() const {
-    if (m_widget == NULL) return false;
+    if (m_widget == nullptr) return false;
     return ((CheckBoxTextObject *)this)->inputCheckBox()->isChecked();
 }
 
 void CheckBoxTextObject::setChecked(bool flag) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputCheckBox()->setChecked(flag);
     m_textEdit->repaint();
 }
 
 QString CheckBoxTextObject::text() const {
-    if (m_widget == NULL) return QString();
+    if (m_widget == nullptr) return QString();
     return ((CheckBoxTextObject *)this)->inputCheckBox()->text() + (isChecked()?": True":": False");
 }
 
 void CheckBoxTextObject::setText(const QString & text) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputCheckBox()->setText(text);
     m_textEdit->repaint();
 }
 
 ButtonTextObject::ButtonTextObject(QTextEdit *parent,const QIcon & icon,const QString & text) : WidgetTextObject(parent,new QPushButton()) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputButton()->setText(text);
     inputButton()->setIcon(icon);
     connect(inputButton(),&QAbstractButton::clicked,this,&ButtonTextObject::clicked);
 }
 
 ButtonTextObject::ButtonTextObject(QTextEdit *parent,const QString & text) : WidgetTextObject(parent,new QPushButton()) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputButton()->setText(text);
     connect(inputButton(),&QAbstractButton::clicked,this,&ButtonTextObject::clicked);
 }
@@ -490,7 +490,7 @@ QIcon ButtonTextObject::icon() const {
 }
 
 ComboBoxTextObject::ComboBoxTextObject(QTextEdit *parent,const QStringList & items) : WidgetTextObject(parent,new QComboBox()) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputComboBox()->addItems(items);
     connect(m_widget,SIGNAL(activated(int)),this,SLOT(onActivated(int)));
 }
@@ -500,7 +500,7 @@ void ComboBoxTextObject::onActivated(int index) {
 }
 
 QString ComboBoxTextObject::text() const {
-    if (m_widget == NULL) return QString();
+    if (m_widget == nullptr) return QString();
     return ((ComboBoxTextObject *)this)->inputComboBox()->currentText();
 }
 
@@ -523,39 +523,39 @@ QLabel * LabelTextObject::inputLabel() {
 }
 
 QPixmap LabelTextObject::pixmap() const {
-    if (m_widget == NULL) return QPixmap();
+    if (m_widget == nullptr) return QPixmap();
     return ((LabelTextObject *)this)->inputLabel()->pixmap(Qt::ReturnByValue);
 }
 
 void LabelTextObject::setPixmap(const QPixmap & pix) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputLabel()->setPixmap(pix);
     m_textEdit->repaint();
 }
 
 QString LabelTextObject::text() const {
-    if (m_widget == NULL) return QString();
+    if (m_widget == nullptr) return QString();
     return ((LabelTextObject *)this)->inputLabel()->text();
 }
 
 void LabelTextObject::setText(const QString & text) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputLabel()->setText(text);
     m_textEdit->repaint();
 }
 
 Qt::Alignment LabelTextObject::alignment() const {
-    if (m_widget == NULL) return Qt::AlignLeft | Qt::AlignVCenter;
+    if (m_widget == nullptr) return Qt::AlignLeft | Qt::AlignVCenter;
     return ((LabelTextObject *)this)->inputLabel()->alignment();
 }
 
 void LabelTextObject::setAlignment(Qt::Alignment alignment) {
-    if (m_widget == NULL) return;
+    if (m_widget == nullptr) return;
     inputLabel()->setAlignment(alignment);
     m_textEdit->repaint();
 }
 
-SimpleLabelTextObject::SimpleLabelTextObject(QTextEdit *parent,const QString & text,const QIcon & icon,const QUrl & url,const QString & description) : WidgetTextObject(parent,NULL) {
+SimpleLabelTextObject::SimpleLabelTextObject(QTextEdit *parent,const QString & text,const QIcon & icon,const QUrl & url,const QString & description) : WidgetTextObject(parent,nullptr) {
     m_text = text;
     m_icon = icon;
     m_description = description;
@@ -596,7 +596,7 @@ QSizeF SimpleLabelTextObject::intrinsicSize(QTextDocument *,int,const QTextForma
 }
 
 void SimpleLabelTextObject::drawObject(QPainter *painter,const QRectF &rect,QTextDocument *,int,const QTextFormat & format) {
-    if (textEdit() == NULL) return;
+    if (textEdit() == nullptr) return;
 
     QFont font = format.toCharFormat().font();
     if (!m_url.isEmpty()) font.setUnderline(true);

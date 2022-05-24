@@ -19,8 +19,8 @@
 
 
 AlpmConfig::AlpmConfig() {
-    holdpkgs = NULL;
-    m_alpm_handle = NULL;
+    holdpkgs = nullptr;
+    m_alpm_handle = nullptr;
 }
 
 AlpmConfig::~AlpmConfig() {
@@ -28,7 +28,7 @@ AlpmConfig::~AlpmConfig() {
 }
 
 alpm_list_t * AlpmConfig::convert_list(const QStringList & list) {
-    alpm_list_t * ret = NULL;
+    alpm_list_t * ret = nullptr;
 
     for (int i=0;i<list.count();i++) {
         ret = alpm_list_add(ret,strdup(list[i].toLocal8Bit().constData()));
@@ -133,7 +133,7 @@ int AlpmConfig::index_of_repo(const QString & name) {
 bool AlpmConfig::addMirrorRepo(const Repo & repo_no_servers) {
     m_error.clear();
 
-    if (m_alpm_handle == NULL) {
+    if (m_alpm_handle == nullptr) {
         m_error = "AlpmConfig::addMirrorRepo: "+QObject::tr("Alpm class is not initialized!");
         return false;
     }
@@ -178,7 +178,7 @@ bool AlpmConfig::addMirrorRepo(const Repo & repo_no_servers) {
 bool AlpmConfig::addNewRepo(const Repo & repo) {
     m_error.clear();
 
-    if (m_alpm_handle == NULL) {
+    if (m_alpm_handle == nullptr) {
         m_error = "AlpmConfig::addNewRepo: "+QObject::tr("Alpm class is not initialized!");
         return false;
     }
@@ -223,7 +223,7 @@ bool AlpmConfig::addNewRepo(const Repo & repo) {
 bool AlpmConfig::deleteRepo(const QString & name) {
     m_error.clear();
 
-    if (m_alpm_handle == NULL) {
+    if (m_alpm_handle == nullptr) {
         m_error = "AlpmConfig::deleteRepo: "+QObject::tr("Alpm class is not initialized!");
         return false;
     }
@@ -263,16 +263,16 @@ bool AlpmConfig::deleteRepo(const QString & name) {
 
 const QString AlpmConfig::user_name() {
     uid_t uid = geteuid();
-    struct passwd * pw = (uid == (uid_t)-1 && errno ? NULL : getpwuid(uid));
-    if (pw == NULL) return QString();
+    struct passwd * pw = (uid == (uid_t)-1 && errno ? nullptr : getpwuid(uid));
+    if (pw == nullptr) return QString();
 
     return QString::fromLocal8Bit(pw->pw_name);
 }
 
 const QString AlpmConfig::user_dir() {
     uid_t uid = geteuid();
-    struct passwd * pw = (uid == (uid_t)-1 && errno ? NULL : getpwuid(uid));
-    if (pw == NULL) return QString();
+    struct passwd * pw = (uid == (uid_t)-1 && errno ? nullptr : getpwuid(uid));
+    if (pw == nullptr) return QString();
 
     return QString::fromLocal8Bit(pw->pw_dir);
 }
@@ -378,17 +378,17 @@ QString AlpmConfig::confPath() const {
 }
 
 alpm_handle_t * AlpmConfig::translate(const QString & _dbpath) {
-    if (!m_error.isEmpty()) return NULL;
+    if (!m_error.isEmpty()) return nullptr;
     if (conf_filepath.isEmpty()) {
         m_error = QObject::tr("Pacman's conf file is unknown!");
-        return NULL;
+        return nullptr;
     }
 
-    alpm_list_t * cachedirs = NULL;
-    alpm_list_t * ignoregroups = NULL;
-    alpm_list_t * ignorepkgs = NULL;
-    alpm_list_t * noextract = NULL;
-    alpm_list_t * noupgrade = NULL;
+    alpm_list_t * cachedirs = nullptr;
+    alpm_list_t * ignoregroups = nullptr;
+    alpm_list_t * ignorepkgs = nullptr;
+    alpm_list_t * noextract = nullptr;
+    alpm_list_t * noupgrade = nullptr;
     int i;
 
     m_error.clear();
@@ -402,8 +402,8 @@ alpm_handle_t * AlpmConfig::translate(const QString & _dbpath) {
     noextract = convert_list(this->noextract);
     noupgrade = convert_list(this->noupgrade);
 
-    alpm_handle_t * m_handle = alpm_initialize(rootdir.toLocal8Bit().constData(),dbpath.toLocal8Bit().constData(),NULL);
-    if(!m_handle) return NULL;
+    alpm_handle_t * m_handle = alpm_initialize(rootdir.toLocal8Bit().constData(),dbpath.toLocal8Bit().constData(),nullptr);
+    if(!m_handle) return nullptr;
 
     alpm_option_set_cachedirs(m_handle,cachedirs);
     alpm_option_set_noupgrades(m_handle,noupgrade);
